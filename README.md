@@ -4,7 +4,7 @@
 
 This application allows to create new companies with their own data, security and model settings without recompilation.
 
-Launch the application, enter as Admin with empty company.
+1. Launch the application, enter as Admin with empty company.
 
 ![image](https://user-images.githubusercontent.com/39731874/214006275-2675b9a2-64d6-4d9f-845b-03737256a33f.png)
 
@@ -25,7 +25,7 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 
 
 
-4. Create a Employee, setup sesurity rules to prohibit access to the Position class.
+4. Create a Employee, setup security rules to prohibit access to the Position class.
 
 5. Click LogOff and select SecondCompany in the Company Name combobox, enter as Admin. Setup sesurity rules to prohibit access to the Payment class.
 
