@@ -1,10 +1,10 @@
 <!-- default badges list -->
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-Текст для Readme
-Приложение позоляет без перекомпиляции создавать новые компании и настравать для каждой сесурити и модель.
 
-Запустите приложение, войдите под Admin без выбора компании.
+This application allows to create new companies with its own data, security and model settings without recompilation.
+
+Launch the application, enter as Admin with empty company.
 
 
 
