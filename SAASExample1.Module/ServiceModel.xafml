@@ -1,0 +1,8 @@
+﻿<Application Title="SAASExample1">
+	<NavigationItems>
+		<Items>
+			<Item Id="Company" ViewId="Company_ListView" IsNewNode="True" />
+			<Item Id="Default" Removed="True" />
+		</Items>
+	</NavigationItems>
+</Application>
