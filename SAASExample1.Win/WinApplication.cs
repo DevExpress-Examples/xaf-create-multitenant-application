@@ -13,11 +13,15 @@ using SAASExample1.Module;
 using SAASExample1.Module.BusinessObjects;
 using System.Data.Common;
 using DevExpress.Persistent.BaseImpl.EF;
+using Microsoft.Extensions.DependencyInjection;
+using SAASExample1.Module.Services;
+using System.Collections.Concurrent;
 
 namespace SAASExample1.Win;
 
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Win.WinApplication._members
 public class SAASExample1WindowsFormsApplication : WinApplication {
+    private static ConcurrentDictionary<string, bool> isCompatibilityChecked = new ConcurrentDictionary<string, bool>();
     public SAASExample1WindowsFormsApplication() {
 		SplashScreen = new DXSplashScreen(typeof(XafSplashScreen), new DefaultOverlayFormOptions());
         ApplicationName = "SAASExample1";
@@ -38,6 +42,11 @@ public class SAASExample1WindowsFormsApplication : WinApplication {
         }
         ResourcesModelStore serviceStore = new ResourcesModelStore(typeof(SAASExample1Module).Assembly, resourceName);
         e.AddExtraDiffStore("ServiceStore", serviceStore);
+    }
+    protected override bool IsCompatibilityChecked {
+        get => isCompatibilityChecked.ContainsKey(ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+
+        set => isCompatibilityChecked.TryAdd(ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString(), value);
     }
     private void SAASExample1WindowsFormsApplication_CustomizeLanguagesList(object sender, CustomizeLanguagesListEventArgs e) {
         string userLanguageName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
