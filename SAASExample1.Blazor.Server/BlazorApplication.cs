@@ -22,6 +22,10 @@ public class SAASExample1BlazorApplication : BlazorApplication {
         CheckCompatibilityType = DevExpress.ExpressApp.CheckCompatibilityType.DatabaseSchema;
         DatabaseVersionMismatch += SAASExample1BlazorApplication_DatabaseVersionMismatch;
         CreateCustomUserModelDifferenceStore += SAASExample1BlazorApplication_CreateCustomUserModelDifferenceStore;
+        //CreateCustomLogonWindowControllers += SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers;
+    }
+    private void SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers(object sender, CreateCustomLogonWindowControllersEventArgs e) {
+        e.Controllers.Add(((XafApplication)sender).CreateController<Module.Controllers.SelectCompanyController>());
     }
 
     private void SAASExample1BlazorApplication_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
