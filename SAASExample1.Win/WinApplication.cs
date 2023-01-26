@@ -16,6 +16,7 @@ using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.Extensions.DependencyInjection;
 using SAASExample1.Module.Services;
 using System.Collections.Concurrent;
+using DevExpress.XtraRichEdit.Utils;
 
 namespace SAASExample1.Win;
 
@@ -30,6 +31,10 @@ public class SAASExample1WindowsFormsApplication : WinApplication {
         DatabaseVersionMismatch += SAASExample1WindowsFormsApplication_DatabaseVersionMismatch;
         CustomizeLanguagesList += SAASExample1WindowsFormsApplication_CustomizeLanguagesList;
         CreateCustomUserModelDifferenceStore += SAASExample1WindowsFormsApplication_CreateCustomUserModelDifferenceStore;
+        //CreateCustomLogonWindowControllers += SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers;
+    }
+    private void SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers(object sender, CreateCustomLogonWindowControllersEventArgs e) {
+        e.Controllers.Add(((XafApplication)sender).CreateController<Module.Controllers.SelectCompanyController>());
     }
     private void SAASExample1WindowsFormsApplication_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
         var logonParameters = ((ILogonParameterProvider)((WinApplication)sender).ServiceProvider?.GetService(typeof(ILogonParameterProvider)))?.GetLogonParameters(typeof(CustomLogonParametersForStandardAuthentication)) as CustomLogonParametersForStandardAuthentication;
