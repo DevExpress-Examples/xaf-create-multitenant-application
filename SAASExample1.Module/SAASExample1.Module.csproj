@@ -21,6 +21,7 @@
     <Compile Include="BusinessObjects\Position.cs" />
     <Compile Include="BusinessObjects\SAASExample1DbContext.cs" />
     <Compile Include="BusinessObjects\Payment.cs" />
+    <Compile Include="Controllers\SelectCompanyController.cs" />
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Interfaces\ICompanyNamesHelper.cs" />
     <Compile Include="Interfaces\IConfigurationConnectionStringProvider.cs" />
