@@ -35,5 +35,5 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 ![image](https://user-images.githubusercontent.com/39731874/214009179-5d207892-94e2-449b-ba4e-439052f27505.png)
 
 
-As a result we have an application with one service database with companyes and two separate databases for each company with their own security and model settings. You  can get by without the service database. In this case modify the CompanyNamesHelper class and return companies for your source. Disadvantage of this approach is that you can not share data between companies.
+As a result we have an application with one service database with companyes and two separate databases for each company with their own security and model settings. You  can get companies without the service database. In this case modify the CompanyNamesHelper class and return companies for your source. Disadvantage of this approach is that you can not share data between companies.
 
