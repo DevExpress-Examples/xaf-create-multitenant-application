@@ -37,3 +37,8 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 
 As a result we have an application with one service database with companyes and two separate databases for each company with their own security and model settings. You  can get companies without the service database. In this case modify the CompanyNamesHelper class and return companies for your source. Disadvantage of this approach is that you can not share data between companies.
 
+Uncomment the
+CreateCustomLogonWindowControllers += SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers;
+string if you want to select company before user.
+
+
