@@ -43,8 +43,11 @@ string if you want to select company before user.
 
 Articles and examples used in this example:
 https://github.com/DevExpress-Examples/XAF_how-to-manage-users-register-a-new-user-restore-a-password-etc-from-the-logon-e4037
+
 https://docs.devexpress.com/eXpressAppFramework/113698/ui-construction/application-model-ui-settings-storage/application-model-storages/store-the-application-model-differences-in-the-database
+
 https://docs.devexpress.com/eXpressAppFramework/113704/ui-construction/application-model-ui-settings-storage/application-model-storages/enable-the-administrative-ui-for-managing-users-model-differences
+
 https://docs.devexpress.com/eXpressAppFramework/403980/application-shell-and-base-infrastructure/application-solution-components/integrate-application-builders-into-existing-applications
 
 
