@@ -42,6 +42,7 @@ CreateCustomLogonWindowControllers += SAASExample1WindowsFormsApplication_Create
 string if you want to select company before user.
 
 Articles and examples used in this example:
+
 https://github.com/DevExpress-Examples/XAF_how-to-manage-users-register-a-new-user-restore-a-password-etc-from-the-logon-e4037
 
 https://docs.devexpress.com/eXpressAppFramework/113698/ui-construction/application-model-ui-settings-storage/application-model-storages/store-the-application-model-differences-in-the-database
