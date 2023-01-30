@@ -1,5 +1,4 @@
 <!-- default badges list -->
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1143380)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
 
@@ -48,6 +47,16 @@ As a result we have an application with one service database with companies and 
 2) Uncomment the
 CreateCustomLogonWindowControllers += SAASExample1WindowsFormsApplication_CreateCustomLogonWindowControllers;
 string if you want to select company before user.
+
+### Used Approaches
+1) [Application Builder](https://docs.devexpress.com/eXpressAppFramework/403980/application-shell-and-base-infrastructure/application-solution-components/integrate-application-builders-into-existing-applications).
+2) CustomLogonParameters with the Company property - CustomLogonParametersForStandardAuthentication class.
+3) DbContext with a dymamic connection string set on configiring - SAASExample1EFCoreDbContext class.
+4) SelectCompanyController used to hide users info and the Login button while the company is not selected.
+5) Set of predefined navigation, type and other permissions in the Updater.cs file.
+6) Services that provides company names and connection strings: CompanyNamesHelper, ConnectionStringProvider, ConfigurationConnectionStringProvider.
+7) xafml files used to hide extra navigation items for Admin: ServiceModel.xafml, CompaniesModel.xafml.
+8) CreateCustomUserModelDifferenceStore handler that add a company specific model layer using the AddExtraDiffStore method.
 
 ### Articles and examples used in this example:
 
