@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" ?>
+<Application>
+  <Views>
+	<DetailView Id="TenantNameHolder_DetailView" AllowEdit="False" />
+  </Views>
+</Application>
