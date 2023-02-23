@@ -8,11 +8,12 @@ using SAASExtension.Interfaces;
 using SAASExtension.Modules;
 using SAASExtension.Options;
 using SAASExtension.Services;
+using SAASExtensionBlazor.Classes;
 
 namespace SAASExtensionBlazor {
     public static class BlazorApplicationBuilderExtensions {
         public static ISAASApplicationBuilder MakeSAAS(this IBlazorApplicationBuilder builder, Action<PublicExtensionModuleOptions> configureOptions = null) {
-            var result = new SAASApplicationBuilder(builder);
+            var result = new SAASApplicationBuilder(new BlazorXAFApplicationBuilderWrapper(builder));
             builder.Get().AddOptions<InternalExtensionModuleOptions>();
             builder.Get().AddOptions<PublicExtensionModuleOptions>();
             builder.Modules.Add((serviceProvider) => {
