@@ -1,5 +1,6 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
+using Microsoft.Extensions.DependencyInjection;
 using SAASExtension.Interfaces;
 
 namespace SAASExtensionBlazor.Classes {
@@ -16,6 +17,12 @@ namespace SAASExtensionBlazor.Classes {
              where TLogonController : Controller, new() {
             applicationBuilder.AddLogonController<TLogonController>(configure);
             return this;
+        }
+        public void AddModule<TModule>(Func<IServiceProvider, TModule> createModuleDelegate) where TModule : ModuleBase {
+            applicationBuilder.Modules.Add(createModuleDelegate);
+        }
+        public void AddOptions<TOptions>() where TOptions : class {
+            applicationBuilder.Get().AddOptions<TOptions>();
         }
         public IXAFApplicationBuilderWrapper AddService<TService, TImplementation>()
             where TService : class
