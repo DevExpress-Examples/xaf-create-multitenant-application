@@ -11,12 +11,13 @@ using SAASExtension.Interfaces;
 using SAASExtension.Modules;
 using SAASExtension.Options;
 using SAASExtension.Services;
+using SAASExtensionWin.Classes;
 using System.Reflection;
 
 namespace SAASExtensionWin {
     public static class WinApplicationBuilderExtensions {
         public static ISAASApplicationBuilder MakeSAAS(this IWinApplicationBuilder builder, Action<PublicExtensionModuleOptions> configureOptions = null) {
-            var result = new SAASApplicationBuilder(builder);
+            var result = new SAASApplicationBuilder(new WinXAFApplicationBuilderWrapper(builder));
             builder.Get().AddOptions<InternalExtensionModuleOptions>();
             builder.Get().AddOptions<PublicExtensionModuleOptions>();
             builder.Modules.Add((serviceProvider) => {
