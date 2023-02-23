@@ -1,5 +1,6 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
+using Microsoft.Extensions.DependencyInjection;
 using SAASExtension.Interfaces;
 using SAASExtension.Services;
 using System;
@@ -19,6 +20,13 @@ namespace SAASExtensionWin.Classes {
             applicationBuilder.AddLogonController<TLogonController>(configure);
             return this;
         }
+        public void AddModule<TModule>(Func<IServiceProvider, TModule> createModuleDelegate) where TModule : ModuleBase {
+            applicationBuilder.Modules.Add(createModuleDelegate);
+        }
+        public void AddOptions<TOptions>() where TOptions : class {
+            applicationBuilder.Get().AddOptions<TOptions>();
+        }
+
         public IXAFApplicationBuilderWrapper AddService<TService, TImplementation>()
             where TService : class
             where TImplementation : class, TService {
