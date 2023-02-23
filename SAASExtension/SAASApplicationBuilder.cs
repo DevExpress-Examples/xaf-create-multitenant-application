@@ -4,9 +4,12 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SAASExtension.BusinessObjects;
 using SAASExtension.Controllers;
 using SAASExtension.Interfaces;
+using SAASExtension.Modules;
 using SAASExtension.Options;
 using SAASExtension.Security;
 using SAASExtension.Services;
@@ -17,8 +20,18 @@ using System.Reflection;
 namespace SAASExtension {
     public class SAASApplicationBuilder : ISAASApplicationBuilder {
         IXAFApplicationBuilderWrapper wrapper;
-        public SAASApplicationBuilder(IXAFApplicationBuilderWrapper wrapper) {
+        public SAASApplicationBuilder(IXAFApplicationBuilderWrapper wrapper, Action<PublicExtensionModuleOptions> configureOptions = null) {
             this.wrapper = wrapper;
+            wrapper.AddOptions<InternalExtensionModuleOptions>();
+            wrapper.AddOptions<PublicExtensionModuleOptions>();
+            wrapper.AddModule((serviceProvider) => {
+                InternalExtensionModuleOptions internalOptions = serviceProvider.GetRequiredService<IOptions<InternalExtensionModuleOptions>>().Value;
+                PublicExtensionModuleOptions publicOptions = serviceProvider.GetRequiredService<IOptions<PublicExtensionModuleOptions>>().Value;
+                ApplicationExtensions.ParsePublicOptions(internalOptions, publicOptions);
+                ExtensionModule extensionModule = new ExtensionModule(internalOptions, publicOptions);
+                return extensionModule;
+            });
+            wrapper.ConfigureOptions<PublicExtensionModuleOptions>(configureOptions);
             wrapper.ConfigureOptions<InternalExtensionModuleOptions>(o => {
                 o.DeclaredExportedTypes.Add(typeof(TenantNameHolder));
             });
