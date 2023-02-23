@@ -17,18 +17,7 @@ using System.Reflection;
 namespace SAASExtensionWin {
     public static class WinApplicationBuilderExtensions {
         public static ISAASApplicationBuilder MakeSAAS(this IWinApplicationBuilder builder, Action<PublicExtensionModuleOptions> configureOptions = null) {
-            var result = new SAASApplicationBuilder(new WinXAFApplicationBuilderWrapper(builder));
-            builder.Get().AddOptions<InternalExtensionModuleOptions>();
-            builder.Get().AddOptions<PublicExtensionModuleOptions>();
-            builder.Modules.Add((serviceProvider) => {
-                InternalExtensionModuleOptions internalOptions = serviceProvider.GetRequiredService<IOptions<InternalExtensionModuleOptions>>().Value;
-                PublicExtensionModuleOptions publicOptions = serviceProvider.GetRequiredService<IOptions<PublicExtensionModuleOptions>>().Value;
-                ApplicationExtensions.ParsePublicOptions(internalOptions, publicOptions);
-                ExtensionModule extensionModule = new ExtensionModule(internalOptions, publicOptions);
-                return extensionModule;
-            });
-            ConfigureOptions<PublicExtensionModuleOptions>(builder, configureOptions);
-            return result;
+            return new SAASApplicationBuilder(new WinXAFApplicationBuilderWrapper(builder), configureOptions);
         }
         public static IWinApplicationBuilder AddService<TService, TImplementation>(this IWinApplicationBuilder builder)
             where TService : class
