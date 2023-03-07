@@ -1,0 +1,176 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <Deterministic>false</Deterministic>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Configurations>Debug;Release;EasyTest</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<DefineConstants>TenantFirstOneDatabase</DefineConstants>
+	<RootNamespace>SAASExample.Blazor.Server</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Model.xafml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model.xafml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SAASExample.Module\SAASExampleTenantFirstOneDatabase.Module.csproj" />
+    <ProjectReference Include="..\SAASExtensionBlazor\SAASExtensionBlazor.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	  <Reference Include="DevExpress.ExpressApp.CodeAnalysis.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.CodeAnalysis.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Data.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Data.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.AuditTrail.EFCore.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.AuditTrail.EFCore.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.AspNetCore.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.AspNetCore.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.ConditionalAppearance.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ConditionalAppearance.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.FileAttachment.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.FileAttachment.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Objects.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Objects.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Office.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Office.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Security.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Security.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Security.AspNetCore.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Security.AspNetCore.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Validation.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Validation.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.Validation.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Validation.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.ViewVariantsModule.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ViewVariantsModule.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Persistent.Base.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.Base.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.EntityFrameworkCore.Security.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.EntityFrameworkCore.Security.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.EFCore.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.EFCore.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Persistent.BaseImpl.EFCore.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.BaseImpl.EFCore.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.AspNetCore.Reporting.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.AspNetCore.Reporting.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Blazor.Reporting.v23.1.JSBasedControls.BlazorServer">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.Reporting.v23.1.JSBasedControls.BlazorServer.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Blazor.Reporting.v23.1.JSBasedControls.Common">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.Reporting.v23.1.JSBasedControls.Common.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.ReportsV2.Blazor.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ReportsV2.Blazor.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.ReportsV2.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ReportsV2.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.ExpressApp.WebApi.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.WebApi.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.XtraReports.v23.1">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.XtraReports.v23.1.dll</HintPath>
+	  </Reference>
+	  <Reference Include="DevExpress.Printing.v23.1.Core">
+		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Printing.v23.1.Core.dll</HintPath>
+	  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+	  <PackageReference Include="Castle.Core" Version="4.4.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.11" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.1" />
+	  <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.6" />
+	  <PackageReference Include="Logify.Alert.Console" Version="1.0.55" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.10" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	  <PackageReference Include="System.Reactive" Version="5.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.10" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
+
+	  <PackageReference Include="System.CodeDom" Version="5.0.0" />
+	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+	  <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.Blazor</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.Blazor</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.Themes\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.Blazor.Themes</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.Themes\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.Blazor.Themes</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.Reporting.JSBasedControls.Common\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.Blazor.Reporting.JSBasedControls.Common</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.Reporting.JSBasedControls.Common\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.Blazor.Reporting.JSBasedControls.Common</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.ExpressApp.Blazor\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.ExpressApp.Blazor</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.ExpressApp.Blazor\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.ExpressApp.Blazor</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.RichEdit\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.Blazor.RichEdit</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.Blazor.RichEdit\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.Blazor.RichEdit</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+	  <StaticWebAsset Include="c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.ExpressApp.Office.Blazor\wwwroot\**">
+		  <SourceType>Package</SourceType>
+		  <SourceId>DevExpress.ExpressApp.Office.Blazor</SourceId>
+		  <ContentRoot>c:\work\Git_2023.1\Bin\\NETCore\staticwebassets\DevExpress.ExpressApp.Office.Blazor\wwwroot\</ContentRoot>
+		  <BasePath>_content/DevExpress.ExpressApp.Office.Blazor</BasePath>
+		  <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+	  </StaticWebAsset>
+  </ItemGroup>
+</Project>
