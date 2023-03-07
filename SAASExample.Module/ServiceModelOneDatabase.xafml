@@ -1,0 +1,15 @@
+﻿<Application Title="SAASExample1">
+	<NavigationItems>
+		<Items>
+			<Item Id="Default" Removed="True" />
+			<Item Id="Default" IsNewNode="True">
+				<Items>
+					<Item Id="Tenant" ViewId="TenantWithConnectionStringObject_ListView" Removed="True" />
+					<Item Id="Tenant" ViewId="TenantObject_ListView" IsNewNode="True" />
+					<Item Id="PermissionPolicyRole_ListView" ViewId="PermissionPolicyRole_ListView" IsNewNode="True" />
+					<Item Id="ApplicationUser_ListView" ViewId="ApplicationUser_ListView" IsNewNode="True" />
+				</Items>
+			</Item>
+		</Items>
+	</NavigationItems>
+</Application>
