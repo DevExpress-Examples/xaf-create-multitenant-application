@@ -10,7 +10,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Configurations>Debug;Release;EasyTest</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DefineConstants>TenantFirstOneDatabase;OneDatabase</DefineConstants>
+    <DefineConstants>LogInFirstOneDatabase;OneDatabase</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Using Include="DevExpress.ExpressApp.ListView" Alias="ListView" />
@@ -28,7 +28,7 @@
     <EmbeddedResource Include="Images\Logo.svg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SAASExample.Module\SAASExampleTenantFirstOneDatabase.Module.csproj" />
+    <ProjectReference Include="..\SAASExample.Module\SAASExampleLogInFirstOneDatabase.Module.csproj" />
     <ProjectReference Include="..\SAASExtensionWin\SAASExtensionWin.csproj" />
   </ItemGroup>
   <ItemGroup>

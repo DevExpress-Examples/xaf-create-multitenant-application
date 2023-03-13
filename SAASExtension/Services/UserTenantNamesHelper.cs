@@ -31,7 +31,7 @@ namespace SAASExtension.Services {
                         using (var objectSpace = provider.CreateObjectSpace()) {
                             SAASPermissionPolicyUserWithTenants user = objectSpace.FindObject<SAASPermissionPolicyUserWithTenants>(CriteriaOperator.Parse($"[UserName] = '{logonParameters.UserName}'"));
                             if (user != null) {
-                                foreach (TenantWithConnectionStringWithUsersObject tenant in user.Tenants) {
+                                foreach (TenantObjectWithUsers tenant in user.Tenants) {
                                     result[tenant.Name] = tenant.ConnectionString;
                                 }
                                 connectionStrings[logonParameters.UserName] = result;

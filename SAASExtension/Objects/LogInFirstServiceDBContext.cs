@@ -19,12 +19,13 @@ public class ServiceDBContext<TUserType, TApplicationUserLoginInfo> : DbContext
     public ServiceDBContext(DbContextOptions<ServiceDBContext<TUserType, TApplicationUserLoginInfo>> options) : base(options) {
     }
     public DbSet<PermissionPolicyRole> Roles { get; set; }
+    public DbSet<PermissionPolicyUser> Users1 { get; set; }
+    public DbSet<SAASPermissionPolicyUser> Users2 { get; set; }
+    public DbSet<SAASPermissionPolicyUserWithTenants> Users3 { get; set; }
     public DbSet<TUserType> Users { get; set; }
     public DbSet<TApplicationUserLoginInfo> UserLoginInfos { get; set; }
-    public DbSet<SAASPermissionPolicyUserWithTenants> SAASUsers { get; set; }
-    public DbSet<TenantObject> Tenants { get; set; }
-    public DbSet<TenantWithConnectionStringObject> Tenants1 { get; set; }
-    public DbSet<TenantWithConnectionStringWithUsersObject> Tenants2 { get; set; }
+    public DbSet<TenantObjectWithUsers> Tenants { get; set; }
+    public DbSet<TenantObject> Tenants1 { get; set; }
     public DbSet<ModelDifference> ModelDifferences { get; set; }
     public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

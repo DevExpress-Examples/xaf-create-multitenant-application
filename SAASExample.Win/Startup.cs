@@ -90,6 +90,68 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         //.AddSelectUserTenantsStartupAction();
         .AddSelectUserTenantsLogonController();
 #endif
+        //#if LogInFirstOneDatabase
+        //        builder
+        //        .AddSAASTenantModelDifferenceStore(mds => {
+        //            mds.Assembly = typeof(SAASExampleModule).Assembly;
+        //            mds.ServiceModelResourceName = "ExtendedServiceModel";
+        //            mds.ProductionModelResourceName = "LiteProductionModel";
+        //        })
+        //        .MakeSAAS(o => {
+        //            o.SelectTenantPropertyCaption = "Company";
+        //            o.SelectTenantFormCaption = "Select Company";
+        //            o.TenantObjectDisplayName = "Company";
+        //            o.LogonFormCaption = "Log In";
+        //            o.RemoveExtraNavigationItems = true;
+        //        })
+        //        .OneDatabase()
+        //        .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+        //        .AddSelectTenantsRunTimeController()
+        //        //.AddSelectUserTenantsStartupAction();
+        //        .AddSelectUserTenantsLogonController();
+        //        builder.ObjectSpaceProviders
+        //            .AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((application, options) => {
+        //                options.UseDefaultSQLServerSAASOptions(application.ServiceProvider);
+        //            });
+        //#endif
+#if PredefinedTenant
+        builder
+        .AddSAASTenantModelDifferenceStore(mds => {
+            mds.Assembly = typeof(SAASExampleModule).Assembly;
+            mds.ServiceModelResourceName = "ExtendedServiceModel";
+            mds.ProductionModelResourceName = "LiteProductionModel";
+        })
+        .MakeSAAS(o => {
+            o.TenantObjectDisplayName = "Company";
+            o.LogonFormCaption = "Log In";
+            o.RemoveExtraNavigationItems = true;
+        })
+        .MultipleDatabases(builder => {
+            ((IWinApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((application, options) => {
+                options.UseDefaultSQLServerSAASOptions(application.ServiceProvider);
+            });
+        })
+        .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
+#endif
+#if PredefinedTenantOneDatabase
+        builder
+        .AddSAASTenantModelDifferenceStore(mds => {
+            mds.Assembly = typeof(SAASExampleModule).Assembly;
+            mds.ServiceModelResourceName = "ExtendedServiceModel";
+            mds.ProductionModelResourceName = "LiteProductionModel";
+        })
+        .MakeSAAS(o => {
+            o.TenantObjectDisplayName = "Company";
+            o.LogonFormCaption = "Log In";
+            o.RemoveExtraNavigationItems = true;
+        })
+        .OneDatabase()
+        .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
+        builder.ObjectSpaceProviders
+           .AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((application, options) => {
+               options.UseDefaultSQLServerOptions(application.ServiceProvider);
+           });
+#endif
 
         builder.Modules
             .AddConditionalAppearance()
@@ -105,7 +167,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 options.UserType = typeof(SAASExample.Module.BusinessObjects.ApplicationUser);
                 options.UserLoginInfoType = typeof(SAASExample.Module.BusinessObjects.ApplicationUserLoginInfo);
             })
-#if TenantFirst || LogInFirst
+#if TenantFirst || LogInFirst || LogInFirstOneDatabase || PredefinedTenant || PredefinedTenantOneDatabase
              .AddSAASPasswordAuthentication(options => {
                  options.IsSupportChangePassword = true;
              });

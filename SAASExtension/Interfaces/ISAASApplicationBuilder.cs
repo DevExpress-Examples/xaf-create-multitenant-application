@@ -16,17 +16,19 @@ namespace SAASExtension.Interfaces {
     public interface IOneDatabaseBuilder {
         IOneDatabaseTenantFirstBuilder TenantFirst();
         IOneDatabaseTenantFirstBuilder TenantFirst<TTenantNamesHelper>(bool useBuiltInTypes = false) where TTenantNamesHelper : class, ITenantNamesHelper;
-        IOneDatabaseLogInFirstBuilder LogInFirst();
+        //IOneDatabaseLogInFirstBuilder LogInFirst<TContext>() where TContext : DbContext;
+        //IOneDatabaseLogInFirstBuilder LogInFirst<TTenantNamesHelper>(bool useBuiltInTypes = false) where TTenantNamesHelper : class, ITenantNamesHelper;
+        IOneDatabaseTenantFirstBuilder PredefinedTenant<TContext>() where TContext : DbContext;
     }
     public interface IMultipleDatabaseBuilder {
         IMultipleDatabaseTenantFirstBuilder TenantFirst();
         IMultipleDatabaseTenantFirstBuilder TenantFirst<TUserType>() where TUserType : PermissionPolicyUser;
         IMultipleDatabaseTenantFirstBuilder TenantFirst<TTenantNamesHelper>(bool useBuiltInTypes = false) where TTenantNamesHelper : class, ITenantNamesHelper;
         IMultipleDatabaseLogInFirstBuilder LogInFirst<TContext>() where TContext : DbContext;
-        IMultipleDatabaseLogInFirstBuilder LogInFirst<TTenantNamesHelper, TContext>(bool useBuiltInTypes = false)
-            where TTenantNamesHelper : class, ITenantNamesHelper
-            where TContext : DbContext;
-        }
+        IMultipleDatabaseLogInFirstBuilder LogInFirst<TTenantNamesHelper>(bool useBuiltInTypes = false)
+            where TTenantNamesHelper : class, ITenantNamesHelper;
+        IMultipleDatabasePredefinedTenantBuilder PredefinedTenant<TContext>() where TContext : DbContext;
+    }
     public interface IMultipleDatabaseTenantFirstBuilder {
         void AddSelectTenantsLogonController(Action<SelectTenantController> configure = null);
     }
@@ -39,5 +41,12 @@ namespace SAASExtension.Interfaces {
         void AddSelectTenantsLogonController(Action<SelectTenantController> configure = null);
     }
     public interface IOneDatabaseLogInFirstBuilder {
+        void AddSelectUserTenantsLogonController();
+        void AddSelectUserTenantsStartupAction();
+        IOneDatabaseLogInFirstBuilder AddSelectTenantsRunTimeController();
+    }
+    public interface IMultipleDatabasePredefinedTenantBuilder {
+    }
+    public interface IOneDatabasePredefinedTenantBuilder {
     }
 }

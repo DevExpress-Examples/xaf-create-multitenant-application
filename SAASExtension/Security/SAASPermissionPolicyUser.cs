@@ -15,6 +15,7 @@ namespace SAASExtension.Security {
         public virtual string Owner { get; set; }
         [DataSourceProperty(nameof(GetTenantNames), DataSourcePropertyIsNullMode.SelectAll)]
         [NotMapped]
+        [JsonIgnore]
         public TenantNameHolder TenantName {
             get {
                 if (tenantName == null) {
@@ -43,6 +44,6 @@ namespace SAASExtension.Security {
         }
     }
     public class SAASPermissionPolicyUserWithTenants : PermissionPolicyUser {
-        public virtual IList<TenantWithConnectionStringWithUsersObject> Tenants { get; set; } = new ObservableCollection<TenantWithConnectionStringWithUsersObject>();
+        public virtual IList<TenantObjectWithUsers> Tenants { get; set; } = new ObservableCollection<TenantObjectWithUsers>();
     }
 }

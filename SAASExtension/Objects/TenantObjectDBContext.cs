@@ -23,7 +23,6 @@ namespace SAASExtension.Objects {
         public DbSet<ModelDifference> ModelDifferences { get; set; }
         public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
         public DbSet<SAASExtension.BusinessObjects.TenantObject> Companies { get; set; }
-        public DbSet<SAASExtension.BusinessObjects.TenantWithConnectionStringObject> CompaniesWithConnectionString { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangingAndChangedNotificationsWithOriginalValues);

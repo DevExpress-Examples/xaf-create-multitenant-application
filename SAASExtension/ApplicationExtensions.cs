@@ -26,6 +26,8 @@ using DevExpress.ExpressApp.Tests.TestObjects;
 using SAASExtension.Services;
 using System.Collections.Generic;
 using DevExpress.ExpressApp.EFCore;
+using DevExpress.Data.Filtering;
+using SAASExtension.Security;
 
 namespace SAASExtension {
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
@@ -81,11 +83,7 @@ namespace SAASExtension {
                     if (typeInfo != null) {
                         typeInfo.AddAttribute(new DisplayNameAttribute(publicOptions.TenantObjectDisplayName));
                     }
-                    typeInfo = typesInfo.FindTypeInfo(typeof(TenantWithConnectionStringObject));
-                    if (typeInfo != null) {
-                        typeInfo.AddAttribute(new DisplayNameAttribute(publicOptions.TenantObjectDisplayName));
-                    }
-                    typeInfo = typesInfo.FindTypeInfo(typeof(TenantWithConnectionStringWithUsersObject));
+                    typeInfo = typesInfo.FindTypeInfo(typeof(TenantObjectWithUsers));
                     if (typeInfo != null) {
                         typeInfo.AddAttribute(new DisplayNameAttribute(publicOptions.TenantObjectDisplayName));
                     }
@@ -162,7 +160,7 @@ namespace SAASExtension {
             return logonParameters?.TenantName != null;
         }
         private static void UpdateExtraProviders(IServiceProvider serviceProvider, List<Func<IServiceProvider, IObjectSpaceProvider>> createObjectSpaceProviderDelegates, Func<IServiceProvider, bool> isFit) {
-            IExtraObjectSpaceProviders extraObjectSpaceProviders = serviceProvider.GetRequiredService<IExtraObjectSpaceProviders>();
+            IExtraObjectSpaceProviders extraObjectSpaceProviders = serviceProvider.GetService<IExtraObjectSpaceProviders>();
             if (extraObjectSpaceProviders != null) {
                 foreach (var factory in createObjectSpaceProviderDelegates) {
                     extraObjectSpaceProviders.Factories.Add(() => factory.Invoke(serviceProvider), isFit);
@@ -184,7 +182,7 @@ namespace SAASExtension {
             };
         }
         private static void UpdateExtraProviders(XafApplication application, List<Func<XafApplication, CreateCustomObjectSpaceProviderEventArgs, IObjectSpaceProvider>> createObjectSpaceProviderDelegates, Func<IServiceProvider, bool> isFit) {
-            IExtraObjectSpaceProviders extraObjectSpaceProviders = application.ServiceProvider.GetRequiredService<IExtraObjectSpaceProviders>();
+            IExtraObjectSpaceProviders extraObjectSpaceProviders = application.ServiceProvider.GetService<IExtraObjectSpaceProviders>();
             if (extraObjectSpaceProviders != null) {
                 foreach (var factory in createObjectSpaceProviderDelegates) {
                     extraObjectSpaceProviders.Factories.Add(() => factory.Invoke(application, null), isFit);
@@ -202,6 +200,27 @@ namespace SAASExtension {
             UpdateExtraProviders(application, createObjectSpaceProviderDelegates, (s) => !IsTenentSet(s));
             application.OnLoginActionPressed += (s, e) => {
                 application.ServiceProvider.GetRequiredService<IObjectSpaceProviderContainer>().Clear();
+            };
+        }
+        private static void SetTenantFromUserToLogonParametersCore<TContext>(XafApplication application)
+            where TContext : DbContext {
+            var logonParameters = application.ServiceProvider?.GetRequiredService<ILogonParameterProvider>()?.GetLogonParameters(typeof(IAuthenticationStandardLogonParameters)) as IAuthenticationStandardLogonParameters;
+            if ((logonParameters is ITenantName) && (logonParameters.UserName != null)) {
+                using (var provider = new EFCoreObjectSpaceProvider<TContext>((builder, cs) => builder.UseServiceSQLServerOptions(application.ServiceProvider))) {
+                    using (var objectSpace = provider.CreateObjectSpace()) {
+                        SAASPermissionPolicyUser user = objectSpace.FindObject<SAASPermissionPolicyUser>(CriteriaOperator.Parse($"[UserName] = '{logonParameters.UserName}'"));
+                        if (user != null) {
+                            ((ITenantName)logonParameters).TenantName = user.Owner;
+                        }
+                    }
+                }
+            }
+        }
+        public static void SetTenantFromUserToLogonParameters<TContext>(XafApplication application) 
+            where TContext : DbContext {
+            SetTenantFromUserToLogonParametersCore<TContext>(application);
+            application.OnLoginActionPressed += (s, e) => {
+                SetTenantFromUserToLogonParametersCore<TContext>((XafApplication)s);
             };
         }
     }
