@@ -47,6 +47,9 @@
     <EmbeddedResource Include="LiteProductionModel.xafml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="PredefinedTenantServiceModel.xafml" />
+  </ItemGroup>
+  <ItemGroup>
 	  <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
 	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
 	  <PackageReference Include="Castle.Core" Version="4.4.1" />

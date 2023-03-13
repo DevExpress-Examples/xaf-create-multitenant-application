@@ -42,12 +42,7 @@ public class Startup {
             .AddSAASTenantModelDifferenceStore(mds => {
                 mds.Assembly = typeof(SAASExampleModule).Assembly;
             })
-            .MakeSAAS(o => {
-                o.SelectTenantPropertyCaption = "Company";
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeSAAS()
             .MultipleDatabases(builder => {
                 ((IBlazorApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((serviceProvider, options) => {
                     options.UseDefaultSQLServerSAASOptions(serviceProvider);
@@ -106,8 +101,6 @@ public class Startup {
                     options.UseDefaultSQLServerSAASOptions(serviceProvider);
                 });
             }).LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
-            .AddSelectTenantsRunTimeController()
-            //.AddSelectUserTenantsStartupAction();
             .AddSelectUserTenantsLogonController();
             builder.Security
                 .AddSAASPasswordAuthentication(options => {
@@ -130,8 +123,6 @@ public class Startup {
             //            })
             //            .OneDatabase()
             //            .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
-            //            .AddSelectTenantsRunTimeController()
-            //            //.AddSelectUserTenantsStartupAction();
             //            .AddSelectUserTenantsLogonController();
             //            builder.Security
             //                .AddSAASPasswordAuthentication(options => {
@@ -146,7 +137,7 @@ public class Startup {
             builder
             .AddSAASTenantModelDifferenceStore(mds => {
                 mds.Assembly = typeof(SAASExampleModule).Assembly;
-                mds.ServiceModelResourceName = "ExtendedServiceModel";
+                mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
             .MakeSAAS(o => {
@@ -169,7 +160,7 @@ public class Startup {
             builder
             .AddSAASTenantModelDifferenceStore(mds => {
                 mds.Assembly = typeof(SAASExampleModule).Assembly;
-                mds.ServiceModelResourceName = "ExtendedServiceModel";
+                mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
             .MakeSAAS(o => {
