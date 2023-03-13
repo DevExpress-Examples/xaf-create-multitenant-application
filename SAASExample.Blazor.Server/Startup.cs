@@ -114,7 +114,80 @@ public class Startup {
                     options.IsSupportChangePassword = true;
                 });
 #endif
-
+            //#if LogInFirstOneDatabase
+            //            builder
+            //            .AddSAASTenantModelDifferenceStore(mds => {
+            //                mds.Assembly = typeof(SAASExampleModule).Assembly;
+            //                mds.ServiceModelResourceName = "ExtendedServiceModel";
+            //                mds.ProductionModelResourceName = "LiteProductionModel";
+            //            })
+            //            .MakeSAAS(o => {
+            //                o.SelectTenantPropertyCaption = "Company";
+            //                o.SelectTenantFormCaption = "Select Company";
+            //                o.TenantObjectDisplayName = "Company";
+            //                o.LogonFormCaption = "Log In";
+            //                o.RemoveExtraNavigationItems = true;
+            //            })
+            //            .OneDatabase()
+            //            .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+            //            .AddSelectTenantsRunTimeController()
+            //            //.AddSelectUserTenantsStartupAction();
+            //            .AddSelectUserTenantsLogonController();
+            //            builder.Security
+            //                .AddSAASPasswordAuthentication(options => {
+            //                    options.IsSupportChangePassword = true;
+            //                });
+            //            builder.ObjectSpaceProviders
+            //                .AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((serviceProvider, options) => {
+            //                options.UseDefaultSQLServerSAASOptions(serviceProvider);
+            //            });
+            //#endif
+#if PredefinedTenant
+            builder
+            .AddSAASTenantModelDifferenceStore(mds => {
+                mds.Assembly = typeof(SAASExampleModule).Assembly;
+                mds.ServiceModelResourceName = "ExtendedServiceModel";
+                mds.ProductionModelResourceName = "LiteProductionModel";
+            })
+            .MakeSAAS(o => {
+                o.TenantObjectDisplayName = "Company";
+                o.LogonFormCaption = "Log In";
+                o.RemoveExtraNavigationItems = true;
+            })
+            .MultipleDatabases(builder => {
+                ((IBlazorApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((serviceProvider, options) => {
+                    options.UseDefaultSQLServerSAASOptions(serviceProvider);
+                });
+            })
+            .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
+            builder.Security
+                .AddSAASPasswordAuthentication(options => {
+                    options.IsSupportChangePassword = true;
+                });
+#endif
+#if PredefinedTenantOneDatabase
+            builder
+            .AddSAASTenantModelDifferenceStore(mds => {
+                mds.Assembly = typeof(SAASExampleModule).Assembly;
+                mds.ServiceModelResourceName = "ExtendedServiceModel";
+                mds.ProductionModelResourceName = "LiteProductionModel";
+            })
+            .MakeSAAS(o => {
+                o.TenantObjectDisplayName = "Company";
+                o.LogonFormCaption = "Log In";
+                o.RemoveExtraNavigationItems = true;
+            })
+            .OneDatabase()
+            .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
+            builder.Security
+                .AddSAASPasswordAuthentication(options => {
+                    options.IsSupportChangePassword = true;
+                });
+            builder.ObjectSpaceProviders
+               .AddSecuredEFCore().WithDbContext<SAASExampleEFCoreDbContext>((serviceProvider, options) => {
+                options.UseDefaultSQLServerOptions(serviceProvider);
+});
+#endif
             builder.Modules
                 .AddConditionalAppearance()
                 .AddValidation(options => {

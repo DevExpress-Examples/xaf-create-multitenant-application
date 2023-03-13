@@ -13,11 +13,10 @@ using System.Threading.Tasks;
 namespace SAASExample.Module.BusinessObjects {
     [DefaultClassOptions]
     [DefaultProperty(nameof(Position.Title))]
-#if TenantFirst || LogInFirst
-    public class Position : BaseObject {
-#endif
-#if TenantFirstOneDatabase
+#if OneDatabase
     public class Position : Tenant {
+#else
+    public class Position : BaseObject {
 #endif
 
         [RuleRequiredField("RuleRequiredField for Position.Title", DefaultContexts.Save)]

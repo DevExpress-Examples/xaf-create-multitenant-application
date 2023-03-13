@@ -4,7 +4,7 @@
 			<Item Id="Default" Removed="True" />
 			<Item Id="Default" IsNewNode="True">
 				<Items>
-					<Item Id="Tenant" ViewId="TenantWithConnectionStringObject_ListView" IsNewNode="True" />
+					<Item Id="Tenant" ViewId="TenantObject_ListView" IsNewNode="True" />
 				</Items>
 			</Item>
 		</Items>

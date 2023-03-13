@@ -8,14 +8,13 @@ using System.ComponentModel;
 namespace SAASExample.Module.BusinessObjects {
     [DefaultClassOptions]
     [DefaultProperty(nameof(Payment.Salary))]
-#if TenantFirst || LogInFirst
+#if OneDatabase
+    public class Payment : Tenant {
+#else
     public class Payment : BaseObject {
 #endif
-#if TenantFirstOneDatabase
-    public class Payment : Tenant {
-#endif
 
-        [RuleRequiredField("RuleRequiredField for (Payment.Salary", DefaultContexts.Save)]
+            [RuleRequiredField("RuleRequiredField for (Payment.Salary", DefaultContexts.Save)]
         public virtual string Salary { get; set; }
     }
 }

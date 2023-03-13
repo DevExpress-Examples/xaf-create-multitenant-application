@@ -45,8 +45,10 @@ public class SAASExampleEFCoreDbContext : DbContext {
     public DbSet<SAASExample.Module.BusinessObjects.Payment> Payments { get; set; }
     public DbSet<SAASExample.Module.BusinessObjects.Position> Positions { get; set; }
     public DbSet<SAASExample.Module.BusinessObjects.Employee> Employees { get; set; }
-#if TenantFirstOneDatabase
+#if OneDatabase
     public DbSet<SAASExtension.BusinessObjects.Tenant> Tenants { get; set; }
+#endif
+#if TenantFirstOneDatabase
     public DbSet<SAASPermissionPolicyUser> SAASUsers { get; set; }
 #endif
 

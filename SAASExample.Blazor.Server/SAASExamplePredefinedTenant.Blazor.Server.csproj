@@ -7,8 +7,8 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Configurations>Debug;Release;EasyTest</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DefineConstants>TenantFirstOneDatabase;OneDatabase</DefineConstants>
-    <RootNamespace>SAASExample.Blazor.Server</RootNamespace>
+	<DefineConstants>PredefinedTenant</DefineConstants>
+	<RootNamespace>SAASExample.Blazor.Server</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Model.xafml" />
@@ -19,7 +19,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SAASExample.Module\SAASExampleTenantFirstOneDatabase.Module.csproj" />
+    <ProjectReference Include="..\SAASExample.Module\SAASExamplePredefinedTenant.Module.csproj" />
     <ProjectReference Include="..\SAASExtensionBlazor\SAASExtensionBlazor.csproj" />
   </ItemGroup>
   <ItemGroup>

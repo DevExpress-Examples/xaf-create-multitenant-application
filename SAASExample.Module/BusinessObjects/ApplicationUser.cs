@@ -16,13 +16,13 @@ namespace SAASExample.Module.BusinessObjects;
 #if TenantFirst
 public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo {
 #endif
-#if TenantFirstOneDatabase
+#if TenantFirstOneDatabase || PredefinedTenant || PredefinedTenantOneDatabase
 public class ApplicationUser : SAASPermissionPolicyUser, ISecurityUserWithLoginInfo {
 #endif
-#if LogInFirst
+#if LogInFirst || LogInFirstOneDatabase
 public class ApplicationUser : SAASPermissionPolicyUserWithTenants, ISecurityUserWithLoginInfo {
 #endif
-public ApplicationUser() : base() {
+        public ApplicationUser() : base() {
         UserLogins = new ObservableCollection<ApplicationUserLoginInfo>();
     }
 

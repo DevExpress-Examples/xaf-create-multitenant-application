@@ -8,7 +8,8 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Configurations>Debug;Release;EasyTest</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DefineConstants>TenantFirstOneDatabase;OneDatabase</DefineConstants>
+    <DefineConstants>LogInFirstOneDatabase;OneDatabase</DefineConstants>
+    <RootNamespace>SAASExample.Module</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Model.DesignedDiffs.xafml" />
@@ -20,6 +21,7 @@
     <Compile Include="BusinessObjects\Position.cs" />
     <Compile Include="BusinessObjects\SAASExampleDbContext.cs" />
     <Compile Include="BusinessObjects\Payment.cs" />
+    <Compile Include="BusinessObjects\ServiceDBContext.cs" />
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Module.cs" />
   </ItemGroup>
@@ -41,7 +43,8 @@
     <EmbeddedResource Include="ProductionModel.xafml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ServiceModelOneDatabase.xafml" />
+    <EmbeddedResource Include="ExtendedServiceModel.xafml" />
+    <EmbeddedResource Include="LiteProductionModel.xafml" />
   </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />

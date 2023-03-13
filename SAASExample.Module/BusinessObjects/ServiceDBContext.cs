@@ -43,8 +43,7 @@
 //    public DbSet<ApplicationUserLoginInfo> UserLoginInfos { get; set; }
 //    public DbSet<SAASPermissionPolicyUserWithTenants> SAASUsers { get; set; }
 //    public DbSet<TenantObject> Tenants { get; set; }
-//    public DbSet<TenantWithConnectionStringObject> Tenants1 { get; set; }
-//    public DbSet<TenantWithConnectionStringWithUsersObject> Tenants2 { get; set; }
+//    public DbSet<TenantObjectWithUsers> Tenants1 { get; set; }
 //    public DbSet<ModelDifference> ModelDifferences { get; set; }
 //    public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
 //    protected override void OnModelCreating(ModelBuilder modelBuilder) {

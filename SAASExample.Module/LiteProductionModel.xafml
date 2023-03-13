@@ -8,9 +8,8 @@
 		<Items>
 			<Item Id="Default">
 				<Items>
-					<Item Id="TenantWithConnectionStringObject_ListView" Removed="True" />
 					<Item Id="TenantObject_ListView" Removed="True" />
-					<Item Id="TenantWithConnectionStringWithUsersObject_ListView" ViewId="TenantWithConnectionStringWithUsersObject_ListView" Removed="True" />
+					<Item Id="TenantObjectWithUsers_ListView" ViewId="TenantObjectWithUsers_ListView" Removed="True" />
 					<Item Id="PermissionPolicyRole_ListView" ViewId="PermissionPolicyRole_ListView" Removed="True" />
 					<Item Id="ApplicationUser_ListView" ViewId="ApplicationUser_ListView" Removed="True" />
 				</Items>
