@@ -86,8 +86,6 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 options.UseDefaultSQLServerSAASOptions(application.ServiceProvider);
             }, ServiceLifetime.Transient);
         }).LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
-        .AddSelectTenantsRunTimeController()
-        //.AddSelectUserTenantsStartupAction();
         .AddSelectUserTenantsLogonController();
 #endif
         //#if LogInFirstOneDatabase
@@ -118,7 +116,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         builder
         .AddSAASTenantModelDifferenceStore(mds => {
             mds.Assembly = typeof(SAASExampleModule).Assembly;
-            mds.ServiceModelResourceName = "ExtendedServiceModel";
+            mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
         .MakeSAAS(o => {
@@ -137,7 +135,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         builder
         .AddSAASTenantModelDifferenceStore(mds => {
             mds.Assembly = typeof(SAASExampleModule).Assembly;
-            mds.ServiceModelResourceName = "ExtendedServiceModel";
+            mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
         .MakeSAAS(o => {
