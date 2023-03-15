@@ -1,0 +1,12 @@
+﻿<Application Title="MultiTenancyExample">
+	<NavigationItems>
+		<Items>
+			<Item Id="Default">
+				<Items>
+					<Item Id="ModelDifference_ListView" Caption="ModelDifferences" Index="0" ViewId="ModelDifference_ListView" IsNewNode="true" />
+					<Item Id="TenantObject_ListView" Removed="True" />
+				</Items>
+			</Item>
+		</Items>
+	</NavigationItems>
+</Application>

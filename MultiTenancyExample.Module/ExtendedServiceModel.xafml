@@ -1,0 +1,15 @@
+﻿<Application Title="MultiTenancyExample">
+	<NavigationItems>
+		<Items>
+			<Item Id="Default" Removed="True" />
+			<Item Id="Default" IsNewNode="True">
+				<Items>
+					<Item Id="Tenant" ViewId="TenantObjectWithUsers_ListView" IsNewNode="True" />
+					<Item Id="Roles" ViewId="PermissionPolicyRole_ListView" IsNewNode="True" />
+					<Item Id="Users" ViewId="ApplicationUser_ListView" IsNewNode="True" />
+					<Item Id="ModelDifference_ListView" Caption="ModelDifferences" ViewId="ModelDifference_ListView" IsNewNode="true" />
+				</Items>
+			</Item>
+		</Items>
+	</NavigationItems>
+</Application>
