@@ -4,7 +4,7 @@
 <!-- default badges end -->
 
 -----
-This example contains six basic and most requested scenarios. The DevExpress.ExpressApp.MultiTenancy package is in CTP mode, so we do not recomend to use it in production. We take in mind other requests(different modules structure for each company, different business classes, etc...) and will update the example when we will make an appropriate soltion. At the current stage we do provide support for this example. If you need an assistance with it, create a new ticket with detailed description of your scenrio in Support Center. We will cosider most popular requests and will add them to the example. 
+This example contains six basic and most requested scenarios. The DevExpress.ExpressApp.MultiTenancy package is in CTP mode, so we do not recomend to use it in production. We take in mind other requests(different modules structure for each company, different business classes, etc...) and will update the example when we will make an appropriate soltion. At the current stage we do provide support for this example. If you need an assistance with it, create a new ticket with detailed description of your scenrio in Support Center. We will cosider most popular requests and add them to the example. 
 
 -----
 
