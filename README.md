@@ -14,7 +14,7 @@ This example contains six basic and most requested scenarios. The DevExpress.Exp
 
 
 2. Create companies(with connection strings for multiple database case).
-You can use the following connections strings for example:
+You can use the following connections strings:
 
 ```
 Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mssqllocaldb;Initial Catalog=Company1
