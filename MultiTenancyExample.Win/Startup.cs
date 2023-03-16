@@ -64,7 +64,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         .AddSelectTenantsLogonController();
         builder.ObjectSpaceProviders
           .AddSecuredEFCore().WithDbContext<MultiTenancyExample.Module.BusinessObjects.MultiTenancyExampleEFCoreDbContext>((application, options) => {
-           options.UseDefaultSQLServerMultiTenancyOptions(application.ServiceProvider);
+           options.UseDefaultSQLServerOptions(application.ServiceProvider);
         });
 #endif
 #if LogInFirst
@@ -88,30 +88,28 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         }).LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
         .AddSelectUserTenantsLogonController();
 #endif
-        //#if LogInFirstOneDatabase
-        //        builder
-        //        .AddMultiTenancyModelDifferenceStore(mds => {
-        //            mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
-        //            mds.ServiceModelResourceName = "ExtendedServiceModel";
-        //            mds.ProductionModelResourceName = "LiteProductionModel";
-        //        })
-        //        .MakeMultiTenancy(o => {
-        //            o.SelectTenantPropertyCaption = "Company";
-        //            o.SelectTenantFormCaption = "Select Company";
-        //            o.TenantObjectDisplayName = "Company";
-        //            o.LogonFormCaption = "Log In";
-        //            o.RemoveExtraNavigationItems = true;
-        //        })
-        //        .OneDatabase()
-        //        .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
-        //        .AddSelectTenantsRunTimeController()
-        //        //.AddSelectUserTenantsStartupAction();
-        //        .AddSelectUserTenantsLogonController();
-        //        builder.ObjectSpaceProviders
-        //            .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
-        //                options.UseDefaultSQLServerMultiTenancyOptions(application.ServiceProvider);
-        //            });
-        //#endif
+#if LogInFirstOneDatabase
+        builder
+        .AddMultiTenancyModelDifferenceStore(mds => {
+            mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
+            mds.ServiceModelResourceName = "ExtendedServiceModel";
+            mds.ProductionModelResourceName = "LiteProductionModel";
+        })
+        .MakeMultiTenancy(o => {
+            o.SelectTenantPropertyCaption = "Company";
+            o.SelectTenantFormCaption = "Select Company";
+            o.TenantObjectDisplayName = "Company";
+            o.LogonFormCaption = "Log In";
+            o.RemoveExtraNavigationItems = true;
+        })
+        .OneDatabase()
+        .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+        .AddSelectUserTenantsLogonController();
+        builder.ObjectSpaceProviders
+            .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
+                options.UseDefaultSQLServerOptions(application.ServiceProvider);
+            });
+#endif
 #if PredefinedTenant
         builder
         .AddMultiTenancyModelDifferenceStore(mds => {
