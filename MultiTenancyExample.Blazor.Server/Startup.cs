@@ -65,22 +65,13 @@ public class Startup {
                 mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
                 mds.ServiceModelResourceName = "ServiceModelOneDatabase";
             })
-            .MakeMultiTenancy(o => {
-                o.SelectTenantPropertyCaption = "Company";
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .OneDatabase()
             .TenantFirst()
             .AddSelectTenantsLogonController();
             builder.Security.AddMultiTenancyPasswordAuthentication<CustomAuthenticationStandardProvider>(options => {
                  options.IsSupportChangePassword = true;
              });
-            //builder.Security
-            //    .AddMultiTenancyPasswordAuthentication(options => {
-            //        options.IsSupportChangePassword = true;
-            //    });
             builder.ObjectSpaceProviders
             .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
                 options.UseDefaultSQLServerOptions(serviceProvider);
@@ -93,13 +84,7 @@ public class Startup {
                 mds.ServiceModelResourceName = "ExtendedServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
-            .MakeMultiTenancy(o => {
-                o.SelectTenantPropertyCaption = "Company";
-                o.SelectTenantFormCaption = "Select Company";
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .MultipleDatabases(builder => {
                 ((IBlazorApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
                     options.UseDefaultSQLServerMultiTenancyOptions(serviceProvider);
@@ -118,13 +103,7 @@ public class Startup {
                 mds.ServiceModelResourceName = "ExtendedServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
-            .MakeMultiTenancy(o => {
-                o.SelectTenantPropertyCaption = "Company";
-                o.SelectTenantFormCaption = "Select Company";
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .OneDatabase()
             .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
             .AddSelectUserTenantsLogonController();
@@ -144,11 +123,7 @@ public class Startup {
                 mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
-            .MakeMultiTenancy(o => {
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .MultipleDatabases(builder => {
                 ((IBlazorApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
                     options.UseDefaultSQLServerMultiTenancyOptions(serviceProvider);
@@ -167,11 +142,7 @@ public class Startup {
                 mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
                 mds.ProductionModelResourceName = "LiteProductionModel";
             })
-            .MakeMultiTenancy(o => {
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .OneDatabase()
             .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
             builder.Security
