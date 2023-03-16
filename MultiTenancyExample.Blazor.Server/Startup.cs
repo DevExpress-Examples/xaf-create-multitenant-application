@@ -15,6 +15,10 @@ using MultiTenancyExample.Module.BusinessObjects;
 using MultiTenancyExtension.Controllers;
 using MultiTenancyExtension.Interfaces;
 using MultiTenancyExtension;
+using System.Collections.ObjectModel;
+using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp.Security;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MultiTenancyExample.Blazor.Server;
 
@@ -79,7 +83,7 @@ public class Startup {
             //    });
             builder.ObjectSpaceProviders
             .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
-                options.UseDefaultSQLServerMultiTenancyOptions(serviceProvider);
+                options.UseDefaultSQLServerOptions(serviceProvider);
             });
 #endif
 #if LogInFirst
@@ -107,32 +111,32 @@ public class Startup {
                     options.IsSupportChangePassword = true;
                 });
 #endif
-            //#if LogInFirstOneDatabase
-            //            builder
-            //            .AddMultiTenancyModelDifferenceStore(mds => {
-            //                mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
-            //                mds.ServiceModelResourceName = "ExtendedServiceModel";
-            //                mds.ProductionModelResourceName = "LiteProductionModel";
-            //            })
-            //            .MakeMultiTenancy(o => {
-            //                o.SelectTenantPropertyCaption = "Company";
-            //                o.SelectTenantFormCaption = "Select Company";
-            //                o.TenantObjectDisplayName = "Company";
-            //                o.LogonFormCaption = "Log In";
-            //                o.RemoveExtraNavigationItems = true;
-            //            })
-            //            .OneDatabase()
-            //            .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
-            //            .AddSelectUserTenantsLogonController();
-            //            builder.Security
-            //                .AddMultiTenancyPasswordAuthentication(options => {
-            //                    options.IsSupportChangePassword = true;
-            //                });
-            //            builder.ObjectSpaceProviders
-            //                .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
-            //                options.UseDefaultSQLServerMultiTenancyOptions(serviceProvider);
-            //            });
-            //#endif
+#if LogInFirstOneDatabase
+            builder
+            .AddMultiTenancyModelDifferenceStore(mds => {
+                mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
+                mds.ServiceModelResourceName = "ExtendedServiceModel";
+                mds.ProductionModelResourceName = "LiteProductionModel";
+            })
+            .MakeMultiTenancy(o => {
+                o.SelectTenantPropertyCaption = "Company";
+                o.SelectTenantFormCaption = "Select Company";
+                o.TenantObjectDisplayName = "Company";
+                o.LogonFormCaption = "Log In";
+                o.RemoveExtraNavigationItems = true;
+            })
+            .OneDatabase()
+            .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+            .AddSelectUserTenantsLogonController();
+            builder.Security
+                .AddMultiTenancyPasswordAuthentication(options => {
+                    options.IsSupportChangePassword = true;
+                });
+            builder.ObjectSpaceProviders
+                .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((serviceProvider, options) => {
+                    options.UseDefaultSQLServerOptions(serviceProvider);
+                });
+#endif
 #if PredefinedTenant
             builder
             .AddMultiTenancyModelDifferenceStore(mds => {
@@ -192,6 +196,14 @@ public class Startup {
                     options.RoleType = typeof(PermissionPolicyRole);
                     options.UserType = typeof(ApplicationUser);
                     options.UserLoginInfoType = typeof(ApplicationUserLoginInfo);
+                    options.Events.OnCustomizeSecurityCriteriaOperator = context => {
+                        DevExpress.ExpressApp.Utils.Guard.ArgumentNotNull(context.ServiceProvider, nameof(context.ServiceProvider));
+                        if (context.Operator is FunctionOperator functionOperator) {
+                            if (functionOperator.Operands.Count == 1 && "CurrentTenant".Equals((functionOperator.Operands[0] as ConstantValue)?.Value?.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
+                                context.Result = new ConstantValue(((ITenantName)context.ServiceProvider.GetService<ILogonParameterProvider>()?.GetLogonParameters(typeof(ITenantName)))?.TenantName);
+                            }
+                        }
+                    };
                 });
         });
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
