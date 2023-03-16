@@ -33,12 +33,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             .AddMultiTenancyModelDifferenceStore(mds => {
                 mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
             })
-            .MakeMultiTenancy(o => {
-                o.SelectTenantPropertyCaption = "Company";
-                o.TenantObjectDisplayName = "Company";
-                o.LogonFormCaption = "Log In";
-                o.RemoveExtraNavigationItems = true;
-            })
+            .MakeMultiTenancy()
             .MultipleDatabases(builder => {
                 ((IWinApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
                     options.UseDefaultSQLServerMultiTenancyOptions(application.ServiceProvider);
@@ -53,12 +48,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             mds.Assembly = typeof(MultiTenancyExampleModule).Assembly;
             mds.ServiceModelResourceName = "ServiceModelOneDatabase";
         })
-        .MakeMultiTenancy(o => {
-            o.SelectTenantPropertyCaption = "Company";
-            o.TenantObjectDisplayName = "Company";
-            o.LogonFormCaption = "Log In";
-            o.RemoveExtraNavigationItems = true;
-        })
+        .MakeMultiTenancy()
         .OneDatabase()
         .TenantFirst()
         .AddSelectTenantsLogonController();
@@ -74,13 +64,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             mds.ServiceModelResourceName = "ExtendedServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
-        .MakeMultiTenancy(o => {
-            o.SelectTenantPropertyCaption = "Company";
-            o.SelectTenantFormCaption = "Select Company";
-            o.TenantObjectDisplayName = "Company";
-            o.LogonFormCaption = "Log In";
-            o.RemoveExtraNavigationItems = true;
-        })
+        .MakeMultiTenancy()
         .MultipleDatabases(builder => {
             ((IWinApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
                 options.UseDefaultSQLServerMultiTenancyOptions(application.ServiceProvider);
@@ -95,13 +79,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             mds.ServiceModelResourceName = "ExtendedServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
-        .MakeMultiTenancy(o => {
-            o.SelectTenantPropertyCaption = "Company";
-            o.SelectTenantFormCaption = "Select Company";
-            o.TenantObjectDisplayName = "Company";
-            o.LogonFormCaption = "Log In";
-            o.RemoveExtraNavigationItems = true;
-        })
+        .MakeMultiTenancy()
         .OneDatabase()
         .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
         .AddSelectUserTenantsLogonController();
@@ -117,11 +95,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
-        .MakeMultiTenancy(o => {
-            o.TenantObjectDisplayName = "Company";
-            o.LogonFormCaption = "Log In";
-            o.RemoveExtraNavigationItems = true;
-        })
+        .MakeMultiTenancy()
         .MultipleDatabases(builder => {
             ((IWinApplicationBuilder)builder).ObjectSpaceProviders.AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
                 options.UseDefaultSQLServerMultiTenancyOptions(application.ServiceProvider);
@@ -136,11 +110,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             mds.ServiceModelResourceName = "PredefinedTenantServiceModel";
             mds.ProductionModelResourceName = "LiteProductionModel";
         })
-        .MakeMultiTenancy(o => {
-            o.TenantObjectDisplayName = "Company";
-            o.LogonFormCaption = "Log In";
-            o.RemoveExtraNavigationItems = true;
-        })
+        .MakeMultiTenancy()
         .OneDatabase()
         .PredefinedTenant<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>();
         builder.ObjectSpaceProviders
