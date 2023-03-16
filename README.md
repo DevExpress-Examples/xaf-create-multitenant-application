@@ -23,7 +23,7 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 
 ![image](https://user-images.githubusercontent.com/39731874/214006416-b8ea9832-0e7e-4ab0-bc1a-a0c17116906a.png)
 
-3. Create users, add them to the Default role. Set Tenant or fill the Tenants collection if required.
+3. Create users and add them to the Default role. Set the Tenant property or fill the Tenants collection if they available in the selected example.
 
 4. Click LogOff and restart the application.
 
