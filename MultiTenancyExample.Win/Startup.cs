@@ -13,13 +13,13 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
 using Microsoft.Extensions.DependencyInjection;
 using MultiTenancyExample.Module;
-using MultiTenancyExtensionWin;
-using MultiTenancyExtension.Security;
-using MultiTenancyExtension.BusinessObjects;
-using MultiTenancyExtension.Services;
+using DevExpress.ExpressApp.MultiTenancy.Win;
+using DevExpress.ExpressApp.MultiTenancy.Security;
+using DevExpress.ExpressApp.MultiTenancy.BusinessObjects;
+using DevExpress.ExpressApp.MultiTenancy.Services;
 using MultiTenancyExample.Module.BusinessObjects;
 using DevExpress.ExpressApp.MiddleTier;
-using MultiTenancyExtension;
+using DevExpress.ExpressApp.MultiTenancy;
 
 namespace MultiTenancyExample.Win;
 
