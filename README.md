@@ -10,7 +10,7 @@ This example demonstrates how to implement a multi-tenant XAF application in six
 > **Note**  
 > The `DevExpress.ExpressApp.MultiTenancy` package is currently at the CTP stage and is not recommended for use in production. We are aware of other scenarios that are not yet featured in this example (different modules structure for each company, different business classes, and so on) and will update the example after we prepare an appropriate solution. 
 >
-> At the current stage we do provide support service for this example. If you need an assistance with it, create a new ticket with a detailed description of your scenario in the [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research your requests and publish solutions for the most popular use case scenarios as a pat of this example.
+> At the current stage, we do provide support service for this example. If you need assistance with it, create a new ticket with a detailed description of your scenario in the [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research your requests and publish solutions for the most popular use case scenarios as a pat of this example.
 
 ## Run the Example
 
