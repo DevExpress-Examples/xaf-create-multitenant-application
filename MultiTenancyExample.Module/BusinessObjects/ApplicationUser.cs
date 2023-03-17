@@ -6,9 +6,9 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using MultiTenancyExtension.BusinessObjects;
-using MultiTenancyExtension.Interfaces;
-using MultiTenancyExtension.Security;
+using DevExpress.ExpressApp.MultiTenancy.BusinessObjects;
+using DevExpress.ExpressApp.MultiTenancy.Interfaces;
+using DevExpress.ExpressApp.MultiTenancy.Security;
 
 namespace MultiTenancyExample.Module.BusinessObjects;
 

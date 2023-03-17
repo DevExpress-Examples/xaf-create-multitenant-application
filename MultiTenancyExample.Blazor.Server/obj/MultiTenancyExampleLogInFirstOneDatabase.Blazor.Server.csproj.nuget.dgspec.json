@@ -1,0 +1,307 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Blazor.Server\\MultiTenancyExampleLogInFirstOneDatabase.Blazor.Server.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Blazor.Server\\MultiTenancyExampleLogInFirstOneDatabase.Blazor.Server.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Blazor.Server\\MultiTenancyExampleLogInFirstOneDatabase.Blazor.Server.csproj",
+        "projectName": "MultiTenancyExampleLogInFirstOneDatabase.Blazor.Server",
+        "projectPath": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Blazor.Server\\MultiTenancyExampleLogInFirstOneDatabase.Blazor.Server.csproj",
+        "packagesPath": "C:\\Users\\Alex\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Blazor.Server\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Alex\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\work\\Git_2023.1\\Bin\\NETCoreDesktop\\NuGet": {},
+          "c:\\work\\Git_2022.1\\Win\\DevExpress.Design.NetCore\\DevExpress.Design.Nuget\\bin\\Debug\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\MultiTenancyExampleLogInFirstOneDatabase.Module.csproj": {
+                "projectPath": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\MultiTenancyExampleLogInFirstOneDatabase.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Castle.Core": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "DevExpress.ExpressApp.ConditionalAppearance": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.MultiTenancy": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.MultiTenancy.Blazor": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Objects": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Security": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Validation": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Validation.Blazor": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23076, )"
+            },
+            "DevExtreme.AspNet.Data": {
+              "target": "Package",
+              "version": "[2.8.6, )"
+            },
+            "Logify.Alert.Console": {
+              "target": "Package",
+              "version": "[1.0.55, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.AspNetCore.OData": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.CodeAnalysis.CSharp": {
+              "target": "Package",
+              "version": "[3.3.1, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Proxies": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.Extensions.DependencyModel": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            },
+            "System.CodeDom": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "System.Reactive": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\MultiTenancyExampleLogInFirstOneDatabase.Module.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\MultiTenancyExampleLogInFirstOneDatabase.Module.csproj",
+        "projectName": "MultiTenancyExampleLogInFirstOneDatabase.Module",
+        "projectPath": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\MultiTenancyExampleLogInFirstOneDatabase.Module.csproj",
+        "packagesPath": "C:\\Users\\Alex\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alex\\Downloads\\How-to-create-a-multitenancy-application-main\\How-to-create-a-multitenancy-application-main\\MultiTenancyExample.Module\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Alex\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\work\\Git_2023.1\\Bin\\NETCoreDesktop\\NuGet": {},
+          "c:\\work\\Git_2022.1\\Win\\DevExpress.Design.NetCore\\DevExpress.Design.Nuget\\bin\\Debug\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Castle.Core": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "DevExpress.ExpressApp.ConditionalAppearance": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.MultiTenancy": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Objects": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Security": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "DevExpress.ExpressApp.Validation": {
+              "target": "Package",
+              "version": "[23.1.2-pre-23074, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Proxies": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[5.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

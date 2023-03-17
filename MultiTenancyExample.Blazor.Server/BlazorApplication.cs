@@ -1,7 +1,7 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Blazor;
-using MultiTenancyExtension.Interfaces;
+using DevExpress.ExpressApp.MultiTenancy.Interfaces;
 using System.Collections.Concurrent;
 
 namespace MultiTenancyExample.Blazor.Server;

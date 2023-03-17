@@ -7,8 +7,8 @@
 //using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
 //using Microsoft.Extensions.Options;
 //using System.Security;
-//using MultiTenancyExtension.BusinessObjects;
-//using MultiTenancyExtension.Security;
+//using DevExpress.ExpressApp.MultiTenancy.BusinessObjects;
+//using DevExpress.ExpressApp.MultiTenancy.Security;
 
 //namespace MultiTenancyExample.Module.BusinessObjects;
 

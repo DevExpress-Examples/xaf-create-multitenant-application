@@ -4,7 +4,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
-using MultiTenancyExtension.Security;
+using DevExpress.ExpressApp.MultiTenancy.Security;
 using Microsoft.Extensions.Options;
 
 namespace MultiTenancyExample.Module.BusinessObjects;
@@ -46,7 +46,7 @@ public class MultiTenancyExampleEFCoreDbContext : DbContext {
     public DbSet<MultiTenancyExample.Module.BusinessObjects.Position> Positions { get; set; }
     public DbSet<MultiTenancyExample.Module.BusinessObjects.Employee> Employees { get; set; }
 #if OneDatabase
-    public DbSet<MultiTenancyExtension.BusinessObjects.Tenant> Tenants { get; set; }
+    public DbSet<DevExpress.ExpressApp.MultiTenancy.BusinessObjects.Tenant> Tenants { get; set; }
 #endif
 #if TenantFirstOneDatabase
     public DbSet<MultiTenancyPermissionPolicyUser> MultiTenancyUsers { get; set; }

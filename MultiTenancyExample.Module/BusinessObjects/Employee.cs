@@ -1,7 +1,7 @@
 ﻿using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
-using MultiTenancyExtension.BusinessObjects;
+using DevExpress.ExpressApp.MultiTenancy.BusinessObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
