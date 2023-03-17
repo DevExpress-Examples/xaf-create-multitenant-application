@@ -46,8 +46,13 @@
     <EmbeddedResource Include="ExtendedServiceModel.xafml" />
     <EmbeddedResource Include="LiteProductionModel.xafml" />
   </ItemGroup>
-  <ItemGroup>
-	  <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <ItemGroup>
+	  <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.MultiTenancy" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Objects" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Security" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
 	  <PackageReference Include="Castle.Core" Version="4.4.1" />
 	  <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
@@ -57,82 +62,5 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.10" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
 	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-	  <Reference Include="DevExpress.ExpressApp.CodeAnalysis.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.CodeAnalysis.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Data.v23.1">
-		  <Private>False</Private>
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Data.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Drawing.v23.1">
-		  <Private>False</Private>
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Drawing.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ConditionalAppearance.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ConditionalAppearance.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.Persistent.BaseImpl.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.BaseImpl.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.AuditTrail.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.AuditTrail.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Printing.v23.1.Core">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Printing.v23.1.Core.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.EntityFrameworkCore.Security.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.EntityFrameworkCore.Security.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.XtraReports.v23.1">
-		  <Private>False</Private>
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.XtraReports.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.MultiTenancy.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.MultiTenancy.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Objects.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Objects.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Security.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Security.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ViewVariantsModule.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ViewVariantsModule.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Validation.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Validation.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.Persistent.Base.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.Base.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ReportsV2.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ReportsV2.v23.1.dll</HintPath>
-		  <Private>False</Private>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.PivotChart.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.PivotChart.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Office.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Office.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.XtraCharts.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.XtraCharts.v23.1.dll</HintPath>
-	  </Reference>
   </ItemGroup>
 </Project>
