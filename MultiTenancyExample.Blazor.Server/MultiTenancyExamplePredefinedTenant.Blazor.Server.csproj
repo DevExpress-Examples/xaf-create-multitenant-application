@@ -22,99 +22,14 @@
     <ProjectReference Include="..\MultiTenancyExample.Module\MultiTenancyExamplePredefinedTenant.Module.csproj" />
   </ItemGroup>
   <ItemGroup>
-	  <Reference Include="DevExpress.ExpressApp.CodeAnalysis.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.CodeAnalysis.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Data.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Data.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.AuditTrail.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.AuditTrail.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.AspNetCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.AspNetCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ConditionalAppearance.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ConditionalAppearance.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.FileAttachment.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.FileAttachment.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.MultiTenancy.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.MultiTenancy.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.MultiTenancy.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Objects.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Objects.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Office.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Office.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Security.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Security.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Security.AspNetCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Security.AspNetCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Validation.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Validation.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.Validation.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.Validation.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ViewVariantsModule.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ViewVariantsModule.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Persistent.Base.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.Base.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.EntityFrameworkCore.Security.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.EntityFrameworkCore.Security.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Persistent.BaseImpl.EFCore.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Persistent.BaseImpl.EFCore.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.AspNetCore.Reporting.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.AspNetCore.Reporting.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Blazor.Reporting.v23.1.JSBasedControls.BlazorServer">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.Reporting.v23.1.JSBasedControls.BlazorServer.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Blazor.Reporting.v23.1.JSBasedControls.Common">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Blazor.Reporting.v23.1.JSBasedControls.Common.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ReportsV2.Blazor.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ReportsV2.Blazor.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.ReportsV2.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.ReportsV2.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.ExpressApp.WebApi.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.ExpressApp.WebApi.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.XtraReports.v23.1">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.XtraReports.v23.1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="DevExpress.Printing.v23.1.Core">
-		  <HintPath>c:\work\Git_2023.1\Bin\NETCore\DevExpress.Printing.v23.1.Core.dll</HintPath>
-	  </Reference>
-  </ItemGroup>
-  <ItemGroup>
+	  <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.MultiTenancy" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Objects" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Security" Version="23.1.2-pre-23074" />
+	  <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.1.2-pre-23074" />
 	  <PackageReference Include="Castle.Core" Version="4.4.1" />
+	  <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="23.1.2-pre-23076" />
 	  <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.11" />
 	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.1" />
 	  <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.6" />
