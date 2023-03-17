@@ -5,12 +5,31 @@
 
 # XAF - How to Implement a Multi-Tenant Application
 
-This example demonstrates how to implement a multi-tenant XAF application in six most popular use-case scenarios. 
+This example demonstrates how to implement a multi-tenant XAF application in six most popular use-case scenarios.
+
+All solutions in the example follow the **multitenancy** paradigm, which means that they are configured to serve multiple **tenants** (groups of users). Each such group only has access to its own subset of data within the application.
 
 > **Note**  
 > The `DevExpress.ExpressApp.MultiTenancy` package is currently at the CTP stage and is not recommended for use in production. We are aware of other scenarios that are not yet featured in this example (different modules structure for each company, different business classes, and so on) and will update the example after we prepare an appropriate solution. 
 >
 > At the current stage, we do provide support service for this example. If you need assistance with it, create a new ticket with a detailed description of your scenario in the [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research your requests and publish solutions for the most popular use case scenarios as a pat of this example.
+
+
+## Included Solutions
+
+The following solutions are included:
+
+1. _LogInFirst_ - Implements a scenario where multiple tenants can be associated with multiple users. Every tenant has its own database connection. A user selects the tenant after the they log in with the standard login form. The application then uses the tenant's database connection.
+
+2. _PredefinedTenant_ - Same as _LogInFirst_, but a user is strictly bound to a tenant. A user must select their tenant in the login form. 
+
+3. _LogInFirstOneDataBase_- Multiple tenants can be associated with multiple users. The solution stores data in a single database. All business objects extend a `Tenant` class that has an `Owner` field. A tenant is selected after login. After that all data is filtered by the `Owner` field so a user can only access their tenant's objects or objects with no `Owner` specified.
+
+4. _PredefinedTenantOneDataBase_ - Same as _LogInFirstOneDataBase_ bun a use is strictly bound to a tenant ad must select their tenant in the login form.
+
+5. _TenantFirst_ - A user first selects a tenant from a list. After that, application runs as a regular XAF application but uses the connection string of the selected tenant.
+
+6. _TenantFirstOneDataBase_ - Similarly to the _LogInFirstOneDataBase_ solution, data is stored in a single database and all business objects extend a `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
 
 ## Run the Example
 
