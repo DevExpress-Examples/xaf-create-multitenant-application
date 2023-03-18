@@ -23,13 +23,13 @@ The following solutions are included:
 
 2. _PredefinedTenant_ - Same as _LogInFirst_, but a user is strictly bound to a tenant. A user must select their tenant in the login form. 
 
-3. _LogInFirstOneDataBase_- Multiple tenants can be associated with multiple users. The solution stores data in a single database. All business objects extend a `Tenant` class that has an `Owner` field. A tenant is selected after login. After that all data is filtered by the `Owner` field so a user can only access their tenant's objects or objects with no `Owner` specified.
+3. _LogInFirstOneDataBase_- Multiple tenants can be associated with multiple users. The solution stores data in a single database. All business objects extend the `Tenant` class that has an `Owner` field. A tenant is selected after login. After that all data is filtered by the `Owner` field so a user can only access their tenant's objects or objects with no `Owner` specified.
 
 4. _PredefinedTenantOneDataBase_ - Same as _LogInFirstOneDataBase_ bun a use is strictly bound to a tenant ad must select their tenant in the login form.
 
 5. _TenantFirst_ - A user first selects a tenant from a list. After that, the application runs as a regular XAF application but uses the connection string of the selected tenant.
 
-6. _TenantFirstOneDataBase_ - Similarly to the _LogInFirstOneDataBase_ solution, data is stored in a single database and all business objects extend a `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
+6. _TenantFirstOneDataBase_ - Similarly to the _LogInFirstOneDataBase_ solution, data is stored in a single database and all business objects extend the `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
 
 ## Run the Example
 
