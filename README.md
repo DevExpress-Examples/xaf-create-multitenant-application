@@ -31,9 +31,9 @@ The following solutions are included:
 
 6. _TenantFirstOneDataBase_ - Similarly to the _LogInFirstOneDataBase_ solution, data is stored in a single database and all business objects extend the `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
 
-## Run the Example
+## Run the Example Solutions
 
-Follow the steps bellow to familiarize yourself with the solution's functionality:
+Follow the steps bellow to familiarize yourself with the solutions included into the example:
 
 1. Choose one of the applications included into the example, launch the application and log in as Admin with empty an empty company parameter.
 
