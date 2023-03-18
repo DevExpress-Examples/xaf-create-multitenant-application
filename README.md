@@ -27,7 +27,7 @@ The following solutions are included:
 
 4. _PredefinedTenantOneDataBase_ - Same as _LogInFirstOneDataBase_ bun a use is strictly bound to a tenant ad must select their tenant in the login form.
 
-5. _TenantFirst_ - A user first selects a tenant from a list. After that, application runs as a regular XAF application but uses the connection string of the selected tenant.
+5. _TenantFirst_ - A user first selects a tenant from a list. After that, the application runs as a regular XAF application but uses the connection string of the selected tenant.
 
 6. _TenantFirstOneDataBase_ - Similarly to the _LogInFirstOneDataBase_ solution, data is stored in a single database and all business objects extend a `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
 
