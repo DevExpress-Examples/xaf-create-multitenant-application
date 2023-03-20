@@ -60,3 +60,6 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 ![image](https://user-images.githubusercontent.com/39731874/214009179-5d207892-94e2-449b-ba4e-439052f27505.png)
 
 
+## Your Feedback Counts
+
+Please take a moment to answer a short survey: https://www.devexpress.com/products/net/application_framework/survey.xml
