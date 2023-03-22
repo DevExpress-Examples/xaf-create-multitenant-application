@@ -29,7 +29,7 @@ The following solutions are included:
 
 5. _TenantFirst_ - A user first selects a tenant from a list. After that, the application runs as a regular XAF application but uses the connection string of the selected tenant.
 
-6. _TenantFirstOneDataBase_ - Data is stored in a single database and all business objects extend the `Tenant` class with an `Owner` field. A user selects their tenant in the login form and can only access their tenant's objects or objects with no `Owner` specified.
+6. _TenantFirstOneDataBase_ - Data is stored in a single database and all business objects extend the `Tenant` class with an `Owner` field. A user selects a tenant from a list and then can only access their tenant's objects or objects with no `Owner` specified.
 
 ## Run the Example Solutions
 
