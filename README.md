@@ -10,7 +10,7 @@ This example demonstrates how to implement a multi-tenant XAF application in six
 All solutions in the example follow the **multitenancy** paradigm: they are configured to serve multiple **tenants** (groups of users). Each such group has access only to its own subset of data within the application.
 
 > **Note**  
-> The `DevExpress.ExpressApp.MultiTenancy` package is currently available as CTP. We do not recommend that you use it in production projects. We are also aware that a few multi-tenancy scenarios are not yet implemented in this example. Examples include different module structure for each company or different business classes. We will extend this example when we prepare appropriate solutions. 
+> The `DevExpress.ExpressApp.MultiTenancy` package is currently available as CTP. We do not recommend that you use it in production projects. We are also aware that a few multitenancy scenarios are not yet implemented in this example. Examples include different module structure for each company or different business classes. We will extend this example when we prepare appropriate solutions.
 >
 > At this time, we do offer technical support for this example. If you require assistance, post a ticket with a detailed description of your scenario to the DevExpress [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research incoming tickets and will publish solutions for most popular scenarios as part of this example.
 
@@ -23,7 +23,7 @@ The following solutions are included:
 
 2. _PredefinedTenant_ - Same as _LogInFirst_, but a user is strictly bound to a tenant. The tenant is assigned to the user by the admin. 
 
-3. _LogInFirstOneDataBase_- Multiple tenants can be associated with multiple users. A tenant is selected after login. All application data comes from a single database. In the database, every business class extend the `Tenant` class, and thus includes an `Owner` field. A user can only access objects where `Owner` is empty or corresponds to the specified tenant.
+3. _LogInFirstOneDataBase_- Multiple tenants can be associated with multiple users. A tenant is selected after login. All application data comes from a single database. In the database, every business class extends the `Tenant` class, and thus includes an `Owner` field. A user can only access objects where `Owner` is empty or corresponds to the specified tenant.
 
 4. _PredefinedTenantOneDataBase_ - Same as _LogInFirstOneDataBase_ but a user is strictly bound to a tenant. The tenant is assigned to the user by the admin.
 
@@ -33,14 +33,14 @@ The following solutions are included:
 
 ## Run the Example Solutions
 
-Follow the steps below to familiarize yourself with the solutions included into the example:
+Follow the steps below to familiarize yourself with the solutions included in the example:
 
-1. Choose one of the applications included into the example, launch the application and log in as Admin with empty an empty company parameter.
+1. Choose one of the applications included in the example, launch the application, and log in as Admin with an empty company parameter.
 
 ![image](https://user-images.githubusercontent.com/39731874/214006275-2675b9a2-64d6-4d9f-845b-03737256a33f.png)
 
 
-2. Create several companies. In the scenario that requires separate database connection, specify connection strings:
+2. Create several companies. In the scenario that requires a separate database connection, specify connection strings:
 
 ```
 Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mssqllocaldb;Initial Catalog=Company1
