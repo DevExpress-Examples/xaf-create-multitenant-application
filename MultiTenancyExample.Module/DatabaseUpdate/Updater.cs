@@ -8,7 +8,7 @@ using DevExpress.ExpressApp.EF;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using MultiTenancyExample.Module.BusinessObjects;
-using MultiTenancyExtension;
+using DevExpress.ExpressApp.MultiTenancy;
 
 namespace MultiTenancyExample.Module.DatabaseUpdate;
 

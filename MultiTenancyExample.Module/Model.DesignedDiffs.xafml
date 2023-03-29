@@ -2,15 +2,15 @@
 <Application Title="MultiTenancyExample">
   <BOModel>
     <Class Name="DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyUser" Caption="Base User" />
-	  <Class Name="MultiTenancyExtension.BusinessObjects.CustomLogonParametersForStandardAuthentication" Caption="Log In">
+	  <Class Name="DevExpress.ExpressApp.MultiTenancy.BusinessObjects.CustomLogonParametersForStandardAuthentication" Caption="Log In">
 		  <OwnMembers>
 			  <Member Name="Tenant" Caption="Company" />
 		  </OwnMembers>
 	  </Class>
-	  <Class Name="MultiTenancyExtension.BusinessObjects.TenantObject" Caption="Company" />
-	  <Class Name="MultiTenancyExtension.BusinessObjects.TenantObjectWithUsers" Caption="Company" />
-	  <Class Name="MultiTenancyExtension.BusinessObjects.TenantObjectWithUsers" Caption="Company" />
-	  <Class Name="MultiTenancyExtension.BusinessObjects.SelectTenantNameObject" Caption="Select Company" >
+	  <Class Name="DevExpress.ExpressApp.MultiTenancy.BusinessObjects.TenantObject" Caption="Company" />
+	  <Class Name="DevExpress.ExpressApp.MultiTenancy.BusinessObjects.TenantObjectWithUsers" Caption="Company" />
+	  <Class Name="DevExpress.ExpressApp.MultiTenancy.BusinessObjects.TenantObjectWithUsers" Caption="Company" />
+	  <Class Name="DevExpress.ExpressApp.MultiTenancy.BusinessObjects.SelectTenantNameObject" Caption="Select Company" >
 		  <OwnMembers>
 			  <Member Name="TenantName" Caption="Company" />
 		  </OwnMembers>

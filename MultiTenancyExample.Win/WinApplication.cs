@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.Utils;
 
-using MultiTenancyExtensionWin;
+using DevExpress.ExpressApp.MultiTenancy.Win;
 
 namespace MultiTenancyExample.Win;
 
