@@ -10,9 +10,9 @@ This example demonstrates how to implement a multi-tenant XAF application in six
 All solutions in the example follow the **multitenancy** paradigm: they are configured to serve multiple **tenants** (groups of users). Each such group has access only to its own subset of data within the application.
 
 > **Note**  
-> The `DevExpress.ExpressApp.MultiTenancy` package is currently available as CTP. We do not recommend that you use it in production projects. We are also aware that a few multitenancy scenarios are not yet implemented in this example. Examples include different module structure for each company or different business classes. We will extend this example when we prepare appropriate solutions.
+> The `DevExpress.ExpressApp.MultiTenancy` package is currently available as a [community technology preview (CTP)](https://www.devexpress.com/aboutus/pre-release.xml). **We do not recommend that you use it in production projects**. We are also aware that a few multitenancy scenarios are not yet implemented in this example. Examples include different module structure for each company or different business classes. We will extend this example when we prepare appropriate solutions.
 >
-> At this time, we do offer technical support for this example. If you require assistance, post a ticket with a detailed description of your scenario to the DevExpress [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research incoming tickets and will publish solutions for most popular scenarios as part of this example.
+> At this time, we do offer technical support for this example. For suggestions, issues and other feedback, please post a ticket with a detailed description of your scenario to the DevExpress [Support Center](https://supportcenter.devexpress.com/). Our R&D team will research incoming tickets and will publish solutions for most popular scenarios as part of this example. Please also take a moment to complete a short survey on your multi-tenancy requirements: **https://www.devexpress.com/products/net/application_framework/survey.xml**. For more information, [refer to the FAQ section at the bottom](/README.md#frequently-asked-questions).
 
 
 ## Included Solutions
@@ -53,13 +53,103 @@ Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\mss
 
 4. Click _LogOff_ and restart the application.
 
-5. If you need to set up separate model differences for each company, navigate to _ModelDifferences_ -> _Shared Model Differences(CompanyName)_ -> _(Default Language)_ and modify the _Xml_ property. You can generate the required XML markup at design time and copy-and-paste it to the editor.
-
-   **See also:** [Enable the Administrative UI to manage End-User Settings in the Database](https://docs.devexpress.com/eXpressAppFramework/113704/ui-construction/application-model-ui-settings-storage/application-model-storages/enable-the-administrative-ui-for-managing-users-model-differences)
+5. If you need to set up separate model differences for each company, navigate to _ModelDifferences_ -> _Shared Model Differences(CompanyName)_ -> _(Default Language)_ and modify the _Xml_ property. You can generate the required XML markup at design time and copy-and-paste it to the editor. For more information, refer to [Enable the Administrative UI to manage End-User Settings in the Database](https://docs.devexpress.com/eXpressAppFramework/113704/ui-construction/application-model-ui-settings-storage/application-model-storages/enable-the-administrative-ui-for-managing-users-model-differences).
 
 ![image](https://user-images.githubusercontent.com/39731874/214009179-5d207892-94e2-449b-ba4e-439052f27505.png)
 
 
-## Your Feedback Counts
 
-Please take a moment to complete a short survey: https://www.devexpress.com/products/net/application_framework/survey.xml
+## Frequently Asked Questions
+
+ 
+
+In the following questions and answers, the phrase “Multi-Tenancy Module” refers to the DevExpress.ExpressApp.MultiTenancy library.  
+
+ 
+
+### Did you set a release timeline for the Multi-Tenancy Module?
+
+ 
+
+We aim for release dates listed below. Note that all future dates are subject to change. Our progress greatly depends on developer interest and user feedback.
+
+- **Early Access Preview (EAP)** – v23.1.1 released [in March 2023](https://community.devexpress.com/blogs/xaf/archive/2023/03/22/xaf-231-eap-runtime-customization-no-code-and-usability-enhancements-to-blazor-ui.aspx).
+- **Community Technology Preview (CTP)** -  v23.1.3 scheduled for June 2023.
+- **Production Version (RTM)** – v23.2.3 scheduled for December 2023. 
+
+
+### When do you expect to publish an XPO version of this module/example?
+
+Our current goal is to collect usage scenario feedback that is not ORM-dependent. That feedback may lead to significant changes in our codebase, so we wanted to optimize our development process by focusing on a single ORM (as such, we opted for EF Core first). We expect that neither ORM will offer significant advantages in multi-tenant usage scenarios. The only reason for disbalance in Multi-Tenancy support is development resource optimization during the Preview stage.
+
+We do not plan to release an XPO version of this example/module until we are content with the early feedback we received from customers. If multi-tenancy is of interest to you, we would appreciate if you test our EF Core example. You can run the executable file, and review available UI screens and their flow. Compare our implementation to your project requirements. Use the following resources to share your thoughts with us:
+
+- **Create a Support Ticket**: https://devexpress.com/ask
+- **Fill out our Survey**: https://www.devexpress.com/products/net/application_framework/survey.xml
+ 
+We do aim to implement full XPO support in v23.2 (Production Version).
+
+### How can XPO users implement multi-tenant apps with XAF today?
+
+ 
+
+Before you read our instructions below, please note that we expect to extend our Multi-Tenancy Module with XPO support in v23.2 (December 2023).
+
+ 
+
+If you need to develop a multi-tenant application before we release v23.2, refer to the following examples: 
+ - [E1344 - How to Change Connection to the Database at Runtime from the Login Form](https://github.com/DevExpress-Examples/XAF_how-to-change-connection-to-the-database-at-runtime-e1344) 
+ - [E4045 - How to separate employees data in different departments using security permissions in XPO](https://github.com/DevExpress-Examples/XAF_how-to-separate-employees-data-in-different-departments-using-security-permissions-in-xpo-e4045/tree/18.2.2+)
+ 
+ Many of our customers used code from these examples to successfully build production multi-tenant XAF apps with XPO and EF Core.
+
+ 
+### What is the processing time for bug reports and suggestions related to the Multi-Tenancy Module and this example?
+
+We appreciate that you took the time to test our example/module and shared your feedback. We will do our best to fix reported issues and implement critical usage scenarios before the official release in December 2023.
+
+ 
+
+While the module is in its Preview stages (EAP or CTP), we cannot guarantee the same level of support as we provide for officially released products. We will process each case individually. Note that response times may be slower than usual and we may not provide immediate solutions. We may also choose to significantly change or remove any functionality. As such, we recommend that you do not use Preview versions of our products in production code.
+
+ 
+For more information on pre-release versions of DevExpress products, see https://www.devexpress.com/aboutus/pre-release.xml.
+
+  
+
+### Can a part of a user identifier specify the tenant (instead of separate tenant selection)?
+
+ 
+
+We are aware of the requirement to use email address as a login, while its domain part sets a tenant/company. Our first production release (v23.2) should implement this capability.
+
+ 
+
+The Company/Branch/Department selector on the logon form also makes sense and is secure. One possible use case is an application that needs to list branches within the same company. A company branch then serves as a tenant, and all tenants are likely to be connected to the same company database.
+
+ 
+
+### Can I implement my own versions of ORM-dependent classes in this example/module: Tenant, MultiTenancyPermissionPolicyUserWithTenants, and others?
+
+ 
+
+Our core multi-tenancy code is not ORM-dependent. It relies on universal interfaces such as ITenant or IOwner. You can review the code in the following namespace: DevExpress.ExpressApp.MultiTenancy.Interfaces.
+
+ 
+
+Persistent/business classes in this example are all ORM-dependent (see classes like Tenant or MultiTenancyPermissionPolicyUserWithTenants). This means that in you cannot extend these class so that they work with a different ORM. EF Core class descendants cannot work with XPO, and vice versa.
+
+ 
+
+You can certainly implement custom persistent classes specifically for XPO or EF Core. You will need to familiarize yourself with Multi-Tenancy Module sources and should have a good understanding of XAF core concepts (at this time, we do offer technical support for this example/module). For additional information, please review “Prerequisites and Advanced Customization Tips” in the following article: https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml.
+
+ 
+
+### How will you license the Multi-Tenancy Module?
+
+We have not made final decisions yet, but we expect to introduce unique licensing terms - different from other XAF modules. The complexity of SaaS applications and their usage scenarios result in high costs of implementation, maintenance, and support. Applications that use the Multi-Tenancy Module will likely impose client access limitations, similar to [licensing and distribution of our Report Server product](https://docs.devexpress.com/ReportServer/14612/license-and-distribution). A single DevExpress Universal subscription may include a limited number of Client Access Licenses (CALs). We are considering other licensing models and are looking forward to hearing from you.
+
+The following articles include a good overview of the required technical expertise and general implementation complexity for multi-tenant applications:
+- https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-app-design-patterns
+- https://learn.microsoft.com/en-us/ef/core/miscellaneous/multitenancy
