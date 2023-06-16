@@ -20,6 +20,8 @@ using DevExpress.ExpressApp.MultiTenancy.Services;
 using MultiTenancyExample.Module.BusinessObjects;
 using DevExpress.ExpressApp.MiddleTier;
 using DevExpress.ExpressApp.MultiTenancy;
+using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp.MultiTenancy.Interfaces;
 
 namespace MultiTenancyExample.Win;
 
@@ -82,6 +84,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         .MakeMultiTenancy()
         .OneDatabase()
         .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+        .AddSelectTenantsRunTimeController()
         .AddSelectUserTenantsLogonController();
         builder.ObjectSpaceProviders
             .AddSecuredEFCore().WithDbContext<MultiTenancyExampleEFCoreDbContext>((application, options) => {
@@ -132,6 +135,14 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 options.RoleType = typeof(PermissionPolicyRole);
                 options.UserType = typeof(MultiTenancyExample.Module.BusinessObjects.ApplicationUser);
                 options.UserLoginInfoType = typeof(MultiTenancyExample.Module.BusinessObjects.ApplicationUserLoginInfo);
+                options.Events.OnCustomizeSecurityCriteriaOperator = context => {
+                    DevExpress.ExpressApp.Utils.Guard.ArgumentNotNull(context.ServiceProvider, nameof(context.ServiceProvider));
+                    if (context.Operator is FunctionOperator functionOperator) {
+                        if (functionOperator.Operands.Count == 1 && "CurrentTenant".Equals((functionOperator.Operands[0] as ConstantValue)?.Value?.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
+                            context.Result = new ConstantValue(((ITenantName)context.ServiceProvider.GetService<ILogonParameterProvider>()?.GetLogonParameters(typeof(ITenantName)))?.TenantName);
+                        }
+                    }
+                };
             })
 #if TenantFirst || LogInFirst || LogInFirstOneDatabase || PredefinedTenant || PredefinedTenantOneDatabase
              .AddMultiTenancyPasswordAuthentication(options => {
