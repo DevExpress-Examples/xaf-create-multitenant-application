@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace MultiTenancyExample.Blazor.Server.Services;
 
-internal class ProxyHubConnectionHandler<THub> : HubConnectionHandler<THub> where THub : Hub {
+public class ProxyHubConnectionHandler<THub> : HubConnectionHandler<THub> where THub : Hub {
     private readonly IValueManagerStorageContainerInitializer storageContainerInitializer;
     public ProxyHubConnectionHandler(
         HubLifetimeManager<THub> lifetimeManager,

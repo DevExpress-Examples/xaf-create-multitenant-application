@@ -11,6 +11,7 @@ using DevExpress.ExpressApp.Model.DomainLogics;
 using DevExpress.ExpressApp.Model.NodeGenerators;
 using System.Collections.Generic;
 using System;
+using MultiTenancyExample.Module.BusinessObjects;
 
 namespace MultiTenancyExample.Module;
 
@@ -30,6 +31,14 @@ public sealed class MultiTenancyExampleModule : ModuleBase {
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
 		DevExpress.ExpressApp.Security.SecurityModule.UsedExportedTypes = DevExpress.Persistent.Base.UsedExportedTypes.Custom;
+    }
+    protected override IEnumerable<Type> GetDeclaredExportedTypes() {
+        List<Type> result = new List<Type>();
+        result.Add(typeof(Employee));
+        result.Add(typeof(Position));
+        result.Add(typeof(Payment));
+        result.Add(typeof(ApplicationUserLoginInfo));
+        return result;
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
         ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);

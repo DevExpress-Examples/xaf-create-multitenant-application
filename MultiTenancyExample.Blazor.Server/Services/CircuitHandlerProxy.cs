@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 
 namespace MultiTenancyExample.Blazor.Server.Services;
 
-internal class CircuitHandlerProxy : CircuitHandler {
+public class CircuitHandlerProxy : CircuitHandler {
     private readonly IScopedCircuitHandler scopedCircuitHandler;
     public CircuitHandlerProxy(IScopedCircuitHandler scopedCircuitHandler) {
         this.scopedCircuitHandler = scopedCircuitHandler;

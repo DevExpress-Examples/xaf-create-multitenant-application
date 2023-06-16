@@ -19,6 +19,8 @@ using System.Collections.ObjectModel;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp.Security;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MultiTenancyExample.Blazor.Server;
 
@@ -90,6 +92,7 @@ public class Startup {
                     options.UseDefaultSQLServerMultiTenancyOptions(serviceProvider);
                 });
             }).LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+            .AddSelectTenantsRunTimeController()
             .AddSelectUserTenantsLogonController();
             builder.Security
                 .AddMultiTenancyPasswordAuthentication(options => {
@@ -106,6 +109,7 @@ public class Startup {
             .MakeMultiTenancy()
             .OneDatabase()
             .LogInFirst<ServiceDBContext<ApplicationUser, ApplicationUserLoginInfo>>()
+            .AddSelectTenantsRunTimeController()
             .AddSelectUserTenantsLogonController();
             builder.Security
                 .AddMultiTenancyPasswordAuthentication(options => {
@@ -160,7 +164,7 @@ public class Startup {
                     options.AllowValidationDetailsAccess = false;
                 })
                 .Add<MultiTenancyExampleModule>()
-            	.Add<MultiTenancyExampleBlazorModule>();
+                .Add<MultiTenancyExampleBlazorModule>();
             builder.ObjectSpaceProviders.AddNonPersistent();
             builder.Security
                 .UseIntegratedMode(options => {
@@ -169,8 +173,8 @@ public class Startup {
                     options.UserLoginInfoType = typeof(ApplicationUserLoginInfo);
                     options.Events.OnCustomizeSecurityCriteriaOperator = context => {
                         DevExpress.ExpressApp.Utils.Guard.ArgumentNotNull(context.ServiceProvider, nameof(context.ServiceProvider));
-                        if (context.Operator is FunctionOperator functionOperator) {
-                            if (functionOperator.Operands.Count == 1 && "CurrentTenant".Equals((functionOperator.Operands[0] as ConstantValue)?.Value?.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
+                        if(context.Operator is FunctionOperator functionOperator) {
+                            if(functionOperator.Operands.Count == 1 && "CurrentTenant".Equals((functionOperator.Operands[0] as ConstantValue)?.Value?.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
                                 context.Result = new ConstantValue(((ITenantName)context.ServiceProvider.GetService<ILogonParameterProvider>()?.GetLogonParameters(typeof(ITenantName)))?.TenantName);
                             }
                         }
@@ -179,6 +183,13 @@ public class Startup {
         });
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
             options.LoginPath = "/LoginPage";
+        })
+        .AddJwtBearer(options => {
+             options.TokenValidationParameters = new TokenValidationParameters() {
+                 ValidIssuer = Configuration["Authentication:Jwt:ValidIssuer"],
+                 ValidAudience = Configuration["Authentication:Jwt:ValidAudience"],
+                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Jwt:IssuerSigningKey"]))
+             };
         });
     }
 
