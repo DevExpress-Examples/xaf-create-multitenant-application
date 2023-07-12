@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using DevExpress.ExpressApp.Win.Utils;
 using DevExpress.Skins;
 using DevExpress.Utils.Drawing;
@@ -9,16 +8,16 @@ using DevExpress.XtraSplashScreen;
 namespace OutlookInspired.Win {
     public partial class XafSplashScreen : SplashScreen {
 		private void LoadBlankLogo() {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string blankLogoResourceName = assembly.GetName().Name + ".Images.Logo.svg";
-            Stream svgStream = assembly.GetManifestResourceStream(blankLogoResourceName);
+            var assembly = Assembly.GetExecutingAssembly();
+            var blankLogoResourceName = assembly.GetName().Name + ".Images.Logo.svg";
+            var svgStream = assembly.GetManifestResourceStream(blankLogoResourceName);
             if(svgStream != null) {
                 svgStream.Position = 0;
                 peLogo.SvgImage = SvgImage.FromStream(svgStream);
             }
         }
         protected override void DrawContent(GraphicsCache graphicsCache, Skin skin) {
-            Rectangle bounds = ClientRectangle;
+            var bounds = ClientRectangle;
             bounds.Width--; bounds.Height--;
             graphicsCache.Graphics.DrawRectangle(graphicsCache.GetPen(Color.FromArgb(255, 87, 87, 87), 1), bounds);
         }
@@ -33,7 +32,7 @@ namespace OutlookInspired.Win {
         public XafSplashScreen() {
             InitializeComponent();
 			LoadBlankLogo();
-            labelCopyright.Text = "Copyright © " + DateTime.Now.Year.ToString() + " Company Name" +  Environment.NewLine + "All rights reserved.";
+            labelCopyright.Text = $"Copyright © {DateTime.Now.Year} Company Name{Environment.NewLine}All rights reserved.";
             UpdateLabelsPosition();
         }
         

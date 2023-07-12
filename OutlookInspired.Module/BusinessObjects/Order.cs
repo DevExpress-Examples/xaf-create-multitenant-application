@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class Order :BaseObject{
+    public class Order :MyBaseObject{
         public  virtual string InvoiceNumber { get; set; }
         public virtual Customer Customer { get; set; }
         public  virtual long? CustomerId { get; set; }

@@ -13,10 +13,10 @@ public class Startup {
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services) {
         services.AddScoped<IAuthenticationTokenProvider, JwtTokenProviderService>();
-        services.AddMiddleTier(Configuration);
-        services.AddAuthentication(Configuration);
-        services.AddAuthorization(Configuration);
-        services.AddSwagger();
+        services.SetupMiddleTier(Configuration);
+        services.SetupAuthentication(Configuration);
+        services.SetupAuthorization();
+        services.SetupSwagger();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

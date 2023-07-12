@@ -2,7 +2,7 @@
 using DevExpress.XtraEditors.Controls;
 
 namespace OutlookInspired.Module.BusinessObjects;
-public class Picture :BaseObject{
+public class Picture :MyBaseObject{
     public  virtual byte[] Data { get; set; }
     public virtual ICollection<Employee> Employees { get; set; }
     public virtual ICollection<CustomerEmployee> CustomerEmployees { get; set; }

@@ -1,7 +1,7 @@
 ﻿using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class EmployeeTask:BaseObject{
+    public class EmployeeTask:MyBaseObject{
         public virtual List<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
         public virtual string Subject { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class Product :BaseObject{
+    public class Product :MyBaseObject{
         public  virtual string Name { get; set; }
         public  virtual string Description { get; set; }
         public  virtual DateTime ProductionStart { get; set; }

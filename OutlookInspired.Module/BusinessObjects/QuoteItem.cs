@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class QuoteItem :BaseObject{
+    public class QuoteItem :MyBaseObject{
         public virtual Quote Quote { get; set; }
         public  virtual long? QuoteId { get; set; }
         public virtual Product Product { get; set; }

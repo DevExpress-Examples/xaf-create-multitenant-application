@@ -1,5 +1,5 @@
 ﻿namespace OutlookInspired.Module.BusinessObjects{
-    public class ProductCatalog :BaseObject{
+    public class ProductCatalog :MyBaseObject{
         public virtual Product Product { get; set; }
         public  virtual long? ProductId { get; set; }
         public  virtual byte[] PDF { get; set; }

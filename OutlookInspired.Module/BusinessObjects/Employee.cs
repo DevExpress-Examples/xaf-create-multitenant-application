@@ -3,7 +3,7 @@ using System.Drawing;
 using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects{
-	public class Employee :BaseObject{
+	public class Employee :MyBaseObject{
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
 		public virtual List<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();

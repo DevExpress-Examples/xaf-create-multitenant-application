@@ -3,14 +3,12 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.AspNetCore.DesignTime;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.Utils;
-using OutlookInspired.MiddleTier;
 
-namespace OutlookInspired.WebApi;
-
+namespace OutlookInspired.MiddleTier;
 public class Program : IDesignTimeApplicationFactory {
-    private static bool ContainsArgument(string[] args, string argument) {
-        return args.Any(arg => arg.TrimStart('/').TrimStart('-').ToLower() == argument.ToLower());
-	}
+    private static bool ContainsArgument(string[] args, string argument) 
+        => args.Any(arg => arg.TrimStart('/').TrimStart('-').ToLower() == argument.ToLower());
+
     public static int Main(string[] args) {
         if(ContainsArgument(args, "help") || ContainsArgument(args, "h")) {
             Console.WriteLine("Updates the database when its version does not match the application's version.");
@@ -25,26 +23,20 @@ public class Program : IDesignTimeApplicationFactory {
             Console.WriteLine($"            2 - {DBUpdaterStatus.UpdateNotNeeded}");
         }
         else {
-            DevExpress.ExpressApp.FrameworkSettings.DefaultSettingsCompatibilityMode = DevExpress.ExpressApp.FrameworkSettingsCompatibilityMode.Latest;
-            IHost host = CreateHostBuilder(args).Build();
-            if(ContainsArgument(args, "updateDatabase")) {
-                using(var serviceScope = host.Services.CreateScope()) {
-                    return serviceScope.ServiceProvider.GetRequiredService<DevExpress.ExpressApp.Utils.IDBUpdater>().Update(ContainsArgument(args, "forceUpdate"), ContainsArgument(args, "silent"));
-                }
+            FrameworkSettings.DefaultSettingsCompatibilityMode = FrameworkSettingsCompatibilityMode.Latest;
+            var host = CreateHostBuilder(args).Build();
+            if(ContainsArgument(args, "updateDatabase")){
+                using var serviceScope = host.Services.CreateScope();
+                return serviceScope.ServiceProvider.GetRequiredService<IDBUpdater>().Update(ContainsArgument(args, "forceUpdate"), ContainsArgument(args, "silent"));
             }
-            else {
-                host.Run();
-            }
+
+            host.Run();
         }
         return 0;
     }
-    XafApplication IDesignTimeApplicationFactory.Create() {
-        IHostBuilder hostBuilder = CreateHostBuilder(Array.Empty<string>());
-        return DesignTimeApplicationFactoryHelper.Create(hostBuilder);
-    }
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => {
-                webBuilder.UseStartup<Startup>();
-            });
+    XafApplication IDesignTimeApplicationFactory.Create() 
+        => DesignTimeApplicationFactoryHelper.Create(CreateHostBuilder(Array.Empty<string>()));
+
+    public static IHostBuilder CreateHostBuilder(string[] args) 
+        => Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
 }

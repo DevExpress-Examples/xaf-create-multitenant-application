@@ -2,7 +2,7 @@
 using OutlookInspired.Module.Attributes.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class Address :BaseObject {
+    public class Address :MyBaseObject {
         [DisplayName("Address")]
         public virtual string Line { get; set; }
         public virtual string City { get; set; }

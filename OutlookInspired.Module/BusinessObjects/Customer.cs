@@ -7,12 +7,42 @@ using DevExpress.XtraEditors.Controls;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultClassOptions]
-	public class Customer:BaseObject {
-		public virtual int Id { get; set; }
+	public class Customer:MyBaseObject {
+		public Customer(){
+			_homeOffice = new Address();
+			_billingAddress = new Address();
+			// _homeOffice.PropertyChanged += (s, e) => SetPropertyValue(e.PropertyName, "HomeOffice", (Address)s);
+			// _billingAddress.PropertyChanged += (s, e) => SetPropertyValue(e.PropertyName, "BillingAddress", (Address)s);
+		}
+		
+		public string HomeOfficeLine { get; set; }
+		
+		public string HomeOfficeCity { get; set; }
+		
+		public string HomeOfficeZipCode { get; set; }
+		
+		public string BillingAddressLine { get; set; }
+		
+		public string BillingAddressCity { get; set; }
+		
+		public string BillingAddressZipCode { get; set; }
+
+		readonly Address _homeOffice;
+		[NotMapped]
+		public Address HomeOffice {
+			get => _homeOffice.UpdateAddress(HomeOfficeLine, HomeOfficeCity, HomeOfficeState, HomeOfficeZipCode, HomeOfficeLatitude, HomeOfficeLongitude);
+			set => _homeOffice.UpdateAddress(value.Line, value.City, value.State, value.ZipCode, value.Latitude, value.Longitude);
+		}
+
+		readonly Address _billingAddress;
+		[NotMapped]
+		public Address BillingAddress {
+			get => _billingAddress.UpdateAddress(BillingAddressLine, BillingAddressCity, BillingAddressState, BillingAddressZipCode, BillingAddressLatitude, BillingAddressLongitude);
+			set => _billingAddress.UpdateAddress(value.Line, value.City, value.State, value.ZipCode, value.Latitude, value.Longitude);
+		}
 		[RuleRequiredField]
 		public virtual string Name { get; set; }
-		public virtual Address HomeOffice{ get; set; } = new();
-		public virtual Address BillingAddress{ get; set; } = new();
+		
 		public virtual StateEnum HomeOfficeState { get; set; }
 		public virtual double HomeOfficeLatitude { get; set; }
 		public virtual double HomeOfficeLongitude { get; set; }

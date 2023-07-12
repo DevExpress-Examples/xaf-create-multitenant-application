@@ -1,5 +1,5 @@
 ﻿namespace OutlookInspired.Module.BusinessObjects{
-    public class CustomerCommunication:BaseObject {
+    public class CustomerCommunication:MyBaseObject {
         public virtual Employee Employee { get; set; }
         public virtual long? EmployeeId { get; set; }
         public virtual CustomerEmployee CustomerEmployee { get; set; }

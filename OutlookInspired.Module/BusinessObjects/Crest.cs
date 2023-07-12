@@ -2,7 +2,7 @@
 using DevExpress.XtraEditors.Controls;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class Crest:BaseObject {
+    public class Crest:MyBaseObject {
         public virtual string CityName { get; set; }
         public virtual byte[] SmallImage { get; set; }
         public virtual byte[] LargeImage { get; set; }

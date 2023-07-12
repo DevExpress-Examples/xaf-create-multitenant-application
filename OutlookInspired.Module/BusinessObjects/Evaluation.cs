@@ -1,5 +1,5 @@
 ﻿namespace OutlookInspired.Module.BusinessObjects{
-    public class Evaluation :BaseObject{
+    public class Evaluation :MyBaseObject{
         public virtual Employee CreatedBy{ get; set; }
         public virtual long? CreatedById{ get; set; }
         public virtual DateTime CreatedOn{ get; set; }

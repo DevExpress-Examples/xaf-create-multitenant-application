@@ -2,7 +2,6 @@
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ using Microsoft.OpenApi.Models;
 
 namespace OutlookInspired.MiddleTier.Extensions{
     public static class ServiceCollection{
-        public static void AddMiddleTier(this IServiceCollection services,IConfiguration configuration) 
+        public static void SetupMiddleTier(this IServiceCollection services,IConfiguration configuration) 
             => services.AddXafMiddleTier(configuration, builder => {
                 builder.Modules
                     .AddReports(options => options.ReportDataType = typeof(DevExpress.Persistent.BaseImpl.EF.ReportDataV2))
@@ -77,7 +76,7 @@ namespace OutlookInspired.MiddleTier.Extensions{
                 });
             });
 
-        public static AuthenticationBuilder AddAuthentication(this IServiceCollection services,IConfiguration configuration) 
+        public static void SetupAuthentication(this IServiceCollection services,IConfiguration configuration) 
             => services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters() {
@@ -90,31 +89,31 @@ namespace OutlookInspired.MiddleTier.Extensions{
                     };
                 });
 
-        public static IServiceCollection AddAuthorization(this IServiceCollection services,IConfiguration configuration) 
+        public static void SetupAuthorization(this IServiceCollection services) 
             => services.AddAuthorization(options => options.DefaultPolicy = new AuthorizationPolicyBuilder(
                     JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .RequireXafAuthentication()
                 .Build());
 
-        public static IServiceCollection AddSwagger(this IServiceCollection services) 
+        public static void SetupSwagger(this IServiceCollection services) 
             => services.AddSwaggerGen(c => {
                 c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo {
+                c.SwaggerDoc("v1", new OpenApiInfo{
                     Title = "OutlookInspired API",
                     Version = "v1",
                     Description = @"MiddleTier"
                 });
-                c.AddSecurityDefinition("JWT", new OpenApiSecurityScheme() {
+                c.AddSecurityDefinition("JWT", new OpenApiSecurityScheme(){
                     Type = SecuritySchemeType.Http,
                     Name = "Bearer",
                     Scheme = "bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement{{
-                        new OpenApiSecurityScheme() {
-                            Reference = new OpenApiReference() {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{ {
+                        new OpenApiSecurityScheme(){
+                            Reference = new OpenApiReference(){
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "JWT"
                             }
