@@ -1,8 +1,9 @@
-﻿namespace OutlookInspired.Module.BusinessObjects{
-    public class ProductImage :MyBaseObject{
+﻿
+
+namespace OutlookInspired.Module.BusinessObjects{
+    public class ProductImage :MigrationBaseObject{
         public virtual Picture Picture { get; set; }
-        public  virtual long? PictureId { get; set; }
         public virtual Product Product { get; set; }
-        public  virtual long? ProductId { get; set; }
+        
     }
 }

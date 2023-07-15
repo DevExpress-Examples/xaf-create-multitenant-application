@@ -21,7 +21,10 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication {
             e.Languages.Add(userLanguageName);
         }
     }
-    private void OutlookInspiredWindowsFormsApplication_DatabaseVersionMismatch(object sender, DatabaseVersionMismatchEventArgs e) {
+    private void OutlookInspiredWindowsFormsApplication_DatabaseVersionMismatch(object sender, DatabaseVersionMismatchEventArgs e){
+	    e.Handled = true;
+	    e.Updater.Update();
+	    return;
 		string message = "Application cannot connect to the specified database.";
 
 		if(e.CompatibilityError is CompatibilityDatabaseIsOldError{ Module: not null } isOldError) {

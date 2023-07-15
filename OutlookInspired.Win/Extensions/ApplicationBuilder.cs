@@ -11,7 +11,7 @@ namespace OutlookInspired.Win.Extensions{
     public static class ApplicationBuilder{
         public static void AddSecurity(this IWinApplicationBuilder builder)
             => builder.Security.UseMiddleTierMode(options => {
-                    options.BaseAddress = new Uri("https://localhost:44319/");
+                    options.BaseAddress = new Uri("https://localhost:5001/");
                     options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
                     options.Events.OnCustomAuthenticate = (_, _, args) => {
                         args.Handled = true;
@@ -26,13 +26,18 @@ namespace OutlookInspired.Win.Extensions{
                 })
                 .UsePasswordAuthentication();
 
-        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder) 
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,Action<DbContextOptionsBuilder> configure=null) 
             => builder.ObjectSpaceProviders
                 .AddEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((application, options) => {
-                    options.UseMiddleTier(application.Security);
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
+                    if (configure != null){
+                        configure(options);
+                    }
+                    else{
+                        options.UseMiddleTier(application.Security);    
+                    }
                 })
                 .AddNonPersistent();
 
@@ -59,7 +64,6 @@ namespace OutlookInspired.Win.Extensions{
                 .AddTreeListEditors()
                 .AddValidation(options => options.AllowValidationDetailsAccess = false)
                 .AddViewVariants(options => options.ShowAdditionalNavigation = true)
-                .Add<Module.OutlookInspiredModule>()
                 .Add<OutlookInspiredWinModule>();
     }
 }

@@ -78,7 +78,8 @@
             // 
             // peImage
             // 
-            this.peImage.EditValue = ((object)(resources.GetObject("peImage.EditValue")));
+            string peImage = "peImage.EditValue";
+            this.peImage.EditValue = ((object)(resources.GetObject(peImage)));
             this.peImage.Location = new System.Drawing.Point(12, 12);
             this.peImage.Name = "peImage";
             this.peImage.Properties.AllowFocused = false;

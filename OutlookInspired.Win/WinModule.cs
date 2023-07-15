@@ -3,6 +3,8 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
+using OutlookInspired.Module;
+
 
 namespace OutlookInspired.Win;
 
@@ -13,12 +15,14 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     //    e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), true, "Win");
     //    e.Handled = true;
     //}
+
     private void Application_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
         e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
         e.Handled = true;
     }
     public OutlookInspiredWinModule() {
         FormattingProvider.UseMaskSettings = true;
+        RequiredModuleTypes.Add(typeof(OutlookInspiredModule));
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
         return ModuleUpdater.EmptyModuleUpdaters;

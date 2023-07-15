@@ -1,8 +1,10 @@
-﻿using DevExpress.Persistent.Validation;
+﻿using System.Collections.ObjectModel;
+
+using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class EmployeeTask:MyBaseObject{
-        public virtual List<Employee> AssignedEmployees{ get; set; } = new();
+    public class EmployeeTask:MigrationBaseObject{
+        public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
         public virtual string Subject { get; set; }
         public virtual string Description { get; set; }
@@ -15,15 +17,12 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual bool Reminder { get; set; }
         public virtual DateTime? ReminderDateTime { get; set; }
         public virtual Employee AssignedEmployee { get; set; }
-        public virtual long? AssignedEmployeeId { get; set; }
         public virtual Employee Owner { get; set; }
-        public virtual long? OwnerId { get; set; }
         public virtual CustomerEmployee CustomerEmployee { get; set; }
-        public virtual long? CustomerEmployeeId { get; set; }
         public virtual  EmployeeTaskFollowUp FollowUp { get; set; }
         public  virtual bool Private { get; set; }
         public  virtual string Category { get; set; }
-        public virtual List<TaskAttachedFile> AttachedFiles { get; set; }
+        public virtual ObservableCollection<TaskAttachedFile> AttachedFiles { get; set; }
         public  virtual bool AttachedCollectionsChanged { get; set; }
         public  virtual long? ParentId { get; set; }
         public  virtual string Predecessors { get; set; }

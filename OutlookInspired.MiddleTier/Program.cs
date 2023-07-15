@@ -3,13 +3,14 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.AspNetCore.DesignTime;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.Utils;
+using OutlookInspired.Module.DatabaseUpdate;
 
 namespace OutlookInspired.MiddleTier;
 public class Program : IDesignTimeApplicationFactory {
     private static bool ContainsArgument(string[] args, string argument) 
         => args.Any(arg => arg.TrimStart('/').TrimStart('-').ToLower() == argument.ToLower());
 
-    public static int Main(string[] args) {
+    public static int Main(string[] args){
         if(ContainsArgument(args, "help") || ContainsArgument(args, "h")) {
             Console.WriteLine("Updates the database when its version does not match the application's version.");
             Console.WriteLine();

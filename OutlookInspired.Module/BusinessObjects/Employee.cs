@@ -1,25 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects{
-	public class Employee :MyBaseObject{
+	public class Employee :MigrationBaseObject{
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
-		public virtual List<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();
+		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();
 		public virtual  EmployeeDepartment Department { get; set; }
 		[RuleRequiredField]
 		public virtual string Title { get; set; }
 		public virtual EmployeeStatus Status { get; set; }
 		public virtual DateTime? HireDate { get; set; }
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))]
-		public virtual List<EmployeeTask> AssignedTasks{ get; set; } = new();
+		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } = new();
 		[InverseProperty(nameof(EmployeeTask.Owner))]
-		public virtual List<EmployeeTask> OwnedTasks{ get; set; } = new();
+		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new();
 		[InverseProperty(nameof(Evaluation.Employee))]
-		public virtual List<Evaluation> Evaluations { get; set; }
+		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }
 		public virtual string PersonalProfile { get; set; }
-		public virtual long? ProbationReasonId { get; set; }
 		public virtual Probation ProbationReason { get; set; }
 		[RuleRequiredField]
 		public virtual string FirstName { get; set; }
@@ -36,22 +36,11 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string Skype { get; set; }
 		public virtual DateTime? BirthDate { get; set; }
 		public virtual Picture Picture { get; set; }
-		public virtual long? PictureId { get; set; }
-		public virtual Address Address{ get; set; } = new();
+		
+		
 		public virtual StateEnum AddressState { get; set; }
 		public virtual double AddressLatitude { get; set; }
 		public virtual double AddressLongitude { get; set; }
-		Image _photo;
-		[NotMapped]
-		public Image Photo {
-			get => _photo ??= Picture.CreateImage();
-			set {
-				if(_photo == value) return;
-				_photo?.Dispose();
-				_photo = value;
-				Picture = value.FromImage();
-			}
-		}
 		bool _unsetFullName;
 		public virtual ICollection<Evaluation> EvaluationsCreatedBy { get; set; }
 		public virtual ICollection<Order> Orders { get; set; }
@@ -67,6 +56,10 @@ namespace OutlookInspired.Module.BusinessObjects{
 				FullName = _unsetFullName ? GetFullName() : value;
 			}
 		}
+
+		[Browsable(false)]
+		public virtual Guid ProbationReasonId{ get; set; }
+
 		string GetFullName() => $"{FirstName} {LastName}";
 
 		public override string ToString() => FullName;

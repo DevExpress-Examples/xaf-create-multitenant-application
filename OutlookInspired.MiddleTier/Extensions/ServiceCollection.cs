@@ -21,7 +21,7 @@ namespace OutlookInspired.MiddleTier.Extensions{
                         // Uncomment this code to use an in-memory database. This database is recreated each time the server starts. With the in-memory database, you don't need to make a migration when the data model is changed.
                         // Do not use this code in production environment to avoid data loss.
                         // We recommend that you refer to the following help topic before you use an in-memory database: https://docs.microsoft.com/en-us/ef/core/testing/in-memory
-                        //options.UseInMemoryDatabase("InMemory");
+                        // options.UseInMemoryDatabase("InMemory");
                         string connectionString = null;
                         if(configuration.GetConnectionString("ConnectionString") != null) {
                             connectionString = configuration.GetConnectionString("ConnectionString");
@@ -65,13 +65,13 @@ namespace OutlookInspired.MiddleTier.Extensions{
                     //    e.Handled = true;
                     //};
 #if DEBUG
-                    if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
+                    // if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
                         application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
                         application.DatabaseVersionMismatch += (_, e) => {
                             e.Updater.Update();
                             e.Handled = true;
                         };
-                    }
+                    // }
 #endif
                 });
             });

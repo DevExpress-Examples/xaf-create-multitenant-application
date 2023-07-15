@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutlookInspired.MiddleTier"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutlookInspired.Win", "OutlookInspired.Win\OutlookInspired.Win.csproj", "{D2C06B0F-84D5-4C14-95BD-AAC45F1E3E79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{D2C06B0F-84D5-4C14-95BD-AAC45F1E3E79}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
 		{D2C06B0F-84D5-4C14-95BD-AAC45F1E3E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2C06B0F-84D5-4C14-95BD-AAC45F1E3E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

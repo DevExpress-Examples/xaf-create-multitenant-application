@@ -1,16 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace OutlookInspired.Module.BusinessObjects{
-    public class Order :MyBaseObject{
+    public class Order :MigrationBaseObject{
         public  virtual string InvoiceNumber { get; set; }
         public virtual Customer Customer { get; set; }
-        public  virtual long? CustomerId { get; set; }
         public virtual CustomerStore Store { get; set; }
-        public  virtual long? StoreId { get; set; }
         public  virtual string PONumber { get; set; }
         public virtual Employee Employee { get; set; }
-        public  virtual long? EmployeeId { get; set; }
+        
         public  virtual DateTime OrderDate { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal SaleAmount { get; set; }
@@ -21,9 +21,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual DateTime? ShipDate { get; set; }
         public  virtual OrderShipMethod ShipMethod { get; set; }
         public  virtual string OrderTerms { get; set; }
-        public virtual List<OrderItem> OrderItems{ get; set; } = new();
+        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
         public  virtual ShipmentCourier ShipmentCourier { get; set; }
-        public  virtual string ShipmentCourierId { get; set; }
         public  virtual ShipmentStatus ShipmentStatus { get; set; }
         public  virtual string Comments { get; set; }
         [DataType(DataType.Currency)]

@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
+using DevExpress.Persistent.BaseImpl.EF;
+
 
 namespace OutlookInspired.Module.BusinessObjects;
 
@@ -20,11 +21,11 @@ public class OutlookInspiredContextInitializer : DbContextTypesInfoInitializerBa
 public class OutlookInspiredDesignTimeDbContextFactory : IDesignTimeDbContextFactory<OutlookInspiredEFCoreDbContext> {
 	public OutlookInspiredEFCoreDbContext CreateDbContext(string[] args) {
 		throw new InvalidOperationException("Make sure that the database connection string and connection provider are correct. After that, uncomment the code below and remove this exception.");
-		//var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
-		//optionsBuilder.UseSqlServer("Integrated Security=SSPI;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired");
-        //optionsBuilder.UseChangeTrackingProxies();
-        //optionsBuilder.UseObjectSpaceLinkProxies();
-		//return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);
+		// var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
+		// optionsBuilder.UseSqlServer("Integrated Security=SSPI;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired");
+        // optionsBuilder.UseChangeTrackingProxies();
+        // optionsBuilder.UseObjectSpaceLinkProxies();
+		// return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);
 	}
 }
 [TypesInfoInitializer(typeof(OutlookInspiredContextInitializer))]
