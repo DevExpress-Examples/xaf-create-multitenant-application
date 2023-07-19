@@ -7,6 +7,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual string Name { get; set; }
         public  virtual byte[] Content { get; set; }
         [Browsable(false)]
-        public virtual Guid EmployeeTaskId{ get; set; }
+        public virtual Guid? EmployeeTaskId{ get; set; }
     }
 }

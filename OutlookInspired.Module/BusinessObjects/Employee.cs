@@ -36,8 +36,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string Skype { get; set; }
 		public virtual DateTime? BirthDate { get; set; }
 		public virtual Picture Picture { get; set; }
-		
-		
 		public virtual StateEnum AddressState { get; set; }
 		public virtual double AddressLatitude { get; set; }
 		public virtual double AddressLongitude { get; set; }
@@ -58,7 +56,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		}
 
 		[Browsable(false)]
-		public virtual Guid ProbationReasonId{ get; set; }
+		public virtual Guid? ProbationReasonId{ get; set; }
 
 		string GetFullName() => $"{FirstName} {LastName}";
 

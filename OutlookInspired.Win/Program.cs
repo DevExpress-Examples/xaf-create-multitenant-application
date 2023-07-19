@@ -10,7 +10,6 @@ static class Program {
     /// </summary>
     [STAThread]
     public static int Main(string[] args){
-        // Task.Delay(TimeSpan.FromSeconds(3)).Wait();
         FrameworkSettings.DefaultSettingsCompatibilityMode = FrameworkSettingsCompatibilityMode.Latest;
 #if EASYTEST
         DevExpress.ExpressApp.Win.EasyTest.EasyTestRemotingRegistration.Register();

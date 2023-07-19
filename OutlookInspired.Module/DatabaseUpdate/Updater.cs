@@ -62,11 +62,9 @@ public class Updater : ModuleUpdater {
 		userAdmin.Roles.Add(adminRole);
 
         ObjectSpace.CommitChanges(); //This line persists created object(s).
-        // if (!ObjectSpace.Any<Customer>()){
-        //     ObjectSpace.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>()
-        //         .ImportFromSqlLite().GetAwaiter().GetResult();
-        //
-        // }
+        if (!ObjectSpace.Any<Customer>()){
+            ObjectSpace.ImportFromSqlLite().Wait();
+        }
 #endif
     }
 

@@ -1,7 +1,7 @@
 ﻿using DevExpress.DevAV;
-using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
 using System.Reflection;
+using DevExpress.ExpressApp;
 using Crest = OutlookInspired.Module.BusinessObjects.Crest;
 using Customer = OutlookInspired.Module.BusinessObjects.Customer;
 using CustomerCommunication = OutlookInspired.Module.BusinessObjects.CustomerCommunication;
@@ -35,10 +35,10 @@ using TaskAttachedFile = OutlookInspired.Module.BusinessObjects.TaskAttachedFile
 
 namespace OutlookInspired.Module.DatabaseUpdate{
     public static class ImportSqlLiteData{
-        public static async Task ImportFromSqlLite(this OutlookInspiredEFCoreDbContext sqlServerContext){
+        public static async Task ImportFromSqlLite(this IObjectSpace objectSpace){
             await using var sqLiteContext = new DevAVDb($"Data Source={typeof(OutlookInspiredEFCoreDbContext).Assembly.ExtractSqlLiteData()}");
-            await sqlServerContext.ImportFrom(sqLiteContext);
-            await sqlServerContext.SaveChangesAsync();
+            await objectSpace.ImportFrom(sqLiteContext);
+            objectSpace.CommitChanges();
         }
 
         private static string ExtractSqlLiteData(this Assembly assembly) {
@@ -51,346 +51,347 @@ namespace OutlookInspired.Module.DatabaseUpdate{
             return sqlLitePath;
         }
 
-        static async Task ImportFrom(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
-            => await sqlServerContext.ImportCrest( sqliteContext)
-                // .Concat(sqlServerContext.ImportState(sqliteContext))
-                // .Concat(sqlServerContext.ImportCustomer(sqliteContext))
-                // .Concat(sqlServerContext.ImportCustomerStore(sqliteContext))
-                // .Concat(sqlServerContext.ImportPicture(sqliteContext))
-                // .Concat(sqlServerContext.ImportProbation(sqliteContext))
-                // .Concat(sqlServerContext.ImportEmployee(sqliteContext))
-                // .Concat(sqlServerContext.ImportEvaluation( sqliteContext))
-                // .Concat(sqlServerContext.ImportCustomerEmployee(sqliteContext))
-                // .Concat(sqlServerContext.ImportCustomerCommunication(sqliteContext))
-                // .Concat(sqlServerContext.ImportEmployeeTasks( sqliteContext))
-                // .Concat(sqlServerContext.ImportTaskAttachedFiles(sqliteContext))
-                // .Concat(sqlServerContext.ImportProduct(sqliteContext))
-                // .Concat(sqlServerContext.ImportProductImages(sqliteContext))
-                // .Concat(sqlServerContext.ImportProductCatalog(sqliteContext))
-                // .Concat(sqlServerContext.ImportOrder(sqliteContext))
-                // .Concat(sqlServerContext.ImportOrderItem(sqliteContext))
-                // .Concat(sqlServerContext.ImportQuote(sqliteContext))
-                // .Concat(sqlServerContext.ImportQuoteItem(sqliteContext))
+        static async Task ImportFrom(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
+            => await objectSpace.ImportCrest( sqliteContext)
+                .Concat(objectSpace.ImportState(sqliteContext))
+                .Concat(objectSpace.ImportCustomer(sqliteContext))
+                .Concat(objectSpace.ImportCustomerStore(sqliteContext))
+                .Concat(objectSpace.ImportPicture(sqliteContext))
+                .Concat(objectSpace.ImportProbation(sqliteContext))
+                .Concat(objectSpace.ImportEmployee(sqliteContext))
+                .Concat(objectSpace.ImportEvaluation( sqliteContext))
+                .Concat(objectSpace.ImportCustomerEmployee(sqliteContext))
+                .Concat(objectSpace.ImportCustomerCommunication(sqliteContext))
+                .Concat(objectSpace.ImportEmployeeTasks( sqliteContext))
+                .Concat(objectSpace.ImportTaskAttachedFiles(sqliteContext))
+                .Concat(objectSpace.ImportProduct(sqliteContext))
+                .Concat(objectSpace.ImportProductImages(sqliteContext))
+                .Concat(objectSpace.ImportProductCatalog(sqliteContext))
+                .Concat(objectSpace.ImportOrder(sqliteContext))
+                .Concat(objectSpace.ImportOrderItem(sqliteContext))
+                .Concat(objectSpace.ImportQuote(sqliteContext))
+                .Concat(objectSpace.ImportQuoteItem(sqliteContext))
                 .ToArrayAsync();
 
-        static IAsyncEnumerable<Employee> ImportEmployee(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Employee> ImportEmployee(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Employees.AsAsyncEnumerable()
-                .SelectAwait(async employee => {
-                    var proxy = sqlServerContext.CreateProxy<Employee>();
-                    proxy.IdInt64 = employee.Id;
-                    proxy.Picture = await sqlServerContext.Pictures.FindSqlLiteObjectAsync(employee.Picture?.Id??0);
-                    proxy.AddressState = (StateEnum)employee.AddressState;
-                    proxy.Department = (EmployeeDepartment)employee.Department;
-                    proxy.Email=employee.Email;
-                    proxy.Prefix = (PersonPrefix)employee.Prefix;
-                    proxy.Skype = employee.Skype;
-                    proxy.Status = (EmployeeStatus)employee.Status;
-                    proxy.Title = employee.Title;
-                    proxy.AddressLatitude=employee.AddressLatitude;
-                    proxy.AddressLongitude=employee.AddressLongitude;
-                    proxy.BirthDate=employee.BirthDate;
-                    proxy.FirstName=employee.FirstName;
-                    proxy.FullName=employee.FullName;
-                    proxy.HireDate=employee.HireDate;
-                    proxy.HomePhone=employee.HomePhone;
-                    proxy.LastName = employee.LastName;
-                    proxy.MobilePhone=employee.MobilePhone;
-                    proxy.PersonalProfile=employee.PersonalProfile;
-                    proxy.ProbationReason = await sqlServerContext.Probations.FindSqlLiteObjectAsync(employee.ProbationReason?.Id??0);
-                    return proxy;
+                .Select(sqlLite => {
+                    var employee = objectSpace.CreateObject<Employee>();
+                    employee.IdInt64 = sqlLite.Id;
+                    employee.Picture = objectSpace.FindSqlLiteObject<Picture>( sqlLite.Picture?.Id);
+                    employee.AddressState = (StateEnum)sqlLite.AddressState;
+                    employee.Department = (EmployeeDepartment)sqlLite.Department;
+                    employee.Email=sqlLite.Email;
+                    employee.Prefix = (PersonPrefix)sqlLite.Prefix;
+                    employee.Skype = sqlLite.Skype;
+                    employee.Status = (EmployeeStatus)sqlLite.Status;
+                    employee.Title = sqlLite.Title;
+                    employee.AddressLatitude=sqlLite.AddressLatitude;
+                    employee.AddressLongitude=sqlLite.AddressLongitude;
+                    employee.BirthDate=sqlLite.BirthDate;
+                    employee.FirstName=sqlLite.FirstName;
+                    employee.FullName=sqlLite.FullName;
+                    employee.HireDate=sqlLite.HireDate;
+                    employee.HomePhone=sqlLite.HomePhone;
+                    employee.LastName = sqlLite.LastName;
+                    employee.MobilePhone=sqlLite.MobilePhone;
+                    employee.PersonalProfile=sqlLite.PersonalProfile;
+                    employee.ProbationReason = objectSpace.FindSqlLiteObject<Probation>(sqlLite.ProbationReason?.Id);
+                    return employee;
                 });
 
-        private static Task<T> FindSqlLiteObjectAsync<T>(this DbSet<T> dbSet, long id) where T:MigrationBaseObject 
-            => dbSet.FirstOrDefaultAsync(migrationBaseObject => migrationBaseObject.IdInt64 == id);
+        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T:MigrationBaseObject 
+            => objectSpace.FindObject<T>(migrationBaseObject => id==migrationBaseObject.IdInt64,true);
 
-        static IAsyncEnumerable<Evaluation> ImportEvaluation(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Evaluation> ImportEvaluation(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Evaluations.AsAsyncEnumerable()
-                .SelectAwait(async evaluation => {
-                    var proxy = (await sqlServerContext.Evaluations.AddAsync(sqlServerContext.CreateProxy<Evaluation>())).Entity;
-                    proxy.IdInt64 = evaluation.Id;
-                    proxy.Employee = await sqlServerContext.Employees.FindSqlLiteObjectAsync(evaluation.Employee.Id);
-                    proxy.CreatedBy = await sqlServerContext.Employees.FindSqlLiteObjectAsync(evaluation.CreatedBy.Id);
-                    return proxy;
+                .Select( sqlLite => {
+                    var evaluation = objectSpace.CreateObject<Evaluation>();
+                    evaluation.IdInt64 = sqlLite.Id;
+                    evaluation.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee.Id);
+                    evaluation.CreatedBy = objectSpace.FindSqlLiteObject<Employee>(sqlLite.CreatedBy.Id);
+                    return evaluation;
                 });
 
-        static IAsyncEnumerable<Order> ImportOrder(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Order> ImportOrder(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Orders.AsAsyncEnumerable()
-                .SelectAwait(async order => {
-                    var proxy = (await sqlServerContext.Orders.AddAsync(sqlServerContext.CreateProxy<Order>())).Entity;
-                    proxy.IdInt64 = order.Id;
-                    proxy.Employee = await sqlServerContext.Employees.FindSqlLiteObjectAsync(order.Employee.Id);
-                    proxy.Customer = await sqlServerContext.Customers.FindSqlLiteObjectAsync(order.Customer.Id);
-                    proxy.PaymentTotal=order.PaymentTotal;
-                    proxy.ShippingAmount=order.ShippingAmount;
-                    proxy.RefundTotal = order.RefundTotal;
-                    proxy.TotalAmount = order.TotalAmount;
-                    proxy.Comments = order.Comments;
-                    proxy.Store = await sqlServerContext.CustomerStores.FindSqlLiteObjectAsync(order.Store.Id);
-                    proxy.InvoiceNumber=order.InvoiceNumber;
-                    proxy.OrderDate=order.OrderDate;
-                    proxy.OrderTerms = order.OrderTerms;
-                    proxy.SaleAmount = order.SaleAmount;
-                    proxy.ShipDate = order.ShipDate;
-                    proxy.ShipmentCourier = (ShipmentCourier)order.ShipmentCourier;
-                    proxy.ShipmentStatus = (ShipmentStatus)order.ShipmentStatus;
-                    proxy.PONumber = order.PONumber;
-                    return proxy;
+                .Select( sqlLite => {
+                    var order = objectSpace.CreateObject<Order>();
+                    order.IdInt64 = sqlLite.Id;
+                    order.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee.Id);
+                    order.Customer = objectSpace.FindSqlLiteObject<Customer>(sqlLite.Customer.Id);
+                    order.PaymentTotal=sqlLite.PaymentTotal;
+                    order.ShippingAmount=sqlLite.ShippingAmount;
+                    order.RefundTotal = sqlLite.RefundTotal;
+                    order.TotalAmount = sqlLite.TotalAmount;
+                    order.Comments = sqlLite.Comments;
+                    order.Store = objectSpace.FindSqlLiteObject<CustomerStore>(sqlLite.Store.Id);
+                    order.InvoiceNumber=sqlLite.InvoiceNumber;
+                    order.OrderDate=sqlLite.OrderDate;
+                    order.OrderTerms = sqlLite.OrderTerms;
+                    order.SaleAmount = sqlLite.SaleAmount;
+                    order.ShipDate = sqlLite.ShipDate;
+                    order.ShipmentCourier = (ShipmentCourier)sqlLite.ShipmentCourier;
+                    order.ShipmentStatus = (ShipmentStatus)sqlLite.ShipmentStatus;
+                    order.PONumber = sqlLite.PONumber;
+                    return order;
                 });
 
-        static IAsyncEnumerable<Product> ImportProduct(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Product> ImportProduct(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Products.AsAsyncEnumerable()
-                .SelectAwait(async product => {
-                    var proxy = (await sqlServerContext.Products.AddAsync(sqlServerContext.CreateProxy<Product>())).Entity;
-                    proxy.IdInt64 = product.Id;
-                    proxy.Category=(ProductCategory)product.Category;
-                    proxy.Name = product.Name;
-                    proxy.Description=product.Description;
-                    proxy.Available = product.Available;
-                    proxy.Backorder=product.Backorder;
-                    proxy.Barcode = product.Barcode;
-                    proxy.Cost=product.Cost;
-                    proxy.Engineer = await sqlServerContext.Employees.FindSqlLiteObjectAsync(product.Engineer.Id);
-                    proxy.Image=product.Image;
-                    proxy.Manufacturing=product.Manufacturing;
-                    proxy.Support = await sqlServerContext.Employees.FindSqlLiteObjectAsync(product.Support.Id);
-                    proxy.Weight = product.Weight;
-                    proxy.ConsumerRating = product.ConsumerRating;
-                    proxy.CurrentInventory=product.CurrentInventory;
-                    proxy.PrimaryImage = await sqlServerContext.Pictures.FindSqlLiteObjectAsync(product.PrimaryImage.Id);
-                    proxy.ProductionStart=product.ProductionStart;
-                    proxy.RetailPrice = product.RetailPrice;
-                    proxy.SalePrice=product.SalePrice;
-                    return proxy;
+                .Select( sqlLite => {
+                    var product = objectSpace.CreateObject<Product>();
+                    product.IdInt64 = sqlLite.Id;
+                    product.Category=(ProductCategory)sqlLite.Category;
+                    product.Name = sqlLite.Name;
+                    product.Description=sqlLite.Description;
+                    product.Available = sqlLite.Available;
+                    product.Backorder=sqlLite.Backorder;
+                    product.Barcode = sqlLite.Barcode;
+                    product.Cost=sqlLite.Cost;
+                    product.Engineer = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Engineer.Id);
+                    product.Image=sqlLite.Image;
+                    product.Manufacturing=sqlLite.Manufacturing;
+                    product.Support = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Support.Id);
+                    product.Weight = sqlLite.Weight;
+                    product.ConsumerRating = sqlLite.ConsumerRating;
+                    product.CurrentInventory=sqlLite.CurrentInventory;
+                    product.PrimaryImage = objectSpace.FindSqlLiteObject<Picture>(sqlLite.PrimaryImage.Id);
+                    product.ProductionStart=sqlLite.ProductionStart;
+                    product.RetailPrice = sqlLite.RetailPrice;
+                    product.SalePrice=sqlLite.SalePrice;
+                    return product;
                 });
 
-        static IAsyncEnumerable<ProductImage> ImportProductImages(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<ProductImage> ImportProductImages(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.ProductImages.AsAsyncEnumerable()
-                .SelectAwait(async image => {
-                    var proxy = (await sqlServerContext.ProductImages.AddAsync(sqlServerContext.CreateProxy<ProductImage>())).Entity;
-                    proxy.IdInt64 = image.Id;
-                    proxy.Product = await sqlServerContext.Products.FindSqlLiteObjectAsync(image.Product.Id);
-                    proxy.Picture = await sqlServerContext.Pictures.FindSqlLiteObjectAsync(image.Picture.Id);
-                    return proxy;
+                .Select( sqlLite => {
+                    var productImage = objectSpace.CreateObject<ProductImage>();
+                    productImage.IdInt64 = sqlLite.Id;
+                    productImage.Product = objectSpace.FindSqlLiteObject<Product>(sqlLite.Product.Id);
+                    productImage.Picture = objectSpace.FindSqlLiteObject<Picture>(sqlLite.Picture.Id);
+                    return productImage;
                 });
 
-        static IAsyncEnumerable<ProductCatalog> ImportProductCatalog(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<ProductCatalog> ImportProductCatalog(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.ProductCatalogs.AsAsyncEnumerable()
-                .SelectAwait(async catalog => {
-                    var proxy = (await sqlServerContext.ProductCatalogs.AddAsync(sqlServerContext.CreateProxy<ProductCatalog>())).Entity;
-                    proxy.IdInt64 = catalog.Id;
-                    proxy.Product = await sqlServerContext.Products.FindSqlLiteObjectAsync(catalog.Product.Id);
-                    proxy.PDF = catalog.PDF;
-                    return proxy;
+                .Select(sqlLite => {
+                    var productCatalog = objectSpace.CreateObject<ProductCatalog>();
+                    productCatalog.IdInt64 = sqlLite.Id;
+                    productCatalog.Product = objectSpace.FindSqlLiteObject<Product>(sqlLite.Product.Id);
+                    productCatalog.PDF = sqlLite.PDF;
+                    return productCatalog;
                 });
 
-        static IAsyncEnumerable<OrderItem> ImportOrderItem(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<OrderItem> ImportOrderItem(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.OrderItems.AsAsyncEnumerable()
-                .SelectAwait(async item => {
-                    var proxy = (await sqlServerContext.OrderItems.AddAsync(sqlServerContext.CreateProxy<OrderItem>())).Entity;
-                    proxy.IdInt64 = item.Id;
-                    proxy.ProductPrice = item.ProductPrice;
-                    proxy.Discount = item.Discount;
-                    proxy.Order = await sqlServerContext.Orders.FindSqlLiteObjectAsync(item.Order.Id);
-                    proxy.Product = await sqlServerContext.Products.FindSqlLiteObjectAsync(item.Product.Id);
-                    proxy.Total = item.Total;
-                    proxy.ProductUnits = item.ProductUnits;
-                    return proxy;
+                .Select( sqlLite => {
+                    var orderItem = objectSpace.CreateObject<OrderItem>();
+                    orderItem.IdInt64 = sqlLite.Id;
+                    orderItem.ProductPrice = sqlLite.ProductPrice;
+                    orderItem.Discount = sqlLite.Discount;
+                    orderItem.Order = objectSpace.FindSqlLiteObject<Order>(sqlLite.Order.Id);
+                    orderItem.Product = objectSpace.FindSqlLiteObject<Product>(sqlLite.Product.Id);
+                    orderItem.Total = sqlLite.Total;
+                    orderItem.ProductUnits = sqlLite.ProductUnits;
+                    return orderItem;
                 });
 
-        static IAsyncEnumerable<Quote> ImportQuote(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Quote> ImportQuote(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Quotes.AsAsyncEnumerable()
-                .SelectAwait(async quote => {
-                    var proxy = (await sqlServerContext.Quotes.AddAsync(sqlServerContext.CreateProxy<Quote>())).Entity;
-                    proxy.IdInt64 = quote.Id;
-                    proxy.CustomerStore = await sqlServerContext.CustomerStores.FindSqlLiteObjectAsync(quote.CustomerStore.Id);
-                    proxy.Total = quote.Total;
-                    proxy.Employee = await sqlServerContext.Employees.FindSqlLiteObjectAsync(quote.Employee.Id);
-                    proxy.ShippingAmount=quote.ShippingAmount;
-                    proxy.Date=quote.Date;
-                    proxy.Customer = await sqlServerContext.Customers.FindSqlLiteObjectAsync(quote.Customer.Id);
-                    proxy.Number=quote.Number;
-                    proxy.Opportunity=quote.Opportunity;
-                    proxy.SubTotal=quote.SubTotal;
-                    return proxy;
+                .Select(sqlLite => {
+                    var quote = objectSpace.CreateObject<Quote>();
+                    quote.IdInt64 = sqlLite.Id;
+                    quote.CustomerStore = objectSpace.FindSqlLiteObject<CustomerStore>(sqlLite.CustomerStore.Id);
+                    quote.Total = sqlLite.Total;
+                    quote.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee.Id);
+                    quote.ShippingAmount=sqlLite.ShippingAmount;
+                    quote.Date=sqlLite.Date;
+                    quote.Customer = objectSpace.FindSqlLiteObject<Customer>(sqlLite.Customer.Id);
+                    quote.Number=sqlLite.Number;
+                    quote.Opportunity=sqlLite.Opportunity;
+                    quote.SubTotal=sqlLite.SubTotal;
+                    return quote;
                 });
 
-        static IAsyncEnumerable<QuoteItem> ImportQuoteItem(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<QuoteItem> ImportQuoteItem(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.QuoteItems.AsAsyncEnumerable()
-                .SelectAwait(async item => {
-                    var proxy = (await sqlServerContext.QuoteItems.AddAsync(sqlServerContext.CreateProxy<QuoteItem>())).Entity;
-                    proxy.IdInt64 = item.Id;
-                    proxy.Total = item.Total;
-                    proxy.Quote = await sqlServerContext.Quotes.FindSqlLiteObjectAsync(item.Quote.Id);
-                    proxy.Discount = item.Discount;
-                    proxy.ProductUnits = item.ProductUnits;
-                    proxy.Product = await sqlServerContext.Products.FindSqlLiteObjectAsync(item.Product.Id);
-                    proxy.ProductPrice = item.ProductPrice;
-                    return proxy;
+                .Select( sqlLite => {
+                    var quoteItem = objectSpace.CreateObject<QuoteItem>();
+                    quoteItem.IdInt64 = sqlLite.Id;
+                    quoteItem.Total = sqlLite.Total;
+                    quoteItem.Quote = objectSpace.FindSqlLiteObject<Quote>(sqlLite.Quote.Id);
+                    quoteItem.Discount = sqlLite.Discount;
+                    quoteItem.ProductUnits = sqlLite.ProductUnits;
+                    quoteItem.Product = objectSpace.FindSqlLiteObject<Product>(sqlLite.Product.Id);
+                    quoteItem.ProductPrice = sqlLite.ProductPrice;
+                    return quoteItem;
                 });
 
-        static IAsyncEnumerable<CustomerEmployee> ImportCustomerEmployee(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<CustomerEmployee> ImportCustomerEmployee(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.CustomerEmployees.AsAsyncEnumerable()
-                .SelectAwait(async employee => {
-                    var proxy = (await sqlServerContext.CustomerEmployees.AddAsync(sqlServerContext.CreateProxy<CustomerEmployee>())).Entity;
-                    proxy.IdInt64 = employee.Id;
-                    proxy.Prefix = (PersonPrefix)employee.Prefix;
-                    proxy.FirstName = employee.FirstName;
-                    proxy.FullName = employee.FullName;
-                    proxy.Picture = await sqlServerContext.Pictures.FindSqlLiteObjectAsync(employee.Picture.Id);
-                    proxy.Email = employee.Email;
-                    proxy.LastName = employee.LastName;
-                    proxy.Customer = await sqlServerContext.Customers.FindSqlLiteObjectAsync(employee.Id);
-                    proxy.Position = employee.Position;
-                    proxy.CustomerStore = await sqlServerContext.CustomerStores.FindSqlLiteObjectAsync(employee.CustomerStore?.Id??0);
-                    proxy.MobilePhone = employee.MobilePhone;
-                    proxy.IsPurchaseAuthority = employee.IsPurchaseAuthority;
-                    return proxy;
+                .Select(sqlLite => {
+                    var customerEmployee = objectSpace.CreateObject<CustomerEmployee>();
+                    customerEmployee.IdInt64 = sqlLite.Id;
+                    customerEmployee.Prefix = (PersonPrefix)sqlLite.Prefix;
+                    customerEmployee.FirstName = sqlLite.FirstName;
+                    customerEmployee.FullName = sqlLite.FullName;
+                    customerEmployee.Picture = objectSpace.FindSqlLiteObject<Picture>(sqlLite.Picture.Id);
+                    customerEmployee.Email = sqlLite.Email;
+                    customerEmployee.LastName = sqlLite.LastName;
+                    customerEmployee.Customer = objectSpace.FindSqlLiteObject<Customer>(sqlLite.Id);
+                    customerEmployee.Position = sqlLite.Position;
+                    customerEmployee.CustomerStore = objectSpace.FindSqlLiteObject<CustomerStore>(sqlLite.CustomerStore.Id);
+                    customerEmployee.MobilePhone = sqlLite.MobilePhone;
+                    customerEmployee.IsPurchaseAuthority = sqlLite.IsPurchaseAuthority;
+                    return customerEmployee;
                 });
 
-        static IAsyncEnumerable<CustomerCommunication> ImportCustomerCommunication(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<CustomerCommunication> ImportCustomerCommunication(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.CustomerCommunications.AsAsyncEnumerable()
-                .SelectAwait(async communication => {
-                    var proxy = (await sqlServerContext.CustomerCommunications.AddAsync(sqlServerContext.CreateProxy<CustomerCommunication>())).Entity;
-                    proxy.IdInt64 = communication.Id;
-                    proxy.Employee = await sqlServerContext.Employees.FindSqlLiteObjectAsync(communication.Employee.Id);
-                    proxy.CustomerEmployee = await sqlServerContext.CustomerEmployees.FindSqlLiteObjectAsync(communication.CustomerEmployee.Id);
-                    proxy.Date = communication.Date;
-                    proxy.Purpose = communication.Purpose;
-                    proxy.Type = communication.Type;
-                    return proxy;
+                .Select(sqlLite => {
+                    var customerCommunication = objectSpace.CreateObject<CustomerCommunication>();
+                    customerCommunication.IdInt64 = sqlLite.Id;
+                    customerCommunication.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee.Id);
+                    customerCommunication.CustomerEmployee = objectSpace.FindSqlLiteObject<CustomerEmployee>(sqlLite.CustomerEmployee.Id);
+                    customerCommunication.Date = sqlLite.Date;
+                    customerCommunication.Purpose = sqlLite.Purpose;
+                    customerCommunication.Type = sqlLite.Type;
+                    return customerCommunication;
                 });
 
-        static IAsyncEnumerable<Probation> ImportProbation(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Probation> ImportProbation(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Probations.AsAsyncEnumerable()
-                .SelectAwait(async probation => {
-                    var proxy = (await sqlServerContext.Probations.AddAsync(sqlServerContext.CreateProxy<Probation>())).Entity;
-                    proxy.IdInt64 = probation.Id;
-                    proxy.Reason = probation.Reason;
-                    return proxy;
+                .Select(sqlLite => {
+                    var probation = objectSpace.CreateObject<Probation>();
+                    probation.IdInt64 = sqlLite.Id;
+                    probation.Reason = sqlLite.Reason;
+                    return probation;
                 });
 
-        static IAsyncEnumerable<Picture> ImportPicture(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Picture> ImportPicture(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Pictures.AsAsyncEnumerable()
-                .SelectAwait(async picture => {
-                    var proxy = (await sqlServerContext.Pictures.AddAsync(sqlServerContext.CreateProxy<Picture>())).Entity;
-                    proxy.IdInt64 = picture.Id;
-                    proxy.Data = picture.Data;
-                    return proxy;
+                .Select(sqlLite => {
+                    var picture = objectSpace.CreateObject<Picture>();
+                    picture.IdInt64 = sqlLite.Id;
+                    picture.Data = sqlLite.Data;
+                    return picture;
                 });
 
-        static IAsyncEnumerable<EmployeeTask> ImportEmployeeTasks(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<EmployeeTask> ImportEmployeeTasks(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.EmployeeTasks.AsAsyncEnumerable()
-                .SelectAwait(async task => {
-                    var employeeTask = (await sqlServerContext.EmployeeTasks.AddAsync(sqlServerContext.CreateProxy<EmployeeTask>())).Entity;
-                    employeeTask.IdInt64=task.Id;
-                    employeeTask.CustomerEmployee = await sqlServerContext.CustomerEmployees.FindSqlLiteObjectAsync(task.CustomerEmployee?.Id??0);
-                    employeeTask.Status = (EmployeeTaskStatus)task.Status;
-                    employeeTask.Category = task.Category;
-                    employeeTask.Completion=task.Completion;
-                    employeeTask.Description = task.Description;
-                    employeeTask.Owner = await sqlServerContext.Employees.FindSqlLiteObjectAsync(task.Owner.Id);
-                    employeeTask.Predecessors=task.Predecessors;
-                    employeeTask.Priority = (EmployeeTaskPriority)task.Priority;
-                    employeeTask.Private=task.Private;
-                    employeeTask.Reminder = task.Reminder;
-                    employeeTask.Subject = task.Subject;
-                    employeeTask.AssignedEmployee = await sqlServerContext.Employees.FindSqlLiteObjectAsync(task.AssignedEmployee.Id);
-                    employeeTask.DueDate=task.DueDate;
-                    employeeTask.FollowUp = (EmployeeTaskFollowUp)task.FollowUp;
-                    employeeTask.ParentId=task.ParentId;
-                    employeeTask.StartDate=task.StartDate;
-                    employeeTask.AttachedCollectionsChanged=task.AttachedCollectionsChanged;
-                    employeeTask.ReminderDateTime=task.ReminderDateTime;
-                    employeeTask.RtfTextDescription=task.RtfTextDescription;
-                    return employeeTask;
-                    // return task.AssignedEmployees.Do(employee => employeeTask.AssignedEmployees.Add(employees[employee.Id]))
-                    // .IgnoreElements().To(employeeTask).Concat(employeeTask);
+                .SelectMany(sqlLite => {
+                    var task = objectSpace.CreateObject<EmployeeTask>();
+                    task.IdInt64=sqlLite.Id;
+                    task.CustomerEmployee = objectSpace.FindSqlLiteObject<CustomerEmployee>(sqlLite.CustomerEmployee?.Id);
+                    task.Status = (EmployeeTaskStatus)sqlLite.Status;
+                    task.Category = sqlLite.Category;
+                    task.Completion=sqlLite.Completion;
+                    task.Description = sqlLite.Description;
+                    task.Owner = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Owner.Id);
+                    task.Predecessors=sqlLite.Predecessors;
+                    task.Priority = (EmployeeTaskPriority)sqlLite.Priority;
+                    task.Private=sqlLite.Private;
+                    task.Reminder = sqlLite.Reminder;
+                    task.Subject = sqlLite.Subject;
+                    task.AssignedEmployee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.AssignedEmployee?.Id);
+                    task.DueDate=sqlLite.DueDate;
+                    task.FollowUp = (EmployeeTaskFollowUp)sqlLite.FollowUp;
+                    task.ParentId=sqlLite.ParentId;
+                    task.StartDate=sqlLite.StartDate;
+                    task.AttachedCollectionsChanged=sqlLite.AttachedCollectionsChanged;
+                    task.ReminderDateTime=sqlLite.ReminderDateTime;
+                    task.RtfTextDescription=sqlLite.RtfTextDescription;
+            
+                    return sqlLite.AssignedEmployees.Do(employee => task.AssignedEmployees.Add(objectSpace.FindSqlLiteObject<Employee>(employee.Id)))
+                        .To(task).ToAsyncEnumerable();
                 });
 
-        static IAsyncEnumerable<TaskAttachedFile> ImportTaskAttachedFiles(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<TaskAttachedFile> ImportTaskAttachedFiles(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.TaskAttachedFiles.AsAsyncEnumerable()
-                .SelectAwait(async file => {
-                    var proxy = (await sqlServerContext.TaskAttachedFiles.AddAsync(sqlServerContext.CreateProxy<TaskAttachedFile>())).Entity;
-                    proxy.IdInt64 = file.Id;
-                    proxy.Name = file.Name;
-                    proxy.EmployeeTask = await sqlServerContext.EmployeeTasks.FindSqlLiteObjectAsync(file.EmployeeTask.Id);
-                    proxy.Content = file.Content;
-                    return proxy;
+                .Select(sqlLite => {
+                    var taskAttachedFile = objectSpace.CreateObject<TaskAttachedFile>();
+                    taskAttachedFile.IdInt64 = sqlLite.Id;
+                    taskAttachedFile.Name = sqlLite.Name;
+                    taskAttachedFile.EmployeeTask = objectSpace.FindSqlLiteObject<EmployeeTask>(sqlLite.EmployeeTask.Id);
+                    taskAttachedFile.Content = sqlLite.Content;
+                    return taskAttachedFile;
                 });
 
-        static IAsyncEnumerable<Customer> ImportCustomer(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Customer> ImportCustomer(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             =>  sqliteContext.Customers.AsAsyncEnumerable()
-                .SelectAwait(async customer => {
-                    var proxy = (await sqlServerContext.Customers.AddAsync(sqlServerContext.CreateProxy<Customer>())).Entity;
-                    proxy.IdInt64 = customer.Id;
-                    proxy.Logo=customer.Logo;
-                    proxy.Profile=customer.Profile;
-                    proxy.Fax=customer.Fax;
-                    proxy.Name=customer.Name;
-                    proxy.Phone = customer.Phone;
-                    proxy.Status = (CustomerStatus)customer.Status;
-                    proxy.Website = customer.Website;
-                    proxy.AnnualRevenue=customer.AnnualRevenue;
-                    proxy.TotalEmployees=customer.TotalEmployees;
-                    proxy.TotalStores=customer.TotalStores;
-                    proxy.BillingAddressCity = customer.BillingAddressCity;
-                    proxy.BillingAddressLatitude=customer.BillingAddressLatitude;
-                    proxy.BillingAddressLine = customer.BillingAddressLine;
-                    proxy.BillingAddressLongitude = customer.BillingAddressLongitude;
-                    proxy.BillingAddressState = Enum.Parse<StateEnum>(customer.BillingAddressState.ToString());
-                    proxy.BillingAddressZipCode = customer.BillingAddressZipCode;
-                    proxy.HomeOfficeCity = customer.HomeOfficeCity;
-                    proxy.HomeOfficeLatitude=customer.HomeOfficeLatitude;
-                    proxy.HomeOfficeLine = customer.HomeOfficeLine;
-                    proxy.HomeOfficeLongitude = customer.HomeOfficeLongitude;
-                    proxy.HomeOfficeState = Enum.Parse<StateEnum>(customer.HomeOfficeState.ToString());
-                    proxy.HomeOfficeZipCode = customer.HomeOfficeZipCode;
-                    return proxy;
+                .Select(sqlLite => {
+                    var customer = objectSpace.CreateObject<Customer>();
+                    customer.IdInt64 = sqlLite.Id;
+                    customer.Logo=sqlLite.Logo;
+                    customer.Profile=sqlLite.Profile;
+                    customer.Fax=sqlLite.Fax;
+                    customer.Name=sqlLite.Name;
+                    customer.Phone = sqlLite.Phone;
+                    customer.Status = (CustomerStatus)sqlLite.Status;
+                    customer.Website = sqlLite.Website;
+                    customer.AnnualRevenue=sqlLite.AnnualRevenue;
+                    customer.TotalEmployees=sqlLite.TotalEmployees;
+                    customer.TotalStores=sqlLite.TotalStores;
+                    customer.BillingAddressCity = sqlLite.BillingAddressCity;
+                    customer.BillingAddressLatitude=sqlLite.BillingAddressLatitude;
+                    customer.BillingAddressLine = sqlLite.BillingAddressLine;
+                    customer.BillingAddressLongitude = sqlLite.BillingAddressLongitude;
+                    customer.BillingAddressState = Enum.Parse<StateEnum>(sqlLite.BillingAddressState.ToString());
+                    customer.BillingAddressZipCode = sqlLite.BillingAddressZipCode;
+                    customer.HomeOfficeCity = sqlLite.HomeOfficeCity;
+                    customer.HomeOfficeLatitude=sqlLite.HomeOfficeLatitude;
+                    customer.HomeOfficeLine = sqlLite.HomeOfficeLine;
+                    customer.HomeOfficeLongitude = sqlLite.HomeOfficeLongitude;
+                    customer.HomeOfficeState = Enum.Parse<StateEnum>(sqlLite.HomeOfficeState.ToString());
+                    customer.HomeOfficeZipCode = sqlLite.HomeOfficeZipCode;
+                    return customer;
                 });
 
-        static IAsyncEnumerable<CustomerStore> ImportCustomerStore(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<CustomerStore> ImportCustomerStore(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.CustomerStores.AsAsyncEnumerable()
-                .SelectAwait(async store => {
-                    var proxy = (await sqlServerContext.CustomerStores.AddAsync(sqlServerContext.CreateProxy<CustomerStore>())).Entity;
-                    proxy.IdInt64 = store.Id;
-                    proxy.Customer = await sqlServerContext.Customers.FindSqlLiteObjectAsync(store.Customer.Id);
-                    proxy.Crest = await sqlServerContext.Crests.FindSqlLiteObjectAsync(store.Crest.Id);
-                    proxy.Phone=store.Phone;
-                    proxy.Fax = store.Fax;
-                    proxy.Location = store.Location;
-                    proxy.AddressCity=store.Address_City;
-                    proxy.AddressLatitude = store.Address_Latitude;
-                    proxy.AddressLongitude = store.Address_Longitude;
-                    proxy.AddressState = Enum.Parse<StateEnum>(store.Address_State.ToString());
-                    proxy.AddressLine = store.AddressLine;
-                    proxy.AddressZipCode = store.Address_ZipCode;
-                    proxy.AnnualSales = store.AnnualSales;
-                    proxy.SquereFootage = store.SquereFootage;
-                    proxy.TotalEmployees = store.TotalEmployees;
-                    proxy.AddressZipCode = store.Address_ZipCode;
-                    return proxy;
+                .Select(sqlLite => {
+                    var store = objectSpace.CreateObject<CustomerStore>();
+                    store.IdInt64 = sqlLite.Id;
+                    store.Customer = objectSpace.FindSqlLiteObject<Customer>(sqlLite.Customer.Id);
+                    store.Crest = objectSpace.FindSqlLiteObject<Crest>(sqlLite.Crest.Id);
+                    store.Phone=sqlLite.Phone;
+                    store.Fax = sqlLite.Fax;
+                    store.Location = sqlLite.Location;
+                    store.AddressCity=sqlLite.Address_City;
+                    store.AddressLatitude = sqlLite.Address_Latitude;
+                    store.AddressLongitude = sqlLite.Address_Longitude;
+                    store.AddressState = Enum.Parse<StateEnum>(sqlLite.Address_State.ToString());
+                    store.AddressLine = sqlLite.AddressLine;
+                    store.AddressZipCode = sqlLite.Address_ZipCode;
+                    store.AnnualSales = sqlLite.AnnualSales;
+                    store.SquereFootage = sqlLite.SquereFootage;
+                    store.TotalEmployees = sqlLite.TotalEmployees;
+                    store.AddressZipCode = sqlLite.Address_ZipCode;
+                    return store;
                 });
 
-        static IAsyncEnumerable<State> ImportState(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<State> ImportState(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.States.AsAsyncEnumerable()
-                .SelectAwait(async state => {
-                    var proxy = (await sqlServerContext.States.AddAsync(sqlServerContext.CreateProxy<State>())).Entity;
-                    proxy.IdInt64 = ((long)Enum.Parse<StateEnum>(state.ShortName.ToString()));
-                    proxy.ShortName = Enum.Parse<StateEnum>(state.ShortName.ToString());
-                    proxy.LargeFlag=state.Flag48px;
-                    proxy.SmallFlag=state.Flag24px;
-                    proxy.LongName=state.LongName;
-                    return proxy;
+                .Select(sqlLite => {
+                    var state = objectSpace.CreateObject<State>();
+                    state.IdInt64 = ((long)Enum.Parse<StateEnum>(sqlLite.ShortName.ToString()));
+                    state.ShortName = Enum.Parse<StateEnum>(sqlLite.ShortName.ToString());
+                    state.LargeFlag=sqlLite.Flag48px;
+                    state.SmallFlag=sqlLite.Flag24px;
+                    state.LongName=sqlLite.LongName;
+                    return state;
                 });
 
-        static IAsyncEnumerable<Crest> ImportCrest(this OutlookInspiredEFCoreDbContext sqlServerContext, DevAVDb sqliteContext) 
+        static IAsyncEnumerable<Crest> ImportCrest(this IObjectSpace objectSpace, DevAVDb sqliteContext) 
             => sqliteContext.Crests.AsAsyncEnumerable()
-                .SelectAwait(async crest => {
-                    var proxy = (await sqlServerContext.Crests.AddAsync(sqlServerContext.CreateProxy<Crest>())).Entity;
-                    proxy.IdInt64 = crest.Id;
-                    proxy.LargeImage = crest.LargeImage;
-                    proxy.SmallImage = crest.SmallImage;
-                    return proxy;
+                .Select(sqlLite => {
+                    var crest = objectSpace.CreateObject<Crest>();
+                    crest.IdInt64 = sqlLite.Id;
+                    crest.CityName = sqlLite.CityName;
+                    crest.LargeImage = sqlLite.LargeImage;
+                    crest.SmallImage = sqlLite.SmallImage;
+                    return crest;
                 });
     }
 }

@@ -8,6 +8,12 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module{
     public static class Extensions {
+        public static int Count<T>(this IObjectSpace objectSpace, Expression<Func<T, bool>> expression=null)
+            => objectSpace.GetObjectsQuery<T>().Where(expression??(arg =>true) ).Count();
+
+        public static IObjectSpace NewObjectSpace(this XafApplication application) 
+            => application.CreateObjectSpace(typeof(MigrationBaseObject));
+
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);
         
@@ -78,6 +84,20 @@ namespace OutlookInspired.Module{
             }
             return bag.ToArray();
         }
+
+        public static async IAsyncEnumerable<TResult> SelectMany<TSource, TResult>(
+            this IAsyncEnumerable<TSource> source, Func<TSource, IAsyncEnumerable<TResult>> selector){
+            await foreach (var item in source){
+                var results = selector(item);
+                await foreach (var result in results) yield return result;
+            }
+        }
+
+        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
+            foreach (var item in enumerable) yield return item;
+            await Task.CompletedTask;
+        }        
+        
         public static async IAsyncEnumerable<TResult> SelectAwait<TSource, TResult>(
             this IAsyncEnumerable<TSource> source, Func<TSource, Task<TResult>> selector){
             await foreach (var item in source){
