@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
+using DevExpress.Persistent.Validation;
 
 
 namespace OutlookInspired.Module.BusinessObjects {
@@ -10,40 +11,21 @@ namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultClassOptions]
 	public class Customer:MigrationBaseObject {
 		public  virtual string HomeOfficeLine { get; set; }
-		
 		public  virtual string HomeOfficeCity { get; set; }
-		
 		public  virtual string HomeOfficeZipCode { get; set; }
-		
 		public  virtual string BillingAddressLine { get; set; }
-		
 		public virtual string BillingAddressCity { get; set; }
-		
 		public  virtual string BillingAddressZipCode { get; set; }
-
-		// readonly Address _homeOffice;
-		// [NotMapped]
-		// public Address HomeOffice {
-		// 	get => _homeOffice.UpdateAddress(HomeOfficeLine, HomeOfficeCity, HomeOfficeState, HomeOfficeZipCode, HomeOfficeLatitude, HomeOfficeLongitude);
-		// 	set => _homeOffice.UpdateAddress(value.Line, value.City, value.State, value.ZipCode, value.Latitude, value.Longitude);
-		// }
-		//
-		// readonly Address _billingAddress;
-		// [NotMapped]
-		// public Address BillingAddress {
-		// 	get => _billingAddress.UpdateAddress(BillingAddressLine, BillingAddressCity, BillingAddressState, BillingAddressZipCode, BillingAddressLatitude, BillingAddressLongitude);
-		// 	set => _billingAddress.UpdateAddress(value.Line, value.City, value.State, value.ZipCode, value.Latitude, value.Longitude);
-		// }
-		// [RuleRequiredField]
+		[RuleRequiredField]
 		public virtual string Name { get; set; }
-		
 		public virtual StateEnum HomeOfficeState { get; set; }
 		public virtual double HomeOfficeLatitude { get; set; }
 		public virtual double HomeOfficeLongitude { get; set; }
 		public virtual StateEnum BillingAddressState { get; set; }
 		public virtual double BillingAddressLatitude { get; set; }
 		public virtual double BillingAddressLongitude { get; set; }
-		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } 
 		[Attributes.Validation.Phone]
 		public virtual string Phone { get; set; }
 		[Attributes.Validation.Phone]
@@ -56,15 +38,19 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual int TotalEmployees { get; set; }
 		public virtual CustomerStatus Status { get; set; }
 		[InverseProperty(nameof(Order.Customer))]
-		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Order> Orders{ get; set; } 
 		[InverseProperty(nameof(Quote.Customer))]
+		[Aggregated]
 		public virtual ObservableCollection<Quote> Quotes { get; set; }
 		[InverseProperty(nameof(CustomerStore.Customer))]
+		[Aggregated]
 		public virtual ObservableCollection<CustomerStore> CustomerStores { get; set; }
 		public virtual string Profile { get; set; }
+		[ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
+			DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
 		public virtual byte[] Logo { get; set; }
-		Image _img;
-		public Image Image => _img ??= Logo.CreateImage();
+		
 		
 	}
 	public enum CustomerStatus {

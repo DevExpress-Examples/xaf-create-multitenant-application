@@ -3,7 +3,6 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.AspNetCore.DesignTime;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.Utils;
-using OutlookInspired.Module.DatabaseUpdate;
 
 namespace OutlookInspired.MiddleTier;
 public class Program : IDesignTimeApplicationFactory {
