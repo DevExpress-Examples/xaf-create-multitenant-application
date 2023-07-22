@@ -39,7 +39,8 @@ public sealed class OutlookInspiredModule : ModuleBase {
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.HCategory));
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
-        ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);
-        return new[] { updater };
+        yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
     }
+
 }
+

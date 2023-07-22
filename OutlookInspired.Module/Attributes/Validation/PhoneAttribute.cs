@@ -2,7 +2,7 @@
 
 namespace OutlookInspired.Module.Attributes.Validation{
     public class PhoneAttribute:RuleRegularExpressionAttribute{
-        public PhoneAttribute():base("^(http(s)?://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ;,./?%&=]*)?$"){
+        public PhoneAttribute():base(@"^\(\d{3}\)\s\d{3}-\d{4}$"){
         }
     }
 }

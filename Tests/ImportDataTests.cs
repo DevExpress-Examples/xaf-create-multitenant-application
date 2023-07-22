@@ -1,15 +1,32 @@
+using DevExpress.ExpressApp;
+using Humanizer;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services;
 using Shouldly;
 
 namespace Tests{
+    public class EmployeeTests:TestBase{
+        [Test][Apartment(ApartmentState.STA)]
+        public async Task Navigate_To_DashboardView(){
+            using var application = await SetupWinApplication();
+
+            application.Start();
+            // await application.WhenEventFired(nameof(XafApplication.FrameCreated)).FirstAsync();
+            // await Task.Delay(20.Seconds());
+        }
+    
+    }
     public class ImportDataTests:TestBase{
         [Test]
         public async Task ImportFrom(){
-            using var application = await WinApplication();
+            using var application = await SetupWinApplication(application => 
+                application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync());
+            
             var objectSpace = application.NewObjectSpace();
-
+            await objectSpace.ImportFromSqlLite();
             objectSpace.Count<Crest>().ShouldBe(20);
             objectSpace.Count<State>().ShouldBe(51);
             objectSpace.Count<Customer>().ShouldBe(20);

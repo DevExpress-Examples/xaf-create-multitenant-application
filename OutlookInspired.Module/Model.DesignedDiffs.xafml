@@ -1,22 +1,381 @@
-﻿<?xml version="1.0" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Title="OutlookInspired">
-  <BOModel>
-    <Class Name="DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyUser" Caption="Base User" />
-  </BOModel>
-  <Options>
+  <ActionDesign>
+    <ActionToContainerMapping>
+      <ActionContainer Id="EmployeePhone" IsNewNode="True">
+        <ActionLink ActionId="MobilePhone" Index="0" IsNewNode="True" />
+        <ActionLink ActionId="HomePhone" Index="1" IsNewNode="True" />
+      </ActionContainer>
+      <ActionContainer Id="EmployeeSocial" IsNewNode="True">
+        <ActionLink ActionId="Email" Index="2" IsNewNode="True" />
+        <ActionLink ActionId="Skype" Index="3" IsNewNode="True" />
+      </ActionContainer>
+    </ActionToContainerMapping>
+  </ActionDesign>
+  <NavigationItems>
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
+  <Options DataAccessMode="Server">
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
+  <SchemaModules>
+    <SchemaModule Name="SchedulerModuleBase" Version="23.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.3.0" IsNewNode="True" />
+  </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
+    <ListView Id="Employee_AssignedTasks_ListView">
+      <Columns>
+        <ColumnInfo Id="AssignedEmployee" Index="-1" />
+        <ColumnInfo Id="AssignedEmployeesFullList" Index="-1" />
+        <ColumnInfo Id="AttachedCollectionsChanged" Index="-1" />
+        <ColumnInfo Id="AttachedFilesCount" Index="-1" />
+        <ColumnInfo Id="Category" Index="-1" />
+        <ColumnInfo Id="CustomerEmployee" Index="-1" />
+        <ColumnInfo Id="FollowUp" Index="-1" />
+        <ColumnInfo Id="Overdue" Index="-1" />
+        <ColumnInfo Id="Owner" Index="-1" />
+        <ColumnInfo Id="ParentId" Index="-1" />
+        <ColumnInfo Id="Predecessors" Index="-1" />
+        <ColumnInfo Id="Priority" Index="-1" />
+        <ColumnInfo Id="Private" Index="-1" />
+        <ColumnInfo Id="Reminder" Index="-1" />
+        <ColumnInfo Id="ReminderDateTime" Index="-1" />
+        <ColumnInfo Id="RtfTextDescription" Index="-1" />
+        <ColumnInfo Id="StartDate" Index="-1" />
+        <ColumnInfo Id="Status" Index="-1" />
+        <ColumnInfo Id="PriorityImage" Index="0" />
+        <ColumnInfo Id="DueDate" Index="1" SortIndex="0" SortOrder="Ascending" />
+        <ColumnInfo Id="Subject" Index="2" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="Description" Index="3" />
+        <ColumnInfo Id="Completion" Index="4" />
+      </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="Delete" IsNewNode="True" />
+        <ActionLink ActionId="Link" IsNewNode="True" />
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+        <ActionLink ActionId="New" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+        <ActionLink ActionId="Unlink" IsNewNode="True" />
+      </HiddenActions>
+    </ListView>
+    <ListView Id="Employee_AssignedTasks_ListView_Child" ClassName="OutlookInspired.Module.BusinessObjects.EmployeeTask" DataAccessMode="Client" IsNewNode="True">
+      <Columns IsNewNode="True">
+        <ColumnInfo Id="AssignedEmployee" PropertyName="AssignedEmployee" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="AssignedEmployeesFullList" PropertyName="AssignedEmployeesFullList" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="AttachedCollectionsChanged" PropertyName="AttachedCollectionsChanged" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="AttachedFilesCount" PropertyName="AttachedFilesCount" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Category" PropertyName="Category" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="CustomerEmployee" PropertyName="CustomerEmployee" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="FollowUp" PropertyName="FollowUp" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Overdue" PropertyName="Overdue" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Owner" PropertyName="Owner" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="ParentId" PropertyName="ParentId" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Predecessors" PropertyName="Predecessors" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Priority" PropertyName="Priority" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Private" PropertyName="Private" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Reminder" PropertyName="Reminder" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="ReminderDateTime" PropertyName="ReminderDateTime" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="RtfTextDescription" PropertyName="RtfTextDescription" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="StartDate" PropertyName="StartDate" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Status" PropertyName="Status" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="PriorityImage" PropertyName="PriorityImage" Index="0" IsNewNode="True" />
+        <ColumnInfo Id="DueDate" PropertyName="DueDate" Index="1" SortIndex="0" SortOrder="Ascending" IsNewNode="True" />
+        <ColumnInfo Id="Subject" PropertyName="Subject" Index="2" IsNewNode="True" />
+        <ColumnInfo Id="Description" PropertyName="Description" Index="3" IsNewNode="True" />
+        <ColumnInfo Id="Completion" PropertyName="Completion" Index="4" IsNewNode="True" />
+      </Columns>
+      <HiddenActions IsNewNode="True">
+        <ActionLink ActionId="Delete" IsNewNode="True" />
+        <ActionLink ActionId="Link" IsNewNode="True" />
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+        <ActionLink ActionId="New" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+        <ActionLink ActionId="Unlink" IsNewNode="True" />
+      </HiddenActions>
+    </ListView>
+    <DetailView Id="Employee_DetailView">
+      <Items>
+        <PropertyEditor Id="AssignedTasks" Caption="Tasks" />
+        <ActionContainerViewItem Id="EmailCategory" ActionContainer="Email" Caption="EmailCategory(46)" IsNewNode="True" />
+        <ActionContainerViewItem Id="HomePhoneCategory" Caption="HomePhoneCategory(43)" ActionContainer="HomePhone" IsNewNode="True" />
+        <ActionContainerViewItem Id="MobilePhoneCategory" Caption="MobilePhoneCategory(45)" ActionContainer="MobilePhone" IsNewNode="True" />
+        <PropertyEditor Id="Picture" PropertyName="Picture.Data" />
+        <ActionContainerViewItem Id="SkypeCategory" ActionContainer="Skype" Caption="SkypeCategory(56)" IsNewNode="True" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="SimpleEditors" RelativeSize="100" Direction="Vertical" Caption="SimpleEditors">
+            <LayoutGroup Id="Autoee47f688-bd80-492b-8b31-15db5dabc04f" ShowCaption="False" Caption="Autoee47f688-bd80-492b-8b31-15db5dabc04f(3)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
+              <LayoutGroup Id="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086" ShowCaption="False" Caption="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086(4)" Direction="Horizontal" Index="0" RelativeSize="42.18390804597701" IsNewNode="True">
+                <LayoutGroup Id="Autoa11d7465-7eeb-461b-8176-fa484f63a552" ShowCaption="False" Caption="Autoa11d7465-7eeb-461b-8176-fa484f63a552(4)" Index="0" RelativeSize="51.86147186147186" IsNewNode="True">
+                  <LayoutGroup Id="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d" ShowCaption="False" Caption="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d(5)" Index="0" RelativeSize="100" IsNewNode="True">
+                    <LayoutGroup Id="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888" ShowCaption="False" Caption="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888(6)" Index="0" RelativeSize="100" IsNewNode="True">
+                      <LayoutGroup Id="Item1" ShowCaption="False" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
+                        <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12" ShowCaption="False" Caption="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12(9)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
+                          <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Horizontal" Index="0" RelativeSize="38.14713896457766" IsNewNode="True">
+                            <LayoutGroup Id="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf" ShowCaption="False" Caption="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf(10)" Index="0" RelativeSize="67.9465776293823" IsNewNode="True">
+                              <LayoutItem Id="FirstName" ViewItem="FirstName" Index="0" RelativeSize="22.857142857142858" IsNewNode="True" />
+                              <LayoutItem Id="LastName" ViewItem="LastName" Index="1" RelativeSize="17.142857142857142" IsNewNode="True" />
+                              <LayoutItem Id="FullName" ViewItem="FullName" Index="2" RelativeSize="17.142857142857142" IsNewNode="True" />
+                              <LayoutItem Id="BirthDate" ViewItem="BirthDate" Index="3" RelativeSize="17.142857142857142" IsNewNode="True" />
+                              <LayoutGroup Id="Auto6c6e0081-db07-4422-a00e-01156263fb2d" ShowCaption="False" Caption="Auto6c6e0081-db07-4422-a00e-01156263fb2d(16)" Direction="Horizontal" Index="4" RelativeSize="25.714285714285715" IsNewNode="True">
+                                <LayoutItem Id="Title" ViewItem="Title" Index="0" RelativeSize="52.57985257985258" IsNewNode="True" />
+                                <LayoutItem Id="Prefix" ViewItem="Prefix" Index="1" RelativeSize="47.42014742014742" IsNewNode="True" />
+                              </LayoutGroup>
+                            </LayoutGroup>
+                            <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="1" RelativeSize="32.053422370617696" IsNewNode="True" />
+                          </LayoutGroup>
+                          <LayoutGroup Id="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82" ShowCaption="False" Caption="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82(19)" Index="1" RelativeSize="23.705722070844686" IsNewNode="True">
+                            <LayoutItem Id="Address" ViewItem="Address" Index="0" RelativeSize="31.03448275862069" IsNewNode="True" />
+                            <LayoutItem Id="City" ViewItem="City" Index="1" RelativeSize="27.586206896551722" IsNewNode="True" />
+                            <LayoutGroup Id="Auto1f5af4be-c654-4b39-9081-2237c0fc31d3" ShowCaption="False" Caption="Auto1f5af4be-c654-4b39-9081-2237c0fc31d3(23)" Direction="Horizontal" Index="2" RelativeSize="41.37931034482759" IsNewNode="True">
+                              <LayoutItem Id="State" ViewItem="State" Index="0" RelativeSize="53.75626043405676" IsNewNode="True" />
+                              <LayoutItem Id="ZipCode" ViewItem="ZipCode" Index="1" RelativeSize="46.24373956594324" IsNewNode="True" />
+                            </LayoutGroup>
+                          </LayoutGroup>
+                          <LayoutItem Id="Item5" SizeConstraintsType="Custom" MinSize="182, 24" MaxSize="0, 0" Index="2" RelativeSize="6.539509536784741" IsNewNode="True" />
+                          <LayoutGroup Id="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054" ShowCaption="False" Caption="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054(27)" Direction="Horizontal" Index="3" RelativeSize="31.607629427792915" IsNewNode="True">
+                            <LayoutGroup Id="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90" ShowCaption="False" Caption="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90(28)" Index="0" RelativeSize="79.63272120200334" IsNewNode="True">
+                              <LayoutItem Id="HomePhone" ViewItem="HomePhone" Index="0" RelativeSize="25.862068965517242" IsNewNode="True" />
+                              <LayoutItem Id="MobilePhone" ViewItem="MobilePhone" Index="1" RelativeSize="20.689655172413794" IsNewNode="True" />
+                              <LayoutItem Id="Email" ViewItem="Email" Index="2" RelativeSize="20.689655172413794" IsNewNode="True" />
+                              <LayoutItem Id="Skype" ViewItem="Skype" Index="3" RelativeSize="32.758620689655174" IsNewNode="True" />
+                            </LayoutGroup>
+                            <LayoutGroup Id="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323" ShowCaption="False" Caption="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323(31)" Index="1" RelativeSize="20.36727879799666" IsNewNode="True">
+                              <LayoutItem Id="HomePhoneCategory" ViewItem="HomePhoneCategory" Index="0" RelativeSize="27.586206896551722" IsNewNode="True" />
+                              <LayoutItem Id="MobilePhoneCategory" ViewItem="MobilePhoneCategory" Index="1" RelativeSize="22.413793103448278" IsNewNode="True" />
+                              <LayoutItem Id="EmailCategory" ViewItem="EmailCategory" Index="2" RelativeSize="22.413793103448278" IsNewNode="True" />
+                              <LayoutItem Id="SkypeCategory" ViewItem="SkypeCategory" Index="3" RelativeSize="27.586206896551722" IsNewNode="True" />
+                            </LayoutGroup>
+                          </LayoutGroup>
+                        </LayoutGroup>
+                      </LayoutGroup>
+                    </LayoutGroup>
+                  </LayoutGroup>
+                </LayoutGroup>
+                <LayoutGroup Id="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f" ShowCaption="False" Caption="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f(26)" Index="1" RelativeSize="48.13852813852814" IsNewNode="True">
+                  <LayoutItem Id="Department" ViewItem="Department" Index="0" RelativeSize="8.719346049046322" IsNewNode="True" />
+                  <LayoutItem Id="Status" ViewItem="Status" Index="1" RelativeSize="6.539509536784741" IsNewNode="True" />
+                  <LayoutItem Id="HireDate" ViewItem="HireDate" Index="2" RelativeSize="6.539509536784741" IsNewNode="True" />
+                  <LayoutItem Id="Item2" SizeConstraintsType="Custom" MinSize="10, 23" MaxSize="0, 23" Index="3" RelativeSize="6.267029972752043" IsNewNode="True" />
+                  <LayoutItem Id="Evaluations" ShowCaption="True" ViewItem="Evaluations" CaptionLocation="Top" Index="4" RelativeSize="71.93460490463215" IsNewNode="True" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="AssignedTasks" ViewItem="AssignedTasks" Index="1" RelativeSize="57.81609195402299" ShowCaption="True" IsNewNode="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="Employee" ShowCaption="True" Direction="Horizontal" Index="2" RelativeSize="16.139767054908486" Removed="True">
+              <LayoutGroup Id="Employee_col1" ShowCaption="False" Index="0" RelativeSize="50" IsNewNode="True">
+                <LayoutItem Id="PersonalProfile" ViewItem="PersonalProfile" Index="0" RelativeSize="50" IsNewNode="True" />
+                <LayoutItem Id="ProbationReason" ViewItem="ProbationReason" Index="1" RelativeSize="50" IsNewNode="True" />
+              </LayoutGroup>
+              <LayoutGroup Id="Employee_col2" ShowCaption="False" Index="1" RelativeSize="50" IsNewNode="True">
+                <LayoutItem Id="AddressLatitude" ViewItem="AddressLatitude" Index="0" RelativeSize="50" IsNewNode="True" />
+                <LayoutItem Id="AddressLongitude" ViewItem="AddressLongitude" Index="1" RelativeSize="50" IsNewNode="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
+          <TabbedGroup Id="Tabs" RelativeSize="16.547788873038517" Removed="True">
+            <LayoutGroup Id="AssignedEmployeeTasks" RelativeSize="100">
+              <LayoutItem Id="AssignedEmployeeTasks" RelativeSize="100" ViewItem="AssignedEmployeeTasks" />
+            </LayoutGroup>
+            <LayoutGroup Id="AssignedTasks" RelativeSize="0" Caption="Assigned Tasks" Direction="Horizontal">
+              <LayoutItem Id="AssignedTasks" RelativeSize="100" ViewItem="AssignedTasks" Removed="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="Employees" RelativeSize="100">
+              <LayoutItem Id="Employees" RelativeSize="100" ViewItem="Employees" />
+            </LayoutGroup>
+            <LayoutGroup Id="Evaluations" RelativeSize="0" Direction="Horizontal">
+              <LayoutItem Id="Evaluations" RelativeSize="100" ViewItem="Evaluations" Removed="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="EvaluationsCreatedBy" RelativeSize="100">
+              <LayoutItem Id="EvaluationsCreatedBy" RelativeSize="100" ViewItem="EvaluationsCreatedBy" />
+            </LayoutGroup>
+            <LayoutGroup Id="Orders" RelativeSize="100">
+              <LayoutItem Id="Orders" RelativeSize="100" ViewItem="Orders" />
+            </LayoutGroup>
+            <LayoutGroup Id="OwnedTasks" RelativeSize="100">
+              <LayoutItem Id="OwnedTasks" RelativeSize="100" ViewItem="OwnedTasks" />
+            </LayoutGroup>
+            <LayoutGroup Id="Products" RelativeSize="100">
+              <LayoutItem Id="Products" RelativeSize="100" ViewItem="Products" />
+            </LayoutGroup>
+            <LayoutGroup Id="Quotes" RelativeSize="100">
+              <LayoutItem Id="Quotes" RelativeSize="100" ViewItem="Quotes" />
+            </LayoutGroup>
+            <LayoutGroup Id="SupportedProducts" RelativeSize="100">
+              <LayoutItem Id="SupportedProducts" RelativeSize="100" ViewItem="SupportedProducts" />
+            </LayoutGroup>
+          </TabbedGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="Employee_DetailView_Child" CaptionColon=":" EnableCaptionColon="True" CaptionLocation="Default" CaptionHorizontalAlignment="Default" CaptionVerticalAlignment="Default" CaptionWordWrap="Default" EnableLayoutGroupImages="True" CustomizationEnabled="True" RequiredFieldMark="*" ClassName="OutlookInspired.Module.BusinessObjects.Employee" AllowEdit="False" AllowDelete="False" AllowNew="False" IsNewNode="True">
+      <Items IsNewNode="True">
+        <PropertyEditor Id="Address" PropertyName="Address" IsNewNode="True" />
+        <PropertyEditor Id="AddressLatitude" PropertyName="AddressLatitude" IsNewNode="True" />
+        <PropertyEditor Id="AddressLongitude" PropertyName="AddressLongitude" IsNewNode="True" />
+        <PropertyEditor Id="AssignedEmployeeTasks" PropertyName="AssignedEmployeeTasks" View="Employee_AssignedEmployeeTasks_ListView" IsNewNode="True" />
+        <PropertyEditor Id="AssignedTasks" PropertyName="AssignedTasks" Caption="Tasks" View="Employee_AssignedTasks_ListView_Child" IsNewNode="True" />
+        <PropertyEditor Id="BirthDate" PropertyName="BirthDate" IsNewNode="True" />
+        <PropertyEditor Id="City" PropertyName="City" IsNewNode="True" />
+        <PropertyEditor Id="Department" PropertyName="Department" IsNewNode="True" />
+        <PropertyEditor Id="Email" PropertyName="Email" IsNewNode="True" />
+        <ActionContainerViewItem Id="EmailCategory" ActionContainer="Email" Caption="EmailCategory(46)" IsNewNode="True" />
+        <ActionContainerViewItem Id="EmployeePhone" ActionContainer="EmployeePhone" Caption="EmployeePhone(38)" IsNewNode="True" />
+        <PropertyEditor Id="Employees" PropertyName="Employees" View="Employee_Employees_ListView" IsNewNode="True" />
+        <ActionContainerViewItem Id="EmployeeSocial" ActionContainer="EmployeeSocial" Caption="EmployeeSocial(40)" IsNewNode="True" />
+        <PropertyEditor Id="Evaluations" PropertyName="Evaluations" View="Employee_Evaluations_ListView_Child" IsNewNode="True" />
+        <PropertyEditor Id="EvaluationsCreatedBy" PropertyName="EvaluationsCreatedBy" View="Employee_EvaluationsCreatedBy_ListView" IsNewNode="True" />
+        <PropertyEditor Id="FirstName" PropertyName="FirstName" IsNewNode="True" />
+        <PropertyEditor Id="FullName" PropertyName="FullName" IsNewNode="True" />
+        <PropertyEditor Id="HireDate" PropertyName="HireDate" IsNewNode="True" />
+        <PropertyEditor Id="HomePhone" PropertyName="HomePhone" IsNewNode="True" />
+        <ActionContainerViewItem Id="HomePhoneCategory" Caption="HomePhoneCategory(43)" ActionContainer="HomePhone" IsNewNode="True" />
+        <PropertyEditor Id="LastName" PropertyName="LastName" IsNewNode="True" />
+        <PropertyEditor Id="MobilePhone" PropertyName="MobilePhone" IsNewNode="True" />
+        <ActionContainerViewItem Id="MobilePhoneCategory" Caption="MobilePhoneCategory(45)" ActionContainer="MobilePhone" IsNewNode="True" />
+        <PropertyEditor Id="Orders" PropertyName="Orders" View="Employee_Orders_ListView" IsNewNode="True" />
+        <PropertyEditor Id="OwnedTasks" PropertyName="OwnedTasks" View="Employee_OwnedTasks_ListView" IsNewNode="True" />
+        <PropertyEditor Id="PersonalProfile" PropertyName="PersonalProfile" IsNewNode="True" />
+        <PropertyEditor Id="Picture" PropertyName="Picture.Data" IsNewNode="True" />
+        <PropertyEditor Id="Prefix" PropertyName="Prefix" IsNewNode="True" />
+        <PropertyEditor Id="ProbationReason" PropertyName="ProbationReason" IsNewNode="True" />
+        <PropertyEditor Id="ProbationReasonId" PropertyName="ProbationReasonId" IsNewNode="True" />
+        <PropertyEditor Id="Products" PropertyName="Products" View="Employee_Products_ListView" IsNewNode="True" />
+        <PropertyEditor Id="Quotes" PropertyName="Quotes" View="Employee_Quotes_ListView" IsNewNode="True" />
+        <PropertyEditor Id="Skype" PropertyName="Skype" IsNewNode="True" />
+        <ActionContainerViewItem Id="SkypeCategory" ActionContainer="Skype" Caption="SkypeCategory(56)" IsNewNode="True" />
+        <PropertyEditor Id="State" PropertyName="State" IsNewNode="True" />
+        <PropertyEditor Id="Status" PropertyName="Status" IsNewNode="True" />
+        <PropertyEditor Id="SupportedProducts" PropertyName="SupportedProducts" View="Employee_SupportedProducts_ListView" IsNewNode="True" />
+        <PropertyEditor Id="Title" PropertyName="Title" IsNewNode="True" />
+        <PropertyEditor Id="ZipCode" PropertyName="ZipCode" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+            <LayoutGroup Id="Autoee47f688-bd80-492b-8b31-15db5dabc04f" ShowCaption="False" Caption="Autoee47f688-bd80-492b-8b31-15db5dabc04f(3)" Index="0" RelativeSize="100" IsNewNode="True">
+              <LayoutGroup Id="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086" ShowCaption="False" Caption="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086(4)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
+                <LayoutGroup Id="Autoa11d7465-7eeb-461b-8176-fa484f63a552" ShowCaption="False" Caption="Autoa11d7465-7eeb-461b-8176-fa484f63a552(4)" Index="0" RelativeSize="100" IsNewNode="True">
+                  <LayoutGroup Id="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d" ShowCaption="False" Caption="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d(5)" Index="0" RelativeSize="100" IsNewNode="True">
+                    <LayoutGroup Id="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888" ShowCaption="False" Caption="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888(6)" Index="0" RelativeSize="100" IsNewNode="True">
+                      <LayoutGroup Id="Item1" ShowCaption="False" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
+                        <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12" ShowCaption="False" Caption="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12(9)" Index="0" RelativeSize="100" IsNewNode="True">
+                          <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
+                            <LayoutGroup Id="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4" ShowCaption="False" Caption="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4(11)" Direction="Horizontal" Index="0" RelativeSize="26.923076923076923" IsNewNode="True">
+                              <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="0" RelativeSize="33.22545846817692" SizeConstraintsType="Custom" MinSize="308, 38" MaxSize="308, 0" IsNewNode="True" />
+                              <LayoutGroup Id="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1" ShowCaption="False" Caption="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1(13)" Index="1" RelativeSize="13.700107874865157" IsNewNode="True">
+                                <LayoutItem Id="Item8" Index="0" RelativeSize="15.2073732718894" IsNewNode="True" />
+                                <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" SizeConstraintsType="Custom" MinSize="127, 32" Index="1" RelativeSize="19.35483870967742" IsNewNode="True" />
+                                <LayoutItem Id="Title" ViewItem="Title" Index="2" RelativeSize="11.059907834101383" ShowCaption="False" IsNewNode="True" />
+                                <LayoutItem Id="Item9" Index="3" RelativeSize="10.599078341013826" IsNewNode="True" />
+                                <LayoutItem Id="EmployeePhone" ViewItem="EmployeePhone" Index="4" RelativeSize="11.981566820276498" IsNewNode="True" />
+                                <LayoutItem Id="EmployeeSocial" ViewItem="EmployeeSocial" Index="5" RelativeSize="11.981566820276498" IsNewNode="True" />
+                                <LayoutItem Id="Item7" Index="6" RelativeSize="19.81566820276498" IsNewNode="True" />
+                              </LayoutGroup>
+                              <LayoutGroup Id="Auto23f9911d-101e-4fbc-9bc0-5d1fe7385a04" ShowCaption="False" Caption="Auto23f9911d-101e-4fbc-9bc0-5d1fe7385a04(13)" Index="2" RelativeSize="53.07443365695793" IsNewNode="True">
+                                <LayoutGroup Id="Auto5bdcc713-6a58-41f4-a73c-03230057d780" ShowCaption="False" Caption="Auto5bdcc713-6a58-41f4-a73c-03230057d780(15)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
+                                  <LayoutItem Id="Item5" Index="0" RelativeSize="100" IsNewNode="True" />
+                                </LayoutGroup>
+                              </LayoutGroup>
+                            </LayoutGroup>
+                            <LayoutItem Id="Item6" Index="1" RelativeSize="1.7369727047146402" IsNewNode="True" />
+                            <TabbedGroup Id="Item3" CaptionLocation="Top" Index="2" RelativeSize="71.33995037220843" IsNewNode="True">
+                              <LayoutGroup Id="Item4" ShowCaption="True" Caption="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
+                                <LayoutItem Id="Evaluations" ViewItem="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True" />
+                              </LayoutGroup>
+                              <LayoutGroup Id="Item2" ShowCaption="True" Caption="Tasks" CaptionLocation="Top" Index="1" RelativeSize="100" IsNewNode="True">
+                                <LayoutItem Id="AssignedTasks" ViewItem="AssignedTasks" Index="0" RelativeSize="100" IsNewNode="True" />
+                              </LayoutGroup>
+                            </TabbedGroup>
+                          </LayoutGroup>
+                        </LayoutGroup>
+                      </LayoutGroup>
+                    </LayoutGroup>
+                  </LayoutGroup>
+                </LayoutGroup>
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <ListView Id="Employee_Evaluations_ListView">
+      <Columns>
+        <ColumnInfo Id="Details" Index="-1" />
+        <ColumnInfo Id="Employee" Index="-1" />
+        <ColumnInfo Id="Rating" Index="-1" />
+        <ColumnInfo Id="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" />
+        <ColumnInfo Id="Subject" Index="1" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="Manager" Index="2" />
+      </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="Delete" IsNewNode="True" />
+        <ActionLink ActionId="Link" IsNewNode="True" />
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+        <ActionLink ActionId="New" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+        <ActionLink ActionId="Unlink" IsNewNode="True" />
+      </HiddenActions>
+    </ListView>
+    <ListView Id="Employee_Evaluations_ListView_Child" ClassName="OutlookInspired.Module.BusinessObjects.Evaluation" DataAccessMode="Client" IsNewNode="True">
+      <Columns IsNewNode="True">
+        <ColumnInfo Id="Details" PropertyName="Details" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Employee" PropertyName="Employee" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Rating" PropertyName="Rating" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="CreatedOn" PropertyName="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" IsNewNode="True" />
+        <ColumnInfo Id="Subject" PropertyName="Subject" Index="1" IsNewNode="True" />
+        <ColumnInfo Id="Manager" PropertyName="Manager" Index="2" IsNewNode="True" />
+      </Columns>
+      <HiddenActions IsNewNode="True">
+        <ActionLink ActionId="Delete" IsNewNode="True" />
+        <ActionLink ActionId="Link" IsNewNode="True" />
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+        <ActionLink ActionId="New" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+        <ActionLink ActionId="Unlink" IsNewNode="True" />
+      </HiddenActions>
+    </ListView>
+    <ListView Id="Employee_ListView" AutoExpandAllGroups="True" IsGroupPanelVisible="True" MasterDetailMode="ListViewOnly" MasterDetailView="Employee_DetailView_Child">
+      <Columns>
+        <ColumnInfo Id="PrefixImage" Index="0" Width="52" />
+        <ColumnInfo Id="FullName" Index="1" />
+        <ColumnInfo Id="Department" GroupIndex="0" SortOrder="Ascending" Index="2" />
+        <ColumnInfo Id="Address" Index="3" />
+        <ColumnInfo Id="City" Index="4" />
+        <ColumnInfo Id="State" Index="5" />
+        <ColumnInfo Id="ZipCode" Index="6" />
+        <ColumnInfo Id="Email" Index="7" />
+      </Columns>
+    </ListView>
+    <DashboardView Id="EmployeeListView" Caption="Employee" IsNewNode="True">
+      <Items IsNewNode="True">
+        <DashboardViewItem Id="Employee_ListView" ViewId="Employee_ListView" Index="0" IsNewNode="True" />
+        <DashboardViewItem Id="Employee_DetailView_Child" ViewId="Employee_DetailView_Child" ActionsToolbarVisibility="Hide" Index="1" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" ShowCaption="False" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
+          <LayoutItem Id="Employee_ListView" ViewItem="Employee_ListView" Index="0" RelativeSize="75" IsNewNode="True" />
+          <LayoutItem Id="Employee_DetailView_Child" ViewItem="Employee_DetailView_Child" Index="1" RelativeSize="32.254584681769146" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>
-        <LayoutGroup Id="Main" >
-          <LayoutGroup Id="SimpleEditors" >
-            <LayoutGroup Id="ReportDataV2" >
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutGroup Id="ReportDataV2">
               <LayoutItem Id="DisplayName" ViewItem="DisplayName" Index="0" IsNewNode="True" Removed="True" />
               <LayoutItem Id="ParametersObjectType" ViewItem="ParametersObjectType" Index="1" IsNewNode="True" Removed="True" />
               <LayoutItem Id="DataTypeCaption" ViewItem="DataTypeCaption" Index="2" IsNewNode="True" Removed="True" />
-              <LayoutItem Id="IsInplaceReport" Index="3" />
+              <LayoutItem Id="IsInplaceReport" Index="3" ViewItem="IsInplaceReport" />
             </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>

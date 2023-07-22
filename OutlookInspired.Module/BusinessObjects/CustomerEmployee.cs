@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects {
@@ -20,20 +21,20 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual string Position { get; set; }
 		public virtual bool IsPurchaseAuthority { get; set; }
 		public virtual ICollection<CustomerCommunication> CustomerCommunications { get; set; }
-		// public virtual Address Address => CustomerStore?.Address;
 		public virtual ICollection<EmployeeTask> EmployeeTasks { get; set; }
-		// Image _photo;
-		// [NotMapped]
-		// public Image Photo {
-		// 	get => _photo ??= Picture.Data.CreateImage();
-		// 	set {
-		// 		_photo = value;
-		// 		Picture = value.FromImage();
-		// 	} 
-		// }
+		
 	}
 	public enum PersonPrefix {
-		Dr, Mr, Ms, Miss, Mrs
+		[ImageName("Doctor")]
+		Dr,
+		[ImageName("Mr")]
+		Mr,
+		[ImageName("Ms")]
+		Ms,
+		[ImageName("Miss")]
+		Miss,
+		[ImageName("Mrs")]
+		Mrs
 	}
 
 }

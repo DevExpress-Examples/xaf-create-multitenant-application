@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.DatabaseUpdate;
@@ -62,9 +61,7 @@ public class Updater : ModuleUpdater {
 		userAdmin.Roles.Add(adminRole);
 
         ObjectSpace.CommitChanges(); //This line persists created object(s).
-        if (!ObjectSpace.Any<Customer>()){
-            ObjectSpace.ImportFromSqlLite().Wait();
-        }
+        
 #endif
     }
 

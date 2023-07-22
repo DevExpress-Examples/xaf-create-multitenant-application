@@ -70,7 +70,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<TaskAttachedFile>().HasOne(file => file.EmployeeTask).WithMany(task => task.AttachedFiles).HasForeignKey(file => file.EmployeeTaskId);
-        modelBuilder.Entity<Evaluation>().HasOne(evaluation => evaluation.CreatedBy).WithMany(employee => employee.EvaluationsCreatedBy);
+        modelBuilder.Entity<Evaluation>().HasOne(evaluation => evaluation.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
         modelBuilder.Entity<ProductImage>().HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);
         modelBuilder.Entity<Customer>().Property(customer => customer.AnnualRevenue).HasConversion<double>();
         OnEmployeeModelCreating(modelBuilder);

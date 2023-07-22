@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using OutlookInspired.Module.Services;
 
 
 namespace OutlookInspired.Module.BusinessObjects{

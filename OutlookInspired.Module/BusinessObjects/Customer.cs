@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Services;
 
 
 namespace OutlookInspired.Module.BusinessObjects {
@@ -31,6 +32,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[Attributes.Validation.Phone]
 		public virtual string Fax { get; set; }
 		[Attributes.Validation.Url]
+		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)]
 		public virtual string Website { get; set; }
 		[DataType(DataType.Currency)]
 		public virtual decimal AnnualRevenue { get; set; }

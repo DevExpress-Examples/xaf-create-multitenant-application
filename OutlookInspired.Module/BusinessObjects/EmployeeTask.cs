@@ -1,8 +1,13 @@
 ﻿using System.Collections.ObjectModel;
-
+using System.Drawing;
+using DevExpress.ExpressApp.ConditionalAppearance;
+using DevExpress.ExpressApp.DC;
+using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{
+    [Appearance(nameof(DueDate),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(DueDate),FontStyle = FontStyle.Bold)]
     public class EmployeeTask:MigrationBaseObject{
         public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
@@ -12,7 +17,13 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
         public virtual EmployeeTaskStatus Status { get; set; }
+        [VisibleInListView(false)][VisibleInLookupListView(false)]
         public virtual EmployeeTaskPriority Priority { get; set; }
+
+        [VisibleInDetailView(false)][XafDisplayName(nameof(Priority))]
+        public Image PriorityImage => Priority.Image();
+        
+        [EditorAlias(EditorAliases.ProgressEditor)]
         public virtual int Completion { get; set; }
         public virtual bool Reminder { get; set; }
         public virtual DateTime? ReminderDateTime { get; set; }
@@ -37,7 +48,14 @@ namespace OutlookInspired.Module.BusinessObjects{
         NotStarted, Completed, InProgress, NeedAssistance, Deferred
     }
     public enum EmployeeTaskPriority {
-        Low, Normal, High, Urgent
+        [ImageName("PriorityLow")]
+        Low,
+        [ImageName("PriorityNormal")]
+        Normal,
+        [ImageName("PriorityHigh")]
+        High,
+        [ImageName("PriorityUrgent")]
+        Urgent
     }
 
     public enum EmployeeTaskFollowUp {
