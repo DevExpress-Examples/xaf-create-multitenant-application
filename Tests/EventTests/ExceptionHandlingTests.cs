@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using OutlookInspired.Module.Services;
 using Shouldly;
 
 namespace Tests.EventTests{

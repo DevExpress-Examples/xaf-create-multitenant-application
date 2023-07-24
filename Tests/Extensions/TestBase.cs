@@ -4,9 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Win;
 using OutlookInspired.Win.Extensions;
 
-namespace Tests{
+namespace Tests.Extensions{
     public abstract class TestBase{
         protected async Task<WinApplication> SetupWinApplication(Func<WinApplication, Task>? beforeSetup=null){
+            var model = Directory.GetFiles(Environment.CurrentDirectory!, "*.xafml").FirstOrDefault();
+            if (File.Exists(model)){
+                // File.Delete(model);
+            }
             var builder = WinApplication.CreateBuilder();
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();

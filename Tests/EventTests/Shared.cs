@@ -48,9 +48,40 @@
             Value2 = value2;
         }
     }
+    public class ExceptionThrowingEventArgs : EventArgs
+    {
+        public void ThrowException()
+        {
+            throw new Exception("Exception thrown from ExceptionThrowingEventArgs");
+        }
+    }
 
     public class TestClass
     {
+        public event EventHandler<ExceptionThrowingEventArgs> TestEventException;
+
+        public void RaiseTestEventException()
+        {
+            var args = new ExceptionThrowingEventArgs();
+            TestEventException?.Invoke(this, args);
+            args.ThrowException();
+        }
+        
+        public event EventHandler TestEvent4;
+        public event EventHandler TestEvent5;
+        
+
+
+
+
+        public void RaiseTestEvent4() {
+            TestEvent4?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RaiseTestEvent5() {
+            TestEvent5?.Invoke(this, EventArgs.Empty);
+        }
+
         public event EventHandler? TestEvent;
         public event EventHandler<StringEventArgs>? TestEventWithParameter;
         public event EventHandler<MultiStringEventArgs>? TestEventWithMultipleParameters;

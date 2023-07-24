@@ -9,24 +9,24 @@ namespace OutlookInspired.Module.Services{
                 return item;
             });
         
+        
         public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source){
             foreach (var unused in source){
                 yield break;
             }
         }
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> source,params T[] values){
-            return source.Concat(values.AsEnumerable());
-        }
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> source,params T[] values) => source.Concat(values.AsEnumerable());
+
         public static Dictionary<TKey, TObject> ToDictionary<TObject,TKey>(this IEnumerable<TObject> objects,Func<TObject,TKey> keySelector) where TObject:MigrationBaseObject 
             => objects.ToDictionary(keySelector, o => o);
 
         public static IEnumerable<TValue> To<TSource,TValue>(this IEnumerable<TSource> source,TValue value) 
             => source.Select(_ => value);
 
-        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
-            foreach (var item in enumerable) yield return item;
-            await Task.CompletedTask;
-        }
+        // public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
+        //     foreach (var item in enumerable) yield return item;
+        //     await Task.CompletedTask;
+        // }
         
         public static IEnumerable<T> WhereNotDefault<T,T2>(this IEnumerable<T> source, Func<T,T2> predicate) 
             => source.Where(arg => !predicate(arg).IsDefaultValue());

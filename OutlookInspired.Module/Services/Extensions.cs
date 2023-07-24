@@ -39,6 +39,12 @@ namespace OutlookInspired.Module.Services{
             return tcs.Task;
         }
 
+        public static IEnumerable<T> ToEnumerable<T>(this T obj){
+            yield return obj;
+        }
+        public static IAsyncEnumerable<T> Defer<T>(this object o, Func<IAsyncEnumerable<T>> selector)
+            => new[]{o}.ToAsyncEnumerable().SelectMany(_ => selector());
+        
         public static Task DelayAndExit(this XafApplication application,TimeSpan delay) => Task.Delay(delay).ContinueWith(_ => application.Exit());
 
         public static CancellationToken AsCancelable(this Task task){

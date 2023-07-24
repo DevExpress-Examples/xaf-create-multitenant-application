@@ -1,24 +1,12 @@
-using DevExpress.ExpressApp;
-using Humanizer;
+using DevExpress.Mvvm.Native;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using OutlookInspired.Module;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 using Shouldly;
+using Tests.Extensions;
 
 namespace Tests{
-    public class EmployeeTests:TestBase{
-        [Test][Apartment(ApartmentState.STA)]
-        public async Task Navigate_To_DashboardView(){
-            using var application = await SetupWinApplication();
-
-            application.Start();
-            // await application.WhenEventFired(nameof(XafApplication.FrameCreated)).FirstAsync();
-            // await Task.Delay(20.Seconds());
-        }
-    
-    }
     public class ImportDataTests:TestBase{
         [Test]
         public async Task ImportFrom(){
