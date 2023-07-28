@@ -25,8 +25,9 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual StateEnum BillingAddressState { get; set; }
 		public virtual double BillingAddressLatitude { get; set; }
 		public virtual double BillingAddressLongitude { get; set; }
+
 		[Aggregated]
-		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } 
+		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } = new(); 
 		[Attributes.Validation.Phone]
 		public virtual string Phone { get; set; }
 		[Attributes.Validation.Phone]
@@ -41,13 +42,15 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual CustomerStatus Status { get; set; }
 		[InverseProperty(nameof(Order.Customer))]
 		[Aggregated]
-		public virtual ObservableCollection<Order> Orders{ get; set; } 
+		public virtual ObservableCollection<Order> Orders{ get; set; }
+
 		[InverseProperty(nameof(Quote.Customer))]
 		[Aggregated]
-		public virtual ObservableCollection<Quote> Quotes { get; set; }
+		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
+
 		[InverseProperty(nameof(CustomerStore.Customer))]
 		[Aggregated]
-		public virtual ObservableCollection<CustomerStore> CustomerStores { get; set; }
+		public virtual ObservableCollection<CustomerStore> CustomerStores{ get; set; } = new();
 		public virtual string Profile { get; set; }
 		[ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
 			DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]

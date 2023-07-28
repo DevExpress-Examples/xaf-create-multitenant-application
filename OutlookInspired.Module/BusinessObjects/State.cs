@@ -10,4 +10,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual byte[] LargeFlag{ get; set; }
         
     }
+    
+    public enum StateEnum {
+        CA=1, AR, AL, AK, AZ, CO, CT, DE, DC, FL, GA, HI, ID, IL, IN, IA, KS, KY, LA, ME, MD, MA, MI, MN, MS, MO, MT, NE, NV, NH, NJ, NM, NY, NC, OH, OK, OR, PA, RI, SC, SD, TN, TX, UT, VT, VA, WA, WV, WI, WY, ND
+    }
 }

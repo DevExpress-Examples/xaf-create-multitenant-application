@@ -120,6 +120,9 @@
             // 
             // labelSubtitle
             // 
+
+            #region Designer generated code
+
             this.labelSubtitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(216)))), ((int)(((byte)(188)))));
             this.labelSubtitle.Appearance.Options.UseFont = true;
@@ -129,6 +132,8 @@
             this.labelSubtitle.Size = new System.Drawing.Size(64, 25);
             this.labelSubtitle.TabIndex = 1;
             this.labelSubtitle.Text = "Subtitle";
+
+            #endregion
             // 
             // labelApplicationName
             // 

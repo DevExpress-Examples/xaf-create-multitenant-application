@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using System.Collections.ObjectModel;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 
@@ -14,7 +14,8 @@ namespace OutlookInspired.Module.BusinessObjects{
             DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
         [XafDisplayName("Large")][VisibleInListView(false)][VisibleInLookupListView(false)]
         public virtual byte[] LargeImage { get; set; }
-        public virtual ICollection<CustomerStore> CustomerStores { get; set; }
-        
+
+        public virtual ObservableCollection<CustomerStore> CustomerStores{ get; set; } = new();
+
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
+using DevExpress.Xpo;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultProperty(nameof(FullName))]
@@ -20,9 +22,11 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual CustomerStore CustomerStore { get; set; }
 		public virtual string Position { get; set; }
 		public virtual bool IsPurchaseAuthority { get; set; }
-		public virtual ICollection<CustomerCommunication> CustomerCommunications { get; set; }
-		public virtual ICollection<EmployeeTask> EmployeeTasks { get; set; }
-		
+		[Aggregated]
+		public virtual ObservableCollection<CustomerCommunication> CustomerCommunications{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<EmployeeTask> EmployeeTasks{ get; set; } = new();
+
 	}
 	public enum PersonPrefix {
 		[ImageName("Doctor")]

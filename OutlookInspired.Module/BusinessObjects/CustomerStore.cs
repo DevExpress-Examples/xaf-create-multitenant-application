@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using DevExpress.ExpressApp.DC;
 using OutlookInspired.Module.Attributes.Validation;
 
 
@@ -24,9 +24,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual decimal AnnualSales { get; set; }
 		public virtual Crest Crest { get; set; }
 		public virtual string Location { get; set; }
-		public virtual ICollection<CustomerEmployee> CustomerEmployees { get; set; }
-		public virtual ICollection<Order> Orders { get; set; }
-		public virtual ICollection<Quote> Quotes { get; set; }
+		[Aggregated]
+		public virtual ObservableCollection<CustomerEmployee> CustomerEmployees{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
 		public string CustomerName => Customer?.Name;
 
 	}

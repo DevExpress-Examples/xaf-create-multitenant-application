@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DevExpress.ExpressApp.DC;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -21,6 +22,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual DateTime? ShipDate { get; set; }
         public  virtual OrderShipMethod ShipMethod { get; set; }
         public  virtual string OrderTerms { get; set; }
+        [Aggregated]
         public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
         public  virtual ShipmentCourier ShipmentCourier { get; set; }
         public  virtual ShipmentStatus ShipmentStatus { get; set; }

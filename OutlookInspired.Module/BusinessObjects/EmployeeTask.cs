@@ -1,16 +1,20 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(DueDate),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(DueDate),FontStyle = FontStyle.Bold)]
     public class EmployeeTask:MigrationBaseObject{
+        [Aggregated]
         public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
+        [FontSizeDelta(8)]
         public virtual string Subject { get; set; }
         public virtual string Description { get; set; }
         public virtual string RtfTextDescription { get; set; }
@@ -27,13 +31,20 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual int Completion { get; set; }
         public virtual bool Reminder { get; set; }
         public virtual DateTime? ReminderDateTime { get; set; }
+
         public virtual Employee AssignedEmployee { get; set; }
+        [Browsable(false)]
+        public virtual Guid? AssignedEmployeeId { get; set; }
         public virtual Employee Owner { get; set; }
+        [Browsable(false)]
+        public virtual Guid? OwnerId { get; set; }
         public virtual CustomerEmployee CustomerEmployee { get; set; }
         public virtual  EmployeeTaskFollowUp FollowUp { get; set; }
         public  virtual bool Private { get; set; }
         public  virtual string Category { get; set; }
-        public virtual ObservableCollection<TaskAttachedFile> AttachedFiles { get; set; }
+
+        [Aggregated]
+        public virtual ObservableCollection<TaskAttachedFile> AttachedFiles{ get; set; } = new();
         public  virtual bool AttachedCollectionsChanged { get; set; }
         public  virtual long? ParentId { get; set; }
         public  virtual string Predecessors { get; set; }

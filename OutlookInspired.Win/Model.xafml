@@ -11,11 +11,11 @@
   <Views>
     <ListView Id="Employee_AssignedTasks_ListView_Child">
       <Columns>
+        <ColumnInfo Id="Description" RowIndex="1" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
+        <ColumnInfo Id="Completion" RowIndex="2" Index="1" OwnerBand="Main" />
         <ColumnInfo Id="DueDate" RowIndex="0" Index="1" OwnerBand="Main" />
         <ColumnInfo Id="PriorityImage" RowIndex="0" Index="2" OwnerBand="Main" />
-        <ColumnInfo Id="Description" RowIndex="1" Index="0" OwnerBand="Main" />
-        <ColumnInfo Id="Completion" RowIndex="2" Index="1"  OwnerBand="Main" />
       </Columns>
       <BandsLayout Enable="True" AllowChangeBandParent="False" AllowChangeColumnParent="False" AllowColumnMoving="False" AllowBandMoving="False" ShowBands="False" ShowColumnHeaders="False">
         <Band Id="Main" Index="0" IsNewNode="True" />
@@ -29,17 +29,77 @@
     </DetailView>
     <ListView Id="Employee_Evaluations_ListView_Child">
       <Columns>
+        <ColumnInfo Id="Bonus" RowIndex="1" Index="0" OwnerBand="Raise" />
         <ColumnInfo Id="CreatedOn" RowIndex="2" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Details" RowIndex="1" Index="0" OwnerBand="Main" />
+        <ColumnInfo Id="Raise" RowIndex="0" Index="0" OwnerBand="Raise" />
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
-        <ColumnInfo Id="Manager" RowIndex="0" Index="1" ToolTip="Manager" ToolTipIconType="Information" OwnerBand="Main" />
+        <ColumnInfo Id="Manager" RowIndex="0" Index="1" OwnerBand="Main" />
       </Columns>
       <BandsLayout Enable="True" AllowChangeBandParent="False" AllowChangeColumnParent="False" AllowColumnMoving="False" AllowBandMoving="False" ShowBands="False" ShowColumnHeaders="False">
         <Band Id="Main" Index="0" IsNewNode="True" />
+        <Band Id="Raise" Index="0" IsNewNode="True" />
       </BandsLayout>
     </ListView>
     <ListView Id="Employee_ListView" ShowFindPanel="True">
       <SplitLayout SplitterPosition="1262" />
     </ListView>
+    <ListView Id="Employee_ListView_Card" ClassName="OutlookInspired.Module.BusinessObjects.Employee" AutoExpandAllGroups="True" IsGroupPanelVisible="True" MasterDetailView="Employee_DetailView_Child" ShowFindPanel="True" IsNewNode="True">
+      <Columns IsNewNode="True">
+        <ColumnInfo Id="AddressLatitude" PropertyName="AddressLatitude" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="AddressLongitude" PropertyName="AddressLongitude" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="BirthDate" PropertyName="BirthDate" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="FirstName" PropertyName="FirstName" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="HireDate" PropertyName="HireDate" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="HomePhone" PropertyName="HomePhone" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="ID" PropertyName="ID" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="LastName" PropertyName="LastName" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="MobilePhone" PropertyName="MobilePhone" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="PersonalProfile" PropertyName="PersonalProfile" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Picture" PropertyName="Picture" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Prefix" PropertyName="Prefix" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="ProbationReason" PropertyName="ProbationReason" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Skype" PropertyName="Skype" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="Status" PropertyName="Status" Index="-1" IsNewNode="True" />
+        <ColumnInfo Id="PrefixImage" PropertyName="PrefixImage" Index="0" Width="52" IsNewNode="True" />
+        <ColumnInfo Id="FullName" PropertyName="FullName" Index="1" SortIndex="0" SortOrder="Ascending" IsNewNode="True" />
+        <ColumnInfo Id="Department" PropertyName="Department" Index="2" GroupIndex="0" SortOrder="Ascending" IsNewNode="True" />
+        <ColumnInfo Id="Title" PropertyName="Title" Index="2" IsNewNode="True" />
+        <ColumnInfo Id="Address" PropertyName="Address" Index="3" IsNewNode="True" />
+        <ColumnInfo Id="City" PropertyName="City" Index="4" IsNewNode="True" />
+        <ColumnInfo Id="State" PropertyName="State" Index="5" IsNewNode="True" />
+        <ColumnInfo Id="ZipCode" PropertyName="ZipCode" Index="6" IsNewNode="True" />
+        <ColumnInfo Id="Email" PropertyName="Email" Index="7" IsNewNode="True" />
+      </Columns>
+      <SplitLayout SplitterPosition="1262" IsNewNode="True" />
+    </ListView>
+    <DashboardView Id="EmployeeCardListView">
+      <Layout>
+        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren">
+          <LayoutItem Id="UserControlObject_DetailView" RelativeSize="60.0326264274062" />
+          <SeparatorItem Id="Item1" Index="1" RelativeSize="0.8156606851549756" IsNewNode="True" />
+          <LayoutItem Id="Employee_DetailView_Child" Index="2" RelativeSize="39.151712887438826" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+    <DashboardView Id="EmployeeListView">
+      <Layout>
+        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren">
+          <LayoutItem Id="Employee_ListView" RelativeSize="61.582381729200655" />
+          <SeparatorItem Id="Item1" Index="1" RelativeSize="0.8156606851549756" IsNewNode="True" />
+          <LayoutItem Id="Employee_DetailView_Child" Index="2" RelativeSize="37.60195758564437" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+    <DetailView Id="UserControlObject_DetailView" AllowEdit="False" AllowNew="False" AllowDelete="False">
+      <Items>
+        <ControlDetailItem Id="EmployeesPeek" ControlTypeName="OutlookInspired.Win.UserControls.EmployeesPeek" IsNewNode="True" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" Caption="Main">
+          <LayoutItem Id="EmployeesPeek" ViewItem="EmployeesPeek" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
   </Views>
 </Application>

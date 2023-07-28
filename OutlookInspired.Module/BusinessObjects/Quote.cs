@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using DevExpress.ExpressApp.DC;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -16,6 +17,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [DataType(DataType.Currency)]
         public  virtual decimal Total { get; set; }
         public virtual  double Opportunity { get; set; }
-        public virtual ObservableCollection<QuoteItem> QuoteItems { get; set; }
+        [Aggregated]
+        public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
     }
 }

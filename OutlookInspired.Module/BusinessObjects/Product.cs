@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using DevExpress.ExpressApp.DC;
 using OutlookInspired.Module.Services;
 
 
@@ -14,6 +16,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual byte[] Image { get; set; }
         public virtual Employee Support { get; set; }
         public virtual Employee Engineer { get; set; }
+        [Browsable(false)]
+        public virtual Guid? EngineerId { get; set; }
         public  virtual int? CurrentInventory { get; set; }
         public  virtual int Backorder { get; set; }
         public  virtual int Manufacturing { get; set; }
@@ -28,13 +32,19 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual double Weight { get; set; }
         public  virtual double ConsumerRating { get; set; }
         public  virtual ProductCategory Category { get; set; }
+
         [InverseProperty(nameof(ProductCatalog.Product))]
-        public virtual ObservableCollection<ProductCatalog> Catalog { get; set; }
-        [InverseProperty(nameof(OrderItem.Product))]
-        public virtual ObservableCollection<OrderItem> OrderItems { get; set; }
-        public virtual ObservableCollection<ProductImage> Images { get; set; }
-        public virtual ICollection<QuoteItem> QuoteItems { get; set; }
-        public Stream Brochure => Catalog is{ Count: > 0 } ? Catalog[0].PdfStream : null;
+        public virtual ObservableCollection<ProductCatalog> Catalogs{ get; set; } = new();
+
+        [InverseProperty(nameof(OrderItem.Product))][Aggregated]
+        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
+
+        [Aggregated]
+        public virtual ObservableCollection<ProductImage> Images{ get; set; } = new();
+
+        [Aggregated]
+        public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
+        public Stream Brochure => Catalogs is{ Count: > 0 } ? Catalogs[0].PdfStream : null;
         Image _img;
         public Image ProductImage => _img != null || PrimaryImage == null ? _img : _img = PrimaryImage.Data.CreateImage();
 

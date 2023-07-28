@@ -15,6 +15,8 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication {
         DatabaseVersionMismatch += OutlookInspiredWindowsFormsApplication_DatabaseVersionMismatch;
         CustomizeLanguagesList += OutlookInspiredWindowsFormsApplication_CustomizeLanguagesList;
     }
+    
+    
     private void OutlookInspiredWindowsFormsApplication_CustomizeLanguagesList(object sender, CustomizeLanguagesListEventArgs e) {
         string userLanguageName = Thread.CurrentThread.CurrentUICulture.Name;
         if(userLanguageName != "en-US" && e.Languages.IndexOf(userLanguageName) == -1) {

@@ -1,15 +1,27 @@
 ﻿using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
-    public static class EnumerableExtensions{
+    internal static class EnumerableExtensions{
+        
+        public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) 
+            => source.SelectMany(sources => sources);
+
+        public static IEnumerable<T> SelectManyRecursive<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childrenSelector){
+            foreach (var i in source){
+                yield return i;
+                var children = childrenSelector(i);
+                if (children == null) continue;
+                foreach (var child in SelectManyRecursive(children, childrenSelector))
+                    yield return child;
+            }
+        }
         public static IEnumerable<TSource> Do<TSource>(
             this IEnumerable<TSource> source, Action<TSource> action)
             => source.Select(item => {
                 action(item);
                 return item;
             });
-        
-        
+
         public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source){
             foreach (var unused in source){
                 yield break;
@@ -23,10 +35,10 @@ namespace OutlookInspired.Module.Services{
         public static IEnumerable<TValue> To<TSource,TValue>(this IEnumerable<TSource> source,TValue value) 
             => source.Select(_ => value);
 
-        // public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
-        //     foreach (var item in enumerable) yield return item;
-        //     await Task.CompletedTask;
-        // }
+        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
+            foreach (var item in enumerable) yield return item;
+            await Task.CompletedTask;
+        }
         
         public static IEnumerable<T> WhereNotDefault<T,T2>(this IEnumerable<T> source, Func<T,T2> predicate) 
             => source.Where(arg => !predicate(arg).IsDefaultValue());

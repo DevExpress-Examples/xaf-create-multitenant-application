@@ -1,5 +1,22 @@
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+
 namespace OutlookInspired.Module.Services{
-    public static class ReflectionExtensions{
+    internal static class ReflectionExtensions{
+        public static bool IsPublic(this MemberInfo memberInfo) 
+            => memberInfo switch {
+                FieldInfo fieldInfo => fieldInfo.IsPublic,
+                PropertyInfo propertyInfo => propertyInfo.GetGetMethod()?.IsPublic == true || propertyInfo.GetSetMethod()?.IsPublic == true,
+                MethodInfo methodInfo => methodInfo.IsPublic,
+                EventInfo eventInfo => eventInfo.GetAddMethod()?.IsPublic == true || eventInfo.GetRemoveMethod()?.IsPublic == true,
+                _ => false
+            };
+        
+        public static IOrderedEnumerable<MemberInfo> GetMembers(this Type type, MemberTypes memberType,  BindingFlags? flags=null) 
+            => type.GetMembers(flags??BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+                .Where(member => member.MemberType == memberType)
+                .OrderByDescending(member => (member is MethodInfo{ IsPublic: true }));
+        
         public static T CreateInstance<T>(this Type type) => (T)CreateInstance(type);
 
         public static object CreateInstance(this Type type){
@@ -26,5 +43,15 @@ namespace OutlookInspired.Module.Services{
         public static object DefaultValue(this Type t) => t.IsValueType ? Activator.CreateInstance(t) : null;
 		
         public static T DefaultValue<T>(this Type t) => t.IsValueType||t.IsArray ? t.CreateInstance<T>() : default;
+        
+        public static IEnumerable<TSource> YieldItem<TSource>(this TSource source){
+            yield return source;
+        }
+        public static object GetPropertyValue(this object obj, string propertyName) 
+            => obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!.GetValue(obj);
+        
+        public static void SetPropertyValue(this object obj, string propertyName, object value) 
+            => obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+                .SetValue(obj, value);
     }
 }

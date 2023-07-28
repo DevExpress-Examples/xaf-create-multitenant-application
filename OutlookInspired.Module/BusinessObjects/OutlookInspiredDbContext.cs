@@ -20,12 +20,12 @@ public class OutlookInspiredContextInitializer : DbContextTypesInfoInitializerBa
 //This factory creates DbContext for design-time services. For example, it is required for database migration.
 public class OutlookInspiredDesignTimeDbContextFactory : IDesignTimeDbContextFactory<OutlookInspiredEFCoreDbContext> {
 	public OutlookInspiredEFCoreDbContext CreateDbContext(string[] args) {
-		throw new InvalidOperationException("Make sure that the database connection string and connection provider are correct. After that, uncomment the code below and remove this exception.");
-		// var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
-		// optionsBuilder.UseSqlServer("Integrated Security=SSPI;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired");
-        // optionsBuilder.UseChangeTrackingProxies();
-        // optionsBuilder.UseObjectSpaceLinkProxies();
-		// return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);
+		// throw new InvalidOperationException("Make sure that the database connection string and connection provider are correct. After that, uncomment the code below and remove this exception.");
+		var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
+		optionsBuilder.UseSqlServer("Integrated Security=SSPI;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired");
+        optionsBuilder.UseChangeTrackingProxies();
+        optionsBuilder.UseObjectSpaceLinkProxies();
+		return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);
 	}
 }
 [TypesInfoInitializer(typeof(OutlookInspiredContextInitializer))]
@@ -65,14 +65,15 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
+        
         modelBuilder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangingAndChangedNotificationsWithOriginalValues);
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<TaskAttachedFile>().HasOne(file => file.EmployeeTask).WithMany(task => task.AttachedFiles).HasForeignKey(file => file.EmployeeTaskId);
-        modelBuilder.Entity<Evaluation>().HasOne(evaluation => evaluation.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
-        modelBuilder.Entity<ProductImage>().HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);
+        OnProductImageModelCreating(modelBuilder);
         modelBuilder.Entity<Customer>().Property(customer => customer.AnnualRevenue).HasConversion<double>();
+        OnTaskAttachedFileModelCreating(modelBuilder);
+        OnEvaluationModelCreating(modelBuilder);
         OnEmployeeModelCreating(modelBuilder);
         OnEmployeeTaskModelCreating(modelBuilder);
         OnCustomerEmployeeModelCreating(modelBuilder);
@@ -81,12 +82,39 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         OnProductModelCreating(modelBuilder);
         OnQuoteModelCreating(modelBuilder);
         OnQuoteItemModelCreating(modelBuilder);
+        OnProductCatalogModelCreating(modelBuilder);
         OnCustomerCommunicationModelCreating(modelBuilder);
         OnOrderItemModelCreating(modelBuilder);
+        // foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())){
+        //  relationship.DeleteBehavior = DeleteBehavior.Cascade;
+        // }
+        // foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())){
+	       //  relationship.DeleteBehavior = DeleteBehavior.Cascade;
+        // }
+        
+    }
+
+    private static void OnProductImageModelCreating(ModelBuilder modelBuilder){
+	    var productImage = modelBuilder.Entity<ProductImage>();
+	    productImage.HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);
+	    productImage.HasOne(image => image.Product).WithMany(product => product.Images).HasForeignKey(image => image.ProductId).OnDelete(DeleteBehavior.Cascade);   
+    }
+
+    private static void OnTaskAttachedFileModelCreating(ModelBuilder modelBuilder){
+	    var taskAttachedFile = modelBuilder.Entity<TaskAttachedFile>();
+	    taskAttachedFile.HasOne(file => file.EmployeeTask).WithMany(task => task.AttachedFiles)
+		    .HasForeignKey(file => file.EmployeeTaskId).OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private static void OnEvaluationModelCreating(ModelBuilder modelBuilder){
+	    var evaluation = modelBuilder.Entity<Evaluation>();
+	    evaluation.HasOne(item => item.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
+	    evaluation.HasOne(e => e.Manager).WithMany().HasForeignKey(e => e.ManagerId).OnDelete(DeleteBehavior.Cascade);
     }
 
     private static void OnOrderItemModelCreating(ModelBuilder modelBuilder){
 	    var orderItem = modelBuilder.Entity<OrderItem>();
+	    modelBuilder.Entity<OrderItem>().HasOne(o => o.Product).WithMany(product => product.OrderItems).HasForeignKey(o => o.ProductID).OnDelete(DeleteBehavior.Cascade);
 	    orderItem.Property(item => item.Discount).HasConversion<double>();
 	    orderItem.Property(item => item.ProductPrice).HasConversion<double>();
 	    orderItem.Property(item => item.Total).HasConversion<double>();
@@ -106,6 +134,15 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	    quoteItem.Property(item => item.Total).HasConversion<double>();
     }
 
+    private static void OnProductCatalogModelCreating(ModelBuilder modelBuilder){
+	    var catalog = modelBuilder.Entity<ProductCatalog>();
+	    catalog.HasOne(productCatalog => productCatalog.Product)
+		    .WithMany(product => product.Catalogs)
+		    .HasForeignKey(productCatalog => productCatalog.ProductId)
+		    .OnDelete(DeleteBehavior.Cascade);
+
+    }
+
     private static void OnQuoteModelCreating(ModelBuilder modelBuilder){
 	    var quote = modelBuilder.Entity<Quote>();
 	    quote.HasOne(q => q.CustomerStore).WithMany(store => store.Quotes);
@@ -117,12 +154,16 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 
     private static void OnProductModelCreating(ModelBuilder modelBuilder){
 	    var product = modelBuilder.Entity<Product>();
-	    product.HasOne(p => p.Engineer).WithMany(employee => employee.Products);
+	    product.HasOne(p => p.Engineer).WithMany(employee => employee.Products)
+		    ;
 	    product.HasOne(p => p.PrimaryImage).WithMany(picture => picture.Products);
-	    product.HasOne(p => p.Support).WithMany(employee => employee.SupportedProducts);
+	    product.HasOne(p => p.Support).WithMany(employee => employee.SupportedProducts).OnDelete(DeleteBehavior.Cascade);
 	    product.Property(p => p.SalePrice).HasConversion<double>();
 	    product.Property(p => p.RetailPrice).HasConversion<double>();
 	    product.Property(p => p.Cost).HasConversion<double>();
+	    modelBuilder.Entity<Product>().HasMany(p => p.QuoteItems).WithOne(qi => qi.Product).HasForeignKey(qi => qi.ProductId)
+		    .OnDelete(DeleteBehavior.Cascade);
+
     }
 
     private static void OnOrderModelCreating(ModelBuilder modelBuilder){
@@ -150,8 +191,8 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
     private static void OnEmployeeTaskModelCreating(ModelBuilder modelBuilder){
 	    var employeeTask = modelBuilder.Entity<EmployeeTask>();
 	    employeeTask.Ignore(task => task.AssignedEmployees);
-	    employeeTask.HasOne(task => task.AssignedEmployee).WithMany(employee => employee.AssignedTasks);
-	    employeeTask.HasOne(task => task.Owner).WithMany(employee => employee.OwnedTasks);
+	    employeeTask.HasOne(task => task.AssignedEmployee).WithMany(employee => employee.AssignedTasks).HasForeignKey(task => task.AssignedEmployeeId).OnDelete(DeleteBehavior.SetNull);
+	    // employeeTask.HasOne(task => task.Owner).WithMany(employee => employee.OwnedTasks).HasForeignKey(task => task.OwnerId).OnDelete(DeleteBehavior.Cascade);
 	    employeeTask.HasOne(task => task.CustomerEmployee).WithMany(employee => employee.EmployeeTasks);
     }
 
@@ -160,5 +201,6 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	    employee.Ignore(employee1 => employee1.AssignedEmployeeTasks);
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
+	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);
     }
 }

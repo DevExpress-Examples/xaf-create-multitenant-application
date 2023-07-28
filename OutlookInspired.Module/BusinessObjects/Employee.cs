@@ -11,26 +11,29 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{
 	
-	[XafDefaultProperty(nameof(FullName))]
+	[DefaultProperty(nameof(FullName))]
+	[VisibleInReports]
 	public class Employee :MigrationBaseObject{
 
-		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
-		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } 
+		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))][Aggregated]
+		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new(); 
 		public virtual  EmployeeDepartment Department { get; set; }
 		[RuleRequiredField]
-		// [EditorAlias(EditorAliases.LabelPropertyEditor)]
+		
 		[FontSizeDelta(8)]
 		public virtual string Title { get; set; }
 		[VisibleInListView(false)]
 		public virtual EmployeeStatus Status { get; set; }
 		[VisibleInListView(false)]
 		public virtual DateTime? HireDate { get; set; }
-		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))]
-		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } 
-		[InverseProperty(nameof(EmployeeTask.Owner))]
-		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } 
-		[InverseProperty(nameof(Evaluation.Employee))]
-		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }
+
+		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][Aggregated]
+		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } = new();
+
+		[InverseProperty(nameof(EmployeeTask.Owner))][Aggregated]
+		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
+		[InverseProperty(nameof(Evaluation.Employee))][Aggregated]
+		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
 		[VisibleInListView(false)]
 		public virtual string PersonalProfile { get; set; }
 		[VisibleInListView(false)]
@@ -72,18 +75,33 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string Address { get; set; }
 		[RuleRequiredField]
 		public virtual string City { get; set; }
-		[ZipCode]
+        [ZipCode]
 		public virtual string ZipCode { get; set; }
-		public virtual ICollection<Evaluation> EvaluationsCreatedBy { get; set; }
-		public virtual ICollection<Order> Orders { get; set; }
-		public virtual ICollection<Product> Products { get; set; }
-		public virtual ICollection<Product> SupportedProducts { get; set; }
-		public virtual ICollection<Quote> Quotes { get; set; }
-		public virtual ICollection<CustomerCommunication> Employees { get; set; }
+
+		[Aggregated]
+		public virtual ObservableCollection<Evaluation> EvaluationsCreatedBy{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Product> Products{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Product> SupportedProducts{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
+		[Aggregated]
+		public virtual ObservableCollection<CustomerCommunication> Employees{ get; set; } = new();
 
 		[Browsable(false)]
 		public virtual Guid? ProbationReasonId{ get; set; }
-		
+
+		public override void OnSaving(){
+            if (ObjectSpace.IsObjectToDelete(this)){
+				ObjectSpace.Delete(Products);
+				ObjectSpace.Delete(SupportedProducts);	
+				ObjectSpace.Delete(AssignedTasks);	
+				ObjectSpace.Delete(OwnedTasks);	
+			}
+		}
 	}
 
 	public enum EmployeeDepartment {

@@ -6,6 +6,7 @@ using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.DatabaseUpdate;
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater
@@ -24,6 +25,10 @@ public class Updater : ModuleUpdater {
         //    theObject.Name = name;
         //}
 #if !RELEASE
+        // if (!ObjectSpace.Any<Customer>()){
+        //     throw new NotSupportedException(
+        //         "Run the OutlookInspired.Tests.ImportData Test to import existing data from the SqlLite database");
+        // }
         var sampleUser = ObjectSpace.FirstOrDefault<ApplicationUser>(u => u.UserName == "User");
         if(sampleUser == null) {
             sampleUser = ObjectSpace.CreateObject<ApplicationUser>();

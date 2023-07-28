@@ -17,6 +17,7 @@
       <Item Id="Default">
         <Items>
           <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
+          <Item Id="ModelDifference_ListView" ViewId="ModelDifference_ListView" IsNewNode="True" />
         </Items>
       </Item>
     </Items>
@@ -247,7 +248,6 @@
         <PropertyEditor Id="Picture" PropertyName="Picture.Data" IsNewNode="True" />
         <PropertyEditor Id="Prefix" PropertyName="Prefix" IsNewNode="True" />
         <PropertyEditor Id="ProbationReason" PropertyName="ProbationReason" IsNewNode="True" />
-        <PropertyEditor Id="ProbationReasonId" PropertyName="ProbationReasonId" IsNewNode="True" />
         <PropertyEditor Id="Products" PropertyName="Products" View="Employee_Products_ListView" IsNewNode="True" />
         <PropertyEditor Id="Quotes" PropertyName="Quotes" View="Employee_Quotes_ListView" IsNewNode="True" />
         <PropertyEditor Id="Skype" PropertyName="Skype" IsNewNode="True" />
@@ -269,25 +269,25 @@
                       <LayoutGroup Id="Item1" ShowCaption="False" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
                         <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12" ShowCaption="False" Caption="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12(9)" Index="0" RelativeSize="100" IsNewNode="True">
                           <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
-                            <LayoutGroup Id="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4" ShowCaption="False" Caption="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4(11)" Direction="Horizontal" Index="0" RelativeSize="26.923076923076923" IsNewNode="True">
-                              <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="0" RelativeSize="33.22545846817692" SizeConstraintsType="Custom" MinSize="308, 38" MaxSize="308, 0" IsNewNode="True" />
-                              <LayoutGroup Id="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1" ShowCaption="False" Caption="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1(13)" Index="1" RelativeSize="13.700107874865157" IsNewNode="True">
-                                <LayoutItem Id="Item8" Index="0" RelativeSize="15.2073732718894" IsNewNode="True" />
-                                <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" SizeConstraintsType="Custom" MinSize="127, 32" Index="1" RelativeSize="19.35483870967742" IsNewNode="True" />
-                                <LayoutItem Id="Title" ViewItem="Title" Index="2" RelativeSize="11.059907834101383" ShowCaption="False" IsNewNode="True" />
-                                <LayoutItem Id="Item9" Index="3" RelativeSize="10.599078341013826" IsNewNode="True" />
-                                <LayoutItem Id="EmployeePhone" ViewItem="EmployeePhone" Index="4" RelativeSize="11.981566820276498" IsNewNode="True" />
-                                <LayoutItem Id="EmployeeSocial" ViewItem="EmployeeSocial" Index="5" RelativeSize="11.981566820276498" IsNewNode="True" />
-                                <LayoutItem Id="Item7" Index="6" RelativeSize="19.81566820276498" IsNewNode="True" />
-                              </LayoutGroup>
-                              <LayoutGroup Id="Auto23f9911d-101e-4fbc-9bc0-5d1fe7385a04" ShowCaption="False" Caption="Auto23f9911d-101e-4fbc-9bc0-5d1fe7385a04(13)" Index="2" RelativeSize="53.07443365695793" IsNewNode="True">
-                                <LayoutGroup Id="Auto5bdcc713-6a58-41f4-a73c-03230057d780" ShowCaption="False" Caption="Auto5bdcc713-6a58-41f4-a73c-03230057d780(15)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
-                                  <LayoutItem Id="Item5" Index="0" RelativeSize="100" IsNewNode="True" />
+                            <LayoutGroup Id="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4" ShowCaption="False" Caption="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4(11)" Direction="Horizontal" Index="0" RelativeSize="26.799007444168733" IsNewNode="True">
+                              <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="0" RelativeSize="33.08270676691729" SizeConstraintsType="Custom" MinSize="308, 38" MaxSize="308, 0" IsNewNode="True" />
+                              <LayoutGroup Id="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1" ShowCaption="False" Caption="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1(13)" Index="1" RelativeSize="66.9172932330827" IsNewNode="True">
+                                <LayoutItem Id="Item8" Index="0" RelativeSize="14.814814814814815" IsNewNode="True" />
+                                <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" SizeConstraintsType="Custom" MinSize="127, 32" Index="1" RelativeSize="18.98148148148148" IsNewNode="True" />
+                                <LayoutItem Id="Title" ViewItem="Title" Index="2" RelativeSize="11.11111111111111" ShowCaption="False" IsNewNode="True" />
+                                <LayoutGroup Id="Auto1572097e-1296-4054-ba0a-b5035cf892bd" ShowCaption="False" Caption="" Direction="Horizontal" Index="3" RelativeSize="55.092592592592595" IsNewNode="True">
+                                  <LayoutGroup Id="Auto63d2c2bc-bf83-47ff-bc5b-83c1c7851fc8" ShowCaption="False" Caption="" Index="0" RelativeSize="14.92776886035313" IsNewNode="True">
+                                    <LayoutItem Id="Item9" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="0" RelativeSize="19.327731092436974" IsNewNode="True" />
+                                    <LayoutItem Id="EmployeePhone" ViewItem="EmployeePhone" Index="1" RelativeSize="21.84873949579832" IsNewNode="True" />
+                                    <LayoutItem Id="EmployeeSocial" ViewItem="EmployeeSocial" Index="2" RelativeSize="21.84873949579832" IsNewNode="True" />
+                                    <LayoutItem Id="Item7" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="3" RelativeSize="36.97478991596638" IsNewNode="True" />
+                                  </LayoutGroup>
+                                  <LayoutItem Id="Item5" Index="1" RelativeSize="85.07223113964687" IsNewNode="True" />
                                 </LayoutGroup>
                               </LayoutGroup>
                             </LayoutGroup>
                             <LayoutItem Id="Item6" Index="1" RelativeSize="1.7369727047146402" IsNewNode="True" />
-                            <TabbedGroup Id="Item3" CaptionLocation="Top" Index="2" RelativeSize="71.33995037220843" IsNewNode="True">
+                            <TabbedGroup Id="Item3" CaptionLocation="Top" Index="2" RelativeSize="71.46401985111663" IsNewNode="True">
                               <LayoutGroup Id="Item4" ShowCaption="True" Caption="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
                                 <LayoutItem Id="Evaluations" ViewItem="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True" />
                               </LayoutGroup>
@@ -309,8 +309,10 @@
     </DetailView>
     <ListView Id="Employee_Evaluations_ListView">
       <Columns>
+        <ColumnInfo Id="Bonus" Index="-1" />
         <ColumnInfo Id="Details" Index="-1" />
         <ColumnInfo Id="Employee" Index="-1" />
+        <ColumnInfo Id="Raise" Index="-1" />
         <ColumnInfo Id="Rating" Index="-1" />
         <ColumnInfo Id="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" />
         <ColumnInfo Id="Subject" Index="1" SortIndex="-1" SortOrder="None" />
@@ -333,6 +335,8 @@
         <ColumnInfo Id="CreatedOn" PropertyName="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" IsNewNode="True" />
         <ColumnInfo Id="Subject" PropertyName="Subject" Index="1" IsNewNode="True" />
         <ColumnInfo Id="Manager" PropertyName="Manager" Index="2" IsNewNode="True" />
+        <ColumnInfo Id="Bonus" PropertyName="Bonus" IsNewNode="True" />
+        <ColumnInfo Id="Raise" PropertyName="Raise" IsNewNode="True" />
       </Columns>
       <HiddenActions IsNewNode="True">
         <ActionLink ActionId="Delete" IsNewNode="True" />
@@ -355,17 +359,33 @@
         <ColumnInfo Id="Email" Index="7" />
       </Columns>
     </ListView>
-    <DashboardView Id="EmployeeListView" Caption="Employee" IsNewNode="True">
+    <DashboardView Id="EmployeeCardListView" MasterDetail="True" IsNewNode="True">
       <Items IsNewNode="True">
-        <DashboardViewItem Id="Employee_ListView" ViewId="Employee_ListView" Index="0" IsNewNode="True" />
-        <DashboardViewItem Id="Employee_DetailView_Child" ViewId="Employee_DetailView_Child" ActionsToolbarVisibility="Hide" Index="1" IsNewNode="True" />
+        <DashboardViewItem Id="Employee_DetailView_Child" ViewId="Employee_DetailView_Child" ActionsToolbarVisibility="Hide" IsNewNode="True" />
+        <DashboardViewItem Id="UserControlObject_DetailView" ViewId="UserControlObject_DetailView" Caption="Employee" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True">
         <LayoutGroup Id="Main" ShowCaption="False" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
-          <LayoutItem Id="Employee_ListView" ViewItem="Employee_ListView" Index="0" RelativeSize="75" IsNewNode="True" />
-          <LayoutItem Id="Employee_DetailView_Child" ViewItem="Employee_DetailView_Child" Index="1" RelativeSize="32.254584681769146" IsNewNode="True" />
+          <LayoutItem Id="UserControlObject_DetailView" ViewItem="UserControlObject_DetailView" Index="0" RelativeSize="60.29313790806129" IsNewNode="True" />
+          <LayoutItem Id="Employee_DetailView_Child" ViewItem="Employee_DetailView_Child" Index="1" RelativeSize="39.70686209193871" IsNewNode="True" />
         </LayoutGroup>
       </Layout>
+    </DashboardView>
+    <DashboardView Id="EmployeeListView" Caption="Employee" MasterDetail="True" IsNewNode="True">
+      <Items IsNewNode="True">
+        <DashboardViewItem Id="Employee_DetailView_Child" ActionsToolbarVisibility="Hide" ViewId="Employee_DetailView_Child" IsNewNode="True" />
+        <DashboardViewItem Id="Employee_ListView" ViewId="Employee_ListView" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" ShowCaption="False" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
+          <LayoutItem Id="Employee_ListView" ViewItem="Employee_ListView" Index="0" RelativeSize="61.74343357441949" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          <LayoutItem Id="Employee_DetailView_Child" ViewItem="Employee_DetailView_Child" Index="1" RelativeSize="38.25656642558051" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+      <Variants Current="EmployeeListView" IsNewNode="True">
+        <Variant Id="EmployeeCardListView" ViewID="EmployeeCardListView" Caption="Card" IsNewNode="True" />
+        <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
+      </Variants>
     </DashboardView>
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>
@@ -380,6 +400,14 @@
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
+    </DetailView>
+    <DetailView Id="UserControlObject_DetailView">
+      <HiddenActions>
+        <ActionLink ActionId="Refresh" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+        <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
+        <ActionLink ActionId="ShowAllContexts" IsNewNode="True" />
+      </HiddenActions>
     </DetailView>
   </Views>
 </Application>

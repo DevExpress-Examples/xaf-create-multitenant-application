@@ -63,7 +63,7 @@ namespace OutlookInspired.Win.Extensions{
                 .AddScheduler()
                 .AddTreeListEditors()
                 .AddValidation(options => options.AllowValidationDetailsAccess = false)
-                .AddViewVariants(options => options.ShowAdditionalNavigation = true)
+                .AddViewVariants()
                 .Add<OutlookInspiredWinModule>();
     }
 }

@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Model.DesignedDiffs.xafml" />
-    <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
+    
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
@@ -64,6 +64,10 @@
     <EmbeddedResource Include="Images\MediumPriority.png" />
     <None Remove="Images\NormalPriority.png" />
     <EmbeddedResource Include="Images\NormalPriority.png" />
+    <None Remove="Images\EvaluationNo.svg" />
+    <EmbeddedResource Include="Images\EvaluationNo.svg" />
+    <None Remove="Images\EvaluationYes.svg" />
+    <EmbeddedResource Include="Images\EvaluationYes.svg" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
@@ -93,5 +97,22 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="UnusableNodes.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes2.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes3.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes5.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes9.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>

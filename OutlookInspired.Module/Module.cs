@@ -1,12 +1,14 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Runtime.CompilerServices;
+using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
-
+[assembly: InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
 
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.ModuleBase.
-public sealed class OutlookInspiredModule : ModuleBase {
+public sealed class OutlookInspiredModule : ModuleBase{
+	public const string ModelCategory = "OutlookInspired";
     public OutlookInspiredModule() {
 		// 
 		// OutlookInspiredModule
