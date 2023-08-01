@@ -1,8 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
+using OutlookInspired.Module.Model;
+
 [assembly: InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
 
@@ -42,6 +45,12 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
         yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
+    }
+    
+    public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
+	    base.AddGeneratorUpdaters(updaters);
+	    updaters.Add(new ModelViewClonerUpdater());
+	    updaters.Add(new UserControlObjectUpdater());
     }
 
 }

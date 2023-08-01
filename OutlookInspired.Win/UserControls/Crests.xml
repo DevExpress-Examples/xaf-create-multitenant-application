@@ -1,0 +1,262 @@
+﻿<XtraSerializer version="1.0" application="View">
+  <property name="#LayoutVersion" />
+  <property name="#LayoutScaleFactor">@1,Width=1@1,Height=1</property>
+  <property name="OptionsNavigation" isnull="true" iskey="true">
+    <property name="AutoFocusNewRow">false</property>
+    <property name="AutoMoveRowFocus">true</property>
+    <property name="EnterMoveNextColumn">false</property>
+    <property name="UseOfficePageNavigation">true</property>
+  </property>
+  <property name="OptionsViewStyles" isnull="true" iskey="true">
+    <property name="ExtraLarge" isnull="true" iskey="true">
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@1,Width=0@1,Height=0</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="Large" isnull="true" iskey="true">
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">True</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@3,Width=165@3,Height=161</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="Medium" isnull="true" iskey="true">
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@3,Width=120@3,Height=117</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="Small" isnull="true" iskey="true">
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@1,Width=0@1,Height=0</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="Tiles" isnull="true" iskey="true">
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@1,Width=0@1,Height=0</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="List" isnull="true" iskey="true">
+      <property name="FitSelectionToColumnWidth">false</property>
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@1,Width=0@1,Height=0</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+    <property name="Content" isnull="true" iskey="true">
+      <property name="DescriptionMinOffset">120</property>
+      <property name="DescriptionMinWidth">300</property>
+      <property name="DescriptionMaxOffset">250</property>
+      <property name="SelectionDrawMode">AroundImage</property>
+      <property name="ShowDescription">Default</property>
+      <property name="ImageMargins">-1, -1, -1, -1</property>
+      <property name="ContentMargins">-1, -1, -1, -1</property>
+      <property name="CheckBoxMargins">-1, -1, -1, -1</property>
+      <property name="ImageSize">@1,Width=0@1,Height=0</property>
+      <property name="HorizontalIndent">-1</property>
+      <property name="VerticalIndent">-1</property>
+      <property name="IndentBetweenGroupAndItem">-1</property>
+      <property name="IndentBetweenGroups">-1</property>
+      <property name="ImageToTextIndent">-1</property>
+      <property name="ItemWidth">-1</property>
+      <property name="GroupCaptionButtonIndent">-1</property>
+      <property name="GroupCheckBoxIndent">-1</property>
+    </property>
+  </property>
+  <property name="ColumnSet" isnull="true" iskey="true">
+    <property name="ExtraLargeImageColumnName">CrestLargeImage</property>
+    <property name="LargeImageColumnName">CrestLargeImage</property>
+    <property name="MediumImageColumnName">CrestSmallImage</property>
+    <property name="SmallImageColumnName">CrestSmallImage</property>
+    <property name="ExtraLargeImageIndexColumnName" />
+    <property name="LargeImageIndexColumnName" />
+    <property name="MediumImageIndexColumnName" />
+    <property name="SmallImageIndexColumnName" />
+    <property name="TextColumnName">CrestCity</property>
+    <property name="DescriptionColumnName">AddressLines</property>
+    <property name="CheckBoxColumnName" />
+    <property name="EnabledColumnName" />
+    <property name="GroupColumnName" />
+  </property>
+  <property name="DetailHeight">512</property>
+  <property name="DetailTabHeaderLocation">Top</property>
+  <property name="OptionsBehavior" isnull="true" iskey="true">
+    <property name="AllowAddRows">Default</property>
+    <property name="AllowDeleteRows">Default</property>
+    <property name="AutoSelectAllInEditor">true</property>
+    <property name="EditorShowMode">Default</property>
+    <property name="CacheValuesOnRowUpdating">CacheAll</property>
+    <property name="FocusLeaveOnTab">false</property>
+    <property name="ImmediateUpdateRowPosition">true</property>
+    <property name="KeepFocusedRowOnUpdate">true</property>
+    <property name="ReadOnly">false</property>
+    <property name="Editable">false</property>
+  </property>
+  <property name="OptionsView" isnull="true" iskey="true">
+    <property name="Style">Large</property>
+    <property name="ShowButtonMode">Default</property>
+    <property name="ShowFilterPanelMode">Default</property>
+  </property>
+  <property name="OptionsFilter" isnull="true" iskey="true">
+    <property name="FilterEditorAggregateEditing">No</property>
+    <property name="FilterEditorUseMenuForOperandsAndOperators">false</property>
+    <property name="DefaultFilterEditorView">Visual</property>
+    <property name="ShowAllTableValuesInCheckedFilterPopup">true</property>
+    <property name="ShowAllTableValuesInFilterPopup">false</property>
+    <property name="UseNewCustomFilterDialog">false</property>
+    <property name="ColumnFilterPopupMaxRecordsCount">-1</property>
+    <property name="ColumnFilterPopupRowCount">20</property>
+    <property name="MRUFilterListCount">10</property>
+    <property name="MRUColumnFilterListCount">5</property>
+    <property name="MRUFilterListPopupCount">10</property>
+    <property name="AllowColumnMRUFilterList">true</property>
+    <property name="AllowMRUFilterList">true</property>
+    <property name="AllowFilterEditor">true</property>
+    <property name="AllowFilterIncrementalSearch">true</property>
+    <property name="AllowMultiSelectInCheckedFilterPopup">true</property>
+    <property name="ColumnFilterPopupMode">Default</property>
+    <property name="ShowCustomFunctions">Default</property>
+    <property name="FilterEditorAllowCustomExpressions">Default</property>
+  </property>
+  <property name="ActiveFilterEnabled">true</property>
+  <property name="ViewCaptionHeight">-1</property>
+  <property name="Columns" iskey="true" value="5">
+    <property name="Item1" isnull="true" iskey="true">
+      <property name="Name">colAddressLines</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ImageIndex">-1</property>
+      <property name="FieldName">AddressLines</property>
+      <property name="ColumnEditName" />
+      <property name="VisibleIndex">0</property>
+      <property name="Visible">true</property>
+      <property name="Width">112</property>
+      <property name="MinWidth">30</property>
+      <property name="MaxWidth">0</property>
+      <property name="UnboundDataTypeName" />
+    </property>
+    <property name="Item2" isnull="true" iskey="true">
+      <property name="Name">colCrestSmallImage</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ImageIndex">-1</property>
+      <property name="FieldName">CrestSmallImage</property>
+      <property name="ColumnEditName" />
+      <property name="VisibleIndex">1</property>
+      <property name="Visible">true</property>
+      <property name="Width">112</property>
+      <property name="MinWidth">30</property>
+      <property name="MaxWidth">0</property>
+      <property name="UnboundDataTypeName" />
+    </property>
+    <property name="Item3" isnull="true" iskey="true">
+      <property name="Name">colCustomerName</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ImageIndex">-1</property>
+      <property name="FieldName">CustomerName</property>
+      <property name="ColumnEditName" />
+      <property name="VisibleIndex">1</property>
+      <property name="Visible">true</property>
+      <property name="Width">112</property>
+      <property name="MinWidth">30</property>
+      <property name="MaxWidth">0</property>
+      <property name="UnboundDataTypeName" />
+    </property>
+    <property name="Item4" isnull="true" iskey="true">
+      <property name="Name">colCrestLargeImage</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ImageIndex">-1</property>
+      <property name="FieldName">CrestLargeImage</property>
+      <property name="ColumnEditName" />
+      <property name="VisibleIndex">0</property>
+      <property name="Visible">true</property>
+      <property name="Width">112</property>
+      <property name="MinWidth">30</property>
+      <property name="MaxWidth">0</property>
+      <property name="UnboundDataTypeName" />
+    </property>
+    <property name="Item5" isnull="true" iskey="true">
+      <property name="Name">colCrestCity</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ImageIndex">-1</property>
+      <property name="FieldName">CrestCity</property>
+      <property name="ColumnEditName" />
+      <property name="VisibleIndex">0</property>
+      <property name="Visible">true</property>
+      <property name="Width">112</property>
+      <property name="MinWidth">30</property>
+      <property name="MaxWidth">0</property>
+      <property name="UnboundDataTypeName" />
+    </property>
+  </property>
+  <property name="ViewCaption" />
+  <property name="BorderStyle">Default</property>
+  <property name="SynchronizeClones">true</property>
+  <property name="Name">winExplorerView</property>
+  <property name="Tag" isnull="true" />
+  <property name="ActiveFilterString" />
+  <property name="FormatRules" iskey="true" value="0" />
+  <property name="FormatConditions" iskey="true" value="0" />
+  <property name="FindFilterText" />
+  <property name="FindPanelVisible">false</property>
+</XtraSerializer>

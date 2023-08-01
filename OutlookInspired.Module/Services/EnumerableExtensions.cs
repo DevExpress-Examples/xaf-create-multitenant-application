@@ -2,6 +2,13 @@
 
 namespace OutlookInspired.Module.Services{
     internal static class EnumerableExtensions{
+        public static IEnumerable<T> Finally<T>(this IEnumerable<T> source, Action action){
+            return _();
+            IEnumerable<T> _(){
+                foreach (var element in source) yield return element;
+                action();
+            }
+        }
         
         public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) 
             => source.SelectMany(sources => sources);
@@ -15,6 +22,11 @@ namespace OutlookInspired.Module.Services{
                     yield return child;
             }
         }
+        public static void Enumerate<T>(this IEnumerable<T> source) {
+            using var e = source.GetEnumerator();
+            while (e.MoveNext()) { }
+        }
+
         public static IEnumerable<TSource> Do<TSource>(
             this IEnumerable<TSource> source, Action<TSource> action)
             => source.Select(item => {

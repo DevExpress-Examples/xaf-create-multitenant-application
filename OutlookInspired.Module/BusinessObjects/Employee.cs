@@ -12,7 +12,7 @@ using OutlookInspired.Module.Services;
 namespace OutlookInspired.Module.BusinessObjects{
 	
 	[DefaultProperty(nameof(FullName))]
-	[VisibleInReports]
+	[VisibleInReports][ImageName("BO_Person")]
 	public class Employee :MigrationBaseObject{
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))][Aggregated]
@@ -42,7 +42,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string FirstName { get; set; }
 		[RuleRequiredField][VisibleInListView(false)]
 		public virtual string LastName { get; set; }
-		[EditorAlias(EditorAliases.LabelPropertyEditor)]
+		// [EditorAlias(EditorAliases.LabelPropertyEditor)]
 		[FontSizeDelta(16)]
 		public virtual string FullName { get; set; }
 		

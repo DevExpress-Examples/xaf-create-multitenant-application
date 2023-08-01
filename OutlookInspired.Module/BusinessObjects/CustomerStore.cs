@@ -30,7 +30,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
 		[Aggregated]
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
-		public string CustomerName => Customer?.Name;
+		
 
 	}
 }

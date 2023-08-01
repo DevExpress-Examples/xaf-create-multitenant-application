@@ -1,5 +1,5 @@
 ﻿namespace OutlookInspired.Module.Controllers{
-    public interface IMasterDetailService{
+    public interface IUserControl{
         event EventHandler<ObjectArgs> SelectedObjectChanged;
         event EventHandler<ObjectArgs> ProcessObject;
     }

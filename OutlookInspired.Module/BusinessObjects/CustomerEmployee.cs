@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
-using DevExpress.Xpo;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultProperty(nameof(FullName))]
@@ -19,6 +19,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual string Email { get; set; }
 		public virtual Picture Picture { get; set; }
 		public virtual Customer Customer { get; set; }
+		public virtual Guid CustomerId { get; set; }
 		public virtual CustomerStore CustomerStore { get; set; }
 		public virtual string Position { get; set; }
 		public virtual bool IsPurchaseAuthority { get; set; }

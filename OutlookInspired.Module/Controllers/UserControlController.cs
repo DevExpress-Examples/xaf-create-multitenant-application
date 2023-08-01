@@ -10,40 +10,38 @@ namespace OutlookInspired.Module.Controllers{
             NewAction = new SimpleAction(this,"CreateNewObject",PredefinedCategory.Edit){
                 ImageName = "Action_New"
             };
-            NewAction.Executed += (_, e) => {
-                var type = ((DetailView)e.Action.SelectionContext).ObjectTypeInfo.Type;
-                var objectSpace = Application.CreateObjectSpace(type);
-                e.ShowViewParameters.CreatedView = Application.CreateDetailView(objectSpace, objectSpace.CreateObject(type));
-            };
+            NewAction.Executed += (_, e) 
+                => e.ShowViewParameters.CreatedView = Application.NewDetailView(((DetailView)e.Action.SelectionContext).ObjectTypeInfo.Type);
             DeleteAction = new SimpleAction(this,"DeleteUserControlObject",PredefinedCategory.Edit){
                 ImageName = "Action_Delete",ConfirmationMessage = "You are about to delete the selected record(s). Do you want to proceed?",
                 SelectionDependencyType = SelectionDependencyType.RequireMultipleObjects
             };
-            DeleteAction.Executed+=(_, e) => {
-                var detailView = ((DetailView)e.Action.SelectionContext);
-                detailView.ObjectSpace.Delete(detailView.CurrentObject);
-                detailView.ObjectSpace.CommitChanges();
-            };
-            ProcessUserControlSelectedObjectAction = new SimpleAction(this,"ProcessUserControlSelectedObject",PredefinedCategory.Unspecified);
+            DeleteAction.Executed+=(_, e) 
+                => ((DetailView)e.Action.SelectionContext).DeleteSelectObjects();
+            ProcessUserControlSelectedObjectAction = new SimpleAction(this,"ProcessUserControlSelectedObject","Hidden");
             ProcessUserControlSelectedObjectAction.Executed+=(_, e) 
                 => e.ShowViewParameters.CreatedView = Application.NewDetailView(((DetailView)e.Action.SelectionContext).CurrentObject);
         }
 
         public SimpleAction DeleteAction{ get; }
-
         public SimpleAction NewAction{ get; }
-
         public SimpleAction ProcessUserControlSelectedObjectAction{ get; }
 
         protected override void OnFrameAssigned(){
             base.OnFrameAssigned();
             if (Frame.Context == TemplateContext.ApplicationWindow){
-                Application.DetailViewCreated += (_, e) => {
+                Application.DetailViewCreated += (sender, e) => {
                     if (e.View.ObjectTypeInfo.Type == typeof(UserControlObject)){
-                        ((NonPersistentObjectSpace)e.View.ObjectSpace).AdditionalObjectSpaces.Add(Application.NewObjectSpace());
+                        var additionalObjectSpaces = ((NonPersistentObjectSpace)e.View.ObjectSpace).AdditionalObjectSpaces;
+                        if (!additionalObjectSpaces.Any()){
+                            additionalObjectSpaces.Add(((XafApplication)sender).NewObjectSpace());    
+                        }
+                        
                     }
                 };
             }
         }
+
+        
     }
 }

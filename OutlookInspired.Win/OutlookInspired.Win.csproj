@@ -73,5 +73,17 @@
     <None Update="UnusableNodes1.xml">
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
+    <None Update="UnusableNodes2.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes3.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes4.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes5.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>
