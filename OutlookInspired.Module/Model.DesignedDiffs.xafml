@@ -39,18 +39,17 @@
       </Items>
       <Layout>
         <LayoutGroup Id="Main" RelativeSize="100" Caption="Main" Direction="Vertical">
-          <LayoutGroup Id="Auto69942e97-e67a-46fc-be02-20a4e1119c26" ShowCaption="False" Caption="Auto69942e97-e67a-46fc-be02-20a4e1119c26(2)" Direction="Horizontal" Index="0" RelativeSize="15.460992907801419" IsNewNode="True">
-            <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" CaptionLocation="Top" Index="0" RelativeSize="27.69857433808554" IsNewNode="True" />
-            <LayoutGroup Id="Auto470bf61b-04f7-459d-9328-6a6d07b1e0f8" ShowCaption="False" Caption="Auto470bf61b-04f7-459d-9328-6a6d07b1e0f8(3)" Index="1" RelativeSize="72.30142566191446" IsNewNode="True">
-              <LayoutItem Id="Item1" SizeConstraintsType="Custom" MinSize="115, 32" MaxSize="0, 32" Index="0" RelativeSize="29.357798165137616" IsNewNode="True" />
-              <LayoutItem Id="Name" ShowCaption="False" ViewItem="Name" CaptionLocation="Top" Index="1" RelativeSize="22.01834862385321" IsNewNode="True" />
-              <LayoutItem Id="Item2" SizeConstraintsType="Custom" MinSize="10, 19" MaxSize="0, 19" Index="2" RelativeSize="17.431192660550458" IsNewNode="True" />
-              <LayoutItem Id="HomeOfficeLine" ViewItem="HomeOfficeLine" Index="3" RelativeSize="22.01834862385321" ShowCaption="False" IsNewNode="True" />
-              <LayoutItem Id="Item3" Index="4" RelativeSize="9.174311926605505" IsNewNode="True" />
+          <LayoutGroup Id="Auto69942e97-e67a-46fc-be02-20a4e1119c26" ShowCaption="False" Caption="Auto69942e97-e67a-46fc-be02-20a4e1119c26(2)" Direction="Horizontal" Index="0" RelativeSize="8.692528735632184" IsNewNode="True">
+            <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" CaptionLocation="Top" Index="0" RelativeSize="27.623261694058154" IsNewNode="True" />
+            <LayoutGroup Id="Auto470bf61b-04f7-459d-9328-6a6d07b1e0f8" ShowCaption="False" Caption="Auto470bf61b-04f7-459d-9328-6a6d07b1e0f8(3)" Index="1" RelativeSize="72.37673830594184" IsNewNode="True">
+              <LayoutItem Id="Item1" SizeConstraintsType="Custom" MinSize="115, 32" MaxSize="0, 32" Index="0" RelativeSize="26.446280991735538" IsNewNode="True" />
+              <LayoutItem Id="Name" ShowCaption="False" ViewItem="Name" CaptionLocation="Top" Index="1" RelativeSize="24.793388429752067" IsNewNode="True" />
+              <LayoutItem Id="Item2" SizeConstraintsType="Custom" MinSize="10, 19" MaxSize="0, 19" Index="2" RelativeSize="15.702479338842975" IsNewNode="True" />
+              <LayoutItem Id="HomeOfficeLine" ViewItem="HomeOfficeLine" Index="3" RelativeSize="24.793388429752067" ShowCaption="False" IsNewNode="True" />
+              <LayoutItem Id="Item3" Index="4" RelativeSize="8.264462809917354" IsNewNode="True" />
             </LayoutGroup>
           </LayoutGroup>
-          <LayoutItem Id="CustomerStore" ViewItem="CustomerStore" Index="1" RelativeSize="3.404255319148936" IsNewNode="True" />
-          <LayoutItem Id="Item4" Index="2" RelativeSize="81.13475177304964" IsNewNode="True" />
+          <LayoutItem Id="CustomerStore" ViewItem="CustomerStore" Index="1" RelativeSize="91.30747126436782" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
           <LayoutGroup Id="SimpleEditors" RelativeSize="100" Removed="True">
             <LayoutGroup Id="Customer" Removed="True" />
           </LayoutGroup>

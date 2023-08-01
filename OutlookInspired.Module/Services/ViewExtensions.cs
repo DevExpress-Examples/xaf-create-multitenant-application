@@ -70,9 +70,13 @@ namespace OutlookInspired.Module.Services{
             => compositeView.GetItems<ControlViewItem>().Select(item => item.Control)
                 .OfType<TControl>();
 
-        public static T SetCurrentObject<T>(this DetailView detailView, T currentObject) where T : class 
-            => (T)(detailView.CurrentObject = detailView.ObjectSpace.GetObject(currentObject));
-        
+        public static T SetCurrentObject<T>(this DetailView detailView, T currentObject) where T : class{
+            var viewCurrentObject = (T)(detailView.CurrentObject = detailView.ObjectSpace.GetObject(currentObject));
+            detailView.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IComplexControl>()
+                .ForEach(control => control.Refresh());
+            return viewCurrentObject;
+        }
+
         public static bool Is(this View view, Type objectType ) 
             => view.Is(ViewType.Any,Nesting.Any,objectType);
         public static DetailView ToDetailView(this View view) => (DetailView)view;

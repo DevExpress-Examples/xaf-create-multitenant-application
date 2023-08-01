@@ -11,28 +11,10 @@
   <Views>
     <DetailView Id="Customer_DetailView_Child">
       <Items>
-        <ControlDetailItem Id="CustomerStore" ControlTypeName="OutlookInspired.Win.UserControls.CustomerStoreWinExplorerView" />
+        <ControlDetailItem Id="CustomerStore" ControlTypeName="OutlookInspired.Win.UserControls.CustomerStoreView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
-      <Layout>
-        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren">
-          <LayoutGroup Id="Auto69942e97-e67a-46fc-be02-20a4e1119c26" TextAlignMode="AlignWithChildren" RelativeSize="17.013639626704954">
-            <LayoutItem Id="Logo" RelativeSize="27.476255088195387" />
-            <LayoutGroup Id="Auto470bf61b-04f7-459d-9328-6a6d07b1e0f8" RelativeSize="72.52374491180461" TextAlignMode="AlignWithChildren">
-              <LayoutItem Id="Item1" RelativeSize="13.50210970464135" />
-              <LayoutItem Id="Name" RelativeSize="12.658227848101266" />
-              <LayoutItem Id="Item2" RelativeSize="8.016877637130802" />
-              <LayoutItem Id="HomeOfficeLine" RelativeSize="12.658227848101266" />
-              <LayoutItem Id="Item3" RelativeSize="53.164556962025316" />
-            </LayoutGroup>
-          </LayoutGroup>
-          <SeparatorItem Id="Item6" Index="1" RelativeSize="0.3589375448671931" IsNewNode="True" />
-          <LayoutItem Id="CustomerStore" Index="2" RelativeSize="2.1536252692031588" />
-          <SeparatorItem Id="Item5" Index="3" RelativeSize="0.3589375448671931" IsNewNode="True" />
-          <LayoutItem Id="Item4" Index="4" RelativeSize="80.1148600143575" />
-        </LayoutGroup>
-      </Layout>
     </DetailView>
     <DetailView Id="CustomerGridView_DetailView">
       <Items>

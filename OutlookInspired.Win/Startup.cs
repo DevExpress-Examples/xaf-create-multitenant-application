@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Security.ClientServer;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
+using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Win.Extensions;
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
@@ -11,8 +12,9 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         var builder = WinApplication.CreateBuilder();
         builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
         builder.AddModules();
-        builder.AddObjectSpaceProviders();
-        builder.AddSecurity();
+        // builder.AddObjectSpaceProviders();
+        builder.AddObjectSpaceProviders(options => options.UseSqlServer("Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired"));
+        // builder.AddSecurity();
         builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
         return builder.Build();
     }
