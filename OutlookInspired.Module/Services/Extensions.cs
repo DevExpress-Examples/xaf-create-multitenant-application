@@ -7,7 +7,9 @@ using DevExpress.XtraEditors.Controls;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions {
-         
+        public static decimal RoundNumber(this decimal d, int decimals = 0) 
+            => Math.Round(d, decimals);
+        
         public static byte[] ImageBytes(this Enum @enum) 
             => ImageLoader.Instance.GetEnumValueImageInfo(@enum).ImageBytes;
         

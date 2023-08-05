@@ -24,7 +24,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual DateTime ProductionStart { get; set; }
         public  virtual bool Available { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.StretchImage)]
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
         public  virtual byte[] Image { get; set; }
         public virtual Employee Support { get; set; }
         public virtual Employee Engineer { get; set; }

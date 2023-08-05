@@ -17,8 +17,8 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     //}
 
     private void Application_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
-        e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
-        e.Handled = true;
+        // e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
+        // e.Handled = true;
     }
     public OutlookInspiredWinModule() {
         FormattingProvider.UseMaskSettings = true;

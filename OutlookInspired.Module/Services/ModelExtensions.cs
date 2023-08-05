@@ -1,7 +1,14 @@
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 
 namespace OutlookInspired.Module.Services{
     internal static class ModelExtensions{
+        public static PropertyEditor NewPropertyEditor(this IModelMemberViewItem modelMemberViewItem) 
+            => modelMemberViewItem.PropertyEditorType.HasPublicParameterlessConstructor()
+                ? (PropertyEditor)Activator.CreateInstance(modelMemberViewItem.PropertyEditorType)
+                : (PropertyEditor)Activator.CreateInstance(modelMemberViewItem.PropertyEditorType,
+                    args: new object[]{ modelMemberViewItem.GetParent<IModelObjectView>().ModelClass.TypeInfo.Type, modelMemberViewItem });
+
         public static TNode GetParent<TNode>(this IModelNode modelNode) where TNode : class 
             => modelNode.Parent as TNode ?? modelNode.Parent?.GetParent<TNode>();
 

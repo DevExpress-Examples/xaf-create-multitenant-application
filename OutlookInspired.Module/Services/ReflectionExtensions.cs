@@ -3,6 +3,10 @@ using System.Runtime.ExceptionServices;
 
 namespace OutlookInspired.Module.Services{
     internal static class ReflectionExtensions{
+        public static bool HasPublicParameterlessConstructor(this Type type) 
+            => type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                .Any(ctor => ctor.GetParameters().Length == 0);
+
         public static bool IsPublic(this MemberInfo memberInfo) 
             => memberInfo switch {
                 FieldInfo fieldInfo => fieldInfo.IsPublic,

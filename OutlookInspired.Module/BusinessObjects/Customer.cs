@@ -82,7 +82,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[FieldSize(-1)]
 		public virtual string Profile { get; set; }
 		[ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-			DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
+			DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual byte[] Logo { get; set; }
 		
