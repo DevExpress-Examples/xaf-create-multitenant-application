@@ -1,17 +1,18 @@
-﻿using OutlookInspired.Module.BusinessObjects;
+﻿using DevExpress.XtraEditors;
+using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.UserControls
 {
-    public partial class CustomerLayoutView : BaseUserControl
+    public partial class CustomerLayoutView : ColumnViewUserControl
     {
-        public CustomerLayoutView() => InitializeComponent();
+        public CustomerLayoutView()
+        {
+            InitializeComponent();
+            labelControl1.Text = @"RECORDS: 0";
+            DataSourceOrFilterChanged += (_, _) => labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
+        }
 
         protected override Type GetObjectType() => typeof(Customer);
 
-        public override void Refresh()
-        {
-            base.Refresh();
-            labelControl1.Text = $@"RECORDS: {GetColumnView().DataRowCount.ToString()}";
-        }
     }
 }

@@ -6,7 +6,7 @@ using DevExpress.Persistent.Base;
 namespace OutlookInspired.Module.BusinessObjects;
 public class Picture :MigrationBaseObject{
     [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-        DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
+        DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.AutoSize)]
     public  virtual byte[] Data { get; set; }
 
     public virtual ObservableCollection<Employee> Employees{ get; set; } = new();

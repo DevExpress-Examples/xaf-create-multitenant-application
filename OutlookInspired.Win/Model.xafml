@@ -3,10 +3,10 @@
   <NavigationItems NavigationStyle="Accordion" DefaultChildItemsDisplayStyle="List" />
   <Options UIType="TabbedMDI" FormStyle="Ribbon" EnableHtmlFormatting="True" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.1.3.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.1.3.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.3.0" IsNewNode="True" />
-    <SchemaModule Name="SystemWindowsFormsModule" Version="23.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SystemWindowsFormsModule" Version="23.1.4.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <DetailView Id="Customer_DetailView_Child">
@@ -16,25 +16,15 @@
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
     </DetailView>
-    <DetailView Id="CustomerGridView_DetailView">
-      <Items>
-        <ControlDetailItem Id="CustomerGridView" ControlTypeName="OutlookInspired.Win.UserControls.CustomerGridView" IsNewNode="True" />
-      </Items>
-      <Layout>
-        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" Caption="Main">
-          <LayoutItem Id="CustomerGridView" ViewItem="CustomerGridView" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
-        </LayoutGroup>
-      </Layout>
-    </DetailView>
+    <ListView Id="Customer_ListView">
+      <Columns>
+        <ColumnInfo Id="Logo" ImageSizeMode="CenterImage" />
+      </Columns>
+    </ListView>
     <DetailView Id="CustomerLayoutView_DetailView">
       <Items>
-        <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.CustomerLayoutView" IsNewNode="True" />
+        <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.CustomerLayoutView" />
       </Items>
-      <Layout>
-        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" Caption="Main">
-          <LayoutItem Id="CustomerLayoutView" ViewItem="CustomerLayoutView" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
-        </LayoutGroup>
-      </Layout>
     </DetailView>
     <DashboardView Id="CustomerListView">
       <Layout>
@@ -51,7 +41,6 @@
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Completion" RowIndex="2" Index="1" OwnerBand="Main" />
         <ColumnInfo Id="DueDate" RowIndex="0" Index="1" OwnerBand="Main" />
-        <ColumnInfo Id="PriorityImage" RowIndex="0" Index="2" OwnerBand="Main" />
       </Columns>
       <BandsLayout Enable="True" AllowChangeBandParent="False" AllowChangeColumnParent="False" AllowColumnMoving="False" AllowBandMoving="False" ShowBands="False" ShowColumnHeaders="False">
         <Band Id="Main" Index="0" IsNewNode="True" />
@@ -120,13 +109,8 @@
     </DashboardView>
     <DetailView Id="EmployeeLayoutView_DetailView">
       <Items>
-        <ControlDetailItem Id="EmployeesLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.EmployeesLayoutView" IsNewNode="True" />
+        <ControlDetailItem Id="EmployeesLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.EmployeesLayoutView" />
       </Items>
-      <Layout>
-        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" Caption="Main">
-          <LayoutItem Id="EmployeesLayoutView" ViewItem="EmployeesLayoutView" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
-        </LayoutGroup>
-      </Layout>
     </DetailView>
     <DashboardView Id="EmployeeListView">
       <Layout>
@@ -137,5 +121,35 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
+    <DetailView Id="Order_DetailView_Child">
+      <Items>
+        <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+        <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+      </Items>
+    </DetailView>
+    <ListView Id="Order_ListView" ShowFindPanel="True" />
+    <DetailView Id="OrderGridView_DetailView">
+      <Items>
+        <ControlDetailItem Id="OrderGridView" ControlTypeName="OutlookInspired.Win.UserControls.OrderGridView" />
+      </Items>
+    </DetailView>
+    <ListView Id="Product_ListView" ShowFindPanel="True" />
+    <ListView Id="Quote_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor">
+      <Columns>
+        <ColumnInfo Id="Opportunity" Width="127" />
+        <ColumnInfo Id="City" PropertyName="CustomerStore.AddressCity" IsNewNode="True" />
+        <ColumnInfo Id="Customer" Width="106" Removed="True" />
+        <ColumnInfo Id="CustomerStore" Width="153" Removed="True" />
+        <ColumnInfo Id="Date" Width="83" Removed="True" />
+        <ColumnInfo Id="Employee" Width="107" Removed="True" />
+        <ColumnInfo Id="ID" Removed="True" />
+        <ColumnInfo Id="Number" Width="94" Removed="True" />
+        <ColumnInfo Id="ShippingAmount" Width="170" Removed="True" />
+        <ColumnInfo Id="State" PropertyName="CustomerStore.AddressState" Caption="State" IsNewNode="True" />
+        <ColumnInfo Id="SubTotal" Width="104" Removed="True" />
+        <ColumnInfo Id="Total" PropertyName="Total" IsNewNode="True" Removed="True" />
+      </Columns>
+      <PivotSettings ShowColumnGrandTotals="True" ShowColumnTotals="True" ShowRowGrandTotals="True" ShowRowTotals="True" AddNewColumns="False" Settings="﻿&lt;XtraSerializer version=&quot;1.0&quot; application=&quot;PivotGrid&quot;&gt;&#xD;&#xA;  &lt;property name=&quot;#LayoutVersion&quot; /&gt;&#xD;&#xA;  &lt;property name=&quot;#LayoutScaleFactor&quot;&gt;@1,Width=1@1,Height=1&lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;FixedColumnFieldValues&quot; iskey=&quot;true&quot; value=&quot;0&quot; /&gt;&#xD;&#xA;  &lt;property name=&quot;Fields&quot; iskey=&quot;true&quot; value=&quot;4&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;Item1&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;      &lt;property name=&quot;Options&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;AllowRunTimeSummaryChange&quot;&gt;true&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ImageIndex&quot;&gt;-1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ToolTips&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;HeaderText&quot; /&gt;&#xD;&#xA;        &lt;property name=&quot;ValueText&quot; /&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldEditName&quot; /&gt;&#xD;&#xA;      &lt;property name=&quot;Name&quot;&gt;Field_Opportunity&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Area&quot;&gt;DataArea&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldName&quot;&gt;Opportunity&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Caption&quot;&gt;PERCENTAGE&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SummaryType&quot;&gt;Average&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;CellFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:#,###,##0.##############################}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;GrandTotalCellFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:#,###,##0.##############################}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ValueFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:#,###,##0.##############################}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Index&quot;&gt;0&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;AreaIndex&quot;&gt;1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SortOrder&quot;&gt;Descending&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;MinWidth&quot;&gt;20&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Width&quot;&gt;332&lt;/property&gt;&#xD;&#xA;    &lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;Item2&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;      &lt;property name=&quot;Options&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;AllowRunTimeSummaryChange&quot;&gt;true&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ImageIndex&quot;&gt;-1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ToolTips&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;HeaderText&quot; /&gt;&#xD;&#xA;        &lt;property name=&quot;ValueText&quot; /&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldEditName&quot; /&gt;&#xD;&#xA;      &lt;property name=&quot;Name&quot;&gt;Field_CustomerStore.AddressCity&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Area&quot;&gt;RowArea&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldName&quot;&gt;CustomerStore.AddressCity&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Caption&quot;&gt;City&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SummaryType&quot;&gt;Count&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Index&quot;&gt;1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;AreaIndex&quot;&gt;1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SortOrder&quot;&gt;Descending&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;MinWidth&quot;&gt;20&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Width&quot;&gt;100&lt;/property&gt;&#xD;&#xA;    &lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;Item3&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;      &lt;property name=&quot;Options&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;AllowRunTimeSummaryChange&quot;&gt;true&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ImageIndex&quot;&gt;-1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ToolTips&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;HeaderText&quot; /&gt;&#xD;&#xA;        &lt;property name=&quot;ValueText&quot; /&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldEditName&quot; /&gt;&#xD;&#xA;      &lt;property name=&quot;Name&quot;&gt;Field_CustomerStore.AddressState&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Area&quot;&gt;RowArea&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldName&quot;&gt;CustomerStore.AddressState&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Caption&quot;&gt;State&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SummaryType&quot;&gt;Count&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Index&quot;&gt;2&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;AreaIndex&quot;&gt;0&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;MinWidth&quot;&gt;20&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Width&quot;&gt;100&lt;/property&gt;&#xD;&#xA;    &lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;Item4&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;      &lt;property name=&quot;Options&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;AllowRunTimeSummaryChange&quot;&gt;true&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ImageIndex&quot;&gt;-1&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ToolTips&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;HeaderText&quot; /&gt;&#xD;&#xA;        &lt;property name=&quot;ValueText&quot; /&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldEditName&quot; /&gt;&#xD;&#xA;      &lt;property name=&quot;Name&quot;&gt;Field_Total&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Area&quot;&gt;DataArea&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;FieldName&quot;&gt;Total&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Caption&quot;&gt;Opportunities&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;CellFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:C}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;GrandTotalCellFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:C}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;ValueFormat&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;        &lt;property name=&quot;FormatString&quot;&gt;{0:C}&lt;/property&gt;&#xD;&#xA;        &lt;property name=&quot;FormatType&quot;&gt;Custom&lt;/property&gt;&#xD;&#xA;      &lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Index&quot;&gt;3&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;AreaIndex&quot;&gt;0&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;SortOrder&quot;&gt;Descending&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;MinWidth&quot;&gt;20&lt;/property&gt;&#xD;&#xA;      &lt;property name=&quot;Width&quot;&gt;100&lt;/property&gt;&#xD;&#xA;    &lt;/property&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;Prefilter&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;ShowOperandTypeIcon&quot;&gt;false&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;Enabled&quot;&gt;false&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;CriteriaString&quot; /&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;ActiveFilter&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;Enabled&quot;&gt;false&lt;/property&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;OptionsCustomization&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;CustomizationFormStyle&quot;&gt;Excel2007&lt;/property&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;OptionsChartDataSource&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;ProvideColumnGrandTotals&quot;&gt;true&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;ProvideRowGrandTotals&quot;&gt;true&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;ProvideColumnTotals&quot;&gt;true&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;ProvideRowTotals&quot;&gt;true&lt;/property&gt;&#xD;&#xA;    &lt;property name=&quot;DataProvideMode&quot;&gt;UseCustomSettings&lt;/property&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;OptionsFilter&quot; isnull=&quot;true&quot; iskey=&quot;true&quot;&gt;&#xD;&#xA;    &lt;property name=&quot;DefaultFilterEditorView&quot;&gt;VisualAndText&lt;/property&gt;&#xD;&#xA;  &lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;FixedLineWidth&quot;&gt;2&lt;/property&gt;&#xD;&#xA;  &lt;property name=&quot;Groups&quot; iskey=&quot;true&quot; value=&quot;0&quot; /&gt;&#xD;&#xA;  &lt;property name=&quot;FormatRules&quot; iskey=&quot;true&quot; value=&quot;0&quot; /&gt;&#xD;&#xA;  &lt;property name=&quot;FormatConditions&quot; iskey=&quot;true&quot; value=&quot;0&quot; /&gt;&#xD;&#xA;&lt;/XtraSerializer&gt;" />
+    </ListView>
   </Views>
 </Application>

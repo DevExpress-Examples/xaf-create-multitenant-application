@@ -1,7 +1,16 @@
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
 
 namespace OutlookInspired.Module.Services{
     internal static class FrameExtensions{
+        public static IEnumerable<ActionBase> ActiveActions(this Frame frame, params string[] actionsIds)
+            => frame.Actions(actionsIds).Where(action => action.Active);
+        public static IEnumerable<ActionBase> Actions(this Frame frame,params string[] actionsIds) 
+            => frame.Actions<ActionBase>(actionsIds);
+        
+        public static IEnumerable<T> Actions<T>(this Frame frame,params string[] actionsIds) where T : ActionBase 
+            => frame.Controllers.Cast<Controller>().SelectMany(controller => controller.Actions).OfType<T>()
+                .Where(actionBase => !actionsIds.Any()|| actionsIds.Any(s => s==actionBase.Id));
         public static bool When<T>(this T frame, params Nesting[] nesting) where T : Frame 
             => nesting.Any(item => item == Nesting.Any || frame is NestedFrame && item == Nesting.Nested ||
                                    !(frame is NestedFrame) && item == Nesting.Root);

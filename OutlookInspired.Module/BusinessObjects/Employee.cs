@@ -13,14 +13,17 @@ namespace OutlookInspired.Module.BusinessObjects{
 	
 	[DefaultProperty(nameof(FullName))]
 	[VisibleInReports][ImageName("BO_Person")]
+	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
+	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
 	public class Employee :MigrationBaseObject{
+		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
+		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))][Aggregated]
 		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new(); 
 		public virtual  EmployeeDepartment Department { get; set; }
-		[RuleRequiredField]
+		[RuleRequiredField][FontSizeDelta(8)]
 		
-		[FontSizeDelta(8)]
 		public virtual string Title { get; set; }
 		[VisibleInListView(false)]
 		public virtual EmployeeStatus Status { get; set; }
@@ -42,7 +45,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string FirstName { get; set; }
 		[RuleRequiredField][VisibleInListView(false)]
 		public virtual string LastName { get; set; }
-		// [EditorAlias(EditorAliases.LabelPropertyEditor)]
+		
 		[FontSizeDelta(16)]
 		public virtual string FullName { get; set; }
 		
@@ -51,7 +54,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[VisibleInDetailView(false)]
 		[XafDisplayName(nameof(Prefix))]
-		public virtual Image PrefixImage => Prefix.Image();
+		public virtual byte[] PrefixImage => Prefix.ImageBytes();
 		
 		[Phone][VisibleInListView(false)]
 		public virtual string HomePhone { get; set; }
@@ -78,17 +81,17 @@ namespace OutlookInspired.Module.BusinessObjects{
         [ZipCode]
 		public virtual string ZipCode { get; set; }
 
-		[Aggregated]
+		
 		public virtual ObservableCollection<Evaluation> EvaluationsCreatedBy{ get; set; } = new();
-		[Aggregated]
+		
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
-		[Aggregated]
+		
 		public virtual ObservableCollection<Product> Products{ get; set; } = new();
-		[Aggregated]
+		
 		public virtual ObservableCollection<Product> SupportedProducts{ get; set; } = new();
-		[Aggregated]
+		
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
-		[Aggregated]
+		
 		public virtual ObservableCollection<CustomerCommunication> Employees{ get; set; } = new();
 
 		[Browsable(false)]

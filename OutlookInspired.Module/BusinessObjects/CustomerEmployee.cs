@@ -19,7 +19,9 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual string Email { get; set; }
 		public virtual Picture Picture { get; set; }
 		public virtual Customer Customer { get; set; }
+		[Browsable(false)]
 		public virtual Guid CustomerId { get; set; }
+		
 		public virtual CustomerStore CustomerStore { get; set; }
 		public virtual string Position { get; set; }
 		public virtual bool IsPurchaseAuthority { get; set; }

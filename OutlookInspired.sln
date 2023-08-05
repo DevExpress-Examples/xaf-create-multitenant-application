@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookInspired.Tests", "Ou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.Testing", "DevExpress.ExpressApp.Testing\DevExpress.ExpressApp.Testing.csproj", "{7DCC6B7D-F550-4243-A59E-CF483B1DE441}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.NetStandard", "..\..\..\Program Files\DevExpress 22.2\Components\Sources\DevExpress.ExpressApp\DevExpress.ExpressApp\DevExpress.ExpressApp.NetStandard.csproj", "{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,11 @@ Global
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
+		{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7B743DB-90EE-425D-A8D5-C4C3EE7774B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

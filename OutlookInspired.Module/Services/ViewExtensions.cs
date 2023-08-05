@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
+using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.Controllers;
 
@@ -17,14 +18,14 @@ namespace OutlookInspired.Module.Services{
     internal static class ViewExtensions{
         public static MasterDetailType MasterDetailType(this DashboardView dashboardView){
             var items = dashboardView.Items(ViewType.DetailView,ViewType.ListView).ToArray();
-            if (items.All(item => item.IsMasterDetailService())){
+            if (items.All(item => item.IsMaster())){
                 return Services.MasterDetailType.BothViewsCustom;
             }
             var masterItem = items.MasterItem();
             var childItem = items.Except(masterItem.YieldItem()).First();
-            return masterItem.IsMasterDetailService() ? childItem.IsMasterDetailService()
+            return masterItem.IsMaster() ? childItem.IsMaster()
                     ? Services.MasterDetailType.BothViewsCustom : Services.MasterDetailType.MasterCustom
-                : childItem.IsMasterDetailService() ? Services.MasterDetailType.ChildCustom
+                : childItem.IsMaster() ? Services.MasterDetailType.ChildCustom
                     : Services.MasterDetailType.BothViewsNative;
         }
 
@@ -33,15 +34,20 @@ namespace OutlookInspired.Module.Services{
 
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
 
-        public static bool IsMasterDetailService(this DashboardViewItem item)
-            => item.InnerView.IsMasterDetailService();
+        public static bool IsMaster(this DashboardViewItem item)
+            => item.InnerView.IsMaster();
 
         public static NestedFrame MasterFrame(this DashboardView view)
-            => view.NestedFrames(ViewType.DetailView)
-                .First(nestedFrame => nestedFrame.View.IsMasterDetailService());
+            => view.Items.OfType<DashboardViewItem>().Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide)
+                .Select(item => item.Frame).Cast<NestedFrame>().First();
         
-        public static bool IsMasterDetailService(this View compositeView) 
-            => compositeView.ToCompositeView().GetItems<ControlViewItem>().Any()&&!compositeView.ObjectTypeInfo.IsPersistent;
+        public static bool IsMaster(this View view) => view is DetailView detailView && detailView.Model.IsMaster();
+
+        static bool IsMaster(this IModelDetailView detailViewModel){
+            var modelControlDetailItems = detailViewModel.Items.OfType<IModelControlDetailItem>().ToArray();
+            return modelControlDetailItems.Length>0&& modelControlDetailItems.All(item => XafTypesInfo.Instance.FindTypeInfo(item.ControlTypeName)
+                    .FindAttribute<DetailUserControlAttribute>() == null);
+        }
 
         public static UserControlController SetSelectionContext(this UserControlController userControlController,View view){
             userControlController.Actions.ForEach(action => action.SelectionContext = view);
@@ -57,8 +63,12 @@ namespace OutlookInspired.Module.Services{
         public static IEnumerable<TView> Views<TView>(this DashboardView dashboardView) where TView:View
             => dashboardView.GetItems<DashboardViewItem>().Select(item => item.InnerView).OfType<TView>();
         public static IEnumerable<DashboardViewItem> Items(this DashboardView dashboardView,params ViewType[] viewTypes)
-            => dashboardView.GetItems<DashboardViewItem>().Where(item =>viewTypes.Length==0|| viewTypes.Any(viewType =>item.InnerView.Is(viewType) ));
-        
+            => dashboardView.GetItems<DashboardViewItem>().Where(item =>viewTypes.Length==0|| viewTypes.Any(viewType =>item.Model.View.Is(viewType) ));
+
+        public static bool Is(this IModelView modelView,ViewType viewType) 
+            => viewType == ViewType.Any || (viewType == ViewType.DetailView ? modelView is IModelDetailView :
+                viewType == ViewType.ListView ? modelView is IModelListView : modelView is IModelDashboardView);
+
         public static IEnumerable<NestedFrame> NestedFrames(this DashboardView dashboardView,params ViewType[] viewTypes)
             => dashboardView.Items(viewTypes).Select(item => item.Frame).Cast<NestedFrame>();
         public static IEnumerable<NestedFrame> NestedFrames<TView>(this DashboardView dashboardView,params Type[] objectTypes) where TView:View 
@@ -70,10 +80,10 @@ namespace OutlookInspired.Module.Services{
             => compositeView.GetItems<ControlViewItem>().Select(item => item.Control)
                 .OfType<TControl>();
 
-        public static T SetCurrentObject<T>(this DetailView detailView, T currentObject) where T : class{
+        public static T SetCurrentObject<T>(this View detailView, T currentObject) where T : class{
             var viewCurrentObject = (T)(detailView.CurrentObject = detailView.ObjectSpace.GetObject(currentObject));
-            detailView.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IComplexControl>()
-                .ForEach(control => control.Refresh());
+            // detailView.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>()
+                // .ForEach(control => control.SetDataSource(viewCurrentObject));
             return viewCurrentObject;
         }
 

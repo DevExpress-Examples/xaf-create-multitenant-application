@@ -172,7 +172,6 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     product.Description = sqlLite.Description;
                     product.Available = sqlLite.Available;
                     product.Backorder = sqlLite.Backorder;
-                    product.Barcode = sqlLite.Barcode;
                     product.Cost = sqlLite.Cost;
                     product.Engineer = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Engineer.Id);
                     product.Image = sqlLite.Image;

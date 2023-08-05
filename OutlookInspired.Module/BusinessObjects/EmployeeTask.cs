@@ -10,7 +10,9 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(DueDate),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(DueDate),FontStyle = FontStyle.Bold)]
+    [CloneView(CloneViewType.ListView, EmployeeAssignedTasksListViewChild)]
     public class EmployeeTask:MigrationBaseObject{
+        public const string EmployeeAssignedTasksListViewChild="Employee_AssignedTasks_ListView_Child";
         [Aggregated]
         public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
@@ -25,7 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual EmployeeTaskPriority Priority { get; set; }
 
         [VisibleInDetailView(false)][XafDisplayName(nameof(Priority))]
-        public Image PriorityImage => Priority.Image();
+        public byte[] PriorityImage => Priority.ImageBytes();
         
         [EditorAlias(EditorAliases.ProgressEditor)]
         public virtual int Completion { get; set; }

@@ -50,7 +50,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
 	    updaters.Add(new ModelViewClonerUpdater());
-	    updaters.Add(new UserControlObjectUpdater());
+	    updaters.Add(new MasterDetailViewUpdater());
     }
 
 }

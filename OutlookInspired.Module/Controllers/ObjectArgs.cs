@@ -1,11 +1,15 @@
-﻿namespace OutlookInspired.Module.Controllers{
-    public interface IUserControl{
-        event EventHandler<ObjectArgs> SelectedObjectChanged;
-        event EventHandler<ObjectArgs> ProcessObject;
-    }
-    public class ObjectArgs:EventArgs{
-        public object Instance{ get; }
+﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Editors;
 
-        public ObjectArgs(object instance) => Instance = instance;
+namespace OutlookInspired.Module.Controllers{
+    [AttributeUsage(AttributeTargets.Class)]
+    public class DetailUserControlAttribute:Attribute{
+        
+    }
+    public interface IUserControl:ISelectionContext,IComplexControl{
+        void Refresh(object currentObject);
+        event EventHandler ProcessObject;
+        event EventHandler DataSourceOrFilterChanged;
+        
     }
 }

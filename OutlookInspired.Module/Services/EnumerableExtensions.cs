@@ -2,6 +2,8 @@
 
 namespace OutlookInspired.Module.Services{
     internal static class EnumerableExtensions{
+        
+
         public static IEnumerable<T> Finally<T>(this IEnumerable<T> source, Action action){
             return _();
             IEnumerable<T> _(){

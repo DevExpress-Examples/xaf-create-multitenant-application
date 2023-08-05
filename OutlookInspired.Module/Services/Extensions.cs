@@ -8,8 +8,8 @@ using DevExpress.XtraEditors.Controls;
 namespace OutlookInspired.Module.Services{
     public static class Extensions {
          
-        public static Image Image(this Enum @enum) 
-            => ImageLoader.Instance.GetEnumValueImageInfo(@enum).Image;
+        public static byte[] ImageBytes(this Enum @enum) 
+            => ImageLoader.Instance.GetEnumValueImageInfo(@enum).ImageBytes;
         
         public static void SaveToFile(this Stream stream, string filePath) {
             var directory = Path.GetDirectoryName(filePath) + "";
@@ -56,7 +56,7 @@ namespace OutlookInspired.Module.Services{
     }
     
     public struct EditorAliases {
-        public const string CustomStringPropertyEditor = "CustomStringPropertyEditor";
+        public const string PdfViewerEditor = "PdfViewerEditor";
         public const string LabelPropertyEditor = "LabelPropertyEditor";
         public const string HyperLinkPropertyEditor = "HyperLinkPropertyEditor";
         public const string ProgressEditor = "ProgressEditor";

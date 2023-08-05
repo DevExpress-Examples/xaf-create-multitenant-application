@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using Humanizer;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
@@ -64,8 +65,9 @@ public class Updater : ModuleUpdater {
         }
         adminRole.IsAdministrative = true;
 		userAdmin.Roles.Add(adminRole);
-
+        
         ObjectSpace.CommitChanges(); //This line persists created object(s).
+        
         
 #endif
     }

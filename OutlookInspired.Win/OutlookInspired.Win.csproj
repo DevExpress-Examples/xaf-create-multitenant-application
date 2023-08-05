@@ -27,27 +27,27 @@
     <EmbeddedResource Include="Images\Logo.svg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Chart.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Notifications.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.PivotChart.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.PivotGrid.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Security.EFCore.Extensions.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.TreeListEditors.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.1.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Win.Design" Version="23.1.3" />
-    <PackageReference Include="DevExpress.Persistent.Base" Version="23.1.3" />
-    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.3" />
-    <PackageReference Include="DevExpress.RichEdit.Export" Version="23.1.3" />
-    <PackageReference Include="DevExpress.Win.Design" Version="23.1.3" />
+    <PackageReference Include="DevExpress.ExpressApp" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Chart.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Notifications.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.PivotChart.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.PivotGrid.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Security.EFCore.Extensions.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.TreeListEditors.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Win.Design" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Persistent.Base" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.4" />
+    <PackageReference Include="DevExpress.RichEdit.Export" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Win.Design" Version="23.1.4" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +86,9 @@
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes6.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes7.xml">
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
   </ItemGroup>

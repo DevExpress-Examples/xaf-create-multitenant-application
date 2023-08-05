@@ -1,0 +1,1 @@
+1. The runtime does not use the desing time caption in PivotGrid

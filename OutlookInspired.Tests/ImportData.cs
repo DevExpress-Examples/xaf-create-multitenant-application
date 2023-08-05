@@ -22,7 +22,7 @@ namespace OutlookInspired.Tests.ImportData{
             objectSpace.Count<Picture>().ShouldBe(112);
             objectSpace.Count<Probation>().ShouldBe(4);
             objectSpace.Count<CustomerStore>().ShouldBe(200);
-            objectSpace.Count<Employee>().ShouldBe(50);
+            objectSpace.Count<Employee>().ShouldBe(51);
             objectSpace.Count<ProductImage>().ShouldBe(76);
             objectSpace.Count<ProductCatalog>().ShouldBe(19);
             objectSpace.Count<Evaluation>().ShouldBe(127);

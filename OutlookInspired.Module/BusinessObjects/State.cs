@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using DevExpress.Persistent.Base;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -6,7 +7,11 @@ namespace OutlookInspired.Module.BusinessObjects{
     public class State:MigrationBaseObject{
         public virtual string LongName{ get; set; }
         public virtual StateEnum ShortName{ get; set; }
+        [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
         public virtual byte[] SmallFlag{ get; set; }
+        [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]
         public virtual byte[] LargeFlag{ get; set; }
         
     }

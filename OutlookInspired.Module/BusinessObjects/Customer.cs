@@ -12,8 +12,13 @@ using OutlookInspired.Module.Services;
 namespace OutlookInspired.Module.BusinessObjects {
 	[ImageName("BO_Customer")]
 	[CloneView(CloneViewType.DetailView, ChildDetailViewId)]
+	[CloneView(CloneViewType.DetailView, CustomerLayoutViewDetailView)]
+	[CloneView(CloneViewType.DetailView, CustomerGridViewDetailView)]
+	[XafDefaultProperty(nameof(Name))]
 	public class Customer:MigrationBaseObject{
 		public const string ChildDetailViewId = "Customer_DetailView_Child";
+		public const string CustomerGridViewDetailView = "CustomerGridView_DetailView";
+		public const string CustomerLayoutViewDetailView = "CustomerLayoutView_DetailView";
 		[FontSizeDelta(4)]
 		public  virtual string HomeOfficeLine { get; set; }
 		[XafDisplayName("City")]
@@ -74,6 +79,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[Aggregated]
 		public virtual ObservableCollection<CustomerStore> CustomerStores{ get; set; } = new();
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
+		[FieldSize(-1)]
 		public virtual string Profile { get; set; }
 		[ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
 			DetailViewImageEditorMode = ImageEditorMode.PictureEdit)]

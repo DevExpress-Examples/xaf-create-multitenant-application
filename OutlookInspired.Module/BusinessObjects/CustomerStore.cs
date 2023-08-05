@@ -5,6 +5,7 @@ using OutlookInspired.Module.Attributes.Validation;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
+	[XafDefaultProperty(nameof(Crest))]
 	public class CustomerStore :MigrationBaseObject{
 		public virtual string AddressLine { get; set; }
 		public virtual string AddressCity { get; set; }

@@ -9,10 +9,12 @@ using OutlookInspired.Module.Attributes;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(CreatedOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(CreatedOn),FontStyle = FontStyle.Bold,Context = "Employee_Evaluations_ListView")]
-    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = FontStyle.Bold,Context = "Employee_Evaluations_ListView_Child")]
-    [Appearance(nameof(CreatedOn)+"_Employee_Evaluations_ListView_Child",AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(CreatedOn),FontColor = "Blue",Context = "Employee_Evaluations_ListView_Child")]
+    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = FontStyle.Bold,Context = EmployeeEvaluationsListViewChild)]
+    [Appearance(nameof(CreatedOn)+"_"+EmployeeEvaluationsListViewChild,AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(CreatedOn),FontColor = "Blue",Context = EmployeeEvaluationsListViewChild)]
     [Appearance(nameof(Rating),AppearanceItemType.ViewItem, nameof(Rating)+"='"+nameof(EvaluationRating.Good)+"'",TargetItems = "*",FontColor = "Green",Context = "Employee_Evaluations_ListView")]
+    [CloneView(CloneViewType.ListView, EmployeeEvaluationsListViewChild)]
     public class Evaluation :MigrationBaseObject{
+        public const string EmployeeEvaluationsListViewChild="Employee_Evaluations_ListView_Child";
         public virtual Employee Manager{ get; set; }
         [Browsable(false)]
         public virtual Guid? ManagerId{ get; set; }

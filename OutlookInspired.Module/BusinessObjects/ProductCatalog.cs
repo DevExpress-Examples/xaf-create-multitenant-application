@@ -8,7 +8,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         [Browsable(false)]
         public virtual Guid? ProductId { get; set; }
         public  virtual byte[] PDF { get; set; }
-        Stream _pdfStream;
-        public Stream PdfStream => _pdfStream ??= new MemoryStream(PDF);
+        
     }
 }
