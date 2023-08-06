@@ -1,5 +1,4 @@
-﻿using Aqua.EnumerableExtensions;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
@@ -49,10 +48,10 @@ namespace OutlookInspired.Module.Services{
                     .FindAttribute<DetailUserControlAttribute>() == null);
         }
 
-        public static UserControlController SetSelectionContext(this UserControlController userControlController,View view){
-            userControlController.Actions.ForEach(action => action.SelectionContext = view);
-            return userControlController;
-        }
+        // public static UserControlController SetSelectionContext(this UserControlController userControlController,View view){
+        //     userControlController.Actions.ForEach(action => action.SelectionContext = view);
+        //     return userControlController;
+        // }
 
         public static void DeleteSelectObjects(this ObjectView objectView)
             => objectView.SelectedObjects.Cast<object>().Do(o => objectView.ObjectSpace.Delete(o))

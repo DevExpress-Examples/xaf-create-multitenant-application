@@ -1,6 +1,5 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.PivotGrid.Win;
-using DevExpress.Utils;
 using OutlookInspired.Win.Extensions;
 
 namespace OutlookInspired.Win.Controllers{

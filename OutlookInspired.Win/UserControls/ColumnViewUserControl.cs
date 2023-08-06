@@ -44,9 +44,7 @@ namespace OutlookInspired.Win.UserControls
         public SelectionType SelectionType => SelectionType.Full;
         public bool IsRoot => false;
 
-        protected virtual void OnDataSourceOfFilterChanged()
-        {
-            DataSourceOrFilterChanged?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnDataSourceOfFilterChanged() => DataSourceOrFilterChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnSelectionTypeChanged() => SelectionTypeChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -19,6 +19,7 @@
           <Item Id="CustomerListView" ViewId="CustomerListView" IsNewNode="True" />
           <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
           <Item Id="ModelDifference_ListView" ViewId="ModelDifference_ListView" IsNewNode="True" />
+          <Item Id="Oppurtunities" ViewId="Oppurtunities" IsNewNode="True" />
           <Item Id="Order" ViewId="OrderListView" IsNewNode="True" />
           <Item Id="Product" ViewId="ProductListView" IsNewNode="True" />
         </Items>
@@ -564,6 +565,18 @@
         <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <DashboardView Id="Oppurtunities" Caption="Oppurtunities" ImageName="BO_Opportunity" IsNewNode="True">
+      <Items IsNewNode="True">
+        <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Hide" IsNewNode="True" />
+        <DashboardViewItem Id="QuoteMapItem_ListView" ViewId="QuoteMapItem_ListView" ActionsToolbarVisibility="Hide" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" ShowCaption="False" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
+          <LayoutItem Id="Quote_ListView" ViewItem="Quote_ListView" Index="0" RelativeSize="50" IsNewNode="True" />
+          <LayoutItem Id="QuoteMapItem_ListView" ViewItem="QuoteMapItem_ListView" Index="1" RelativeSize="50" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
     <DetailView Id="Order_DetailView_Child" FreezeLayout="True">
       <Items>
         <PropertyEditor Id="Customer" PropertyName="Customer.Name" IsNewNode="True" />
@@ -849,6 +862,7 @@
         <Variant Id="ProductListView" ViewID="ProductListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <ListView Id="QuoteMapItem_ListView" DataAccessMode="Client" />
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>
         <LayoutGroup Id="Main">

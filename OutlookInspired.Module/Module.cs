@@ -52,6 +52,8 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    updaters.Add(new ModelViewClonerUpdater());
 	    updaters.Add(new MasterDetailViewUpdater());
     }
+    
+    
 
 }
 
