@@ -7,17 +7,8 @@ using Observable = System.Reactive.Linq.Observable;
 using Unit = System.Reactive.Unit;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
-    public enum ObjectModification{
-        All,
-        New,
-        NewOrUpdated,
-        NewOrDeleted,
-        Updated,
-        UpdatedOrDeleted,
-        Deleted
-    }
-
     public static class ObjectSpaceExtensions{
+        
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);
         public static object FindObject(this IObjectSpace objectSpace, Type objectType) 
@@ -105,8 +96,16 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         
         public static IObservable<Unit> WhenDisposed(this IObjectSpace objectSpace)
             => objectSpace.WhenEvent(nameof(IObjectSpace.Disposed)).ToUnit();
-
-
-
     }
+    
+    public enum ObjectModification{
+        All,
+        New,
+        NewOrUpdated,
+        NewOrDeleted,
+        Updated,
+        UpdatedOrDeleted,
+        Deleted
+    }
+
 }

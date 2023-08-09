@@ -1,47 +1,18 @@
-﻿using System.Reactive.Linq;
-using DevExpress.DevAV;
+﻿
+
+using System.Reactive;
+using System.Reactive.Linq;
+using DevAV = DevExpress.DevAV;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Testing;
-using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Testing.RXExtensions;
 using OutlookInspired.Module.BusinessObjects;
-using Crest = OutlookInspired.Module.BusinessObjects.Crest;
-using Customer = OutlookInspired.Module.BusinessObjects.Customer;
-using CustomerCommunication = OutlookInspired.Module.BusinessObjects.CustomerCommunication;
-using CustomerEmployee = OutlookInspired.Module.BusinessObjects.CustomerEmployee;
-using CustomerStatus = OutlookInspired.Module.BusinessObjects.CustomerStatus;
-using CustomerStore = OutlookInspired.Module.BusinessObjects.CustomerStore;
-using Employee = OutlookInspired.Module.BusinessObjects.Employee;
-using EmployeeDepartment = OutlookInspired.Module.BusinessObjects.EmployeeDepartment;
-using EmployeeStatus = OutlookInspired.Module.BusinessObjects.EmployeeStatus;
-using EmployeeTask = OutlookInspired.Module.BusinessObjects.EmployeeTask;
-using EmployeeTaskFollowUp = OutlookInspired.Module.BusinessObjects.EmployeeTaskFollowUp;
-using EmployeeTaskPriority = OutlookInspired.Module.BusinessObjects.EmployeeTaskPriority;
-using EmployeeTaskStatus = OutlookInspired.Module.BusinessObjects.EmployeeTaskStatus;
-using Evaluation = OutlookInspired.Module.BusinessObjects.Evaluation;
-using EvaluationRating = OutlookInspired.Module.BusinessObjects.EvaluationRating;
-using Order = OutlookInspired.Module.BusinessObjects.Order;
-using OrderItem = OutlookInspired.Module.BusinessObjects.OrderItem;
-using PersonPrefix = OutlookInspired.Module.BusinessObjects.PersonPrefix;
-using Picture = OutlookInspired.Module.BusinessObjects.Picture;
-using Probation = OutlookInspired.Module.BusinessObjects.Probation;
-using Product = OutlookInspired.Module.BusinessObjects.Product;
-using ProductCatalog = OutlookInspired.Module.BusinessObjects.ProductCatalog;
-using ProductCategory = OutlookInspired.Module.BusinessObjects.ProductCategory;
-using ProductImage = OutlookInspired.Module.BusinessObjects.ProductImage;
-using Quote = OutlookInspired.Module.BusinessObjects.Quote;
-using QuoteItem = OutlookInspired.Module.BusinessObjects.QuoteItem;
-using ShipmentCourier = OutlookInspired.Module.BusinessObjects.ShipmentCourier;
-using ShipmentStatus = OutlookInspired.Module.BusinessObjects.ShipmentStatus;
-using State = OutlookInspired.Module.BusinessObjects.State;
-using StateEnum = OutlookInspired.Module.BusinessObjects.StateEnum;
-using TaskAttachedFile = OutlookInspired.Module.BusinessObjects.TaskAttachedFile;
-using Unit = System.Reactive.Unit;
+using OutlookInspired.Module.Services;
+using StateEnum = DevExpress.DevAV.StateEnum;
 
 namespace OutlookInspired.Tests.ImportData.Extensions{
     public static class ImportExtensions{
         public static IObservable<Unit> ImportFromSqlLite(this IObjectSpace objectSpace)
-            => new DevAVDb(
+            => new DevAV.DevAVDb(
                     $"Data Source=C:\\Users\\Public\\Documents\\DevExpress Demos {XafAssemblyInfo.Version.Substring(0, 4)}\\Components\\Data\\devav.sqlite3")
                 .Use(objectSpace.ImportFrom);
 
@@ -49,7 +20,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
             Func<IObservable<Unit>> nextSource)
             => source.DoOnComplete(objectSpace.CommitChanges).ConcatDefer(nextSource);
 
-        static IObservable<Unit> ImportFrom(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportFrom(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => objectSpace.ZeroDependencies(sqliteContext)
                 .CommitAndConcat(objectSpace, () => objectSpace.ImportCustomerStore(sqliteContext)
                     .Merge(objectSpace.ImportEmployee(sqliteContext)
@@ -61,17 +32,17 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                             objectSpace.CustomerEmployeeDependent(sqliteContext))))
                 .Finally(objectSpace.CommitChanges);
 
-        private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAVDb sqliteContext,
+        private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext,
             IObservable<Unit> customerEmployeeDependent)
             => objectSpace.ImportCustomerEmployee(sqliteContext)
                 .CommitAndConcat(objectSpace, () => customerEmployeeDependent);
 
-        private static IObservable<Unit> CustomerEmployeeDependent(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        private static IObservable<Unit> CustomerEmployeeDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => objectSpace.ImportCustomerCommunication(sqliteContext)
                 .Merge(objectSpace.ImportEmployeeTasks(sqliteContext)
                     .CommitAndConcat(objectSpace, () => objectSpace.ImportTaskAttachedFiles(sqliteContext)));
 
-        private static IObservable<Unit> EmployeeDependent(this IObjectSpace objectSpace, DevAVDb sqliteContext,
+        private static IObservable<Unit> EmployeeDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext,
             IObservable<Unit> productDependent)
             => objectSpace.ImportEvaluation(sqliteContext)
                 .Merge(objectSpace.ImportProduct(sqliteContext).CommitAndConcat(objectSpace, () => productDependent))
@@ -80,17 +51,17 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 .Merge(objectSpace.ImportQuote(sqliteContext)
                     .CommitAndConcat(objectSpace, () => objectSpace.ImportQuoteItem(sqliteContext)));
 
-        private static IObservable<Unit> ProductDependent(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        private static IObservable<Unit> ProductDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => objectSpace.ImportProductImages(sqliteContext).Merge(objectSpace.ImportProductCatalog(sqliteContext));
 
-        private static IObservable<Unit> ZeroDependencies(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        private static IObservable<Unit> ZeroDependencies(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => objectSpace.ImportCrest(sqliteContext)
                 .Merge(objectSpace.ImportState(sqliteContext))
                 .Merge(objectSpace.ImportCustomer(sqliteContext))
                 .Merge(objectSpace.ImportPicture(sqliteContext))
                 .Merge(objectSpace.ImportProbation(sqliteContext));
 
-        static IObservable<Unit> ImportEmployee(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportEmployee(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Employees.ToNowObservable()
                 .Select(sqlLite => {
                     var employee = objectSpace.CreateObject<Employee>();
@@ -99,7 +70,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     employee.Address = sqlLite.AddressLine;
                     employee.ZipCode = sqlLite.AddressZipCode;
                     employee.Picture = objectSpace.FindSqlLiteObject<Picture>(sqlLite.Picture?.Id);
-                    employee.State = Enum.Parse<StateEnum>(sqlLite.AddressState.ToString());
+                    employee.State = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.AddressState.ToString());
                     employee.Department = (EmployeeDepartment)sqlLite.Department;
                     employee.Email = sqlLite.Email;
                     employee.Prefix = (PersonPrefix)sqlLite.Prefix;
@@ -122,9 +93,9 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
 
 
         private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : MigrationBaseObject
-            => objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
+            => objectSpace.FindObject<T>( migrationBaseObject => id == migrationBaseObject.IdInt64);
 
-        static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Evaluations.ToNowObservable()
                 .Select(sqlLite => {
                     var evaluation = objectSpace.CreateObject<Evaluation>();
@@ -138,7 +109,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return evaluation;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportOrder(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportOrder(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Orders.ToNowObservable()
                 .Select(sqlLite => {
                     var order = objectSpace.CreateObject<Order>();
@@ -162,7 +133,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return order;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportProduct(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportProduct(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Products.ToNowObservable()
                 .Select(sqlLite => {
                     var product = objectSpace.CreateObject<Product>();
@@ -187,7 +158,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return product;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportProductImages(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportProductImages(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.ProductImages.ToNowObservable()
                 .Select(sqlLite => {
                     var productImage = objectSpace.CreateObject<ProductImage>();
@@ -197,7 +168,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return productImage;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportProductCatalog(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportProductCatalog(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.ProductCatalogs.ToNowObservable()
                 .Select(sqlLite => {
                     var productCatalog = objectSpace.CreateObject<ProductCatalog>();
@@ -207,7 +178,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return productCatalog;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportOrderItem(this IObjectSpace objectSpace, DevAVDb sqliteContext){
+        static IObservable<Unit> ImportOrderItem(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext){
             var products = objectSpace.GetObjects<Product>()
                 .ToDictionary(product => product.IdInt64, product => product);
             var orders = objectSpace.GetObjects<Order>().ToDictionary(order => order.IdInt64, order => order);
@@ -225,7 +196,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 }).ToUnit();
         }
 
-        static IObservable<Unit> ImportQuote(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportQuote(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Quotes.ToNowObservable()
                 .Select(sqlLite => {
                     var quote = objectSpace.CreateObject<Quote>();
@@ -242,7 +213,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return quote;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportQuoteItem(this IObjectSpace objectSpace, DevAVDb sqliteContext){
+        static IObservable<Unit> ImportQuoteItem(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext){
             var quotes = objectSpace.GetObjects<Quote>().ToDictionary(quote => quote.IdInt64, quote => quote);
             var products = objectSpace.GetObjects<Product>()
                 .ToDictionary(product => product.IdInt64, product => product);
@@ -260,7 +231,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 }).ToUnit();
         }
 
-        static IObservable<Unit> ImportCustomerEmployee(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportCustomerEmployee(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.CustomerEmployees.ToNowObservable()
                 .Select(sqlLite => {
                     var customerEmployee = objectSpace.CreateObject<CustomerEmployee>();
@@ -280,7 +251,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return customerEmployee;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportCustomerCommunication(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportCustomerCommunication(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.CustomerCommunications.ToNowObservable()
                 .Select(sqlLite => {
                     var customerCommunication = objectSpace.CreateObject<CustomerCommunication>();
@@ -293,7 +264,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return customerCommunication;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportProbation(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportProbation(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Probations.ToNowObservable()
                 .Select(sqlLite => {
                     var probation = objectSpace.CreateObject<Probation>();
@@ -302,7 +273,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return probation;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportPicture(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportPicture(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Pictures.ToNowObservable()
                 .Select(sqlLite => {
                     var picture = objectSpace.CreateObject<Picture>();
@@ -312,7 +283,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 })
                 .ToUnit();
 
-        static IObservable<Unit> ImportEmployeeTasks(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportEmployeeTasks(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.EmployeeTasks.ToNowObservable()
                 .SelectMany(sqlLite => {
                     var task = objectSpace.CreateObject<EmployeeTask>();
@@ -342,7 +313,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                         .To(task).ToNowObservable();
                 }).ToUnit();
 
-        static IObservable<Unit> ImportTaskAttachedFiles(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportTaskAttachedFiles(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.TaskAttachedFiles.ToNowObservable()
                 .Select(sqlLite => {
                     var taskAttachedFile = objectSpace.CreateObject<TaskAttachedFile>();
@@ -354,7 +325,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return taskAttachedFile;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportCustomer(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportCustomer(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Customers.ToNowObservable()
                 .Select(sqlLite => {
                     var customer = objectSpace.CreateObject<Customer>();
@@ -373,18 +344,18 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     customer.BillingAddressLatitude = sqlLite.BillingAddressLatitude;
                     customer.BillingAddressLine = sqlLite.BillingAddressLine;
                     customer.BillingAddressLongitude = sqlLite.BillingAddressLongitude;
-                    customer.BillingAddressState = Enum.Parse<StateEnum>(sqlLite.BillingAddressState.ToString());
+                    customer.BillingAddressState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.BillingAddressState.ToString());
                     customer.BillingAddressZipCode = sqlLite.BillingAddressZipCode;
                     customer.HomeOfficeCity = sqlLite.HomeOfficeCity;
                     customer.HomeOfficeLatitude = sqlLite.HomeOfficeLatitude;
                     customer.HomeOfficeLine = sqlLite.HomeOfficeLine;
                     customer.HomeOfficeLongitude = sqlLite.HomeOfficeLongitude;
-                    customer.HomeOfficeState = Enum.Parse<StateEnum>(sqlLite.HomeOfficeState.ToString());
+                    customer.HomeOfficeState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.HomeOfficeState.ToString());
                     customer.HomeOfficeZipCode = sqlLite.HomeOfficeZipCode;
                     return customer;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportCustomerStore(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportCustomerStore(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.CustomerStores.ToNowObservable()
                 .Select(sqlLite => {
                     var store = objectSpace.CreateObject<CustomerStore>();
@@ -397,7 +368,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     store.AddressCity = sqlLite.Address_City;
                     store.AddressLatitude = sqlLite.Address_Latitude;
                     store.AddressLongitude = sqlLite.Address_Longitude;
-                    store.AddressState = Enum.Parse<StateEnum>(sqlLite.Address_State.ToString());
+                    store.AddressState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.Address_State.ToString());
                     store.AddressLine = sqlLite.AddressLine;
                     store.ZipCode = sqlLite.Address_ZipCode;
                     store.AnnualSales = sqlLite.AnnualSales;
@@ -407,19 +378,19 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     return store;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportState(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportState(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.States.ToNowObservable()
                 .Select(sqlLite => {
                     var state = objectSpace.CreateObject<State>();
                     state.IdInt64 = ((long)Enum.Parse<StateEnum>(sqlLite.ShortName.ToString()));
-                    state.ShortName = Enum.Parse<StateEnum>(sqlLite.ShortName.ToString());
+                    state.ShortName = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.ShortName.ToString());
                     state.LargeFlag = sqlLite.Flag48px;
                     state.SmallFlag = sqlLite.Flag24px;
                     state.LongName = sqlLite.LongName;
                     return state;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportCrest(this IObjectSpace objectSpace, DevAVDb sqliteContext)
+        static IObservable<Unit> ImportCrest(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Crests.ToNowObservable()
                 .Select(sqlLite => {
                     var crest = objectSpace.CreateObject<Crest>();

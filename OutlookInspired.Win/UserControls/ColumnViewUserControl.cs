@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Reflection;
 using DevExpress.ExpressApp;
 using DevExpress.XtraGrid.Views.Base;
 using OutlookInspired.Module.Controllers;
@@ -12,14 +11,12 @@ namespace OutlookInspired.Win.UserControls
         private IObjectSpace _objectSpace;
         protected ColumnView ColumnView;
         protected IList DataSource;
-        private readonly bool _isChild;
-        public event EventHandler DataSourceOrFilterChanged;
+        
+        
         public event EventHandler CurrentObjectChanged;
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionTypeChanged;
         public event EventHandler ProcessObject;
-
-        public ColumnViewUserControl() => _isChild = GetType().GetCustomAttribute(typeof(DetailUserControlAttribute)) != null;
         public virtual void Refresh(object currentObject) => Refresh();
 
         public void Setup(IObjectSpace objectSpace, XafApplication application)
@@ -37,14 +34,16 @@ namespace OutlookInspired.Win.UserControls
             Refresh();
         }
 
-        public override void Refresh() => ColumnView.GridControl.DataSource = _isChild ? DataSource : _objectSpace.GetObjects(GetObjectType());
+        public override void Refresh() => ColumnView.GridControl.DataSource =  DataSource ?? _objectSpace.GetObjects(GetObjectType());
         protected virtual Type GetObjectType() => throw new NotImplementedException();
         public object CurrentObject => ColumnView.FocusedRowObject;
         public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();
         public SelectionType SelectionType => SelectionType.Full;
         public bool IsRoot => false;
 
-        protected virtual void OnDataSourceOfFilterChanged() => DataSourceOrFilterChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnDataSourceOfFilterChanged(){
+        }
+
         protected virtual void OnSelectionTypeChanged() => SelectionTypeChanged?.Invoke(this, EventArgs.Empty);
     }
 }

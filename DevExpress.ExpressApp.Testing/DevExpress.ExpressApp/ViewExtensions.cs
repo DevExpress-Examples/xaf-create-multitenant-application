@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.Persistent.Validation;
+using DevExpress.XtraGrid;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class ViewExtensions{
@@ -45,6 +46,10 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         
         public static IObservable<DashboardViewItem> When(this IObservable<DashboardViewItem> source, params ViewType[] viewTypes) 
             => source.Where(item => viewTypes.All(viewType => item.InnerView.Is(viewType)));
+        public static IObservable<object> WhenObjects(this ListView listView) 
+            => listView.Objects().ToNowObservable()
+                .MergeToObject(listView.CollectionSource.WhenCollectionChanged()
+                    .SelectMany(_ => listView.Objects())).Take(1);
         
         public static IEnumerable<object> Objects(this View view) => view.Objects<object>();
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
@@ -56,9 +61,9 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
 
         public static IEnumerable<PropertyEditor> CloneRequiredMembers(this CompositeView compositeView,object existingObject=null) {
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
-            return compositeView.GetItems<PropertyEditor>().Where(editor =>
-                    editor.MemberInfo.FindAttributes<RuleRequiredFieldAttribute>().Any())
-                .Do(editor => { editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.GetValue(existingObject)); });
+            return compositeView.GetItems<PropertyEditor>().Where(editor => !editor.MemberInfo.IsKey&&!editor.MemberInfo.IsList)
+                    .Do(editor => editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.GetValue(existingObject)))
+                ;
         }
 
         public static bool IsNewObject(this CompositeView compositeView)
@@ -111,7 +116,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
 
         public static IObservable<object> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element)
             => detailView.LayoutManager.WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
-                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup));
+                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup))
+                .Select(o => o);
         public static IObservable<TViewItem> NestedViewItems<TView,TViewItem>(this TView view, params Type[] objectTypes ) where TView : DetailView where TViewItem:ViewItem,IFrameContainer 
             => view.NestedFrameContainers(objectTypes).OfType<TViewItem>();
         
@@ -138,8 +144,26 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .Where(frameContainer =>!objectTypes.Any()|| objectTypes.Any(type => type.IsAssignableFrom(frameContainer.Frame.View.ObjectTypeInfo.Type)))
                 .Merge(nestedEditors);
         }
+
+        public static IObservable<GridControl> WhenControlViewItemGridControl(this DetailView detailView)
+            => detailView.WhenControlViewItemWinControl<GridControl>();
+
+        public static IObservable<(TItem item, Control control)> WhenWinControl<TItem>(this IEnumerable<TItem> source,Type controlType) where TItem:ViewItem 
+            => source.ToNowObservable()
+                .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>()
+                    .SelectMany(control => control.Controls.Cast<Control>().Prepend(control))
+                    .WhenNotDefault().Where(controlType.IsInstanceOfType)
+                    .Select(control => (item,control)))
+                ;
         
-        
+        public static IObservable<T> WhenControlViewItemWinControl<T>(this DetailView detailView) where T:Control 
+            => detailView.GetItems<ControlViewItem>().WhenWinControl(typeof(T)).Select(t => t.control).Cast<T>();
+        public static IObservable<T> WhenViewItemWinControl<T>(this DetailView detailView) where T:Control 
+            => detailView.GetItems<ViewItem>().WhenWinControl(typeof(T)).Select(t => t.control).Cast<T>();
+        public static IObservable<(ViewItem item, Control control)> WhenViewItemWinControl(this DetailView detailView,Type controlType)  
+            => detailView.WhenViewItemWinControl<ViewItem>(controlType);
+        public static IObservable<(TItem item, Control control)> WhenViewItemWinControl<TItem>(this DetailView detailView,Type controlType) where TItem:ViewItem  
+            => detailView.GetItems<TItem>().WhenWinControl(controlType);    
 
     }
 }

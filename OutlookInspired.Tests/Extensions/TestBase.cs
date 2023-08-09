@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp.Testing.RXExtensions;
+﻿using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +9,14 @@ using OutlookInspired.Win.Extensions;
 namespace OutlookInspired.Tests.ImportData.Extensions{
     public abstract class TestBase{
         protected static TimeSpan Timeout = UtilityExtensions.TimeoutInterval;
-        public async Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup=null){
+
+        public async Task<WinApplication> SetupWinApplication(string title, Func<WinApplication, Task> beforeSetup = null){
             var builder = WinApplication.CreateBuilder();
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();
             builder.AddObjectSpaceProviders(options => options.UseSqlServer("Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired"));
             var application = builder.Build();
+            application.ApplicationName = title;
             application.SplashScreen = null;  
             if (beforeSetup != null){
                 await beforeSetup(application);
@@ -24,6 +27,7 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
             return application;
         }
 
-        
+        public Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup=null) 
+            => SetupWinApplication(null, beforeSetup);
     }
 }

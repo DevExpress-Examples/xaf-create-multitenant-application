@@ -56,6 +56,13 @@ namespace DevExpress.ExpressApp.Testing.RXExtensions{
             return synchronizationContext != null ? source.ObserveOn(synchronizationContext) : source;
         }
         
+        public static IObservable<T> DoAfterSubscribe<T>(this IObservable<T> source, Action action) 
+            => Observable.Create<T>(observer => {
+                var disposable = source.Subscribe(observer);
+                action();
+                return disposable;
+            });
+        
         public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action)
             => source.Do(source1 => {
                 if (predicate(source1)) {
@@ -80,7 +87,7 @@ namespace DevExpress.ExpressApp.Testing.RXExtensions{
             => source.Assert(caller, timeout);
 
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,string message,TimeSpan? timeout=null) 
-            => source.Log(message).ThrowIfEmpty(message).FirstAsync().IgnoreElements().Timeout(timeout??TimeoutInterval, message);
+            => source.Log(message).ThrowIfEmpty(message).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval, message);
         
         public static TestObserver<T> Test<T>(this IObservable<T> source){
             var testObserver = new TestObserver<T>();

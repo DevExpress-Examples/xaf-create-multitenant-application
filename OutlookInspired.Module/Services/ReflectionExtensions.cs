@@ -1,8 +1,7 @@
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 
 namespace OutlookInspired.Module.Services{
-    internal static class ReflectionExtensions{
+    public static class ReflectionExtensions{
         public static bool HasPublicParameterlessConstructor(this Type type) 
             => type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
                 .Any(ctor => ctor.GetParameters().Length == 0);
@@ -27,7 +26,7 @@ namespace OutlookInspired.Module.Services{
             if (type.IsValueType)
                 return Activator.CreateInstance(type);
 
-            if (type.GetConstructor(Type.EmptyTypes) != null)
+            if (type.HasPublicParameterlessConstructor())
                 return Activator.CreateInstance(type);
             throw new InvalidOperationException($"Type {type.FullName} does not have a parameterless constructor.");
         }

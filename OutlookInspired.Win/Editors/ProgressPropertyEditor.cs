@@ -13,6 +13,9 @@ namespace OutlookInspired.Win.Editors {
         public ProgressPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model) { }
         protected override object CreateControlCore() => new ProgressBarControl();
 
+        class RepositoryItemProgressBar:DevExpress.XtraEditors.Repository.RepositoryItemProgressBar,IValueCalculator{
+            public object Calculate(object value) => Convert.ToDecimal(value) * 100;
+        }
         protected override RepositoryItem CreateRepositoryItem()
             => new RepositoryItemProgressBar(){
                 PercentView = true, ShowTitle = true, DisplayFormat ={ FormatType = FormatType.Numeric, FormatString = "{0}%" },

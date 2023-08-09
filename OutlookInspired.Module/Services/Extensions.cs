@@ -1,9 +1,7 @@
-using System.Drawing;
 using System.Reflection;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
-using DevExpress.XtraEditors.Controls;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions {
@@ -27,12 +25,6 @@ namespace OutlookInspired.Module.Services{
 
         public static IEnumerable<(TAttribute attribute,IMemberInfo memberInfo)> AttributedMembers<TAttribute>(this ITypeInfo info)  
             => info.Members.SelectMany(memberInfo => memberInfo.FindAttributes<Attribute>().OfType<TAttribute>().Select(attribute => (attribute, memberInfo)));
-        public static Image CreateImage(this byte[] data){
-            if(data == null)
-                throw new NotImplementedException();
-            // return ResourceImageHelper.CreateImageFromResourcesEx("DevExpress.DevAV.Resources.Unknown-user.png", typeof(Employee).Assembly);
-            return ByteImageConverter.FromByteArray(data);
-        }
         public static Type GetAssemblyType(this AppDomain domain, string fullName,bool ignoreCase=false) 
             => fullName==null?null:domain.GetAssemblies().Select(assembly => assembly.GetType(fullName,ignoreCase)).WhereNotDefault().FirstOrDefault();
         

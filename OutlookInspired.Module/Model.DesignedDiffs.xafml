@@ -567,7 +567,7 @@
     </DashboardView>
     <DashboardView Id="Oppurtunities" Caption="Oppurtunities" ImageName="BO_Opportunity" IsNewNode="True">
       <Items IsNewNode="True">
-        <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Hide" IsNewNode="True" />
+        <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Default" IsNewNode="True" />
         <DashboardViewItem Id="QuoteMapItem_ListView" ViewId="QuoteMapItem_ListView" ActionsToolbarVisibility="Hide" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True">
@@ -672,46 +672,43 @@
     <DetailView Id="Product_Brochure_DetailView" FreezeLayout="True">
       <Items>
         <PropertyEditor Id="PrimaryImage" PropertyName="PrimaryImage.Data" />
-        <ControlDetailItem Id="ProductReport" ControlTypeName="ProductReport" IsNewNode="True" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main" RelativeSize="100">
           <LayoutGroup Id="SimpleEditors" RelativeSize="100" Caption="SimpleEditors">
-            <LayoutItem Id="Brochure" ViewItem="Brochure" Index="0" RelativeSize="100" CaptionLocation="Top" ShowCaption="False" IsNewNode="True" />
-            <LayoutGroup Id="Product" Index="1" RelativeSize="89.22558922558923" Removed="True">
-              <LayoutGroup Id="Product_col1" RelativeSize="49.96265870052278">
-                <LayoutItem Id="Available" ViewItem="Available" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Backorder" ViewItem="Backorder" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="CurrentInventory" ViewItem="CurrentInventory" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Description" ViewItem="Description" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Engineer" ViewItem="Engineer" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Manufacturing" ViewItem="Manufacturing" RelativeSize="13.793103448275861" />
-                <LayoutItem Id="Name" ViewItem="Name" RelativeSize="13.793103448275861" />
-                <LayoutItem Id="ProductionStart" ViewItem="ProductionStart" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Support" ViewItem="Support" RelativeSize="10.344827586206897" />
+            <LayoutItem Id="Brochure" ShowCaption="False" ViewItem="Brochure" Index="0" RelativeSize="100" CaptionLocation="Top" IsNewNode="True" />
+            <LayoutGroup Id="Product" Index="1" RelativeSize="88.55421686746988" Removed="True">
+              <LayoutGroup Id="Product_col1" RelativeSize="50">
+                <LayoutItem Id="Available" ViewItem="Available" RelativeSize="11.71875" />
+                <LayoutItem Id="Backorder" ViewItem="Backorder" RelativeSize="14.84375" />
+                <LayoutItem Id="CurrentInventory" ViewItem="CurrentInventory" RelativeSize="11.71875" />
+                <LayoutItem Id="Engineer" ViewItem="Engineer" RelativeSize="11.71875" />
+                <LayoutItem Id="Image" ViewItem="Image" RelativeSize="11.71875" />
+                <LayoutItem Id="Name" ViewItem="Name" RelativeSize="14.84375" />
+                <LayoutItem Id="ProductionStart" ViewItem="ProductionStart" RelativeSize="11.71875" />
+                <LayoutItem Id="Support" ViewItem="Support" RelativeSize="11.71875" />
               </LayoutGroup>
-              <LayoutGroup Id="Product_col2" RelativeSize="50.03734129947722">
-                <LayoutItem Id="ProductImage" ViewItem="ProductImage" Index="7" RelativeSize="24.137931034482758" />
-                <LayoutItem Id="Brochure" Removed="True" />
-                <LayoutItem Id="Category" ViewItem="Category" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="ConsumerRating" ViewItem="ConsumerRating" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Cost" ViewItem="Cost" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="PrimaryImage" ViewItem="PrimaryImage" RelativeSize="13.793103448275861" />
-                <LayoutItem Id="RetailPrice" ViewItem="RetailPrice" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="SalePrice" ViewItem="SalePrice" RelativeSize="10.344827586206897" />
-                <LayoutItem Id="Weight" ViewItem="Weight" RelativeSize="10.344827586206897" />
+              <LayoutGroup Id="Product_col2" RelativeSize="50">
+                <LayoutItem Id="Category" ViewItem="Category" RelativeSize="14.84375" />
+                <LayoutItem Id="ConsumerRating" ViewItem="ConsumerRating" RelativeSize="11.71875" />
+                <LayoutItem Id="Cost" ViewItem="Cost" RelativeSize="11.71875" />
+                <LayoutItem Id="Manufacturing" ViewItem="Manufacturing" RelativeSize="14.84375" />
+                <LayoutItem Id="PrimaryImage" ViewItem="PrimaryImage" RelativeSize="11.71875" />
+                <LayoutItem Id="RetailPrice" ViewItem="RetailPrice" RelativeSize="11.71875" />
+                <LayoutItem Id="SalePrice" ViewItem="SalePrice" RelativeSize="11.71875" />
+                <LayoutItem Id="Weight" ViewItem="Weight" RelativeSize="11.71875" />
               </LayoutGroup>
             </LayoutGroup>
           </LayoutGroup>
-          <TabbedGroup Id="Tabs" RelativeSize="96.34966378482228" Removed="True">
-            <LayoutGroup Id="Barcode" RelativeSize="100">
-              <LayoutItem Id="Barcode" ViewItem="Barcode" RelativeSize="100" />
+          <LayoutGroup Id="SizeableEditors" RelativeSize="96.8413496051687" Caption="Description" Removed="True">
+            <LayoutItem Id="Description" ViewItem="Description" RelativeSize="100" Removed="True" />
+          </LayoutGroup>
+          <TabbedGroup Id="Tabs" RelativeSize="48.52835606604451" Removed="True">
+            <LayoutGroup Id="Brochure" Direction="Horizontal">
+              <LayoutItem Id="Brochure" Removed="True" />
             </LayoutGroup>
             <LayoutGroup Id="Catalogs" RelativeSize="100">
               <LayoutItem Id="Catalogs" ViewItem="Catalogs" RelativeSize="100" />
-            </LayoutGroup>
-            <LayoutGroup Id="Image" RelativeSize="100">
-              <LayoutItem Id="Image" ViewItem="Image" RelativeSize="100" />
             </LayoutGroup>
             <LayoutGroup Id="Images" RelativeSize="100">
               <LayoutItem Id="Images" ViewItem="Images" RelativeSize="100" />
@@ -777,7 +774,7 @@
         <ColumnInfo Id="Picture" PropertyName="Picture.Data" />
       </Columns>
     </ListView>
-    <ListView Id="Product_ListView" IsFooterVisible="True" AutoExpandAllGroups="True" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Product_Brochure_DetailView">
+    <ListView Id="Product_ListView" IsFooterVisible="True" AutoExpandAllGroups="True" MasterDetailMode="ListViewOnly" MasterDetailView="Product_Brochure_DetailView">
       <Columns>
         <ColumnInfo Id="ConsumerRating" Index="-1" />
         <ColumnInfo Id="Description" Index="-1" />
@@ -848,13 +845,15 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <DashboardView Id="ProductListView" Caption="Product" ImageName="BO_Product" IsNewNode="True">
+    <DashboardView Id="ProductListView" Caption="Product" ImageName="BO_Product" MasterDetail="True" IsNewNode="True">
       <Items IsNewNode="True">
+        <DashboardViewItem Id="Product_Brochure_DetailView" ViewId="Product_Brochure_DetailView" ActionsToolbarVisibility="Hide" IsNewNode="True" />
         <DashboardViewItem Id="Product_ListView" ViewId="Product_ListView" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True">
-        <LayoutGroup Id="Main" IsNewNode="True">
-          <LayoutItem Id="Product_ListView" ViewItem="Product_ListView" Index="0" IsNewNode="True" />
+        <LayoutGroup Id="Main" ShowCaption="False" Caption="Main(1)" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
+          <LayoutItem Id="Product_ListView" ViewItem="Product_ListView" Index="0" RelativeSize="62.88832913518052" IsNewNode="True" />
+          <LayoutItem Id="Product_Brochure_DetailView" ViewItem="Product_Brochure_DetailView" Index="1" RelativeSize="37.11167086481948" IsNewNode="True" />
         </LayoutGroup>
       </Layout>
       <Variants Current="ProductListView" IsNewNode="True">

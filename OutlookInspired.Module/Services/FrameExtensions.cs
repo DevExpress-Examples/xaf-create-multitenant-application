@@ -2,7 +2,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 
 namespace OutlookInspired.Module.Services{
-    internal static class FrameExtensions{
+    public static class FrameExtensions{
         public static IEnumerable<ActionBase> ActiveActions(this Frame frame, params string[] actionsIds)
             => frame.Actions(actionsIds).Where(action => action.Active);
         public static IEnumerable<ActionBase> Actions(this Frame frame,params string[] actionsIds) 

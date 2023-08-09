@@ -9,7 +9,11 @@ namespace OutlookInspired.Win.UserControls
         {
             InitializeComponent();
             labelControl1.Text = @"RECORDS: 0";
-            DataSourceOrFilterChanged += (_, _) => labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
+        }
+
+        protected override void OnDataSourceOfFilterChanged(){
+            base.OnDataSourceOfFilterChanged();
+            labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
         }
 
         protected override Type GetObjectType() => typeof(Customer);

@@ -17,8 +17,8 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     //}
 
     private void Application_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
-        // e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
-        // e.Handled = true;
+        e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
+        e.Handled = true;
     }
     public OutlookInspiredWinModule() {
         FormattingProvider.UseMaskSettings = true;
@@ -29,7 +29,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     }
     public override void Setup(XafApplication application) {
         base.Setup(application);
-        //application.CreateCustomModelDifferenceStore += Application_CreateCustomModelDifferenceStore;
+        // application.CreateCustomModelDifferenceStore += Application_CreateCustomModelDifferenceStore;
         application.CreateCustomUserModelDifferenceStore += Application_CreateCustomUserModelDifferenceStore;
     }
 }

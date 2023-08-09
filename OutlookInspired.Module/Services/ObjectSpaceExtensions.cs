@@ -2,7 +2,8 @@
 using DevExpress.ExpressApp;
 
 namespace OutlookInspired.Module.Services{
-    internal static class ObjectSpaceExtensions{
+    public static class ObjectSpaceExtensions{
+        
         public static IEnumerable<IObjectSpace> YieldAll(this IObjectSpace objectSpace)
             => objectSpace is not CompositeObjectSpace compositeObjectSpace
                 ? objectSpace.YieldItem()

@@ -5,7 +5,7 @@ using DevExpress.ExpressApp.Testing.RXExtensions;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class ViewItemExtensions{
-        public static IObservable<TTabbedControl> TabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
+        public static IObservable<TTabbedControl> WhenTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
             => source.SelectMany(item => item.Frame.View.ToDetailView().WhenTabControl().Cast<TTabbedControl>());
         public static IObservable<TView> ToView<TView>(this IObservable<DashboardViewItem> source)
             => source.Select(item => item.Frame.View).Cast<TView>();

@@ -9,7 +9,7 @@ using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Extensions{
-    static class Extensions{
+    public static class Extensions{
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)
                 .Select(column => {

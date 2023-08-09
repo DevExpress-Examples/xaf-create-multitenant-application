@@ -1,9 +1,11 @@
-﻿using DevExpress.ExpressApp.Chart.Win;
+﻿
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Chart.Win;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Controllers{
-    public class QuoteMapItemController:Module.Controllers.Quote.QuoteMapItemController{
+    public class QuoteMapItemController:ObjectViewController<ListView,QuoteMapItem>{
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
             if (View.Editor is ChartListEditor chartListEditor){

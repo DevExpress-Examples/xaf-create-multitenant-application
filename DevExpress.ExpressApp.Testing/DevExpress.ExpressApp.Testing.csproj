@@ -11,6 +11,7 @@
     <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.1.4" />
     <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Win.PdfViewer" Version="23.1.4" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    [DomainComponent][DefaultClassOptions]
+    [DomainComponent]
     public class QuoteMapItem{
         public Stage Stage { get; init; }
         public DateTime Date { get; set; }

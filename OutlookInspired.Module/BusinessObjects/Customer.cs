@@ -27,8 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[XafDisplayName("ZipCode")]
 		public  virtual string HomeOfficeZipCode { get; set; }
 		[XafDisplayName("Address")]
-		[Attributes.Validation.Phone][VisibleInListView(false)][VisibleInLookupListView(false)]
-		
+		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public  virtual string BillingAddressLine { get; set; }
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual string BillingAddressCity { get; set; }

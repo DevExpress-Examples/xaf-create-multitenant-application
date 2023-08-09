@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Testing.RXExtensions;
@@ -37,9 +38,10 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         }
         
         private static IObservable<T> Trigger<T>(this IObservable<T> afterExecuted, Action action)
-            => afterExecuted.Publish(source => source.Take(1)
-                .Merge(Observable.Timer(TimeSpan.Zero).Select(_ => default(T))
-                .ObserveOnContext().Do(_ => action()).IgnoreElements()));
+            => afterExecuted.Merge(Observable.Defer(() => {
+                action();
+                return Observable.Empty<T>();
+            }),new SynchronizationContextScheduler(SynchronizationContext.Current!));
         
     }
     

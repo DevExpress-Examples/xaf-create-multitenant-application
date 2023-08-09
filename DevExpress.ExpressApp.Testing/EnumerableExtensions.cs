@@ -1,5 +1,10 @@
 namespace DevExpress.ExpressApp.Testing{
     public static class EnumerableExtensions{
+        public static void Enumerate<T>(this IEnumerable<T> source) {
+            using var e = source.GetEnumerator();
+            while (e.MoveNext()) { }
+        }
+        
         public static IEnumerable<TSource> Do<TSource>(
             this IEnumerable<TSource> source, Action<TSource> action)
             => source.Select(item => {
@@ -17,6 +22,7 @@ namespace DevExpress.ExpressApp.Testing{
                     yield return child;
             }
         }
+        public static TimeSpan Milliseconds(this int milliSeconds) => TimeSpan.FromMilliseconds(milliSeconds);
         internal static TimeSpan Seconds(this int seconds) => TimeSpan.FromSeconds(seconds);
         internal static object DefaultValue(this Type t) => t.IsValueType ? Activator.CreateInstance(t) : null;
         internal static bool IsNullOrEmpty(this string strString)

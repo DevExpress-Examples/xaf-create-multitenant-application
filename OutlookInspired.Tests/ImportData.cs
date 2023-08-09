@@ -1,8 +1,8 @@
 using System.Reactive.Linq;
-using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services;
 using OutlookInspired.Tests.ImportData.Extensions;
 using Shouldly;
 

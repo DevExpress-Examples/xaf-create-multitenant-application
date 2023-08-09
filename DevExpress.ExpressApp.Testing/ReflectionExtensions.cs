@@ -16,8 +16,7 @@ namespace DevExpress.ExpressApp.Testing{
             return def != null ? def.Equals(source) : typeof(TSource) == typeof(object)
                 ? source == null || source.Equals(source.GetType().DefaultValue()) : source == null;
         }
-
-
+        
         public static IEnumerable<TSource> YieldItem<TSource>(this TSource source){
             yield return source;
         }

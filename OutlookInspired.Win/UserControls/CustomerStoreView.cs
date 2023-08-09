@@ -1,16 +1,18 @@
 ﻿using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
-using OutlookInspired.Win.Extensions;
 
 namespace OutlookInspired.Win.UserControls
 {
-    [DetailUserControl]
+    
     public partial class CustomerStoreView : ColumnViewUserControl
     {
         public CustomerStoreView()
         {
             InitializeComponent();
-            DataSourceOrFilterChanged += (_, _) => labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
+            labelControl1.Text = $@"RECORDS: 0";
+        }
+        protected override void OnDataSourceOfFilterChanged(){
+            base.OnDataSourceOfFilterChanged();
+            labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
         }
 
         public override void Refresh(object currentObject)
