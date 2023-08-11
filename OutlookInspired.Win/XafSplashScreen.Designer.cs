@@ -58,7 +58,7 @@
             this.progressBarControl.Properties.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(144)))), ((int)(((byte)(0)))));
             this.progressBarControl.Size = new System.Drawing.Size(350, 16);
             this.progressBarControl.TabIndex = 5;
-            // 
+            // 3c
             // labelCopyright
             // 
             this.labelCopyright.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;

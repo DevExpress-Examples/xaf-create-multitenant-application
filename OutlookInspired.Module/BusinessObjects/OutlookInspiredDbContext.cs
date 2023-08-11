@@ -62,6 +62,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
     public DbSet<EmployeeTask> EmployeeTasks { get; set; }
     public DbSet<CustomerCommunication> CustomerCommunications { get; set; }
     public DbSet<TaskAttachedFile> TaskAttachedFiles { get; set; }
+    public DbSet<ViewFilter> ViewFilters { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
@@ -85,13 +86,6 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         OnProductCatalogModelCreating(modelBuilder);
         OnCustomerCommunicationModelCreating(modelBuilder);
         OnOrderItemModelCreating(modelBuilder);
-        // foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())){
-        //  relationship.DeleteBehavior = DeleteBehavior.Cascade;
-        // }
-        // foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())){
-	       //  relationship.DeleteBehavior = DeleteBehavior.Cascade;
-        // }
-        
     }
 
     private static void OnProductImageModelCreating(ModelBuilder modelBuilder){

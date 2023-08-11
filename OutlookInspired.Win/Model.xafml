@@ -8,6 +8,7 @@
     <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
     <SchemaModule Name="SystemWindowsFormsModule" Version="23.1.4.0" IsNewNode="True" />
   </SchemaModules>
+  <Options Palette="Office Dark Gray"/>
   <Views>
     <DetailView Id="Customer_DetailView_Child">
       <Items>

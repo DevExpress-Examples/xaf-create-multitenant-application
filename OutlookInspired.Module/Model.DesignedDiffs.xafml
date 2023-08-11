@@ -12,6 +12,14 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
+  <Options DataAccessMode="Server">
+    <Dashboards EnableCustomization="False" />
+    <LayoutManagerOptions RequiredFieldMark="*" />
+  </Options>
+  <SchemaModules>
+    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
+  </SchemaModules>
   <NavigationItems>
     <Items>
       <Item Id="Default">
@@ -26,14 +34,6 @@
       </Item>
     </Items>
   </NavigationItems>
-  <Options DataAccessMode="Server">
-    <Dashboards EnableCustomization="False" />
-    <LayoutManagerOptions RequiredFieldMark="*" />
-  </Options>
-  <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
-  </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
     <ListView Id="Customer_CustomerStores_ListView" IsFooterVisible="True">
@@ -428,25 +428,25 @@
                       <LayoutGroup Id="Item1" ShowCaption="False" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
                         <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12" ShowCaption="False" Caption="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12(9)" Index="0" RelativeSize="100" IsNewNode="True">
                           <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
-                            <LayoutGroup Id="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4" ShowCaption="False" Caption="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4(11)" Direction="Horizontal" Index="0" RelativeSize="26.799007444168733" IsNewNode="True">
-                              <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="0" RelativeSize="33.08270676691729" SizeConstraintsType="Custom" MinSize="308, 38" MaxSize="308, 0" IsNewNode="True" />
-                              <LayoutGroup Id="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1" ShowCaption="False" Caption="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1(13)" Index="1" RelativeSize="66.9172932330827" IsNewNode="True">
-                                <LayoutItem Id="Item8" Index="0" RelativeSize="14.814814814814815" IsNewNode="True" />
-                                <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" SizeConstraintsType="Custom" MinSize="127, 32" Index="1" RelativeSize="18.98148148148148" IsNewNode="True" />
-                                <LayoutItem Id="Title" ViewItem="Title" Index="2" RelativeSize="11.11111111111111" ShowCaption="False" IsNewNode="True" />
-                                <LayoutGroup Id="Auto1572097e-1296-4054-ba0a-b5035cf892bd" ShowCaption="False" Caption="" Direction="Horizontal" Index="3" RelativeSize="55.092592592592595" IsNewNode="True">
-                                  <LayoutGroup Id="Auto63d2c2bc-bf83-47ff-bc5b-83c1c7851fc8" ShowCaption="False" Caption="" Index="0" RelativeSize="14.92776886035313" IsNewNode="True">
-                                    <LayoutItem Id="Item9" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="0" RelativeSize="19.327731092436974" IsNewNode="True" />
-                                    <LayoutItem Id="EmployeePhone" ViewItem="EmployeePhone" Index="1" RelativeSize="21.84873949579832" IsNewNode="True" />
-                                    <LayoutItem Id="EmployeeSocial" ViewItem="EmployeeSocial" Index="2" RelativeSize="21.84873949579832" IsNewNode="True" />
-                                    <LayoutItem Id="Item7" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="3" RelativeSize="36.97478991596638" IsNewNode="True" />
+                            <LayoutGroup Id="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4" ShowCaption="False" Caption="Autob97f7c08-b396-42ca-ba5b-04e7f5d602c4(11)" Direction="Horizontal" Index="0" RelativeSize="20.8183776022972" IsNewNode="True">
+                              <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="0" RelativeSize="23.555956678700362" SizeConstraintsType="Custom" MinSize="90, 44" MaxSize="0, 0" IsNewNode="True" />
+                              <LayoutGroup Id="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1" ShowCaption="False" Caption="Auto2c16d7ac-343c-471c-9e98-4be13fe1dfc1(13)" Index="1" RelativeSize="76.44404332129965" IsNewNode="True">
+                                <LayoutItem Id="Item8" Index="0" RelativeSize="18.620689655172413" IsNewNode="True" />
+                                <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" SizeConstraintsType="Custom" MinSize="127, 32" Index="1" RelativeSize="23.79310344827586" IsNewNode="True" />
+                                <LayoutItem Id="Title" ViewItem="Title" Index="2" RelativeSize="10.344827586206897" ShowCaption="False" IsNewNode="True" />
+                                <LayoutGroup Id="Auto1572097e-1296-4054-ba0a-b5035cf892bd" ShowCaption="False" Caption="Auto1572097e-1296-4054-ba0a-b5035cf892bd(17)" Direction="Horizontal" Index="3" RelativeSize="47.241379310344826" IsNewNode="True">
+                                  <LayoutGroup Id="Auto63d2c2bc-bf83-47ff-bc5b-83c1c7851fc8" ShowCaption="False" Caption="Auto63d2c2bc-bf83-47ff-bc5b-83c1c7851fc8(18)" Index="0" RelativeSize="21.01534828807556" IsNewNode="True">
+                                    <LayoutItem Id="Item9" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="0" RelativeSize="29.927007299270073" IsNewNode="True" />
+                                    <LayoutItem Id="EmployeePhone" ViewItem="EmployeePhone" Index="1" RelativeSize="26.277372262773724" IsNewNode="True" />
+                                    <LayoutItem Id="EmployeeSocial" ViewItem="EmployeeSocial" Index="2" RelativeSize="26.277372262773724" IsNewNode="True" />
+                                    <LayoutItem Id="Item7" SizeConstraintsType="Custom" MinSize="93, 10" MaxSize="93, 0" Index="3" RelativeSize="17.51824817518248" IsNewNode="True" />
                                   </LayoutGroup>
-                                  <LayoutItem Id="Item5" Index="1" RelativeSize="85.07223113964687" IsNewNode="True" />
+                                  <LayoutItem Id="Item5" Index="1" RelativeSize="78.98465171192444" IsNewNode="True" />
                                 </LayoutGroup>
                               </LayoutGroup>
                             </LayoutGroup>
-                            <LayoutItem Id="Item6" Index="1" RelativeSize="1.7369727047146402" IsNewNode="True" />
-                            <TabbedGroup Id="Item3" CaptionLocation="Top" Index="2" RelativeSize="71.46401985111663" IsNewNode="True">
+                            <LayoutItem Id="Item6" Index="1" RelativeSize="2.656137832017229" IsNewNode="True" />
+                            <TabbedGroup Id="Item3" CaptionLocation="Top" Index="2" RelativeSize="76.52548456568557" IsNewNode="True">
                               <LayoutGroup Id="Item4" ShowCaption="True" Caption="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
                                 <LayoutItem Id="Evaluations" ViewItem="Evaluations" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True" />
                               </LayoutGroup>
@@ -700,9 +700,6 @@
               </LayoutGroup>
             </LayoutGroup>
           </LayoutGroup>
-          <LayoutGroup Id="SizeableEditors" RelativeSize="96.8413496051687" Caption="Description" Removed="True">
-            <LayoutItem Id="Description" ViewItem="Description" RelativeSize="100" Removed="True" />
-          </LayoutGroup>
           <TabbedGroup Id="Tabs" RelativeSize="48.52835606604451" Removed="True">
             <LayoutGroup Id="Brochure" Direction="Horizontal">
               <LayoutItem Id="Brochure" Removed="True" />
@@ -876,5 +873,21 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="ViewFilter_DetailView" FreezeLayout="True">
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" ShowCaption="False" Caption="Main" Index="0" RelativeSize="100" IsNewNode="True">
+          <LayoutItem Id="Criteria" ViewItem="Criteria" Index="0" RelativeSize="100" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <ListView Id="ViewFilter_ListView" IsFooterVisible="True" MasterDetailMode="ListViewAndDetailView" AllowEdit="True" NewItemRowPosition="Top" DataAccessMode="Client">
+      <Columns>
+        <ColumnInfo Id="Name">
+          <Summary>
+            <ColumnSummaryItem Id="Count" SummaryType="Count" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+      </Columns>
+    </ListView>
   </Views>
 </Application>

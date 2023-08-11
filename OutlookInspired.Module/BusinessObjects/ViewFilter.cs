@@ -1,0 +1,51 @@
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
+using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Editors;
+using DevExpress.Persistent.Base;
+using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Attributes;
+
+namespace OutlookInspired.Module.BusinessObjects{
+    public interface IViewFilter{
+        
+    }
+
+    [XafDefaultProperty(nameof(Name))]
+    [NewItemRowHandlingMode]
+    public class ViewFilter:BaseObject{
+        
+        [RuleRequiredField]
+        public virtual string Name{ get; set; }
+        [Browsable(false)]
+        public virtual string DataTypeName { get; set; }
+        
+        
+        [NotMapped, ImmediatePostData][Browsable(false)]
+        [TypeConverter(typeof(LocalizedClassInfoTypeConverter))]
+        public Type DataType {
+            get => !String.IsNullOrWhiteSpace(DataTypeName) ? XafTypesInfo.Instance.FindTypeInfo(DataTypeName)?.Type : null;
+            set => DataTypeName = value != null ? value.FullName : string.Empty;
+        }
+
+        [CriteriaOptions(nameof(DataType))]
+        [FieldSize(FieldSizeAttribute.Unlimited)]
+        [EditorAlias(EditorAliases.CriteriaPropertyEditor)]
+        public virtual string Criteria { get; set; }
+
+        [Browsable(false)]
+        public int Count => ObjectSpace.GetObjectsCount(DataType, CriteriaOperator.Parse(Criteria));
+
+        public void SetCriteria<T>(string criteria) where T : IViewFilter{
+            DataType = typeof(T);
+            Criteria = criteria;
+        }
+
+        public void SetCriteria<T>(Expression<Func<T, bool>> lambda) where T:IViewFilter 
+            => SetCriteria<T>(CriteriaOperator.FromLambda(lambda).ToString());
+    }
+}

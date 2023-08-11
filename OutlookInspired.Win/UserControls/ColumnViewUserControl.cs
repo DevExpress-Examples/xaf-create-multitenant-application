@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.XtraGrid.Views.Base;
 using OutlookInspired.Module.Controllers;
@@ -11,12 +12,17 @@ namespace OutlookInspired.Win.UserControls
         private IObjectSpace _objectSpace;
         protected ColumnView ColumnView;
         protected IList DataSource;
-        
+        private string _criteria;
         
         public event EventHandler CurrentObjectChanged;
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionTypeChanged;
         public event EventHandler ProcessObject;
+        public void SetCriteria(string criteria){
+            _criteria = criteria;
+            Refresh();
+        }
+
         public virtual void Refresh(object currentObject) => Refresh();
 
         public void Setup(IObjectSpace objectSpace, XafApplication application)
@@ -34,7 +40,7 @@ namespace OutlookInspired.Win.UserControls
             Refresh();
         }
 
-        public override void Refresh() => ColumnView.GridControl.DataSource =  DataSource ?? _objectSpace.GetObjects(GetObjectType());
+        public override void Refresh() => ColumnView.GridControl.DataSource =  DataSource ?? _objectSpace.GetObjects(GetObjectType(),CriteriaOperator.Parse(_criteria));
         protected virtual Type GetObjectType() => throw new NotImplementedException();
         public object CurrentObject => ColumnView.FocusedRowObject;
         public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();

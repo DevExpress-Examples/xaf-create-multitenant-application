@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
-    <EmbeddedResource Include="DatabaseUpdate\devav.sqlite3" />
     <None Remove="Images\Skype.svg" />
     <EmbeddedResource Include="Images\Skype.svg" />
     <None Remove="Images\icon-home-phone-16.png" />

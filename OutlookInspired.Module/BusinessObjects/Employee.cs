@@ -15,7 +15,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[VisibleInReports][ImageName("BO_Person")]
 	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
-	public class Employee :MigrationBaseObject{
+	public class Employee :MigrationBaseObject,IViewFilter{
 		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
 		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";
 
