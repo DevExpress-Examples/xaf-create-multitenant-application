@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
@@ -11,9 +13,14 @@ using DevExpress.XtraGrid.Views.Layout.Handler;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class WinComponentExtensions{
+        public static IObservable<object> WhenDataSourceChanged(this GridControl gridControl) 
+            => gridControl.WhenEvent(nameof(GridControl.DataSourceChanged));
+
         public static IObservable<object> GridDetailViewObjects(this GridView view) 
             => view.WhenEvent<CustomMasterRowEventArgs>(nameof(GridView.MasterRowExpanded))
-                .SelectMany(e => ((IEnumerable)view.GetDetailView(e.RowHandle,e.RelationIndex).DataSource).Cast<object>().Take(1).ToArray())
+                .Select(e => view.GetDetailView(e.RowHandle,e.RelationIndex)).Cast<ColumnView>()
+                .Delay(100.Milliseconds(),new SynchronizationContextScheduler(SynchronizationContext.Current!))
+                .SelectMany(baseView => ((IEnumerable)baseView.DataSource).Cast<object>().Take(1).ToArray())
                 .Take(view.GridControl.LevelTree.Nodes.Count).BufferUntilCompleted().SelectMany()
                 .MergeToObject(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements());
 
@@ -22,9 +29,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             for (var index = 0; index < relationCount; index++){
                 masterView.ExpandMasterRow(masterRowHandle, index);
                 if (masterView.GetDetailView(masterRowHandle, index) is GridView childView){
-                    childView.FocusedRowHandle = 0; 
-                    var childRowCount = childView.DataRowCount;
-                    for (var handle = 0; handle < childRowCount; handle++)
+                    childView.FocusedRowHandle = 0;
+                    for (var handle = 0; handle < childView.DataRowCount; handle++)
                         RecursiveExpandAndFocus(childView, handle);
                 }
             }

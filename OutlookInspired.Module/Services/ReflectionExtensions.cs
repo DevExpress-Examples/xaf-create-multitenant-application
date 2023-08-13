@@ -2,6 +2,9 @@ using System.Reflection;
 
 namespace OutlookInspired.Module.Services{
     public static class ReflectionExtensions{
+        public new static bool ReferenceEquals(this object objA, object objB)
+            => Object.ReferenceEquals(objA, objB);
+        
         public static bool HasPublicParameterlessConstructor(this Type type) 
             => type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
                 .Any(ctor => ctor.GetParameters().Length == 0);

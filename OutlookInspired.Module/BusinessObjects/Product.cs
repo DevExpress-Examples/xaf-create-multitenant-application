@@ -15,7 +15,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, ProductBrochureDetailView)]
     [CloneView(CloneViewType.DetailView, ProductCardViewDetailView)]
     [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = FontStyle.Strikeout)]
-    public class Product :MigrationBaseObject{
+    public class Product :MigrationBaseObject, IViewFilter{
         public const string ProductCardViewDetailView = "ProductCardView_DetailView";
         public const string ProductBrochureDetailView = "Product_Brochure_DetailView";
         public  virtual string Name { get; set; }

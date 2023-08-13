@@ -1,4 +1,6 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Collections;
+using System.ComponentModel;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
@@ -8,7 +10,22 @@ namespace OutlookInspired.Module.Services{
     
     public static class ViewExtensions{
         
-
+        public static IEnumerable<T> Objects<T>(this CollectionSourceBase collectionSourceBase) {
+            if (collectionSourceBase.Collection is IEnumerable collection)
+                return collection.Cast<T>();
+            if (collectionSourceBase.Collection is IListSource listSource)
+                return listSource.GetList().Cast<T>();
+            if (collectionSourceBase is PropertyCollectionSource propertyCollectionSource) {
+                var masterObject = propertyCollectionSource.MasterObject;
+                return masterObject != null ? ((IEnumerable)propertyCollectionSource.MemberInfo.GetValue(masterObject)).Cast<T>() : Enumerable.Empty<T>();
+            }
+            return collectionSourceBase.Collection is QueryableCollection queryableCollection
+                ? ((IEnumerable<T>)queryableCollection.Queryable).ToArray() : throw new NotImplementedException($"{collectionSourceBase}");
+        }
+        
+        public static IEnumerable<T> Objects<T>(this View view) 
+            => view is DetailView ? ((T)view.CurrentObject).YieldItem().ToArray()
+                : view.ToListView().CollectionSource.Objects<T>();
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
 
         public static NestedFrame MasterFrame(this DashboardView view)

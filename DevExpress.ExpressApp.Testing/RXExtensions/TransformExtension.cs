@@ -1,10 +1,19 @@
 ﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Unit = System.Reactive.Unit;
 
 namespace DevExpress.ExpressApp.Testing.RXExtensions{
     public static class TransformExtension{
+        public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, IObservable<T2>> selector) 
+            => source.Select(x => Observable.Defer(() => selector(x))).Concat();
+        public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, Task<T2>> selector) 
+            => source.SelectManySequential(arg => selector(arg).ToObservable());
+        
+        public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1,int, IObservable<T2>> selector) 
+            => source.Select((x,i) => Observable.Defer(() => selector(x,i))).Concat();
+        
         public static IObservable<T> ThrowIfEmpty<T>(this IObservable<T> source,[CallerMemberName]string caller="")
             => source.SwitchIfEmpty(Observable.Defer(() => Observable.Throw<T>(new SequenceIsEmptyException($"source is empty {caller}"))));
         public static IObservable<T> ConcatDefer<T>(this IObservable<T> source, Func<IObservable<T>> target)

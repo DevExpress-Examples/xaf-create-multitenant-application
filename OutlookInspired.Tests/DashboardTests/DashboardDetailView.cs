@@ -44,8 +44,8 @@ namespace OutlookInspired.Tests.ImportData.DashboardTests{
             var evaluationsExist = application.AssertListViewHasObjects(typeof(Evaluation));
             var tasksExist = application.AssertListViewHasObjects(typeof(EmployeeTask));
             return itemSource.MergeToUnit(tabControl)
-                .Merge(evaluationsExist.Concat(tabControl.Do(group => group.SelectedTabPageIndex = 1).ToUnit()))
-                .Merge(tasksExist);        
+                .Merge(evaluationsExist.ConcatToUnit(tabControl.Do(group => group.SelectedTabPageIndex = 1).ToUnit()))
+                .MergeToUnit(tasksExist);        
         }
     }
 }

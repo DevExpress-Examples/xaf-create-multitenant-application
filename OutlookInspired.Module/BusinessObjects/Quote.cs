@@ -6,7 +6,7 @@ using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("BO_Quote")]
-    public class Quote :MigrationBaseObject{
+    public class Quote :MigrationBaseObject, IViewFilter{
         public  virtual string Number { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual CustomerStore CustomerStore { get; set; }

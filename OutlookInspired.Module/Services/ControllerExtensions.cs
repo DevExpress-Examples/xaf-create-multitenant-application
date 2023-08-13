@@ -1,14 +1,13 @@
-﻿using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.SystemModule;
+﻿using DevExpress.ExpressApp.SystemModule;
 
 namespace OutlookInspired.Module.Services{
     public static class ControllerExtensions{
-        public static void ChangeNewObjectDetailView(this NewObjectViewController newObjectViewController,string viewId){
-            object newObject = null;
-            newObjectViewController.ObjectCreating += (_, e) => e.ShowDetailView = false;
-            newObjectViewController.ObjectCreated += (_, e) => newObject = e.CreatedObject;
-            newObjectViewController.NewObjectAction.Executed += (_, e) => e.ShowViewParameters.CreatedView =
-                newObjectViewController.Application.NewDetailView(newObject, (IModelDetailView)newObjectViewController.Application.FindModelView(viewId));
+        public static void UseObjectDefaultDetailView(this NewObjectViewController controller){
+            controller.ObjectCreating += (_, e) => e.Cancel = true;
+            controller.NewObjectAction.Executed += (_, e) => {
+                var objectSpace = controller.Application.NewObjectSpace();
+                e.ShowViewParameters.CreatedView = controller.Application.CreateDetailView(objectSpace,objectSpace.CreateObject(controller.Frame.View.ObjectTypeInfo.Type));
+            };
         }
     }
 }

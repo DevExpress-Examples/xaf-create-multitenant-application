@@ -100,7 +100,7 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         public static IObservable<ListPropertyEditor> NestedListViews(this Frame frame, params Type[] objectTypes ) 
             => frame.View.ToDetailView().NestedListViews(objectTypes);
 
-        public static DetailView ToDetailView(this View view) => (DetailView)view;
+        internal static DetailView ToDetailView(this View view) => (DetailView)view;
         public static IObservable<DetailView> ToDetailView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToDetailView());
         public static IObservable<Unit> WhenDisposedFrame<TFrame>(this TFrame source) where TFrame : Frame
@@ -124,6 +124,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             => window.DashboardViewItems(ViewType.DetailView).Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide).ToNowObservable()
                 .SelectMany(item => item.InnerView.ToDetailView().WhenControlViewItemGridControl().Select(gridControl => (gridControl,item.Frame)));
 
+        public static T Action<T>(this Frame frame, string id) where T:ActionBase
+            => frame.Actions<T>(id).FirstOrDefault();
         public static ActionBase Action(this Frame frame, string id) 
             => frame.Actions(id).FirstOrDefault();
         

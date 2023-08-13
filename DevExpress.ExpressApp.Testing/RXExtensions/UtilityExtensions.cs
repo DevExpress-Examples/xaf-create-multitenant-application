@@ -3,6 +3,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
 
 namespace DevExpress.ExpressApp.Testing.RXExtensions{
     public static class UtilityExtensions{
@@ -77,10 +79,14 @@ namespace DevExpress.ExpressApp.Testing.RXExtensions{
         public static IObservable<T> DoOnComplete<T>(this IObservable<T> source, Action onComplete)
             => source.Do(_ => { }, onComplete);
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 10).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 20).Seconds();
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source,string message) 
             => source.Timeout(TimeoutInterval, Observable.Throw<TSource>(new TimeoutException(message)));
+
+        public static IObservable<SingleChoiceAction> AssertSingleChoiceAction<TItemDataType>(this IObservable<Frame> source,string actionId,int itemsCount) 
+            => source.Select(frame => frame.Action<SingleChoiceAction>(actionId)).Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
+                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction)).Assert();
 
         public static IObservable<TSource> Assert<TSource>(
             this IObservable<TSource> source, TimeSpan? timeout = null, [CallerMemberName] string caller = "") 

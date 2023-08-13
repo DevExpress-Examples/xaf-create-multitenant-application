@@ -24,10 +24,22 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             objectSpace.Delete(objectSpace.GetObjectsQuery<ModelDifference>().ToArray());
             objectSpace.CommitChanges();
         }
-        public static void ChangeStartupState(this WinApplication application,FormWindowState windowState) 
+
+        public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 
+            => source.DoWhen(_ => Screen.AllScreens.Length>1, form => {
+                var currentScreen = Screen.FromControl(form);
+                var inactiveScreen = Screen.AllScreens.FirstOrDefault(screen => !Equals(screen, currentScreen));
+                if (inactiveScreen != null){
+                    form.StartPosition = FormStartPosition.Manual;
+                    form.Location = new Point(inactiveScreen.Bounds.Left, inactiveScreen.Bounds.Top);
+                }            
+            });
+
+        public static void ChangeStartupState(this WinApplication application,FormWindowState windowState,bool moveToInactiveMonitor=true) 
             => application.WhenFrameCreated(TemplateContext.ApplicationWindow)
                 .TemplateChanged().Select(frame => frame.Template)
                 .Cast<Form>()
+                .If(_ => moveToInactiveMonitor,form => form.Observe().MoveToInactiveMonitor(),form => form.Observe())
                 .Do(form => form.WindowState = windowState).Take(1)
                 .Subscribe();
 

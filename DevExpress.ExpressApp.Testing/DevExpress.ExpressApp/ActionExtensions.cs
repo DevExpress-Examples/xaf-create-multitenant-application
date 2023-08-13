@@ -7,21 +7,24 @@ using DevExpress.ExpressApp.Testing.RXExtensions;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class ActionExtensions{
+        public static IEnumerable<ChoiceActionItem> Items<T>(this SingleChoiceAction action)
+            => action.Items.Where(item => item.Data is T);
+        
         public static IObservable<SimpleActionExecuteEventArgs> WhenExecuted(this SimpleAction action) 
             => action.WhenEvent<ActionBaseEventArgs>(nameof(SimpleAction.Executed)).Cast<SimpleActionExecuteEventArgs>().TakeUntilDisposed(action);
-        public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterNavigation,params object[] selection)
-            => afterNavigation.Trigger(() => action.DoExecute(selection));
+        public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterExecuted,params object[] selection)
+            => afterExecuted.Trigger(() => action.DoExecute(selection));
         public static IObservable<Unit> Trigger(this SimpleAction action, params object[] selection)
             => action.Trigger(Observable.Empty<Unit>(),selection);
         
         public static void DoExecute(this SimpleAction action, params object[] selection) 
             => action.DoExecute(() => action.DoExecute(),selection);
         
-        public static IObservable<T> Trigger<T>(this SingleChoiceAction action, IObservable<T> afterNavigation,params object[] selection)
-            => action.Trigger(afterNavigation,() => action.SelectedItem,selection);
+        public static IObservable<T> Trigger<T>(this SingleChoiceAction action, IObservable<T> afterExecuted,params object[] selection)
+            => action.Trigger(afterExecuted,() => action.SelectedItem,selection);
         
-        public static IObservable<T> Trigger<T>(this SingleChoiceAction action, IObservable<T> afterNavigation,Func<ChoiceActionItem> selectedItem,params object[] selection)
-            => afterNavigation.Trigger(() => action.DoExecute(selectedItem(), selection));
+        public static IObservable<T> Trigger<T>(this SingleChoiceAction action, IObservable<T> afterExecuted,Func<ChoiceActionItem> selectedItem,params object[] selection)
+            => afterExecuted.Trigger(() => action.DoExecute(selectedItem(), selection));
         
         public static void DoExecute(this SingleChoiceAction action,ChoiceActionItem selectedItem, params object[] objectSelection) 
             => action.DoExecute( () => action.DoExecute(selectedItem), objectSelection);

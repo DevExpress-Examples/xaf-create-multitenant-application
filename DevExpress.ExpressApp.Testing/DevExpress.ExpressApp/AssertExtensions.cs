@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.Testing.RXExtensions;
+using DevExpress.XtraGrid;
 using DevExpress.XtraPdfViewer;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
@@ -41,10 +42,11 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         public static IObservable<DashboardViewItem> AssertDashboardViewItems(this Window frame,ViewType viewType,Func<DashboardViewItem,bool> match,params Type[] objectTypes) 
             => frame.DashboardViewItems(viewType,objectTypes).Where(match).ToNowObservable().Assert();
 
-        public static IObservable<Unit> AssertDashboardListView(this XafApplication application,string navigationView, string viewVariant){
+        public static IObservable<DashboardViewItem> AssertDashboardListView(this XafApplication application,string navigationView, string viewVariant){
             var dashboardViewFrame = application.AssertFrame(ViewType.DashboardView).Cast<Window>();
             var navigate = application.AssertNavigation(navigationView);
-            var changeViewVariant = dashboardViewFrame.AssertChangeViewVariant(viewVariant);
+            var changeViewVariant = dashboardViewFrame.AssertChangeViewVariant(viewVariant).Cast<Window>();
+            var listViewFrame = changeViewVariant.AssertMasterFrame();
             var hasRecords = dashboardViewFrame.AssertWindowHasObjects();
             var processSelectedObject = dashboardViewFrame.AssertProcessSelectedObject();
             var existingObjectRootDetailView = application.AssertExistingObjectDetailView();
@@ -52,15 +54,31 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .AssertSaveNewObject().AssertDeleteObject();
 
             var gridControlDetailViewObjects = dashboardViewFrame.AssertGridControlDetailViewObjects();
-            var testDashboardListView = navigate
+            return navigate
                 .Merge(changeViewVariant)
                 .Merge(hasRecords)
                 .MergeToUnit(processSelectedObject)
+                // .MergeToUnit(listViewFrame)
                 .Merge(existingObjectRootDetailView)
                 .ConcatToUnit(newSaveDeleteObject)
-                .ConcatToUnit(gridControlDetailViewObjects);
-            return testDashboardListView;
+                .ConcatToUnit(gridControlDetailViewObjects)
+                .IgnoreElements().To<DashboardViewItem>()
+                .Concat(listViewFrame).Assert();
         }
+
+        public static IObservable<object> AssertObjectsCount(this View view, int objectsCount) 
+            => view.WhenDataSourceChanged().FirstAsync(o => o is CollectionSourceBase collectionSourceBase
+                ? collectionSourceBase.GetCount() == objectsCount : ((GridControl)o).MainView.DataRowCount == objectsCount)
+                .Assert($"{nameof(AssertObjectsCount)} {view.Id}");
+
+        public static IObservable<object> WhenDataSourceChanged(this View view) 
+            => view is ListView listView ? listView.CollectionSource.WhenCriteriaApplied()
+                : view.ToDetailView().WhenControlViewItemGridControl().SelectMany(control => control.WhenDataSourceChanged().To(control));
+
+        private static IObservable<DashboardViewItem> AssertMasterFrame(this IObservable<Window> source) 
+            => source.SelectMany(window => window.DashboardViewItems(ViewType.DetailView)
+                .Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide).ToNowObservable()
+                    .SwitchIfEmpty(Observable.Defer(() => window.AssertDashboardViewItems(ViewType.ListView)))).Assert();
 
         public static IObservable<DashboardViewItem> AssertDashboardDetailView(this XafApplication application,string navigationId,string viewVariant){
             var navigate = application.AssertNavigation(navigationId);
@@ -121,10 +139,10 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .WhenNotDefault(detailView => detailView.CurrentObject)
                 .Assert().ToUnit();
 
-        public static IObservable<Unit> AssertListViewHasObjects(this XafApplication application,Type objectType) 
-            => application.WhenFrame(objectType,ViewType.ListView).ToListView()
-                .SelectMany(listView => listView.WhenObjects())
-                .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}").ToUnit();
+        public static IObservable<Frame> AssertListViewHasObjects(this XafApplication application,Type objectType) 
+            => application.WhenFrame(objectType,ViewType.ListView)
+                .SelectMany(frame => frame.View.ToListView().WhenObjects().To(frame))
+                .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
         
         
 

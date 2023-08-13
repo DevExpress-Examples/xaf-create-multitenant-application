@@ -3,6 +3,8 @@ using DevExpress.ExpressApp.Actions;
 
 namespace OutlookInspired.Module.Services{
     public static class ActionExtensions{
+        public static IEnumerable<ChoiceActionItem> ChoiceActionItem(this object[] objects) 
+            => objects.Select(o => new ChoiceActionItem(o.ToString(),o));
         public static View View(this ActionBase actionBase) => actionBase.View<View>();
         public static XafApplication Application(this ActionBaseEventArgs actionBase) => actionBase.Action.Application;
         public static View View(this ActionBaseEventArgs actionBase) => actionBase.Action.View();

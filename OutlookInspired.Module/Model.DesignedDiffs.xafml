@@ -27,7 +27,7 @@
           <Item Id="CustomerListView" ViewId="CustomerListView" IsNewNode="True" />
           <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
           <Item Id="ModelDifference_ListView" ViewId="ModelDifference_ListView" IsNewNode="True" />
-          <Item Id="Oppurtunities" ViewId="Oppurtunities" IsNewNode="True" />
+          <Item Id="Opportunities" ViewId="Opportunities" IsNewNode="True" />
           <Item Id="Order" ViewId="OrderListView" IsNewNode="True" />
           <Item Id="Product" ViewId="ProductListView" IsNewNode="True" />
         </Items>
@@ -565,7 +565,7 @@
         <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
-    <DashboardView Id="Oppurtunities" Caption="Oppurtunities" ImageName="BO_Opportunity" IsNewNode="True">
+    <DashboardView Id="Opportunities" Caption="Opportunities" ImageName="BO_Opportunity" IsNewNode="True">
       <Items IsNewNode="True">
         <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Default" IsNewNode="True" />
         <DashboardViewItem Id="QuoteMapItem_ListView" ViewId="QuoteMapItem_ListView" ActionsToolbarVisibility="Hide" IsNewNode="True" />

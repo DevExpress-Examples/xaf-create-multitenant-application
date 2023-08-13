@@ -130,7 +130,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         
         public static IObservable<TView> TakeUntilViewDisposed<TView>(this IObservable<TView> source) where TView:View 
             => source.TakeWhileInclusive(view => !view.IsDisposed);
-        public static ListView ToListView(this View view) => ((ListView)view);
+
+        internal static ListView ToListView(this View view) => ((ListView)view);
         
         
         private static IObservable<TFrameContainer> NestedFrameContainers<TView,TFrameContainer>(this IObservable<TFrameContainer> lazyListPropertyEditors, TView view, Type[] objectTypes) where TView : CompositeView where TFrameContainer:IFrameContainer{

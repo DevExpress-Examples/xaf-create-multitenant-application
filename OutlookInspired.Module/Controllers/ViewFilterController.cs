@@ -11,19 +11,20 @@ using OutlookInspired.Module.Services;
 namespace OutlookInspired.Module.Controllers{
 
     public class ViewFilterController:ObjectViewController<ObjectView,IViewFilter>{
-        private readonly SingleChoiceAction _filterAction;
+        public const string FilterViewActionId = "FilterView";
         public ViewFilterController(){
-            _filterAction = new SingleChoiceAction(this,"FilterView",PredefinedCategory.Filters){
+            FilterAction = new SingleChoiceAction(this,FilterViewActionId,PredefinedCategory.Filters){
                 ImageName = "Action_Filter",PaintStyle = ActionItemPaintStyle.Image,
             };
-            _filterAction.Executed += (_, e) => {
+            FilterAction.Executed += (_, e) => {
                 if (!ManagerFilters(e)) FilterView();
             };
         }
-        
+
+        public SingleChoiceAction FilterAction{ get; }
 
         private void FilterView(){
-            var criteria = _filterAction.SelectedItem.Data is ViewFilter viewFilter ? viewFilter.Criteria : null;
+            var criteria = FilterAction.SelectedItem.Data is ViewFilter viewFilter ? viewFilter.Criteria : null;
             var userControl = View.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>().FirstOrDefault();
             if (userControl != null){
                 userControl.SetCriteria(criteria);
@@ -34,7 +35,7 @@ namespace OutlookInspired.Module.Controllers{
         }
 
         private bool ManagerFilters(ActionBaseEventArgs e){
-            if (_filterAction.SelectedItem.Data as string != "Manage") return false;
+            if (FilterAction.SelectedItem.Data as string != "Manage") return false;
             CreateViewFilterListView(e.ShowViewParameters);
             AddDialogController(e.ShowViewParameters);
             return true;
@@ -46,11 +47,11 @@ namespace OutlookInspired.Module.Controllers{
             showViewParameters.Controllers.Add(controller);
             controller.AcceptAction.Executed += (_, _) => {
                 AddFilterItems();
-                _filterAction.DoExecute(_filterAction.SelectedItem);
+                FilterAction.DoExecute(FilterAction.SelectedItem);
             };
             controller.CancelAction.Executed+= (_, _) => {
                 AddFilterItems();
-                _filterAction.DoExecute(_filterAction.SelectedItem);
+                FilterAction.DoExecute(FilterAction.SelectedItem);
             }; 
         }
 
@@ -64,18 +65,18 @@ namespace OutlookInspired.Module.Controllers{
 
         protected override void OnActivated(){
             base.OnActivated();
-            _filterAction.Active[nameof(ViewFilterController)] = View is ListView||Frame is NestedFrame;
+            FilterAction.Active[nameof(ViewFilterController)] = View is ListView||Frame is NestedFrame;
             AddFilterItems();
         }
         
         private void AddFilterItems(){
-            _filterAction.Items.Clear();
-            _filterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),
+            FilterAction.Items.Clear();
+            FilterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),
                     (caption:$"All ({ObjectSpace.GetObjectsCount(View.ObjectTypeInfo.Type, null)})",data:"All") }
                 .Select(t => new ChoiceActionItem(t.caption, t.data)).Concat(ObjectSpace.GetObjectsQuery<ViewFilter>()
                     .Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToArray()
                     .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count})",filter))).ToArray());
-            _filterAction.SelectedItem = _filterAction.Items.First(item => item.Data as string == "All");
+            FilterAction.SelectedItem = FilterAction.Items.First(item => item.Data as string == "All");
         }
     }
 }

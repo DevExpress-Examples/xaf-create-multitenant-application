@@ -13,7 +13,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, OrderGridViewDetailView)]
     
     [ImageName("BO_Order")]
-    public class Order :MigrationBaseObject{
+    public class Order :MigrationBaseObject, IViewFilter{
         public const string OrderInvoiceDetailView = "Order_DetailView_Child";
         public const string OrderGridViewDetailView = "OrderGridView_DetailView";
         

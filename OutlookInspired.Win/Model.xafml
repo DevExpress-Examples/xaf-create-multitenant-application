@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
   <NavigationItems NavigationStyle="Accordion" DefaultChildItemsDisplayStyle="List" />
-  <Options UIType="TabbedMDI" FormStyle="Ribbon" EnableHtmlFormatting="True" />
+  <Options UIType="TabbedMDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
     <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.1.4.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
     <SchemaModule Name="SystemWindowsFormsModule" Version="23.1.4.0" IsNewNode="True" />
   </SchemaModules>
-  <Options Palette="Office Dark Gray"/>
   <Views>
     <DetailView Id="Customer_DetailView_Child">
       <Items>
@@ -133,6 +132,16 @@
       <Items>
         <ControlDetailItem Id="OrderGridView" ControlTypeName="OutlookInspired.Win.UserControls.OrderGridView" />
       </Items>
+    </DetailView>
+    <DetailView Id="Product_Brochure_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors" TextAlignMode="AlignWithChildren" RelativeSize="100" />
+          <LayoutGroup Id="SizeableEditors" Caption="Description" RelativeSize="96.8413496051687" Removed="True">
+            <LayoutItem Id="Description" Removed="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
     </DetailView>
     <ListView Id="Product_ListView" ShowFindPanel="True" />
     <ListView Id="Quote_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor">
