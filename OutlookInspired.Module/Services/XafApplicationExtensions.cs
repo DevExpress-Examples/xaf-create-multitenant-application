@@ -28,6 +28,6 @@ namespace OutlookInspired.Module.Services{
             => (IModelDetailView) application.Model.Views[application.FindDetailViewId(objectType)];
         
         public static IObjectSpace NewObjectSpace(this XafApplication application) 
-            => application.CreateObjectSpace(typeof(MigrationBaseObject));
+            => application.CreateObjectSpace(typeof(OutlookInspiredBaseObject));
     }
 }

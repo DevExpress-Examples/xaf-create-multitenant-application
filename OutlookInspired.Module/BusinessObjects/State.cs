@@ -4,7 +4,7 @@ using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DefaultProperty(nameof(LongName))]
-    public class State:MigrationBaseObject{
+    public class State:OutlookInspiredBaseObject{
         public virtual string LongName{ get; set; }
         public virtual StateEnum ShortName{ get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

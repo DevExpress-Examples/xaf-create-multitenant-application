@@ -15,7 +15,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 	[CloneView(CloneViewType.DetailView, CustomerLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, CustomerGridViewDetailView)]
 	[XafDefaultProperty(nameof(Name))]
-	public class Customer:MigrationBaseObject,IViewFilter{
+	public class Customer:OutlookInspiredBaseObject,IViewFilter{
 		public const string ChildDetailViewId = "Customer_DetailView_Child";
 		public const string CustomerGridViewDetailView = "CustomerGridView_DetailView";
 		public const string CustomerLayoutViewDetailView = "CustomerLayoutView_DetailView";

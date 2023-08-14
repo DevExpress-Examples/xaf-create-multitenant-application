@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using OutlookInspired.Win;
 using OutlookInspired.Win.Extensions;
 
@@ -28,6 +29,6 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
         }
 
         public Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup=null) 
-            => SetupWinApplication(null, beforeSetup);
+            => SetupWinApplication(TestContext.CurrentContext.Test.FullName, beforeSetup);
     }
 }

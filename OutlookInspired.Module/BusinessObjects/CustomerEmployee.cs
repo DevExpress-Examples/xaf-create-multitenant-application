@@ -6,7 +6,7 @@ using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultProperty(nameof(FullName))]
-	public class CustomerEmployee :MigrationBaseObject{
+	public class CustomerEmployee :OutlookInspiredBaseObject{
 		[RuleRequiredField]
 		public virtual string FirstName { get; set; }
 		[RuleRequiredField]

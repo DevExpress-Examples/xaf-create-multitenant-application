@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
-  <NavigationItems NavigationStyle="Accordion" DefaultChildItemsDisplayStyle="List" />
+  <NavigationItems NavigationStyle="Accordion" DefaultChildItemsDisplayStyle="List">
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="Event_ListView" Removed="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
   <Options UIType="TabbedMDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
@@ -52,11 +60,11 @@
         <PropertyEditor Id="Title" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
     </DetailView>
-    <ListView Id="Employee_Evaluations_ListView_Child">
+    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
+    <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor">
       <Columns>
         <ColumnInfo Id="Bonus" RowIndex="1" Index="0" OwnerBand="Raise" />
-        <ColumnInfo Id="CreatedOn" RowIndex="2" Index="0" OwnerBand="Main" />
-        <ColumnInfo Id="Details" RowIndex="1" Index="0" OwnerBand="Main" />
+        <ColumnInfo Id="Description" RowIndex="1" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Raise" RowIndex="0" Index="0" OwnerBand="Raise" />
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Manager" RowIndex="0" Index="1" OwnerBand="Main" />
@@ -66,6 +74,7 @@
         <Band Id="Raise" Index="0" IsNewNode="True" />
       </BandsLayout>
     </ListView>
+    <ListView Id="Employee_EvaluationsCreatedBy_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
     <ListView Id="Employee_ListView" ShowFindPanel="True">
       <SplitLayout SplitterPosition="1262" />
     </ListView>
@@ -121,6 +130,8 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
+    <ListView Id="Evaluation_ListView" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" SchedulerViewType="Year" SelectedIntervalStart="2020-01-01" SelectedIntervalEnd="2020-12-31" />
+    <ListView Id="Event_ListView" ResourceClass="" />
     <DetailView Id="Order_DetailView_Child">
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />

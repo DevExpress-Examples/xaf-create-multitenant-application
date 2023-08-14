@@ -43,7 +43,7 @@ namespace OutlookInspired.Module.Services{
         }
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> source,params T[] values) => source.Concat(values.AsEnumerable());
 
-        public static Dictionary<TKey, TObject> ToDictionary<TObject,TKey>(this IEnumerable<TObject> objects,Func<TObject,TKey> keySelector) where TObject:MigrationBaseObject 
+        public static Dictionary<TKey, TObject> ToDictionary<TObject,TKey>(this IEnumerable<TObject> objects,Func<TObject,TKey> keySelector) where TObject:OutlookInspiredBaseObject 
             => objects.ToDictionary(keySelector, o => o);
 
         public static IEnumerable<TValue> To<TSource,TValue>(this IEnumerable<TSource> source,TValue value) 

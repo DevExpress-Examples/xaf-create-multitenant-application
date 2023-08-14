@@ -49,7 +49,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         public static IObservable<object> WhenObjects(this ListView listView) 
             => listView.Objects().ToNowObservable()
                 .MergeToObject(listView.CollectionSource.WhenCollectionChanged()
-                    .SelectMany(_ => listView.Objects())).Take(1);
+                    .SelectMany(_ => listView.Objects()))
+                .MergeToObject(listView.CollectionSource.WhenCriteriaApplied().SelectMany(@base => @base.Objects() ));
         
         public static IEnumerable<object> Objects(this View view) => view.Objects<object>();
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;

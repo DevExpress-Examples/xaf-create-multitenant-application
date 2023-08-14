@@ -2,6 +2,7 @@
 
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 using DevAV = DevExpress.DevAV;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Testing.RXExtensions;
@@ -16,24 +17,18 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     $"Data Source=C:\\Users\\Public\\Documents\\DevExpress Demos {XafAssemblyInfo.Version.Substring(0, 4)}\\Components\\Data\\devav.sqlite3")
                 .Use(objectSpace.ImportFrom);
 
-        static IObservable<Unit> CommitAndConcat(this IObservable<Unit> source, IObjectSpace objectSpace,
-            Func<IObservable<Unit>> nextSource)
+        static IObservable<Unit> CommitAndConcat(this IObservable<Unit> source, IObjectSpace objectSpace, Func<IObservable<Unit>> nextSource)
             => source.DoOnComplete(objectSpace.CommitChanges).ConcatDefer(nextSource);
 
         static IObservable<Unit> ImportFrom(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => objectSpace.ZeroDependencies(sqliteContext)
                 .CommitAndConcat(objectSpace, () => objectSpace.ImportCustomerStore(sqliteContext)
                     .Merge(objectSpace.ImportEmployee(sqliteContext)
-                        .CommitAndConcat(objectSpace,
-                            () => objectSpace.EmployeeDependent(sqliteContext,
-                                objectSpace.ProductDependent(sqliteContext))))
-                    .CommitAndConcat(objectSpace,
-                        () => objectSpace.EmployeeStoreDependent(sqliteContext,
-                            objectSpace.CustomerEmployeeDependent(sqliteContext))))
+                        .CommitAndConcat(objectSpace, () => objectSpace.EmployeeDependent(sqliteContext, objectSpace.ProductDependent(sqliteContext))))
+                    .CommitAndConcat(objectSpace, () => objectSpace.EmployeeStoreDependent(sqliteContext, objectSpace.CustomerEmployeeDependent(sqliteContext))))
                 .Finally(objectSpace.CommitChanges);
 
-        private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext,
-            IObservable<Unit> customerEmployeeDependent)
+        private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext, IObservable<Unit> customerEmployeeDependent)
             => objectSpace.ImportCustomerEmployee(sqliteContext)
                 .CommitAndConcat(objectSpace, () => customerEmployeeDependent);
 
@@ -92,8 +87,8 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 }).ToUnit();
 
 
-        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : MigrationBaseObject
-            => objectSpace.FindObject<T>( migrationBaseObject => id == migrationBaseObject.IdInt64);
+        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : IOutlookInspiredBaseObject
+            => objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
 
         static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Evaluations.ToNowObservable()
@@ -103,11 +98,21 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                     evaluation.Subject = sqlLite.Subject;
                     evaluation.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee?.Id);
                     evaluation.Manager = objectSpace.FindSqlLiteObject<Employee>(sqlLite.CreatedBy.Id);
-                    evaluation.CreatedOn = sqlLite.CreatedOn;
+                    evaluation.StartOn = sqlLite.CreatedOn;
+                    evaluation.EndOn = sqlLite.CreatedOn.AddHours(1);
                     evaluation.Rating = (EvaluationRating)sqlLite.Rating;
-                    evaluation.Details = sqlLite.Details;
+                    evaluation.Description = sqlLite.Details;
+                    var description = Regex.Replace(evaluation.Description, $@"Raise:\s*{Raise.Yes}", "");
+                    if (!description.Equals(evaluation.Description)){
+                        evaluation.Raise=Raise.Yes;
+                    }
+                    description = Regex.Replace(evaluation.Description, $@"Bonus:\s*{Bonus.Yes}", "");
+                    if (!description.Equals(evaluation.Description)){
+                        evaluation.Bonus=Bonus.Yes;
+                    }
                     return evaluation;
-                }).ToUnit();
+                })
+                .ToUnit();
 
         static IObservable<Unit> ImportOrder(this IObjectSpace objectSpace, DevAV.DevAVDb sqliteContext)
             => sqliteContext.Orders.ToNowObservable()

@@ -139,9 +139,12 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .WhenNotDefault(detailView => detailView.CurrentObject)
                 .Assert().ToUnit();
 
+        public static IObservable<Frame> AssertListViewHasObjects(this IObservable<Frame> source)
+            => source.SelectMany(frame => frame.View.ToListView().WhenObjects().To(frame))
+                .Assert($"{nameof(AssertListViewHasObjects)}");
+        
         public static IObservable<Frame> AssertListViewHasObjects(this XafApplication application,Type objectType) 
-            => application.WhenFrame(objectType,ViewType.ListView)
-                .SelectMany(frame => frame.View.ToListView().WhenObjects().To(frame))
+            => application.WhenFrame(objectType,ViewType.ListView).AssertListViewHasObjects()
                 .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
         
         

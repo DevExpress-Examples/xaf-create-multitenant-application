@@ -1,8 +1,16 @@
+using System.IO;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
 
 namespace DevExpress.ExpressApp.Testing{
     public static class ReflectionExtensions{
+        public static string ToValidFileName(this string input) {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var validString = new string(input.Where(ch => !invalidChars.Contains(ch)).ToArray()).Replace(" ", "_");
+            return Regex.Replace(validString.Length > 250 ? validString.Substring(0, 250) : validString, "[^a-zA-Z0-9_]", "");
+        }
+
         public static void ThrowCaptured(this Exception exception)
             =>ExceptionDispatchInfo.Capture(exception).Throw();
 

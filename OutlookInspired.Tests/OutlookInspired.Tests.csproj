@@ -32,4 +32,7 @@
         <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
         <ProjectReference Include="..\OutlookInspired.Win\OutlookInspired.Win.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="DashboardTests\" />
+    </ItemGroup>
 </Project>

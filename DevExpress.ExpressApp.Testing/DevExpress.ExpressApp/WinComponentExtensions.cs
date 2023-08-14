@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
@@ -10,9 +9,18 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.Handler;
 using DevExpress.XtraGrid.Views.Layout;
 using DevExpress.XtraGrid.Views.Layout.Handler;
+using DevExpress.XtraScheduler;
+using DevExpress.XtraScheduler.Xml;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class WinComponentExtensions{
+        public static string YearlyOnWorkDayRecurrenceInfoXml(this DateTime now) 
+            => new RecurrenceInfoXmlPersistenceHelper(new RecurrenceInfo(now){
+                Type = RecurrenceType.Yearly, Periodicity = 1, Month = now.Month, WeekOfMonth = WeekOfMonth.First,
+                Duration = TimeSpan.FromHours(1), WeekDays = WeekDays.WorkDays
+            }).ToXml();
+
+
         public static IObservable<object> WhenDataSourceChanged(this GridControl gridControl) 
             => gridControl.WhenEvent(nameof(GridControl.DataSourceChanged));
 

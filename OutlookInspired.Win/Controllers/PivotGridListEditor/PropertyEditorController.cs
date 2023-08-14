@@ -1,13 +1,12 @@
 ﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.PivotGrid.Win;
 using OutlookInspired.Win.Editors;
 using OutlookInspired.Win.Extensions;
 
-namespace OutlookInspired.Win.Controllers{
-    public class PivotGridPropertyEditorController:ViewController<ListView>{
+namespace OutlookInspired.Win.Controllers.PivotGridListEditor{
+    public class PropertyEditorController:ViewController<ListView>{
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            if (View.Editor is PivotGridListEditor pivotGridListEditor){
+            if (View.Editor is DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor pivotGridListEditor){
                 var pivotGridControl = pivotGridListEditor.PivotGridControl;
                 var repositoryItems = pivotGridControl.AddRepositoryItems(View);
                 pivotGridControl.CustomCellEdit += (_, e) => {

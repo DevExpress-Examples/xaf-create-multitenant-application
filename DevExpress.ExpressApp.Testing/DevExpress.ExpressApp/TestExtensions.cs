@@ -13,6 +13,8 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
                 .IgnoreElements().To<T>()
                 .Merge(test.BufferUntilCompleted().Do(_ => application.Exit()).SelectMany())
+                .Merge(application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
+                    .Do(e => e.Exception.ThrowCaptured()).To<T>())
                 .Catch<T, Exception>(exception => {
                     context.Send(_ => application.Exit(),null);
                     return Observable.Throw<T>(exception);

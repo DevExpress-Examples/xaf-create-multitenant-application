@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\Logo.svg" />
+    <EmbeddedResource Include="Images\SplashScreenImage.svg" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp" Version="23.1.4" />
@@ -89,6 +90,12 @@
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes7.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes8.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes9.xml">
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
   </ItemGroup>

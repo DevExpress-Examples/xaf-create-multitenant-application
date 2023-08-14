@@ -2,11 +2,11 @@
 using DevExpress.ExpressApp.Win.Editors;
 using OutlookInspired.Module.Attributes;
 
-namespace OutlookInspired.Win.Controllers{
+namespace OutlookInspired.Win.Controllers.GridListEditor{
     public class NewItemRowHandlingModeController:ListViewControllerBase{
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            if (View.Editor is GridListEditor listEditor&&View.ObjectTypeInfo.FindAttribute<NewItemRowHandlingModeAttribute>()!=null){
+            if (View.Editor is DevExpress.ExpressApp.Win.Editors.GridListEditor listEditor&&View.ObjectTypeInfo.FindAttribute<NewItemRowHandlingModeAttribute>()!=null){
                 listEditor.NewItemRowHandlingMode=GridListEditorNewItemRowHandlingMode.NativeControl;
             }
         }

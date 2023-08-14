@@ -10,7 +10,7 @@ using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.ImportData.Extensions;
 
-namespace OutlookInspired.Tests.ImportData.DashboardTests{
+namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]
     public class DashboardDetailView:TestBase{
         [TestCaseSource(nameof(TestCases))]
@@ -24,22 +24,24 @@ namespace OutlookInspired.Tests.ImportData.DashboardTests{
 
         private static IEnumerable TestCases{
             get{
-                yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeDetailView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeDetailView);
-                yield return new TestCaseData("CustomerListView","CustomerListView", AssertCustomerDetailView);
-                yield return new TestCaseData("CustomerListView","CustomerCardListView", AssertCustomerDetailView);
-                yield return new TestCaseData("ProductListView","ProductCardView", AssertProductDetailView);
-                yield return new TestCaseData("ProductListView","ProductListView", AssertProductDetailView);
+                yield return new TestCaseData("EmployeeListView","EmployeeListView", DashboardDetailViewExtensions.AssertEmployeeDetailView);
+                yield return new TestCaseData("EmployeeListView","EmployeeCardListView", DashboardDetailViewExtensions.AssertEmployeeDetailView);
+                yield return new TestCaseData("CustomerListView","CustomerListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
+                yield return new TestCaseData("CustomerListView","CustomerCardListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
+                yield return new TestCaseData("ProductListView","ProductCardView", DashboardDetailViewExtensions.AssertProductDetailView);
+                yield return new TestCaseData("ProductListView","ProductListView", DashboardDetailViewExtensions.AssertProductDetailView);
             }
         }
+    }
 
-        private static IObservable<Unit> AssertCustomerDetailView(XafApplication application, IObservable<DashboardViewItem> itemSource) 
+    static class DashboardDetailViewExtensions{
+        internal static IObservable<Unit> AssertCustomerDetailView(this XafApplication application, IObservable<DashboardViewItem> itemSource) 
             => itemSource.AssertDetailViewGridControlHasObjects().ToUnit();
 
-        private static IObservable<Unit> AssertProductDetailView(XafApplication application, IObservable<DashboardViewItem> itemSource) 
+        internal static IObservable<Unit> AssertProductDetailView(this XafApplication application, IObservable<DashboardViewItem> itemSource) 
             => itemSource.AssertDetailViewPdfViewerHasPages();
-
-        private static IObservable<Unit> AssertEmployeeDetailView(XafApplication application,IObservable<DashboardViewItem> itemSource){
+        
+        internal static IObservable<Unit> AssertEmployeeDetailView(this XafApplication application,IObservable<DashboardViewItem> itemSource){
             var tabControl = application.AssertTabControl<TabbedGroup>();
             var evaluationsExist = application.AssertListViewHasObjects(typeof(Evaluation));
             var tasksExist = application.AssertListViewHasObjects(typeof(EmployeeTask));

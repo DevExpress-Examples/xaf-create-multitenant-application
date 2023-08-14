@@ -2,7 +2,7 @@
 
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class QuoteItem :MigrationBaseObject{
+    public class QuoteItem :OutlookInspiredBaseObject{
         public virtual Quote Quote { get; set; }
         public virtual Product Product { get; set; }
         public virtual Guid? ProductId { get; set; }

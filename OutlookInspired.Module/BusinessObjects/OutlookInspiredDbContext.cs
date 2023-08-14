@@ -41,8 +41,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	public DbSet<FileData> FileData { get; set; }
 	public DbSet<ReportDataV2> ReportDataV2 { get; set; }
 	public DbSet<DashboardData> DashboardData { get; set; }
-    public DbSet<Event> Event { get; set; }
-    public DbSet<Analysis> Analysis { get; set; }
+	public DbSet<Analysis> Analysis { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -71,85 +70,93 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
-        OnProductImageModelCreating(modelBuilder);
         modelBuilder.Entity<Customer>().Property(customer => customer.AnnualRevenue).HasConversion<double>();
-        OnTaskAttachedFileModelCreating(modelBuilder);
-        OnEvaluationModelCreating(modelBuilder);
-        OnEmployeeModelCreating(modelBuilder);
-        OnEmployeeTaskModelCreating(modelBuilder);
-        OnCustomerEmployeeModelCreating(modelBuilder);
-        OnCustomerStoreModelCreating(modelBuilder);
-        OnOrderModelCreating(modelBuilder);
-        OnProductModelCreating(modelBuilder);
-        OnQuoteModelCreating(modelBuilder);
-        OnQuoteItemModelCreating(modelBuilder);
-        OnProductCatalogModelCreating(modelBuilder);
-        OnCustomerCommunicationModelCreating(modelBuilder);
-        OnOrderItemModelCreating(modelBuilder);
+        modelBuilder.OnProductImage()
+	        .OnTaskAttachedFile()
+	        .OnEvaluation()
+	        .OnEmployee()
+	        .OnEmployeeTask()
+	        .OnCustomerEmployee()
+	        .OnCustomerStore()
+	        .OnOrder()
+	        .OnProduct()
+	        .OnQuote()
+	        .OnQuoteItem()
+	        .OnProductCatalog()
+	        .OnCustomerCommunication()
+	        .OnOrderItem();
     }
 
-    private static void OnProductImageModelCreating(ModelBuilder modelBuilder){
-	    var productImage = modelBuilder.Entity<ProductImage>();
-	    productImage.HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);
-	    productImage.HasOne(image => image.Product).WithMany(product => product.Images).HasForeignKey(image => image.ProductId).OnDelete(DeleteBehavior.Cascade);   
-    }
-
-    private static void OnTaskAttachedFileModelCreating(ModelBuilder modelBuilder){
+}
+static class ModelCreating{
+	internal static ModelBuilder OnTaskAttachedFile(this ModelBuilder modelBuilder){
 	    var taskAttachedFile = modelBuilder.Entity<TaskAttachedFile>();
 	    taskAttachedFile.HasOne(file => file.EmployeeTask).WithMany(task => task.AttachedFiles)
 		    .HasForeignKey(file => file.EmployeeTaskId).OnDelete(DeleteBehavior.Cascade);
-    }
+	    return modelBuilder;
+	}
 
-    private static void OnEvaluationModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnEvaluation(this ModelBuilder modelBuilder){
 	    var evaluation = modelBuilder.Entity<Evaluation>();
-	    evaluation.HasOne(item => item.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
-	    evaluation.HasOne(e => e.Manager).WithMany().HasForeignKey(e => e.ManagerId).OnDelete(DeleteBehavior.Cascade);
+	    // evaluation.HasOne(item => item.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
+	    // evaluation.HasOne(e => e.Manager).WithMany().HasForeignKey(e => e.ManagerId).OnDelete(DeleteBehavior.Cascade);
+	    evaluation.HasOne(e => e.Manager)
+		    .WithMany(employee => employee.EvaluationsCreatedBy)
+		    .HasForeignKey(e => e.ManagerId)
+		    .OnDelete(DeleteBehavior.Cascade);
+
+	    // evaluation.HasOne(e => e.RecurrencePattern).WithMany(e => e.RecurrenceEvaluations).HasForeignKey(e => e.RecurrencePatternId);
+	    // evaluation.HasOne(e => e.RecurrencePattern).WithMany().OnDelete(DeleteBehavior.Restrict);
+	    return modelBuilder;
     }
 
-    private static void OnOrderItemModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnOrderItem(this ModelBuilder modelBuilder){
 	    var orderItem = modelBuilder.Entity<OrderItem>();
 	    modelBuilder.Entity<OrderItem>().HasOne(o => o.Product).WithMany(product => product.OrderItems).HasForeignKey(o => o.ProductID).OnDelete(DeleteBehavior.Cascade);
 	    orderItem.Property(item => item.Discount).HasConversion<double>();
 	    orderItem.Property(item => item.ProductPrice).HasConversion<double>();
 	    orderItem.Property(item => item.Total).HasConversion<double>();
+	    return modelBuilder;
     }
 
-    private static void OnCustomerCommunicationModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnCustomerCommunication(this ModelBuilder modelBuilder){
 	    var customerCommunication = modelBuilder.Entity<CustomerCommunication>();
 	    customerCommunication.HasOne(communication => communication.CustomerEmployee).WithMany(employee => employee.CustomerCommunications);
 	    customerCommunication.HasOne(communication => communication.Employee).WithMany(employee => employee.Employees);
+	    return modelBuilder;
     }
 
-    private static void OnQuoteItemModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnQuoteItem(this ModelBuilder modelBuilder){
 	    var quoteItem = modelBuilder.Entity<QuoteItem>();
 	    quoteItem.HasOne(item => item.Product).WithMany(product => product.QuoteItems);
 	    quoteItem.Property(item => item.Discount).HasConversion<double>();
 	    quoteItem.Property(item => item.ProductPrice).HasConversion<double>();
 	    quoteItem.Property(item => item.Total).HasConversion<double>();
+	    return modelBuilder;
     }
 
-    private static void OnProductCatalogModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnProductCatalog(this ModelBuilder modelBuilder){
 	    var catalog = modelBuilder.Entity<ProductCatalog>();
 	    catalog.HasOne(productCatalog => productCatalog.Product)
 		    .WithMany(product => product.Catalogs)
 		    .HasForeignKey(productCatalog => productCatalog.ProductId)
 		    .OnDelete(DeleteBehavior.Cascade);
-
+	    return modelBuilder;
     }
 
-    private static void OnQuoteModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnQuote(this ModelBuilder modelBuilder){
 	    var quote = modelBuilder.Entity<Quote>();
 	    quote.HasOne(q => q.CustomerStore).WithMany(store => store.Quotes);
 	    quote.HasOne(q => q.Employee).WithMany(employee => employee.Quotes);
 	    quote.Property(q => q.SubTotal).HasConversion<double>();
 	    quote.Property(q => q.ShippingAmount).HasConversion<double>();
 	    quote.Property(q => q.Total).HasConversion<double>();
+	    return modelBuilder;
     }
 
-    private static void OnProductModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnProduct(this ModelBuilder modelBuilder){
 	    var product = modelBuilder.Entity<Product>();
-	    product.HasOne(p => p.Engineer).WithMany(employee => employee.Products)
-		    ;
+	    product.HasOne(p => p.Engineer).WithMany(employee => employee.Products);
 	    product.HasOne(p => p.PrimaryImage).WithMany(picture => picture.Products);
 	    product.HasOne(p => p.Support).WithMany(employee => employee.SupportedProducts).OnDelete(DeleteBehavior.Cascade);
 	    product.Property(p => p.SalePrice).HasConversion<double>();
@@ -157,10 +164,11 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	    product.Property(p => p.Cost).HasConversion<double>();
 	    modelBuilder.Entity<Product>().HasMany(p => p.QuoteItems).WithOne(qi => qi.Product).HasForeignKey(qi => qi.ProductId)
 		    .OnDelete(DeleteBehavior.Cascade);
+	    return modelBuilder;
 
     }
 
-    private static void OnOrderModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnOrder(this ModelBuilder modelBuilder){
 	    var order = modelBuilder.Entity<Order>();
 	    order.HasOne(o => o.Employee).WithMany(employee => employee.Orders);
 	    order.HasOne(o => o.Store).WithMany(store => store.Orders);
@@ -168,33 +176,46 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	    order.Property(o => o.TotalAmount).HasConversion<double>();
 	    order.Property(o => o.PaymentTotal).HasConversion<double>();
 	    order.Property(o => o.RefundTotal).HasConversion<double>();
+	    return modelBuilder;
     }
 
-    private static void OnCustomerStoreModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnCustomerStore(this ModelBuilder modelBuilder){
 	    var customerStore = modelBuilder.Entity<CustomerStore>();
 	    customerStore.HasOne(store => store.Crest).WithMany(crest => crest.CustomerStores);
 	    customerStore.Property(store => store.AnnualSales).HasConversion<double>();
+	    return modelBuilder;
     }
 
-    private static void OnCustomerEmployeeModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnCustomerEmployee(this ModelBuilder modelBuilder){
 	    var customerEmployee = modelBuilder.Entity<CustomerEmployee>();
 	    customerEmployee.HasOne(employee => employee.CustomerStore).WithMany(store => store.CustomerEmployees);
 	    customerEmployee.HasOne(employee => employee.Picture).WithMany(picture => picture.CustomerEmployees);
+	    return modelBuilder;
     }
 
-    private static void OnEmployeeTaskModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnEmployeeTask(this ModelBuilder modelBuilder){
 	    var employeeTask = modelBuilder.Entity<EmployeeTask>();
 	    employeeTask.Ignore(task => task.AssignedEmployees);
 	    employeeTask.HasOne(task => task.AssignedEmployee).WithMany(employee => employee.AssignedTasks).HasForeignKey(task => task.AssignedEmployeeId).OnDelete(DeleteBehavior.SetNull);
 	    // employeeTask.HasOne(task => task.Owner).WithMany(employee => employee.OwnedTasks).HasForeignKey(task => task.OwnerId).OnDelete(DeleteBehavior.Cascade);
 	    employeeTask.HasOne(task => task.CustomerEmployee).WithMany(employee => employee.EmployeeTasks);
+	    return modelBuilder;
     }
 
-    private static void OnEmployeeModelCreating(ModelBuilder modelBuilder){
+	internal static ModelBuilder OnEmployee(this ModelBuilder modelBuilder){
 	    var employee = modelBuilder.Entity<Employee>();
 	    employee.Ignore(employee1 => employee1.AssignedEmployeeTasks);
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
 	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);
-    }
+	    return modelBuilder;
+
+
+	}
+	internal static ModelBuilder OnProductImage(this ModelBuilder modelBuilder){
+		var productImage = modelBuilder.Entity<ProductImage>();
+		productImage.HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);
+		productImage.HasOne(image => image.Product).WithMany(product => product.Images).HasForeignKey(image => image.ProductId).OnDelete(DeleteBehavior.Cascade);
+		return modelBuilder;
+	}    
 }

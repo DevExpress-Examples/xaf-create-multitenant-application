@@ -12,14 +12,6 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
-  <Options DataAccessMode="Server">
-    <Dashboards EnableCustomization="False" />
-    <LayoutManagerOptions RequiredFieldMark="*" />
-  </Options>
-  <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
-  </SchemaModules>
   <NavigationItems>
     <Items>
       <Item Id="Default">
@@ -34,6 +26,14 @@
       </Item>
     </Items>
   </NavigationItems>
+  <Options DataAccessMode="Server">
+    <Dashboards EnableCustomization="False" />
+    <LayoutManagerOptions RequiredFieldMark="*" />
+  </Options>
+  <SchemaModules>
+    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
+  </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
     <ListView Id="Customer_CustomerStores_ListView" IsFooterVisible="True">
@@ -469,39 +469,31 @@
     <ListView Id="Employee_Evaluations_ListView">
       <Columns>
         <ColumnInfo Id="Bonus" Index="-1" />
-        <ColumnInfo Id="Details" Index="-1" />
         <ColumnInfo Id="Employee" Index="-1" />
         <ColumnInfo Id="Raise" Index="-1" />
         <ColumnInfo Id="Rating" Index="-1" />
-        <ColumnInfo Id="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" />
         <ColumnInfo Id="Subject" Index="1" SortIndex="-1" SortOrder="None" />
         <ColumnInfo Id="Manager" Index="2" />
       </Columns>
       <HiddenActions>
-        <ActionLink ActionId="Delete" IsNewNode="True" />
         <ActionLink ActionId="Link" IsNewNode="True" />
         <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
-        <ActionLink ActionId="New" IsNewNode="True" />
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="Unlink" IsNewNode="True" />
       </HiddenActions>
     </ListView>
     <ListView Id="Employee_Evaluations_ListView_Child">
       <Columns>
-        <ColumnInfo Id="Details" Index="-1" />
         <ColumnInfo Id="Employee" Index="-1" />
         <ColumnInfo Id="Rating" Index="-1" />
-        <ColumnInfo Id="CreatedOn" Index="0" SortIndex="0" SortOrder="Ascending" />
         <ColumnInfo Id="Subject" Index="1" />
         <ColumnInfo Id="Manager" Index="2" />
         <ColumnInfo Id="Bonus" Index="3" />
         <ColumnInfo Id="Raise" Index="4" />
       </Columns>
       <HiddenActions>
-        <ActionLink ActionId="Delete" IsNewNode="True" />
         <ActionLink ActionId="Link" IsNewNode="True" />
         <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
-        <ActionLink ActionId="New" IsNewNode="True" />
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="Unlink" IsNewNode="True" />
       </HiddenActions>
@@ -565,6 +557,28 @@
         <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <DetailView Id="Evaluation_DetailView" FreezeLayout="True">
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+            <LayoutItem Id="Subject" ViewItem="Subject" Index="0" RelativeSize="3.073967339097022" IsNewNode="True" />
+            <LayoutGroup Id="Auto16d8f731-a8ec-45a6-82e9-47181b5acd45" ShowCaption="False" Caption="Auto16d8f731-a8ec-45a6-82e9-47181b5acd45(4)" Direction="Horizontal" Index="1" RelativeSize="8.069164265129682" IsNewNode="True">
+              <LayoutGroup Id="Autoef77cc0b-7adb-4ba0-8f46-2154ceb189a4" ShowCaption="False" Caption="Autoef77cc0b-7adb-4ba0-8f46-2154ceb189a4(5)" Index="0" RelativeSize="49.88978692138134" IsNewNode="True">
+                <LayoutItem Id="Manager" ViewItem="Manager" Index="0" RelativeSize="35.714285714285715" IsNewNode="True" />
+                <LayoutItem Id="StartOn" ViewItem="StartOn" Index="1" RelativeSize="28.571428571428573" IsNewNode="True" />
+                <LayoutItem Id="Raise" ViewItem="Raise" Index="2" RelativeSize="35.714285714285715" IsNewNode="True" />
+              </LayoutGroup>
+              <LayoutGroup Id="Auto2e88e520-6972-489e-9bca-d53674b9bd2a" ShowCaption="False" Caption="Auto2e88e520-6972-489e-9bca-d53674b9bd2a(8)" Index="1" RelativeSize="50.11021307861866" IsNewNode="True">
+                <LayoutItem Id="Employee" ViewItem="Employee" Index="0" RelativeSize="35.714285714285715" IsNewNode="True" />
+                <LayoutItem Id="Rating" ViewItem="Rating" Index="1" RelativeSize="28.571428571428573" IsNewNode="True" />
+                <LayoutItem Id="Bonus" ViewItem="Bonus" Index="2" RelativeSize="35.714285714285715" IsNewNode="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+            <LayoutItem Id="Description" ViewItem="Description" Index="2" RelativeSize="88.85686839577329" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <DashboardView Id="Opportunities" Caption="Opportunities" ImageName="BO_Opportunity" IsNewNode="True">
       <Items IsNewNode="True">
         <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Default" IsNewNode="True" />

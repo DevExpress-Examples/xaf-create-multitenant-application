@@ -3,7 +3,7 @@
 using System.ComponentModel;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public class ProductCatalog :MigrationBaseObject{
+    public class ProductCatalog :OutlookInspiredBaseObject{
         public virtual Product Product { get; set; }
         [Browsable(false)]
         public virtual Guid? ProductId { get; set; }

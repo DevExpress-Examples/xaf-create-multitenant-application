@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
+using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Attributes.Validation;
@@ -15,15 +16,26 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[VisibleInReports][ImageName("BO_Person")]
 	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
-	public class Employee :MigrationBaseObject,IViewFilter{
+	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource{
 		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
 		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";
+
+		[VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
+		public object Id => ID;
+
+		[Browsable(false)]
+		public Int32 OleColor => 0;
+
+		//
+		// [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals")]
+		// public override void OnLoaded() {
+		// 	Int32 unused = Evaluations.Count;
+		// }
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))][Aggregated]
 		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new(); 
 		public virtual  EmployeeDepartment Department { get; set; }
 		[RuleRequiredField][FontSizeDelta(8)]
-		
 		public virtual string Title { get; set; }
 		[VisibleInListView(false)]
 		public virtual EmployeeStatus Status { get; set; }
@@ -35,7 +47,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[InverseProperty(nameof(EmployeeTask.Owner))][Aggregated]
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
-		[InverseProperty(nameof(Evaluation.Employee))][Aggregated]
+		[InverseProperty(nameof(Evaluation.Employee))]
+		// [Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
 		[VisibleInListView(false)]
 		public virtual string PersonalProfile { get; set; }
@@ -104,6 +117,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 				ObjectSpace.Delete(AssignedTasks);	
 				ObjectSpace.Delete(OwnedTasks);	
 			}
+		}
+
+		[NotMapped]
+		public virtual string Caption{
+			get => FullName;
+			set => FullName=value;
 		}
 	}
 

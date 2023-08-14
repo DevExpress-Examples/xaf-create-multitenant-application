@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects;
-public class Picture :MigrationBaseObject{
+public class Picture :OutlookInspiredBaseObject{
     [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
         DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
     public  virtual byte[] Data { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace DevExpress.ExpressApp.Testing.RXExtensions{
     public class TestObserver<T> : IObserver<T>{
+        
         private readonly List<T> _items;
 
         public TestObserver() => _items = new List<T>();

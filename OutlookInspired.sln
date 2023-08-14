@@ -13,14 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookInspired.Tests", "Ou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.Testing", "DevExpress.ExpressApp.Testing\DevExpress.ExpressApp.Testing.csproj", "{7DCC6B7D-F550-4243-A59E-CF483B1DE441}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp", "..\..\..\Program Files\DevExpress 23.1\Components\Sources\DevExpress.ExpressApp\DevExpress.ExpressApp\DevExpress.ExpressApp.csproj", "{39E0DE91-4458-44FA-9320-55F94BD812AB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.Win.NetCore.Desktop", "..\..\..\Program Files\DevExpress 23.1\Components\Sources\DevExpress.ExpressApp\DevExpress.ExpressApp.Win\DevExpress.ExpressApp.Win.NetCore.Desktop.csproj", "{22A876ED-DA65-4203-B8B3-3103ED717A7E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.Persistent.BaseImpl.EFCore.NetStandard", "..\..\..\Program Files\DevExpress 23.1\Components\Sources\DevExpress.Persistent\DevExpress.Persistent.BaseImpl.EFCore\DevExpress.Persistent.BaseImpl.EFCore.NetStandard.csproj", "{5A809D4C-54EF-4564-B3A5-775379741792}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.ViewVariantsModule.NetStandard", "..\..\..\Program Files\DevExpress 23.1\Components\Sources\DevExpress.ExpressApp.Modules\DevExpress.ExpressApp.ViewVariantsModule\DevExpress.ExpressApp.ViewVariantsModule.NetStandard.csproj", "{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,26 +50,6 @@ Global
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DCC6B7D-F550-4243-A59E-CF483B1DE441}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39E0DE91-4458-44FA-9320-55F94BD812AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39E0DE91-4458-44FA-9320-55F94BD812AB}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
-		{39E0DE91-4458-44FA-9320-55F94BD812AB}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
-		{39E0DE91-4458-44FA-9320-55F94BD812AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39E0DE91-4458-44FA-9320-55F94BD812AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22A876ED-DA65-4203-B8B3-3103ED717A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22A876ED-DA65-4203-B8B3-3103ED717A7E}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
-		{22A876ED-DA65-4203-B8B3-3103ED717A7E}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
-		{22A876ED-DA65-4203-B8B3-3103ED717A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22A876ED-DA65-4203-B8B3-3103ED717A7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A809D4C-54EF-4564-B3A5-775379741792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A809D4C-54EF-4564-B3A5-775379741792}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A809D4C-54EF-4564-B3A5-775379741792}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
-		{5A809D4C-54EF-4564-B3A5-775379741792}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A809D4C-54EF-4564-B3A5-775379741792}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
-		{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6B45D02-A642-417D-9FB2-C94FD5A8CAE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
