@@ -8,7 +8,6 @@ using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.XtraGrid;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
@@ -18,6 +17,7 @@ using OutlookInspired.Tests.ImportData.Extensions;
 namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]
     public class DashboardListView:TestBase{
+        
         [TestCase("Opportunities", null,4)]
         [TestCase("OrderListView", "Detail",12)]
         [TestCase("OrderListView", "OrderListView",12)]
@@ -31,10 +31,10 @@ namespace OutlookInspired.Tests.ImportData{
             using var application = await SetupWinApplication();
             application.Model.Options.UseServerMode = false;
 
-            var assertDashboardListView = application.AssertDashboardListView(navigationView, viewVariant);
-            var assertFilterAction = assertDashboardListView.AssertFilterAction(filtersCount);
+            var dashboardListView = application.AssertDashboardListView(navigationView, viewVariant);
+            var assertFilterAction = dashboardListView.AssertFilterAction(filtersCount);
             
-            application.StartWinTest(assertDashboardListView
+            application.StartWinTest(dashboardListView
                     .MergeToUnit(assertFilterAction)
                     // .DoNotComplete()
             );
@@ -42,23 +42,19 @@ namespace OutlookInspired.Tests.ImportData{
     }
 
     static class DashboardListViewExtensions{
-        internal static IObservable<Unit> AssertFilterAction(this IObservable<DashboardViewItem> source, int filtersCount){
-            var action = source.Select(item => item.Frame)
-                .AssertSingleChoiceAction<ViewFilter>(ViewFilterController.FilterViewActionId, filtersCount);
-            return action
-                .AssertFilters(filtersCount)
-                .AssertAddNewFilter( action).ToUnit();
-        }
+        internal static IObservable<Unit> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
+            => source.AssertSingleChoiceAction<ViewFilter>(ViewFilterController.FilterViewActionId, filtersCount)
+                .AssertFilterAction(filtersCount);
+
+        private static IObservable<Unit> AssertFilterAction(this IObservable<SingleChoiceAction> source, int filtersCount) 
+            => source.AssertFilters(filtersCount).AssertAddNewFilter( source).ToUnit();
 
         private static IObservable<ChoiceActionItem> AssertAddNewFilter(this IObservable<object> filters, IObservable<SingleChoiceAction> action) 
             => filters.ViewFilterView( action)
                 .SelectMany(t => t.frame.View.WhenActivated().To(t))
                 .SelectMany(t => {
                     var gridView = ((GridListEditor)t.frame.View.ToListView().Editor).GridView;
-                    gridView.AddNewRow();
-                    gridView.FocusedRowHandle = GridControl.NewItemRowHandle;
-                    gridView.SetRowCellValue(gridView.FocusedRowHandle, nameof(ViewFilter.Name), "test");
-                    gridView.UpdateCurrentRow();
+                    gridView.AddNewRow((nameof(ViewFilter.Name), "test"));
                     return t.frame.GetController<DialogController>().AcceptAction.Trigger(t.source.View.WhenDataSourceChanged().To(t.source));
                 })
                 .SelectMany(frame => frame.Action<SingleChoiceAction>(ViewFilterController.FilterViewActionId).Items<ViewFilter>()
@@ -71,7 +67,7 @@ namespace OutlookInspired.Tests.ImportData{
 
         private static IObservable<(Frame frame, Frame source)> ViewFilterView(this IObservable<object> filters, IObservable<SingleChoiceAction> action) 
             => filters.IgnoreElements().To<(Frame frame, Frame source)>()
-                .Concat(action.SelectMany(choiceAction => choiceAction.Trigger(choiceAction.Application.AssertListViewHasObjects(typeof(ViewFilter))
+                .Concat(action.SelectMany(choiceAction => choiceAction.Trigger(choiceAction.Application.AssertListViewHasObjects(typeof(ViewFilter)).ToFirst()
                     .Select(frame => (frame, source: choiceAction.Controller.Frame)), choiceAction.Items.First)));
 
         private static IObservable<object> AssertFilters(this IObservable<SingleChoiceAction> source,int filtersCount) 

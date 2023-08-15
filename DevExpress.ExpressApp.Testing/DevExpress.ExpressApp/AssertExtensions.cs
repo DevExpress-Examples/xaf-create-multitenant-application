@@ -14,12 +14,12 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         public static IObservable<Frame> AssertChangeViewVariant(this IObservable<Frame> source,string variantId) 
             => source.If(_ => variantId!=null,frame => frame.Observe().ChangeViewVariant(variantId),frame => frame.Observe()).Assert($"{nameof(AssertChangeViewVariant)} {variantId}");
         
-        public static IObservable<Unit> AssertProcessSelectedObject(this IObservable<Window> source)
+        public static IObservable<Unit> AssertProcessSelectedObject(this IObservable<Frame> source)
             => source.SelectMany(window => window.AssertProcessSelectedObject());
-        public static IObservable<Unit> AssertProcessSelectedObject(this Window window) 
-            => window.ProcessSelectedObject().Assert($"{nameof(AssertProcessSelectedObject)} {window.View.Id}");
+        public static IObservable<Unit> AssertProcessSelectedObject(this Frame frame) 
+            => frame.ProcessSelectedObject().Assert($"{nameof(AssertProcessSelectedObject)} {frame.View.Id}");
         
-        public static IObservable<Frame> AssertCreateNewObject(this Window window)
+        public static IObservable<Frame> AssertCreateNewObject(this Frame window)
             => window.CreateNewObject().Assert();
 
         public static IObservable<Frame> AssertSaveNewObject(this IObservable<Frame> source)
@@ -29,7 +29,7 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             => source.WhenDeleteObject().SelectMany(t => t.application.CreateObjectSpace()
                 .Use(space => space.GetObjectByKey(t.type,t.keyValue).Observe().Select(o => o).WhenDefault())).Assert().ToUnit();
 
-        public static IObservable<Frame> AssertCreateNewObject(this IObservable<Window> source)
+        public static IObservable<Frame> AssertCreateNewObject(this IObservable<Frame> source)
             => source.SelectMany(window => window.AssertCreateNewObject());
         
         
@@ -37,34 +37,42 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             => application.WhenExistingObjectRootDetailViewFrame(objectType).CloseWindow()
                 .Assert($"{nameof(AssertExistingObjectDetailView)} {objectType?.Name}").ToUnit();
 
-        public static IObservable<DashboardViewItem> AssertDashboardViewItems(this Window frame,ViewType viewType,params Type[] objectTypes) 
+        public static IObservable<DashboardViewItem> AssertDashboardViewItems(this Frame frame,ViewType viewType,params Type[] objectTypes) 
             => frame.AssertDashboardViewItems(viewType,_ => true,objectTypes);
-        public static IObservable<DashboardViewItem> AssertDashboardViewItems(this Window frame,ViewType viewType,Func<DashboardViewItem,bool> match,params Type[] objectTypes) 
+        public static IObservable<DashboardViewItem> AssertDashboardViewItems(this Frame frame,ViewType viewType,Func<DashboardViewItem,bool> match,params Type[] objectTypes) 
             => frame.DashboardViewItems(viewType,objectTypes).Where(match).ToNowObservable().Assert();
 
-        public static IObservable<DashboardViewItem> AssertDashboardListView(this XafApplication application,string navigationView, string viewVariant){
-            var dashboardViewFrame = application.AssertFrame(ViewType.DashboardView).Cast<Window>();
-            var navigate = application.AssertNavigation(navigationView);
-            var changeViewVariant = dashboardViewFrame.AssertChangeViewVariant(viewVariant).Cast<Window>();
-            var listViewFrame = changeViewVariant.AssertMasterFrame();
-            var hasRecords = dashboardViewFrame.AssertWindowHasObjects();
-            var processSelectedObject = dashboardViewFrame.AssertProcessSelectedObject();
-            var existingObjectRootDetailView = application.AssertExistingObjectDetailView();
-            var newSaveDeleteObject = dashboardViewFrame.AssertCreateNewObject()
-                .AssertSaveNewObject().AssertDeleteObject();
+        public static IObservable<Frame> AssertListView(this XafApplication application,string navigation, string viewVariant=null) 
+            => application.AssertNavigation(navigation)
+                .AssertChangeViewVariant(viewVariant)
+                .AssertListView()
+                .Assert($"{nameof(AssertListView)} {navigation} {viewVariant}");
 
-            var gridControlDetailViewObjects = dashboardViewFrame.AssertGridControlDetailViewObjects();
-            return navigate
-                .Merge(changeViewVariant)
-                .Merge(hasRecords)
+        private static IObservable<Frame> AssertListView(this IObservable<Frame> listView){
+            var listViewHasObjects = listView.AssertListViewHasObjects();
+            var processSelectedObject = listView.AssertProcessSelectedObject();
+            var existingObjectRootDetailView = listView.SelectMany(window => window.Application.AssertExistingObjectDetailView());
+            var newSaveDeleteObject = listView.AssertCreateNewObject()
+                .AssertSaveNewObject().AssertDeleteObject();
+            var gridControlDetailViewObjects = listView.AssertGridControlDetailViewObjects();
+
+            return listView
+                .Merge(listView)
+                .Merge(listViewHasObjects.ToSecond())
                 .MergeToUnit(processSelectedObject)
-                // .MergeToUnit(listViewFrame)
-                .Merge(existingObjectRootDetailView)
+                .MergeToUnit(existingObjectRootDetailView)
                 .ConcatToUnit(newSaveDeleteObject)
                 .ConcatToUnit(gridControlDetailViewObjects)
-                .IgnoreElements().To<DashboardViewItem>()
-                .Concat(listViewFrame).Assert();
+                .IgnoreElements().To<Frame>()
+                .Concat(listView);
         }
+        
+        public static IObservable<Frame> AssertDashboardListView(this XafApplication application,string navigationView, string viewVariant=null) 
+            => application.AssertNavigation(navigationView)
+                .AssertChangeViewVariant(viewVariant)
+                .AssertMasterFrame().Select(item => item.Frame)
+                .AssertListView()
+                .Assert($"{nameof(AssertDashboardListView)} {navigationView} {viewVariant}");
 
         public static IObservable<object> AssertObjectsCount(this View view, int objectsCount) 
             => view.WhenDataSourceChanged().FirstAsync(o => o is CollectionSourceBase collectionSourceBase
@@ -75,10 +83,10 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
             => view is ListView listView ? listView.CollectionSource.WhenCriteriaApplied()
                 : view.ToDetailView().WhenControlViewItemGridControl().SelectMany(control => control.WhenDataSourceChanged().To(control));
 
-        private static IObservable<DashboardViewItem> AssertMasterFrame(this IObservable<Window> source) 
-            => source.SelectMany(window => window.DashboardViewItems(ViewType.DetailView)
+        private static IObservable<DashboardViewItem> AssertMasterFrame(this IObservable<Frame> source) 
+            => source.SelectMany(frame => frame.DashboardViewItems(ViewType.DetailView)
                 .Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide).ToNowObservable()
-                    .SwitchIfEmpty(Observable.Defer(() => window.AssertDashboardViewItems(ViewType.ListView)))).Assert();
+                    .SwitchIfEmpty(frame.AssertDashboardViewItems(ViewType.ListView))).Assert();
 
         public static IObservable<DashboardViewItem> AssertDashboardDetailView(this XafApplication application,string navigationId,string viewVariant){
             var navigate = application.AssertNavigation(navigationId);
@@ -110,15 +118,15 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
         public static IObservable<TTabbedControl> AssertTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
             => source.WhenTabControl<TTabbedControl>().Assert();
 
-        public static IObservable<object> AssertWindowHasObjects(this IObservable<Window> source)
-            => source.If(window => window.DashboardViewItems<DetailView>().Any(),window => window.Observe().WhenObjects()
+        public static IObservable<object> AssertWindowHasObjects(this IObservable<Frame> source)
+            => source.If(window => window.DashboardViewItems<DetailView>().Any(),window => window.Observe().WhenObjects().ToSecond()
                     .Assert($"{nameof(AssertWindowHasObjects)} {window.View.Id}"),
                 window => window.DashboardViewItems<ListView>().ToNowObservable().BufferUntilCompleted()
                     .SelectMany(listViews => listViews.ToNowObservable().SelectMany(listView => listView.WhenObjects().Take(1))
                         .Take(listViews.Length))
                     .Assert($"{nameof(AssertWindowHasObjects)} {window.View.Id}"));
         
-        public static IObservable<object> AssertGridControlDetailViewObjects(this IObservable<Window> source)
+        public static IObservable<object> AssertGridControlDetailViewObjects(this IObservable<Frame> source)
             => source.WhenGridControlDetailViewObjects().Assert();
 
         public static IObservable<Unit> AssertDetailViewNotHaveObject(this IObservable<DashboardViewItem> source)
@@ -139,11 +147,14 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 .WhenNotDefault(detailView => detailView.CurrentObject)
                 .Assert().ToUnit();
 
-        public static IObservable<Frame> AssertListViewHasObjects(this IObservable<Frame> source)
-            => source.SelectMany(frame => frame.View.ToListView().WhenObjects().To(frame))
-                .Assert($"{nameof(AssertListViewHasObjects)}");
+        public static IObservable<(Frame frame, object o)> AssertListViewHasObjects(this IObservable<Frame> source)
+            => source.AssertObjectViewHasObjects();
+            // => source.SelectMany(frame => frame.View.ToListView().WhenObjects().To(frame))
+                // .Assert($"{nameof(AssertListViewHasObjects)}");
+        public static IObservable<(Frame frame, object o)> AssertObjectViewHasObjects(this IObservable<Frame> source)
+            => source.WhenObjects().Assert();
         
-        public static IObservable<Frame> AssertListViewHasObjects(this XafApplication application,Type objectType) 
+        public static IObservable<(Frame frame, object o)> AssertListViewHasObjects(this XafApplication application,Type objectType) 
             => application.WhenFrame(objectType,ViewType.ListView).AssertListViewHasObjects()
                 .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
         

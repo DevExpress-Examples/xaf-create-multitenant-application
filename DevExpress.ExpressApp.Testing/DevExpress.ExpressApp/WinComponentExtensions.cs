@@ -14,6 +14,12 @@ using DevExpress.XtraScheduler.Xml;
 
 namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
     public static class WinComponentExtensions{
+        public static void AddNewRow(this GridView gridView,params (string fieldName,object value)[] values){
+            gridView.AddNewRow();
+            gridView.FocusedRowHandle = GridControl.NewItemRowHandle;
+            values.Do(t => gridView.SetRowCellValue(gridView.FocusedRowHandle, t.fieldName, t.value)).Enumerate();
+            gridView.UpdateCurrentRow();
+        } 
         public static string YearlyOnWorkDayRecurrenceInfoXml(this DateTime now) 
             => new RecurrenceInfoXmlPersistenceHelper(new RecurrenceInfo(now){
                 Type = RecurrenceType.Yearly, Periodicity = 1, Month = now.Month, WeekOfMonth = WeekOfMonth.First,

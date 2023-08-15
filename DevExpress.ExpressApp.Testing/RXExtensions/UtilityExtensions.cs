@@ -86,7 +86,8 @@ namespace DevExpress.ExpressApp.Testing.RXExtensions{
 
         public static IObservable<SingleChoiceAction> AssertSingleChoiceAction<TItemDataType>(this IObservable<Frame> source,string actionId,int itemsCount) 
             => source.Select(frame => frame.Action<SingleChoiceAction>(actionId)).Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
-                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction)).Assert();
+                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction))
+                .Assert($"{nameof(AssertSingleChoiceAction)} {actionId} {itemsCount}");
 
         public static IObservable<TSource> Assert<TSource>(
             this IObservable<TSource> source, TimeSpan? timeout = null, [CallerMemberName] string caller = "") 
