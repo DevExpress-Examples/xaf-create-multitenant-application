@@ -5,9 +5,9 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using DevAV = DevExpress.DevAV;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
+using XAF.Testing.RX;
 using StateEnum = DevExpress.DevAV.StateEnum;
 
 namespace OutlookInspired.Tests.ImportData.Extensions{

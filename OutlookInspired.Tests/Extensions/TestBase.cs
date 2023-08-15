@@ -1,11 +1,11 @@
-﻿using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Testing.RXExtensions;
-using DevExpress.ExpressApp.Win;
+﻿using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using OutlookInspired.Win;
 using OutlookInspired.Win.Extensions;
+using XAF.Testing.RX;
+using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Extensions{
     public abstract class TestBase{

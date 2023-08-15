@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using XAF.Testing.RX;
+using ListView = DevExpress.ExpressApp.ListView;
+using View = DevExpress.ExpressApp.View;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{
         public static IObservable<(ListView listView, XafApplication application)> WhenListViewCreated(this IObservable<XafApplication> source,Type objectType=null) 
             => source.SelectMany(application => application.WhenListViewCreated(objectType).Pair(application));

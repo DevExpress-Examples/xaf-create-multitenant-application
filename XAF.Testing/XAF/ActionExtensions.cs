@@ -2,10 +2,11 @@
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class ActionExtensions{
         public static IEnumerable<ChoiceActionItem> Items<T>(this SingleChoiceAction action)
             => action.Items.Where(item => item.Data is T);

@@ -2,11 +2,12 @@
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using DevExpress.ExpressApp;
+using XAF.Testing.RX;
 using Observable = System.Reactive.Linq.Observable;
 using Unit = System.Reactive.Unit;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
         
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 

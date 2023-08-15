@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using DevExpress.ExpressApp.Model;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class ModelExtensions{
         public static T CreateInstance<T>(this Type type) => (T)CreateInstance(type);
 

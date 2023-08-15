@@ -3,16 +3,15 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win.Editors;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Tests.ImportData.Extensions;
+using XAF.Testing.RX;
+using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]

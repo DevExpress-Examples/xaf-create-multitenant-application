@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp.DC;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class TypesInfoExtensions{
         
         public static Version XAFVersion(this ITypesInfo typesInfo) 

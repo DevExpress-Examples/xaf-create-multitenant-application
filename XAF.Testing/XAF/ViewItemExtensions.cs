@@ -1,9 +1,9 @@
 ﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class ViewItemExtensions{
         public static IObservable<TTabbedControl> WhenTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
             => source.SelectMany(item => item.Frame.View.ToDetailView().WhenTabControl().Cast<TTabbedControl>());

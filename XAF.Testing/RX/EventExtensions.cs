@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class EventExtensions{
         private static readonly ConcurrentDictionary<(Type type, string eventName),(EventInfo info,MethodInfo add,MethodInfo remove)> Events = new();
         public static readonly IScheduler ImmediateScheduler=Scheduler.Immediate;

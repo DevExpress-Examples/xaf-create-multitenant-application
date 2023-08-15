@@ -28,7 +28,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\DevExpress.ExpressApp.Testing\DevExpress.ExpressApp.Testing.csproj" />
+        <ProjectReference Include="..\XAF.Testing\XAF.Testing.csproj" />
         <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
         <ProjectReference Include="..\OutlookInspired.Win\OutlookInspired.Win.csproj" />
     </ItemGroup>

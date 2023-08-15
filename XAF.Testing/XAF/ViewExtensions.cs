@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.XtraGrid;
+using XAF.Testing.RX;
+using ListView = DevExpress.ExpressApp.ListView;
+using View = DevExpress.ExpressApp.View;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class ViewExtensions{
         internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
             => view.FitsCore( viewType) && view.FitsCore( nesting) &&

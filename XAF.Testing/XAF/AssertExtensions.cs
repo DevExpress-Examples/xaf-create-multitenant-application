@@ -1,12 +1,15 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Templates;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.XtraGrid;
 using DevExpress.XtraPdfViewer;
+using XAF.Testing.RX;
+using ListView = DevExpress.ExpressApp.ListView;
+using View = DevExpress.ExpressApp.View;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class AssertExtensions{
         public static IObservable<Frame> AssertFrame(this XafApplication application, params ViewType[] viewTypes) 
             => application.WhenFrame(viewTypes).Assert($"{nameof(AssertFrame)} {string.Join(", ",viewTypes)}");

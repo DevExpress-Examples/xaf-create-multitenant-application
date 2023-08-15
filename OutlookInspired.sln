@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutlookInspired.Win", "Outl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookInspired.Tests", "OutlookInspired.Tests\OutlookInspired.Tests.csproj", "{1E27F963-3533-4F8B-9348-A9CE5B96F4DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.ExpressApp.Testing", "DevExpress.ExpressApp.Testing\DevExpress.ExpressApp.Testing.csproj", "{7DCC6B7D-F550-4243-A59E-CF483B1DE441}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAF.Testing", "XAF.Testing\XAF.Testing.csproj", "{7DCC6B7D-F550-4243-A59E-CF483B1DE441}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{93F1F9BB-409D-40F8-BB53-CE32388C3C5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,5 +55,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7DCC6B7D-F550-4243-A59E-CF483B1DE441} = {93F1F9BB-409D-40F8-BB53-CE32388C3C5E}
+		{1E27F963-3533-4F8B-9348-A9CE5B96F4DB} = {93F1F9BB-409D-40F8-BB53-CE32388C3C5E}
 	EndGlobalSection
 EndGlobal

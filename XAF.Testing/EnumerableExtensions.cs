@@ -1,7 +1,4 @@
-namespace DevExpress.ExpressApp.Testing{
-    // Usage:
-// ScreenCapture.CaptureActiveWindowAndSave("C:\\path\\to\\save\\screenshot.png");
-
+namespace XAF.Testing{
     public static class EnumerableExtensions{
         public static void Enumerate<T>(this IEnumerable<T> source) {
             using var e = source.GetEnumerator();

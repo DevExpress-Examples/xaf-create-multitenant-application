@@ -3,10 +3,11 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
+using XAF.Testing.XAF;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class UtilityExtensions{
         public static IObservable<T> SubscribeReplay<T>(this IObservable<T> source, int bufferSize = 0){
             var replay = bufferSize > 0 ? source.Replay(bufferSize) : source.Replay();

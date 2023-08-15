@@ -2,9 +2,9 @@
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class LayoutManagerExtensions{
         public static IObservable<LayoutManager> WhenLayoutCreated(this LayoutManager layoutManager) 
             => layoutManager.WhenEvent(nameof(layoutManager.LayoutCreated)).To(layoutManager);

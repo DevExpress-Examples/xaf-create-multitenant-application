@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Reactive.Linq;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class FilterExtensions{
         public static IObservable<TSource> WhenDefault<TSource>(this IObservable<TSource> source) 
             => source.Where(obj => obj.IsDefaultValue());

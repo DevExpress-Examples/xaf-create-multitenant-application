@@ -1,17 +1,20 @@
 ﻿using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.ExpressApp.ViewVariantsModule;
 using DevExpress.Utils.Controls;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
+using XAF.Testing.RX;
+using ListView = DevExpress.ExpressApp.ListView;
 using Unit = System.Reactive.Unit;
+using View = DevExpress.ExpressApp.View;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class FrameExtensions{
         public static bool When<T>(this T frame, params Nesting[] nesting) where T : Frame 
             => nesting.Any(item => item == Nesting.Any || frame is NestedFrame && item == Nesting.Nested ||

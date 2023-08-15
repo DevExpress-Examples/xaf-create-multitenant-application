@@ -2,7 +2,7 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class BufferExtensions{
         public static IObservable<IList<T>> BufferUntilInactive<T>(this IObservable<T> source, TimeSpan delay,IScheduler scheduler=null)
             => source.BufferUntilInactive(delay,window => window.ToList(),scheduler);

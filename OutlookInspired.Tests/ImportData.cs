@@ -1,5 +1,4 @@
 using System.Reactive.Linq;
-using DevExpress.ExpressApp.Testing.DevExpress.ExpressApp;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;

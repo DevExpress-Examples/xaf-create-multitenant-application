@@ -1,9 +1,10 @@
 ﻿using System.Reactive.Linq;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Persistent.BaseImpl.EF;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class TestExtensions{
         public static TestObserver<T> StartWinTest<T>(this WinApplication application, IObservable<T> test) 
             => application.Start( test, new WindowsFormsSynchronizationContext());

@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
 
-namespace DevExpress.ExpressApp.Testing{
+namespace XAF.Testing{
     public static class ReflectionExtensions{
         public static string ToValidFileName(this string input) {
             var invalidChars = Path.GetInvalidFileNameChars();

@@ -4,7 +4,7 @@ using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Unit = System.Reactive.Unit;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class TransformExtension{
         public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, IObservable<T2>> selector) 
             => source.Select(x => Observable.Defer(() => selector(x))).Concat();

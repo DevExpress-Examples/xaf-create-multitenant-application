@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using DevExpress.ExpressApp.Testing.RXExtensions;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Base.Handler;
@@ -11,8 +10,9 @@ using DevExpress.XtraGrid.Views.Layout;
 using DevExpress.XtraGrid.Views.Layout.Handler;
 using DevExpress.XtraScheduler;
 using DevExpress.XtraScheduler.Xml;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class WinComponentExtensions{
         public static void AddNewRow(this GridView gridView,params (string fieldName,object value)[] values){
             gridView.AddNewRow();
@@ -49,11 +49,11 @@ namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
                 }
             }
         }
-        public static IObservable<ColumnView> ProcessEvent(this IObservable<GridControl> source,global::DevExpress.Utils.Controls.EventType eventType)
+        public static IObservable<ColumnView> ProcessEvent(this IObservable<GridControl> source,DevExpress.Utils.Controls.EventType eventType)
             => source.Select(control => control.MainView).Cast<ColumnView>()
                 .SelectMany(layoutView => layoutView.ProcessEvent(eventType));
 
-        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView,global::DevExpress.Utils.Controls.EventType eventType) 
+        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView,DevExpress.Utils.Controls.EventType eventType) 
             => columnView.WhenEvent<FocusedRowObjectChangedEventArgs>(nameof(columnView.FocusedRowObjectChanged))
                 .WhenNotDefault(e => e.Row)
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))

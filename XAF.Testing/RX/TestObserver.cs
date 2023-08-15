@@ -1,4 +1,4 @@
-﻿namespace DevExpress.ExpressApp.Testing.RXExtensions{
+﻿namespace XAF.Testing.RX{
     public class TestObserver<T> : IObserver<T>{
         
         private readonly List<T> _items;

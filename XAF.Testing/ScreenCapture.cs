@@ -1,7 +1,6 @@
-using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
+namespace XAF.Testing;
 public static class ScreenCapture
 {
     [DllImport("user32.dll")]

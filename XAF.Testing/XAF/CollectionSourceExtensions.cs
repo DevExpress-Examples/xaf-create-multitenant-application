@@ -1,7 +1,8 @@
 ﻿using System.Reactive.Linq;
-using DevExpress.ExpressApp.Testing.RXExtensions;
+using DevExpress.ExpressApp;
+using XAF.Testing.RX;
 
-namespace DevExpress.ExpressApp.Testing.DevExpress.ExpressApp{
+namespace XAF.Testing.XAF{
     public static class CollectionSourceExtensions{
         public static IObservable<CollectionSourceBase> WhenCriteriaApplied(this CollectionSourceBase collectionSourceBase)
             => collectionSourceBase.WhenEvent(nameof(CollectionSourceBase.CriteriaApplied))

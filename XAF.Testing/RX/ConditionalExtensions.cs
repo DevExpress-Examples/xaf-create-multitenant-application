@@ -1,8 +1,7 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace DevExpress.ExpressApp.Testing.RXExtensions{
+namespace XAF.Testing.RX{
     public static class ConditionalExtensions{
         public static IConnectableObservable<T> TakeAndReplay<T>(this IObservable<T> source, int count)
             => source.Take(count).Replay(count);
