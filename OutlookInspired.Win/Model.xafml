@@ -130,7 +130,7 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
-    <ListView Id="Evaluation_ListView" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" SchedulerViewType="Year" SelectedIntervalStart="2020-01-01" SelectedIntervalEnd="2020-12-31" />
+    <ListView Id="Evaluation_ListView" SchedulerViewType="Year" SelectedIntervalStart="2020-01-01" SelectedIntervalEnd="2020-12-31" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
     <ListView Id="Event_ListView" ResourceClass="" />
     <DetailView Id="Order_DetailView_Child">
       <Items>
@@ -155,7 +155,7 @@
       </Layout>
     </DetailView>
     <ListView Id="Product_ListView" ShowFindPanel="True" />
-    <ListView Id="Quote_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor">
+    <ListView Id="Quote_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor" DataAccessMode="DataView">
       <Columns>
         <ColumnInfo Id="Opportunity" Width="127" />
         <ColumnInfo Id="City" PropertyName="CustomerStore.AddressCity" IsNewNode="True" />

@@ -1,4 +1,5 @@
 ﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Scheduler.Win;
 using DevExpress.XtraScheduler;
 using OutlookInspired.Module.BusinessObjects;
 
