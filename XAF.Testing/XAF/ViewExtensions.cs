@@ -13,6 +13,8 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class ViewExtensions{
+        public static IObservable<T> WhenClosing<T>(this T view) where T : View 
+            => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);
         internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
             => view.FitsCore( viewType) && view.FitsCore( nesting) &&
                (viewType==ViewType.DashboardView&&view is DashboardView||(objectType ?? typeof(object)).IsAssignableFrom(view.ObjectTypeInfo?.Type));

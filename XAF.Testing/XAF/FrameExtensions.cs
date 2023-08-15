@@ -16,6 +16,14 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class FrameExtensions{
+        public static IObservable<T> SelectUntilViewClosed<T,TFrame>(this IObservable<TFrame> source, Func<TFrame, IObservable<T>> selector) where TFrame:Frame 
+            => source.SelectMany(frame => selector(frame).TakeUntilViewClosed(frame));
+        
+        public static IObservable<T> SwitchUntilViewClosed<T,TFrame>(this IObservable<TFrame> source, Func<TFrame, IObservable<T>> selector) where TFrame:Frame 
+            => source.Select(frame => selector(frame).TakeUntilViewClosed(frame)).Switch();
+        
+        public static IObservable<TFrame> TakeUntilViewClosed<TFrame>(this IObservable<TFrame> source,Frame frame)  
+            => source.TakeUntil(frame.View.WhenClosing());
         public static bool When<T>(this T frame, params Nesting[] nesting) where T : Frame 
             => nesting.Any(item => item == Nesting.Any || frame is NestedFrame && item == Nesting.Nested ||
                                    !(frame is NestedFrame) && item == Nesting.Root);

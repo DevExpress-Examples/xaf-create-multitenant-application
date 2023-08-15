@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
@@ -57,6 +58,9 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<Frame> WhenFrame(this XafApplication application, params ViewType[] viewTypes) 
             => application.WhenFrame().WhenFrame(viewTypes);
+        
+        public static IObservable<ListPropertyEditor> WhenNestedFrame(this XafApplication application, Type parentObjectType,params Type[] objectTypes)
+            => application.WhenFrame(parentObjectType,ViewType.DetailView).SelectUntilViewClosed(frame => frame.NestedListViews(objectTypes));
         
         public static IObservable<Frame> WhenFrame(this XafApplication application, Func<Frame,Type> objectType,
             Func<Frame,ViewType> viewType = null, Nesting nesting = Nesting.Any) 

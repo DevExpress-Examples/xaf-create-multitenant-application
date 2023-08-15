@@ -493,7 +493,6 @@
       </Columns>
       <HiddenActions>
         <ActionLink ActionId="Link" IsNewNode="True" />
-        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="Unlink" IsNewNode="True" />
       </HiddenActions>
