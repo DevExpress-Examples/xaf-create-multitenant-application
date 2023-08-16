@@ -15,8 +15,8 @@ namespace XAF.Testing.RX{
             return replay;
         }
 
-        public static IObservable<T> Log<T>(this IObservable<T> source,[CallerMemberName]string caller="") 
-            => source.Do(_ => Console.WriteLine(caller));
+        public static IObservable<T> Log<T>(this IObservable<T> source,Func<T,string> messageFactory,[CallerMemberName]string caller="") 
+            => source.Do(_ => Console.WriteLine($"{caller} {messageFactory(_)}".TrimStart($"{nameof(Assert)} ".ToCharArray())));
 
         public static IObservable<T> ReplayConnect<T>(this IObservable<T> source, int bufferSize = 0) 
             => source.SubscribeReplay(bufferSize);
@@ -92,10 +92,12 @@ namespace XAF.Testing.RX{
 
         public static IObservable<TSource> Assert<TSource>(
             this IObservable<TSource> source, TimeSpan? timeout = null, [CallerMemberName] string caller = "") 
-            => source.Assert(caller, timeout);
+            => source.Assert(_ => caller, timeout);
 
-        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,string message,TimeSpan? timeout=null) 
-            => source.Log(message).ThrowIfEmpty(message).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval, message);
+        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null)
+            => source.Assert(_ => message, timeout);
+        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller="") 
+            => source.Log(messageFactory,caller).ThrowIfEmpty(messageFactory(default)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval, messageFactory(default));
         
         public static TestObserver<T> Test<T>(this IObservable<T> source){
             var testObserver = new TestObserver<T>();

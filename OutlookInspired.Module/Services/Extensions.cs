@@ -5,6 +5,16 @@ using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions {
+        public static byte[] Bytes(this Stream stream){
+            if (stream is MemoryStream memoryStream){
+                return memoryStream.ToArray();
+            }
+
+            using MemoryStream ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
         public static decimal RoundNumber(this decimal d, int decimals = 0) 
             => Math.Round(d, decimals);
         

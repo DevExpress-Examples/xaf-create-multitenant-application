@@ -5,9 +5,11 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using DevAV = DevExpress.DevAV;
 using DevExpress.ExpressApp;
+using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 using XAF.Testing.RX;
+using State = OutlookInspired.Module.BusinessObjects.State;
 using StateEnum = DevExpress.DevAV.StateEnum;
 
 namespace OutlookInspired.Tests.ImportData.Extensions{
@@ -293,19 +295,18 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 .SelectMany(sqlLite => {
                     var task = objectSpace.CreateObject<EmployeeTask>();
                     task.IdInt64 = sqlLite.Id;
-                    task.CustomerEmployee =
-                        objectSpace.FindSqlLiteObject<CustomerEmployee>(sqlLite.CustomerEmployee?.Id);
+                    task.CustomerEmployee = objectSpace.FindSqlLiteObject<CustomerEmployee>(sqlLite.CustomerEmployee?.Id);
+                    task.Owner = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Owner?.Id);
+                    task.AssignedEmployee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.AssignedEmployee?.Id);
                     task.Status = (EmployeeTaskStatus)sqlLite.Status;
                     task.Category = sqlLite.Category;
                     task.Completion = sqlLite.Completion;
                     task.Description = sqlLite.Description;
-                    task.Owner = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Owner?.Id);
                     task.Predecessors = sqlLite.Predecessors;
                     task.Priority = (EmployeeTaskPriority)sqlLite.Priority;
                     task.Private = sqlLite.Private;
                     task.Reminder = sqlLite.Reminder;
                     task.Subject = sqlLite.Subject;
-                    task.AssignedEmployee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.AssignedEmployee?.Id);
                     task.DueDate = sqlLite.DueDate;
                     task.FollowUp = (EmployeeTaskFollowUp)sqlLite.FollowUp;
                     task.ParentId = sqlLite.ParentId;
@@ -323,10 +324,11 @@ namespace OutlookInspired.Tests.ImportData.Extensions{
                 .Select(sqlLite => {
                     var taskAttachedFile = objectSpace.CreateObject<TaskAttachedFile>();
                     taskAttachedFile.IdInt64 = sqlLite.Id;
-                    taskAttachedFile.Name = sqlLite.Name;
-                    taskAttachedFile.EmployeeTask =
-                        objectSpace.FindSqlLiteObject<EmployeeTask>(sqlLite.EmployeeTask.Id);
-                    taskAttachedFile.Content = sqlLite.Content;
+                    var fileData = objectSpace.CreateObject<FileData>();
+                    fileData.FileName = sqlLite.Name;
+                    fileData.Content = sqlLite.Content;
+                    taskAttachedFile.File=fileData;
+                    taskAttachedFile.EmployeeTask = objectSpace.FindSqlLiteObject<EmployeeTask>(sqlLite.EmployeeTask.Id);
                     return taskAttachedFile;
                 }).ToUnit();
 

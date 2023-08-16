@@ -10,6 +10,10 @@
     <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\_Completed.png" />
+    <None Remove="Images\_Deferred.png" />
+    <None Remove="Images\_InProgress.png" />
+    <None Remove="Images\_NotStarted.png" />
     <None Remove="Model.DesignedDiffs.xafml" />
     
   </ItemGroup>
@@ -35,15 +39,7 @@
     <EmbeddedResource Include="Images\Ms.svg" />
     <None Remove="Images\AllTasks.png" />
     <EmbeddedResource Include="Images\AllTasks.png" />
-    <None Remove="Images\Completed.png" />
-    <EmbeddedResource Include="Images\Completed.png" />
-    <None Remove="Images\Deferred.png" />
-    <EmbeddedResource Include="Images\Deferred.png" />
     <EmbeddedResource Include="Images\HighPriority.png" />
-    <None Remove="Images\InProgress.png" />
-    <EmbeddedResource Include="Images\InProgress.png" />
-    <None Remove="Images\NotStarted.png" />
-    <EmbeddedResource Include="Images\NotStarted.png" />
     <None Remove="Images\PriorityHigh.svg" />
     <EmbeddedResource Include="Images\PriorityHigh.svg" />
     <None Remove="Images\PriorityLow.svg" />
@@ -52,8 +48,6 @@
     <EmbeddedResource Include="Images\PriorityNormal.svg" />
     <None Remove="Images\PriorityUrgent.svg" />
     <EmbeddedResource Include="Images\PriorityUrgent.svg" />
-    <None Remove="Images\ReadMe.txt" />
-    <EmbeddedResource Include="Images\ReadMe.txt" />
     <None Remove="Images\Urgent.png" />
     <EmbeddedResource Include="Images\Urgent.png" />
     
@@ -67,6 +61,16 @@
     <EmbeddedResource Include="Images\EvaluationNo.svg" />
     <None Remove="Images\EvaluationYes.svg" />
     <EmbeddedResource Include="Images\EvaluationYes.svg" />
+    <None Remove="Images\Commission.png" />
+    <EmbeddedResource Include="Images\Commission.png" />
+    <None Remove="Images\OnLeave.png" />
+    <EmbeddedResource Include="Images\OnLeave.png" />
+    <None Remove="Images\Probation.png" />
+    <EmbeddedResource Include="Images\Probation.png" />
+    <None Remove="Images\Salaried.png" />
+    <EmbeddedResource Include="Images\Salaried.png" />
+    <None Remove="Images\Terminated.png" />
+    <EmbeddedResource Include="Images\Terminated.png" />
   </ItemGroup>
   <ItemGroup>
 <!--    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />-->

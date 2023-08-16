@@ -25,11 +25,11 @@ namespace OutlookInspired.Tests.ImportData{
         private static IEnumerable TestCases{
             get{
                 yield return new TestCaseData("EmployeeListView","EmployeeListView", DashboardDetailViewExtensions.AssertEmployeeDetailView);
-                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView", DashboardDetailViewExtensions.AssertEmployeeDetailView);
-                // yield return new TestCaseData("CustomerListView","CustomerListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
-                // yield return new TestCaseData("CustomerListView","CustomerCardListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
-                // yield return new TestCaseData("ProductListView","ProductCardView", DashboardDetailViewExtensions.AssertProductDetailView);
-                // yield return new TestCaseData("ProductListView","ProductListView", DashboardDetailViewExtensions.AssertProductDetailView);
+                yield return new TestCaseData("EmployeeListView","EmployeeCardListView", DashboardDetailViewExtensions.AssertEmployeeDetailView);
+                yield return new TestCaseData("CustomerListView","CustomerListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
+                yield return new TestCaseData("CustomerListView","CustomerCardListView", DashboardDetailViewExtensions.AssertCustomerDetailView);
+                yield return new TestCaseData("ProductListView","ProductCardView", DashboardDetailViewExtensions.AssertProductDetailView);
+                yield return new TestCaseData("ProductListView","ProductListView", DashboardDetailViewExtensions.AssertProductDetailView);
             }
         }
     }
@@ -43,11 +43,13 @@ namespace OutlookInspired.Tests.ImportData{
         
         internal static IObservable<Unit> AssertEmployeeDetailView(this XafApplication application,IObservable<DashboardViewItem> itemSource){
             var tabControl = application.AssertTabControl<TabbedGroup>();
-            var evaluationsExist = application.AssertListViewHasObjects(typeof(Evaluation));
-            var tasksExist = application.AssertListViewHasObjects(typeof(EmployeeTask));
-            return itemSource.MergeToUnit(tabControl)
-                .Merge(evaluationsExist.ConcatToUnit(tabControl.Do(group => group.SelectedTabPageIndex = 1).ToUnit()))
-                .MergeToUnit(tasksExist);        
+            return itemSource.Merge(tabControl.IgnoreElements().To<DashboardViewItem>()).BufferUntilCompleted()
+                .SelectMany(items => items.AssertListView(typeof(Evaluation))
+                    .ConcatToUnit(tabControl.Do(group => group.SelectedTabPageIndex = 1))
+                    .ConcatToUnit(items.AssertListView(typeof(EmployeeTask))))
+                .ToUnit();
         }
+
+        
     }
 }

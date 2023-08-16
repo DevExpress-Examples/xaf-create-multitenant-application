@@ -25,15 +25,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[Browsable(false)]
 		public Int32 OleColor => 0;
-
-		//
-		// [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals")]
-		// public override void OnLoaded() {
-		// 	Int32 unused = Evaluations.Count;
-		// }
-
-		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))][Aggregated]
-		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new(); 
 		public virtual  EmployeeDepartment Department { get; set; }
 		[RuleRequiredField][FontSizeDelta(8)]
 		public virtual string Title { get; set; }
@@ -44,11 +35,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][Aggregated]
 		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } = new();
-
-		[InverseProperty(nameof(EmployeeTask.Owner))][Aggregated]
+		
+		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
+		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();
+		[InverseProperty(nameof(EmployeeTask.Owner))]
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
 		[InverseProperty(nameof(Evaluation.Employee))]
-		// [Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
 		[VisibleInListView(false)]
 		public virtual string PersonalProfile { get; set; }
@@ -127,11 +119,33 @@ namespace OutlookInspired.Module.BusinessObjects{
 	}
 
 	public enum EmployeeDepartment {
-		Sales = 1, Support, Shipping, Engineering, HumanResources, Management, IT
+		[ImageName(nameof(Sales))]
+		Sales = 1, 
+		[ImageName(nameof(Support))]
+		Support,
+		[ImageName("ProductQuickShippments")]
+		Shipping,
+		[ImageName("FunctionsEngineering")]
+		Engineering,
+		[ImageName("GroupByResource")]
+		HumanResources,
+		[ImageName("ManageRelations")]
+		Management,
+		[ImageName("Actions_Info")]
+		IT
 	}
 
 	public enum EmployeeStatus {
-		Salaried, Commission, Contract, Terminated, OnLeave
+		[ImageName("Salaried")]
+		Salaried,
+		[ImageName("Commission")]
+		Commission,
+		[ImageName("Contract")]
+		Contract,
+		[ImageName("Terminated")]
+		Terminated,
+		[ImageName("OnLeave")]
+		OnLeave
 	}
 
 }

@@ -27,7 +27,6 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual bool IsPurchaseAuthority { get; set; }
 		[Aggregated]
 		public virtual ObservableCollection<CustomerCommunication> CustomerCommunications{ get; set; } = new();
-		[Aggregated]
 		public virtual ObservableCollection<EmployeeTask> EmployeeTasks{ get; set; } = new();
 
 	}

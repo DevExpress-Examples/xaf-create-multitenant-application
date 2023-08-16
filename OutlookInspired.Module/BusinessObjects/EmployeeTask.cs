@@ -18,7 +18,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         [RuleRequiredField]
         [FontSizeDelta(8)]
         public virtual string Subject { get; set; }
+        [FieldSize(-1)]
         public virtual string Description { get; set; }
+        [FieldSize(-1)]
         public virtual string RtfTextDescription { get; set; }
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
@@ -37,6 +39,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Employee AssignedEmployee { get; set; }
         [Browsable(false)]
         public virtual Guid? AssignedEmployeeId { get; set; }
+        [Appearance("Disable Owner",AppearanceItemType.ViewItem, "1=1",Enabled = false)]
         public virtual Employee Owner { get; set; }
         [Browsable(false)]
         public virtual Guid? OwnerId { get; set; }
@@ -53,12 +56,23 @@ namespace OutlookInspired.Module.BusinessObjects{
         public override string ToString() => $"{Subject} - {Description}, due {DueDate}, {Status},\r\nOwner: {Owner}";
         public bool Overdue 
             => Status != EmployeeTaskStatus.Completed && DueDate.HasValue && DateTime.Now >= DueDate.Value.Date.AddDays(1);
+        [VisibleInDetailView(false)]
         public int AttachedFilesCount => AttachedFiles?.Count ?? 0;
+        [VisibleInDetailView(false)]
         public string AssignedEmployeesFullList => AssignedEmployees == null ? "" : string.Join(", ", AssignedEmployees.Select(x => x.FullName));
     }
 
     public enum EmployeeTaskStatus {
-        NotStarted, Completed, InProgress, NeedAssistance, Deferred
+        [ImageName(nameof(NotStarted))]
+        NotStarted,
+        [ImageName(nameof(Completed))]
+        Completed,
+        [ImageName(nameof(InProgress))]
+        InProgress,
+        [ImageName(nameof(NeedAssistance))]
+        NeedAssistance,
+        [ImageName(nameof(Deferred))]
+        Deferred
     }
     public enum EmployeeTaskPriority {
         [ImageName("PriorityLow")]
@@ -72,7 +86,18 @@ namespace OutlookInspired.Module.BusinessObjects{
     }
 
     public enum EmployeeTaskFollowUp {
-        Today, Tomorrow, ThisWeek, NextWeek, NoDate, Custom
+        [ImageName(nameof(Today))]
+        Today,
+        [ImageName(nameof(Tomorrow))]
+        Tomorrow,
+        [ImageName(nameof(ThisWeek))]
+        ThisWeek,
+        [ImageName(nameof(NextWeek))]
+        NextWeek,
+        [ImageName(nameof(NoDate))]
+        NoDate,
+        [ImageName(nameof(Custom))]
+        Custom
     }
 
 }

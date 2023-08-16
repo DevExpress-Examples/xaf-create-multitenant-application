@@ -15,7 +15,16 @@ namespace OutlookInspired.Module.BusinessObjects{
     }
     
     public enum Stage{
-        High, Medium, Low, Unlikely, Summary,
+        [ImageName(nameof(High))]
+        High,
+        [ImageName(nameof(Medium))]
+        Medium,
+        [ImageName(nameof(Low))]
+        Low,
+        [ImageName("Unlike")]
+        Unlikely,
+        [ImageName(nameof(Summary))]
+        Summary
     }
 
 }

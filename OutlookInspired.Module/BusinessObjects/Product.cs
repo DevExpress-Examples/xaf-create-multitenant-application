@@ -64,7 +64,16 @@ namespace OutlookInspired.Module.BusinessObjects{
     }
 
     public enum ProductCategory {
-        Automation, Monitors, Projectors, Televisions, VideoPlayers,
+        [ImageName(nameof(Automation))]
+        Automation,
+        [ImageName(nameof(Monitors))]
+        Monitors,
+        [ImageName(nameof(Projectors))]
+        Projectors,
+        [ImageName(nameof(Televisions))]
+        Televisions,
+        [ImageName(nameof(VideoPlayers))]
+        VideoPlayers
     }
 
 }
