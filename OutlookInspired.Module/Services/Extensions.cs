@@ -1,10 +1,13 @@
 using System.Reflection;
+using System.Text;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions {
+        public static string GetString(this byte[] bytes, Encoding encoding = null) 
+            => bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);
         public static byte[] Bytes(this Stream stream){
             if (stream is MemoryStream memoryStream){
                 return memoryStream.ToArray();

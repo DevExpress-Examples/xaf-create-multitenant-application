@@ -43,7 +43,14 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.Event));
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.Resource));
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.HCategory));
+		FixGridRendering();
     }
+
+    [Obsolete]
+    private void FixGridRendering(){
+	    DevExpress.Data.Helpers.ServerModeCache.DefaultForceStaSafeForReentryProtected = true;
+    }
+
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
         yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
     }

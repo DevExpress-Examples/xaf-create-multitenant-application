@@ -13,14 +13,15 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.ListView, EmployeeAssignedTasksListViewChild)]
     public class EmployeeTask:OutlookInspiredBaseObject{
         public const string EmployeeAssignedTasksListViewChild="Employee_AssignedTasks_ListView_Child";
-        [Aggregated]
+        
         public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
         [FontSizeDelta(8)]
         public virtual string Subject { get; set; }
-        [FieldSize(-1)]
+        [FieldSize(FieldSizeAttribute.Unlimited)]
         public virtual string Description { get; set; }
-        [FieldSize(-1)]
+        [FieldSize(FieldSizeAttribute.Unlimited)]
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
         public virtual string RtfTextDescription { get; set; }
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
@@ -43,6 +44,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Employee Owner { get; set; }
         [Browsable(false)]
         public virtual Guid? OwnerId { get; set; }
+        [Browsable(false)]
         public virtual CustomerEmployee CustomerEmployee { get; set; }
         public virtual  EmployeeTaskFollowUp FollowUp { get; set; }
         public  virtual bool Private { get; set; }

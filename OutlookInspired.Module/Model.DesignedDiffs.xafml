@@ -553,39 +553,48 @@
         <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView" />
     <DetailView Id="EmployeeTask_DetailView" FreezeLayout="True">
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
-          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="17.483189241114314" Caption="SimpleEditors" IsNewNode="True">
-            <LayoutGroup Id="Auto5979afa5-292f-4c8c-940b-a329f0f3f6d1" ShowCaption="False" Caption="" Direction="Horizontal" Index="0" RelativeSize="83.51648351648352" IsNewNode="True">
-              <LayoutGroup Id="Auto442dc663-4182-4d5a-8cf1-62de700057a9" ShowCaption="False" Caption="" Index="0" RelativeSize="49.96326230712711" IsNewNode="True">
-                <LayoutItem Id="Subject" ViewItem="Subject" Index="0" RelativeSize="21.05263157894737" IsNewNode="True" />
-                <LayoutItem Id="StartDate" ViewItem="StartDate" Index="1" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="Category" ViewItem="Category" Index="2" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="Private" ViewItem="Private" Index="3" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="AssignedEmployee" ViewItem="AssignedEmployee" Index="4" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="CustomerEmployee" ViewItem="CustomerEmployee" Index="5" RelativeSize="15.789473684210526" IsNewNode="True" />
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="12.295869356388089" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutGroup Id="Auto5979afa5-292f-4c8c-940b-a329f0f3f6d1" ShowCaption="False" Caption="Auto5979afa5-292f-4c8c-940b-a329f0f3f6d1(3)" Direction="Horizontal" Index="0" RelativeSize="100" IsNewNode="True">
+              <LayoutGroup Id="Auto442dc663-4182-4d5a-8cf1-62de700057a9" ShowCaption="False" Caption="Auto442dc663-4182-4d5a-8cf1-62de700057a9(4)" Index="0" RelativeSize="49.70631424375918" IsNewNode="True">
+                <LayoutItem Id="Subject" ViewItem="Subject" Index="0" RelativeSize="25" IsNewNode="True" />
+                <LayoutItem Id="StartDate" ViewItem="StartDate" Index="1" RelativeSize="18.75" IsNewNode="True" />
+                <LayoutItem Id="Owner" ViewItem="Owner" Index="2" RelativeSize="18.75" IsNewNode="True" />
+                <LayoutItem Id="AssignedEmployee" ViewItem="AssignedEmployee" Index="3" RelativeSize="37.5" IsNewNode="True" />
               </LayoutGroup>
-              <LayoutGroup Id="Auto73145059-6b79-4322-98d0-81ef2a6189f9" ShowCaption="False" Caption="" Index="1" RelativeSize="50.03673769287289" IsNewNode="True">
-                <LayoutItem Id="Completion" ViewItem="Completion" Index="0" RelativeSize="21.05263157894737" IsNewNode="True" />
-                <LayoutGroup Id="Autoe64350a1-43b8-4366-a442-722080e20da7" ShowCaption="False" Caption="" Direction="Horizontal" Index="1" RelativeSize="15.789473684210526" IsNewNode="True">
-                  <LayoutItem Id="DueDate" ViewItem="DueDate" Index="0" RelativeSize="49.926578560939795" IsNewNode="True" />
-                  <LayoutItem Id="Overdue" ViewItem="Overdue" Index="1" RelativeSize="50.073421439060205" IsNewNode="True" />
+              <LayoutGroup Id="Auto73145059-6b79-4322-98d0-81ef2a6189f9" ShowCaption="False" Caption="Auto73145059-6b79-4322-98d0-81ef2a6189f9(11)" Index="1" RelativeSize="50.29368575624082" IsNewNode="True">
+                <LayoutGroup Id="Autobde92749-14ac-4179-aa35-b0db870951da" ShowCaption="False" Caption="Autobde92749-14ac-4179-aa35-b0db870951da(10)" Direction="Horizontal" Index="0" RelativeSize="27.34375" IsNewNode="True">
+                  <LayoutItem Id="Status" ViewItem="Status" Index="0" RelativeSize="49.92700729927007" IsNewNode="True" />
+                  <LayoutItem Id="Completion" ViewItem="Completion" Index="1" RelativeSize="50.07299270072993" IsNewNode="True" />
                 </LayoutGroup>
-                <LayoutItem Id="Priority" ViewItem="Priority" Index="2" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="Status" ViewItem="Status" Index="3" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="Owner" ViewItem="Owner" Index="4" RelativeSize="15.789473684210526" IsNewNode="True" />
-                <LayoutItem Id="FollowUp" ViewItem="FollowUp" Index="5" RelativeSize="15.789473684210526" IsNewNode="True" />
+                <LayoutGroup Id="Auto8be7af5c-567e-4423-9cbe-e2d53ac61f38" ShowCaption="False" Caption="Auto8be7af5c-567e-4423-9cbe-e2d53ac61f38(13)" Index="1" RelativeSize="72.65625" IsNewNode="True">
+                  <LayoutGroup Id="Autoe64350a1-43b8-4366-a442-722080e20da7" ShowCaption="False" Caption="Autoe64350a1-43b8-4366-a442-722080e20da7(13)" Direction="Horizontal" Index="0" RelativeSize="35.483870967741936" IsNewNode="True">
+                    <LayoutItem Id="DueDate" ViewItem="DueDate" Index="0" RelativeSize="49.63503649635037" IsNewNode="True" />
+                    <LayoutItem Id="Overdue" ViewItem="Overdue" Index="1" RelativeSize="50.36496350364963" IsNewNode="True" />
+                  </LayoutGroup>
+                  <LayoutGroup Id="Auto876a3366-c972-466a-9557-d25c41e91a94" ShowCaption="False" Caption="Auto876a3366-c972-466a-9557-d25c41e91a94(17)" Direction="Horizontal" Index="1" RelativeSize="64.51612903225806" IsNewNode="True">
+                    <LayoutGroup Id="Autob0160692-1fb6-4559-b6ff-f7797d41bb40" ShowCaption="False" Caption="Autob0160692-1fb6-4559-b6ff-f7797d41bb40(18)" Index="0" RelativeSize="49.92700729927007" IsNewNode="True">
+                      <LayoutItem Id="Priority" ViewItem="Priority" Index="0" RelativeSize="50" IsNewNode="True" />
+                      <LayoutItem Id="Private" ViewItem="Private" Index="1" RelativeSize="50" IsNewNode="True" />
+                    </LayoutGroup>
+                    <LayoutItem Id="FollowUp" ViewItem="FollowUp" Index="1" RelativeSize="50.07299270072993" IsNewNode="True" />
+                  </LayoutGroup>
+                </LayoutGroup>
               </LayoutGroup>
             </LayoutGroup>
-            <LayoutItem Id="RtfTextDescription" ViewItem="RtfTextDescription" Index="1" RelativeSize="16.483516483516482" IsNewNode="True" />
           </LayoutGroup>
-          <TabbedGroup Id="Tabs" Index="1" RelativeSize="82.51681075888568" IsNewNode="True">
-            <LayoutGroup Id="AssignedEmployees" Index="0" ShowCaption="True" RelativeSize="100" IsNewNode="True">
-              <LayoutItem Id="AssignedEmployees" ViewItem="AssignedEmployees" ShowCaption="False" Index="0" RelativeSize="100" IsNewNode="True" />
+          <TabbedGroup Id="Tabs" Index="1" RelativeSize="87.70413064361192" IsNewNode="True">
+            <LayoutGroup Id="Item1" ShowCaption="True" CaptionLocation="Top" Direction="Vertical" Index="0" Caption="Description" RelativeSize="100" IsNewNode="True">
+              <LayoutItem Id="RtfTextDescription" ViewItem="RtfTextDescription" Index="0" RelativeSize="100" CaptionLocation="Top" ShowCaption="False" IsNewNode="True" />
             </LayoutGroup>
             <LayoutGroup Id="AttachedFiles" Index="1" ShowCaption="True" RelativeSize="100" IsNewNode="True">
               <LayoutItem Id="AttachedFiles" ViewItem="AttachedFiles" ShowCaption="False" Index="0" RelativeSize="100" IsNewNode="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="AssignedEmployees" Index="2" ShowCaption="True" RelativeSize="100" IsNewNode="True">
+              <LayoutItem Id="AssignedEmployees" ViewItem="AssignedEmployees" ShowCaption="False" Index="0" RelativeSize="100" IsNewNode="True" />
             </LayoutGroup>
           </TabbedGroup>
         </LayoutGroup>
@@ -916,6 +925,19 @@
               <LayoutItem Id="ParametersObjectType" ViewItem="ParametersObjectType" Index="1" IsNewNode="True" Removed="True" />
               <LayoutItem Id="DataTypeCaption" ViewItem="DataTypeCaption" Index="2" IsNewNode="True" Removed="True" />
               <LayoutItem Id="IsInplaceReport" Index="3" ViewItem="IsInplaceReport" />
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="TaskAttachedFile_DetailView" FreezeLayout="True">
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+            <LayoutGroup Id="TaskAttachedFile" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+              <LayoutItem Id="EmployeeTask" ViewItem="EmployeeTask" ShowCaption="" Index="0" RelativeSize="3.073967339097022" IsNewNode="True" />
+              <LayoutItem Id="File" ViewItem="File" ShowCaption="" Index="1" RelativeSize="2.3054755043227666" IsNewNode="True" />
+              <LayoutItem Id="Preview" ViewItem="Preview" ShowCaption="False" Index="2" CaptionLocation="Top" RelativeSize="94.6205571565802" IsNewNode="True" />
             </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>

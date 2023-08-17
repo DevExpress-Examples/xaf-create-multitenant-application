@@ -195,19 +195,20 @@ static class ModelCreating{
 
 	internal static ModelBuilder OnEmployeeTask(this ModelBuilder modelBuilder){
 	    var employeeTask = modelBuilder.Entity<EmployeeTask>();
-	    employeeTask.Ignore(task => task.AssignedEmployees);
+	    // employeeTask.Ignore(task => task.AssignedEmployees);
 	    employeeTask.HasOne(task => task.AssignedEmployee).WithMany(employee => employee.AssignedTasks).HasForeignKey(task => task.AssignedEmployeeId).OnDelete(DeleteBehavior.SetNull);
-	    // employeeTask.HasOne(task => task.Owner).WithMany(employee => employee.OwnedTasks).HasForeignKey(task => task.OwnerId).OnDelete(DeleteBehavior.Cascade);
+	    
 	    employeeTask.HasOne(task => task.CustomerEmployee).WithMany(employee => employee.EmployeeTasks);
 	    return modelBuilder;
     }
 
 	internal static ModelBuilder OnEmployee(this ModelBuilder modelBuilder){
 	    var employee = modelBuilder.Entity<Employee>();
-	    employee.Ignore(employee1 => employee1.AssignedEmployeeTasks);
+	    // employee.Ignore(employee1 => employee1.AssignedEmployeeTasks);
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
 	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);
+	    
 	    return modelBuilder;
 
 

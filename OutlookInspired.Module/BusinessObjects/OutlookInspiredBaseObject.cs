@@ -19,5 +19,10 @@ namespace OutlookInspired.Module.BusinessObjects{
             get => base.ObjectSpace;
             set => base.ObjectSpace=value;
         }
+
+        [Obsolete("Default property T1182433 ")]
+        public override string ToString(){
+            return base.ToString();
+        }
     }
 }

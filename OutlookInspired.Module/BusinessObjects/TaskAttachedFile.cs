@@ -2,6 +2,8 @@
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Services;
+using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -12,5 +14,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual FileData File { get; set; }
         [Browsable(false)]
         public virtual Guid? EmployeeTaskId{ get; set; }
+        
+        [EditorAlias(EditorAliases.RichTextPropertyEditor)]
+        public string Preview 
+            => File != null && Path.GetExtension(File.FileName) == ".rtf" ? File.Content.GetString() : null;
     }
 }
