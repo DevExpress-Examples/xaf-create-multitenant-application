@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using DevExpress.Data.Linq;
+using DevExpress.ExpressApp;
+using DevExpress.Utils.Controls;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Base.Handler;
@@ -14,6 +17,18 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class WinComponentExtensions{
+        public static int SelectRow<T>(this GridView gridView, T row) where T : class{
+            var rowHandle = gridView.FindRow(row);
+            gridView.MakeRowVisible(rowHandle);
+            gridView.SelectRow(rowHandle);
+            return rowHandle;
+        }
+        public static object FocusedRowObjectKey(this ColumnView columnView, IObjectSpace objectSpace) 
+            => columnView.IsServerMode ? columnView.FocusedRowObject : objectSpace.GetKeyValue(columnView.FocusedRowObject);
+        public static object FocusRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
+            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject
+                : objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
+
         public static void AddNewRow(this GridView gridView,params (string fieldName,object value)[] values){
             gridView.AddNewRow();
             gridView.FocusedRowHandle = GridControl.NewItemRowHandle;
@@ -49,17 +64,19 @@ namespace XAF.Testing.XAF{
                 }
             }
         }
-        public static IObservable<ColumnView> ProcessEvent(this IObservable<GridControl> source,DevExpress.Utils.Controls.EventType eventType)
-            => source.Select(control => control.MainView).Cast<ColumnView>()
-                .SelectMany(layoutView => layoutView.ProcessEvent(eventType));
+        public static IObservable<ColumnView> ProcessEvent(this IObservable<GridControl> source,EventType eventType)
+            => source.SelectMany(control => control.ProcessEvent(eventType));
 
-        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView,DevExpress.Utils.Controls.EventType eventType) 
+        public static IObservable<ColumnView> ProcessEvent(this GridControl control,EventType eventType) 
+            => ((ColumnView)control.MainView).ProcessEvent(eventType);
+
+        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView,EventType eventType) 
             => columnView.WhenEvent<FocusedRowObjectChangedEventArgs>(nameof(columnView.FocusedRowObjectChanged))
-                .WhenNotDefault(e => e.Row)
+                .WhenNotDefault(e => e.Row).StartWith(columnView.FocusedRowObject).WhenNotDefault()
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(Observable.Defer(() => {
-                    var row = columnView.FindRow(((IEnumerable)columnView.DataSource).Cast<object>().First());
+                    var row = columnView.FindRow(columnView.YieldDataSource().First());
                     columnView.Focus();
                     columnView.SelectRow(row);
                     columnView.SelectRow(2);
@@ -71,10 +88,12 @@ namespace XAF.Testing.XAF{
             => columnView is LayoutView layoutView ? new LayoutViewHandler(layoutView) : new GridHandler((GridView)columnView);
 
         public static IObservable<object> HasObjects(this IObservable<GridControl> source)
-            => source.Select(control => control.DataSource).Cast<IEnumerable>()
-                .WhenNotDefault().SelectMany(enumerable => enumerable.Cast<object>());
+            => source.SelectMany(control => control.MainView.YieldDataSource());
 
-
-
+        private static IEnumerable<object> YieldDataSource(this BaseView control) 
+            => control.DataSource == null ? Enumerable.Empty<object>() : control.DataSource is EntityServerModeSource source
+                ? source.QueryableSource.Cast<object>() : control.DataSource is EntityServerModeFrontEnd frontEndSource
+                    ? 0.Range(frontEndSource.Count).Select(i => frontEndSource[i]).Where(row => row != null)
+                    : ((IEnumerable)control.DataSource).Cast<object>();
     }
 }

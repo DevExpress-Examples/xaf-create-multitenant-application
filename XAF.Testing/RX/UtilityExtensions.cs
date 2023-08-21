@@ -16,7 +16,7 @@ namespace XAF.Testing.RX{
         }
 
         public static IObservable<T> Log<T>(this IObservable<T> source,Func<T,string> messageFactory,[CallerMemberName]string caller="") 
-            => source.Do(_ => Console.WriteLine($"{caller} {messageFactory(_)}".TrimStart($"{nameof(Assert)} ".ToCharArray())));
+            => source.Do(_ => Console.WriteLine($"{caller}: {messageFactory(_)}"));
 
         public static IObservable<T> ReplayConnect<T>(this IObservable<T> source, int bufferSize = 0) 
             => source.SubscribeReplay(bufferSize);
@@ -73,6 +73,15 @@ namespace XAF.Testing.RX{
                 }
             });
 
+        private static int _nestingLevel;
+        private static readonly TimeSpan BaseTimeout = TimeSpan.FromSeconds(30);
+        private static readonly TimeSpan MinimumTimeout = TimeSpan.FromSeconds(25);
+
+        public static IObservable<T> LayerTimeout<T>(this IObservable<T> source, string timeoutMessage,[CallerMemberName]string caller=""){
+            Interlocked.Increment(ref _nestingLevel);
+            var timeout = TimeSpan.FromSeconds(Math.Max(BaseTimeout.TotalSeconds - _nestingLevel , MinimumTimeout.TotalSeconds));
+            return source.Timeout(timeout,timeoutMessage).Finally(() => Interlocked.Decrement(ref _nestingLevel));
+        }
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source, TimeSpan dueTime, string timeoutMessage) 
             => source.Timeout(dueTime, Observable.Throw<TSource>(new TimeoutException(timeoutMessage)));
@@ -92,13 +101,15 @@ namespace XAF.Testing.RX{
 
         public static IObservable<TSource> Assert<TSource>(
             this IObservable<TSource> source, TimeSpan? timeout = null, [CallerMemberName] string caller = "") 
-            => source.Assert(_ => caller, timeout);
+            => source.Assert(_ => "",timeout,caller);
 
-        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null)
-            => source.Assert(_ => message, timeout);
+        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
+            => source.Assert(_ => message,timeout,caller);
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller="") 
-            => source.Log(messageFactory,caller).ThrowIfEmpty(messageFactory(default)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval, messageFactory(default));
-        
+            => source.Log(messageFactory, caller).ThrowIfEmpty(messageFactory.MessageFactory( caller)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval,messageFactory.MessageFactory( caller));
+
+        private static string MessageFactory<TSource>(this Func<TSource, string> messageFactory, string caller) => $"{caller}: {messageFactory(default)}";
+
         public static TestObserver<T> Test<T>(this IObservable<T> source){
             var testObserver = new TestObserver<T>();
             source.Subscribe(testObserver);

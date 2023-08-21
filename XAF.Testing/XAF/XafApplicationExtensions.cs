@@ -114,9 +114,20 @@ namespace XAF.Testing.XAF{
                     return frame.GetController<DeleteObjectsViewController>().DeleteAction
                         .Trigger(frame.WhenDisposedFrame().Select(_ => (type,keyValue,application)));
             });
+        public static IObservable<(Type type, object keyValue, XafApplication application, Frame source)> WhenDeleteObject(this IObservable<(Frame frame,Frame source)> source)
+            => source.SelectMany(t => {
+                    var keyValue = t.frame.View.ObjectSpace.GetKeyValue(t.frame.View.CurrentObject);
+                    var type = t.frame.View.ObjectTypeInfo.Type;
+                    var application = t.frame.Application;
+                    return t.frame.GetController<DeleteObjectsViewController>().DeleteAction
+                        .Trigger(t.frame.WhenDisposedFrame().Select(_ => (type,keyValue,application,t.source)));
+            });
         
 
-        public static IObservable<Frame> WhenSaveNewObject(this IObservable<Frame> source)
+        public static IObservable<(Frame frame, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame source)> source)
+            => source.SelectMany(t => t.frame.Observe().WhenSaveObject().To(t));
+        
+        public static IObservable<Frame> WhenSaveObject(this IObservable<Frame> source)
             => source.Do(frame => frame.GetController<ModificationsController>().SaveAction.DoExecute());
         
         public static IObservable<IObjectSpace> WhenObjectSpaceCreated(this XafApplication application,bool includeNonPersistent=true,bool includeNested=false) 

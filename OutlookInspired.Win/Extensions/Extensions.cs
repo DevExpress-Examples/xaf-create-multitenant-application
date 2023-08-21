@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp.DC;
+﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
@@ -10,6 +11,12 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Extensions{
     public static class Extensions{
+        
+
+        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
+            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject
+                : objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
+
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)
                 .Select(column => {
@@ -20,9 +27,7 @@ namespace OutlookInspired.Win.Extensions{
                 .WhereNotDefault()
                 .Do(t => pivotGridControl.RepositoryItems.Add(t.repositoryItem))
                 .ToDictionary(t => t.pivotGridField, t => t.repositoryItem);
-
         
-
         public static ColumnView ColumnView(this Control userControl) 
             => (ColumnView)userControl.Controls.OfType<GridControl>().First().MainView;
 

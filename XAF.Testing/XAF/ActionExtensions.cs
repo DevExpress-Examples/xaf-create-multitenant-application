@@ -8,9 +8,11 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class ActionExtensions{
+        public static Frame Frame(this ActionBase action) => action.Controller?.Frame;
         public static IEnumerable<ChoiceActionItem> Items<T>(this SingleChoiceAction action)
             => action.Items.Where(item => item.Data is T);
-        
+        public static IObservable<SimpleActionExecuteEventArgs> WhenExecuteCompleted(this SimpleAction action) 
+            => action.WhenEvent<ActionBaseEventArgs>(nameof(ActionBase.ExecuteCompleted)).Cast<SimpleActionExecuteEventArgs>().TakeUntilDisposed(action);
         public static IObservable<SimpleActionExecuteEventArgs> WhenExecuted(this SimpleAction action) 
             => action.WhenEvent<ActionBaseEventArgs>(nameof(SimpleAction.Executed)).Cast<SimpleActionExecuteEventArgs>().TakeUntilDisposed(action);
         public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterExecuted,params object[] selection)

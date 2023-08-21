@@ -6,6 +6,25 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.RX{
     public static class TransformExtension{
+        public static IObservable<TTarget> ConcatIgnoredValue<TSource,TTarget>(this IObservable<TSource> source, TTarget value) 
+            => source.Select(_ => default(TTarget)).WhenNotDefault().Concat(value.Observe());
+
+        public static IObservable<T> ConcatIgnored<T, T2>(this IObservable<T> source, IObservable<T2> secondSelector)
+            => source.ConcatIgnored(_ => secondSelector);
+        public static IObservable<T> ConcatIgnored<T,T2>(this IObservable<T> source,Func<T,IObservable<T2>> secondSelector,Func<T,bool> merge=null)
+            => source.SelectMany(arg => {
+                merge ??= _ => true;
+                return merge(arg) ? secondSelector(arg).IgnoreElements().ConcatIgnoredValue(arg).Finally(() => {}) : arg.Observe();
+            });
+        public static IObservable<T> ConcatIgnored<T>(this IObservable<T> source,Action<T> action,Func<T,bool> merge=null)
+            => source.SelectMany(arg => {
+                merge ??= _ => true;
+                if (merge(arg)) {
+                    action(arg);
+                    return Observable.Empty<T>().ConcatIgnoredValue(arg);
+                }
+                return arg.Observe();
+            });
         public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, IObservable<T2>> selector) 
             => source.Select(x => Observable.Defer(() => selector(x))).Concat();
         public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, Task<T2>> selector) 

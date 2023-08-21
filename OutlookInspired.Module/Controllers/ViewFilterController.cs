@@ -23,6 +23,7 @@ namespace OutlookInspired.Module.Controllers{
 
         public SingleChoiceAction FilterAction{ get; }
 
+        
         private void FilterView(){
             var criteria = FilterAction.SelectedItem.Data is ViewFilter viewFilter ? viewFilter.Criteria : null;
             var userControl = View.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>().FirstOrDefault();
@@ -65,7 +66,7 @@ namespace OutlookInspired.Module.Controllers{
 
         protected override void OnActivated(){
             base.OnActivated();
-            FilterAction.Active[nameof(ViewFilterController)] = View is ListView||Frame is NestedFrame;
+            FilterAction.Active[nameof(ViewFilterController)] = Frame.ParentIsDashboardView();
             AddFilterItems();
         }
         

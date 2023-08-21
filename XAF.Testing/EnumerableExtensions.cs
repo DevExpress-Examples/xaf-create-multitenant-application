@@ -1,5 +1,7 @@
 namespace XAF.Testing{
     public static class EnumerableExtensions{
+        public static IEnumerable<int> Range(this int start, int count)
+            => Enumerable.Range(start, count);
         public static void Enumerate<T>(this IEnumerable<T> source) {
             using var e = source.GetEnumerator();
             while (e.MoveNext()) { }

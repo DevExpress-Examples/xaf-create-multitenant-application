@@ -90,7 +90,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Guid? ManagerId{ get; set; }
         [RuleRequiredField]
         public virtual DateTime? StartOn{ get; set; }
-        [RuleRequiredField]
+        // [RuleRequiredField(DefaultContexts.Save)]
         public virtual Employee Employee{ get; set; }
         [FontSizeDelta(8)]
         public virtual string Subject{ get; set; }

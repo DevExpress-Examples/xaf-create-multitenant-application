@@ -33,14 +33,14 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[VisibleInListView(false)]
 		public virtual DateTime? HireDate { get; set; }
 
-		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][Aggregated]
+		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][DevExpress.ExpressApp.DC.Aggregated]
 		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } = new();
 		
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
 		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();
 		[InverseProperty(nameof(EmployeeTask.Owner))]
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
-		[InverseProperty(nameof(Evaluation.Employee))]
+		[InverseProperty(nameof(Evaluation.Employee))][DevExpress.ExpressApp.DC.Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
 		[VisibleInListView(false)]
 		public virtual string PersonalProfile { get; set; }

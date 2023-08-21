@@ -8,9 +8,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<TTabbedControl> WhenTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
             => source.SelectMany(item => item.Frame.View.ToDetailView().WhenTabControl().Cast<TTabbedControl>());
         public static IObservable<TView> ToView<TView>(this IObservable<DashboardViewItem> source)
-            => source.Select(item => item.Frame.View).Cast<TView>();
+            => source.ToFrame().Select(frame => frame.View).Cast<TView>();
+        public static IObservable<TView> AsView<TView>(this IObservable<DashboardViewItem> source)
+            => source.ToFrame().Select(frame => frame.View).OfType<TView>();
         public static IObservable<TView> OfView<TView>(this IObservable<DashboardViewItem> source)
-            => source.Select(item => item.Frame.View).OfType<TView>();
+            => source.ToFrame().Select(frame => frame.View).OfType<TView>();
         public static IObservable<T> WhenControlCreated<T>(this T source) where T:ViewItem 
             => source.Observe().ControlCreated();
         

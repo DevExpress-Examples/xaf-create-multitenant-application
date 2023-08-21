@@ -1,4 +1,7 @@
-﻿using DevExpress.ExpressApp;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Data.Linq;
+using DevExpress.Data.ODataLinq.Helpers;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model;
 using OutlookInspired.Module.BusinessObjects;
 

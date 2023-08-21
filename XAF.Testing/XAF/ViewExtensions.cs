@@ -13,6 +13,11 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class ViewExtensions{
+        public static IEnumerable<NestedFrame> ToFrame(this IEnumerable<DashboardViewItem> source)
+            => source.Select(item => item.Frame).Cast<NestedFrame>();
+        public static IObservable<NestedFrame> ToFrame(this IObservable<DashboardViewItem> source)
+            => source.Select(item => item.Frame).Cast<NestedFrame>();
+        
         public static IObservable<T> WhenClosing<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);
         internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
@@ -79,34 +84,26 @@ namespace XAF.Testing.XAF{
         static IObservable<T> SelectObject<T>(this IObservable<ListView> source,params T[] objects) where T : class 
             => source.SelectMany(view => {
                 var gridView = (view.Editor as GridListEditor)?.GridView;
-                if (gridView != null){
-                    return objects.ToNowObservable().Select(row => {
-                            var rowHandle = gridView.FindRow(row);
-                            gridView.SelectRow(rowHandle);
-                            return rowHandle;
-                        })
-                        .BufferUntilCompleted()
-                        .Select(obj => {
-                            if (obj.Length==1){
-                                gridView.FocusedRowHandle = obj.First();
-                            }
-                            return gridView.FocusedRowObject as T;
-                        });
-                }
-                throw new NotImplementedException(nameof(view.Editor));
+                return gridView == null ? throw new NotImplementedException(nameof(view.Editor))
+                    : objects.ToNowObservable().Select(row => gridView.SelectRow( row)).BufferUntilCompleted()
+                        .DoWhen(ints => ints.Length == 1, ints => gridView.FocusedRowHandle = ints.First())
+                        .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
             });
+
+        
 
         public static IObservable<object> SelectObject(this ListView listView, params object[] objects)
             => listView.SelectObject<object>(objects);
         
         public static IObservable<TO> SelectObject<TO>(this ListView listView,params TO[] objects) where TO : class 
             => listView.Editor.WhenControlsCreated()
-                .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged")).To(listView)
+                .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged").StartWith(editor.Control.GetPropertyValue("DataSource")).WhenNotDefault()).To(listView)
                 .SelectObject(objects);
 
         public static IObservable<T> WhenControlsCreated<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(View.ControlsCreated));
-        
+        public static IObservable<T> WhenCurrentObjectChanged<T>(this T view) where T:View 
+            => view.WhenViewEvent(nameof(View.CurrentObjectChanged)).To(view);
         public static IObservable<T> WhenSelectionChanged<T>(this T view, int waitUntilInactiveSeconds = 0) where T : View
             => view.WhenViewEvent(nameof(View.SelectionChanged)).To(view)
                 .Publish(changed => waitUntilInactiveSeconds > 0 ? changed.WaitUntilInactive(waitUntilInactiveSeconds) : changed);
@@ -151,6 +148,9 @@ namespace XAF.Testing.XAF{
                 .Where(frameContainer =>!objectTypes.Any()|| objectTypes.Any(type => type.IsAssignableFrom(frameContainer.Frame.View.ObjectTypeInfo.Type)))
                 .Merge(nestedEditors);
         }
+
+        public static IObservable<Frame> ToEditFrame(this IObservable<ListView> source) 
+            => source.Select(view => view.EditFrame);
 
         public static IObservable<GridControl> WhenControlViewItemGridControl(this DetailView detailView)
             => detailView.WhenControlViewItemWinControl<GridControl>();

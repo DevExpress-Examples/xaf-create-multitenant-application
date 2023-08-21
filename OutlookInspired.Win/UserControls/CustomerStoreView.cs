@@ -1,4 +1,6 @@
-﻿using OutlookInspired.Module.BusinessObjects;
+﻿using System.Collections;
+using System.ComponentModel;
+using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.UserControls
 {

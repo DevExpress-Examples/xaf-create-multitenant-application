@@ -44,7 +44,7 @@ namespace XAF.Testing.XAF{
             var action = frame.GetController<ListViewProcessCurrentObjectController>().ProcessCurrentObjectAction;
             var invoke = selectedObject.Invoke()??default(T);
             var afterNavigation = action.WhenExecuted().DoWhen(_ => executed != null, e => executed!(e))
-                .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type).Take(1));
+                .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type)).Take(1);
             return action.Trigger(afterNavigation,invoke.YieldItem().Cast<object>().ToArray());
         }
 
@@ -58,10 +58,24 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> ToController<T>(this IObservable<Frame> source) where T : Controller 
             => source.SelectMany(window => window.Controllers.Cast<Controller>()).OfType<T>();
 
-        public static IObservable<Window> CloseWindow<TFrame>(this IObservable<TFrame> source) where TFrame:Frame 
-            => source.SelectMany(frame => frame.View.WhenActivated().To(frame).WaitUntilInactive(1.Seconds()).Take(1).ObserveOnContext())
-                .Cast<Window>().Do(frame => frame.Close());
+        public static IObservable<Window> CloseWindow<TFrame>(this IObservable<TFrame> source) where TFrame:Frame
+            => source.Cast<Window>().Do(frame => frame.Close()).IgnoreElements();
 
+        
+        public static IObservable<DashboardViewItem> MasterDashboardViewItem(this IObservable<Frame> source, Func<DashboardViewItem, bool> masterItem=null) 
+            => source.SelectMany(frame => frame.MasterDashboardViewItem(masterItem));
+
+        public static IObservable<DashboardViewItem> MasterDashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> masterItem=null) 
+            => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(masterItem)).ToNowObservable()
+                .SwitchIfEmpty(frame.AssertDashboardViewItems(ViewType.ListView));
+
+        public static IObservable<Frame> DashboardListViewEditFrame(this Frame frame) 
+            => frame.DashboardViewItems(ViewType.ListView).Where(item =>item.MasterViewItem()).ToNowObservable()
+                .ToFrame().ToListView().ToEditFrame();
+        
+        public static bool MasterViewItem(this DashboardViewItem item,Func<DashboardViewItem, bool> masterItem=null) 
+            => masterItem?.Invoke(item)??item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide;
+        
         public static IObservable<T> WhenFrame<T>(this IObservable<T> source, params Nesting[] nesting) where T:Frame 
             => source.Where(frame => frame.When(nesting));
         
@@ -97,21 +111,26 @@ namespace XAF.Testing.XAF{
         
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,ViewType viewType,params Type[] objectTypes) 
             => frame.DashboardViewItems(objectTypes).When(viewType);
-        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Window frame,Type objectType,params ViewType[] viewTypes) 
+        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,Type objectType,params ViewType[] viewTypes) 
             => frame.DashboardViewItems(objectType.YieldItem().ToArray()).When(viewTypes);
-        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Window frame,params ViewType[] viewTypes) 
+        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,params ViewType[] viewTypes) 
             => frame.DashboardViewItems(typeof(object).YieldItem().ToArray()).When(viewTypes);
 
         public static IEnumerable<DashboardViewItem> When(this IEnumerable<DashboardViewItem> source, params ViewType[] viewTypes) 
             => source.Where(item => viewTypes.All(viewType => item.InnerView.Is(viewType)));
 
         public static IEnumerable<TViewType> DashboardViewItems<TViewType>(this Frame frame,params Type[] objectTypes) where TViewType:View
-            => frame.DashboardViewItems(objectTypes).Select(item => item.Frame.View as TViewType).WhereNotDefault();
+            => frame.DashboardViewItems(objectTypes).ToFrame().Select(nestedFrame => nestedFrame.View as TViewType).WhereNotDefault();
         
         public static IObservable<ListPropertyEditor> NestedListViews(this Frame frame, params Type[] objectTypes ) 
             => frame.View.ToDetailView().NestedListViews(objectTypes);
 
         internal static DetailView ToDetailView(this View view) => (DetailView)view;
+
+        public static IObservable<Frame> DashboardDetailViewFrame(this Frame frame) 
+            => frame.DashboardViewItems(ViewType.DetailView).Where(item => !item.MasterViewItem()).ToNowObservable()
+                .ToFrame();
+
         public static IObservable<DetailView> ToDetailView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToDetailView());
         public static IObservable<Unit> WhenDisposedFrame<TFrame>(this TFrame source) where TFrame : Frame
@@ -132,7 +151,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<(GridControl gridControl, Frame frame)> WhenGridControl(this Frame frame) 
             => (frame.View is DashboardView ? frame.DashboardViewItems(ViewType.DetailView)
                 .Where(item => item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide)
-                .ToNowObservable().Select(item => item.Frame) : frame.Observe())
+                .ToNowObservable().ToFrame() : frame.Observe())
                 .If(frame1 => frame1.View is DetailView,frame1 => frame1.View.ToDetailView().WhenControlViewItemGridControl()
                     .Select(gridControl => (gridControl, frame1)));
 
@@ -165,11 +184,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenGridControlDetailViewObjects(this IObservable<Frame> source) 
             => source.SelectMany(frame => frame.GridViewDetailViewObjects());
 
-        public static IObservable<Unit> ProcessSelectedObject(this IObservable<Window> source)
+        public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> ProcessSelectedObject(this IObservable<Window> source)
             => source.SelectMany(window => window.ProcessSelectedObject());
         public static NestedFrame ToNestedFrame(this Frame frame) => (NestedFrame)frame;
         public static IObservable<Unit> SelectListViewObject(this IObservable<Window> source, Func<DashboardViewItem, bool> itemSelector=null) 
-            => source.SelectColumnViewObject(itemSelector)
+            => source.SelectColumnViewObject(itemSelector).Select(unit => unit)
                 .SwitchIfEmpty(source.SelectMany(window => window.DashboardViewItems(ViewType.ListView).ToNowObservable()
                     .Where(itemSelector??(_ =>true) ).Select(item => item.InnerView.ToListView())
                     .SelectMany(listView => listView.SelectObject(listView.Objects().Take(1).ToArray())).ToUnit()));
@@ -191,7 +210,8 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<Frame> CreateNewObject(this Frame frame)
             => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                .SelectMany(frame1 => frame1.View.ToDetailView().CloneRequiredMembers().ToNowObservable().IgnoreElements().To<Frame>().Concat(frame1.Observe()));
+                .SelectMany(frame1 => frame1.View.ToDetailView().CloneRequiredMembers().ToNowObservable().IgnoreElements()
+                    .To< Frame>().Concat(frame1.Observe()));
 
         private static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame)
             => frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
@@ -204,25 +224,26 @@ namespace XAF.Testing.XAF{
         private static IObservable<Frame> ListViewCreateNewObject(this Frame frame) 
             => (frame.View is not DashboardView ? frame.Observe()
                 : frame.DashboardViewItems(ViewType.ListView).Where(item => item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide)
-                    .Select(item => item.Frame).ToNowObservable()).CreateNewObject();
+                    .ToFrame().ToNowObservable()).CreateNewObject();
 
-        public static IObservable<Unit> ProcessSelectedObject(this Frame frame) 
-            => frame.WhenGridControl()
-                .Publish(source => source.SelectMany(t => frame.Application.WhenFrame(( (NestedFrame)t.frame).DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
+        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame listViewFrame) 
+            => (listViewFrame.WhenGridControl().Select(t => t)
+                .Publish(source => source.SelectMany(t => listViewFrame.Application.WhenFrame(((NestedFrame)t.frame)
+                            .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
                         .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-                            .Equals(frame1.View.ObjectSpace.GetKeyValue(((ColumnView)t.gridControl.MainView).FocusedRowObject)))
-                        .CloseWindow())
-                    .Merge(source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())).ToUnit()
-                .SwitchIfEmpty(frame.ProcessListViewSelectedItem());
+                            .Equals(((ColumnView)t.gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
+                    .Merge(Observable.Defer(() => source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
+                .SwitchIfEmpty(listViewFrame.ProcessListViewSelectedItem()))
+                .Select(detailViewFrame => (frame: listViewFrame,detailViewFrame));
 
         public static DetailView DashboardChildDetailView(this NestedFrame listViewFrame) 
             => ((DashboardView)listViewFrame.ViewItem.View).Views<DetailView>().First(detailView => detailView!=listViewFrame.View);
 
-        public static IObservable<Unit> ProcessListViewSelectedItem(this Frame frame) 
-            => frame.View is not DashboardView ? frame.WhenObjects().ToSecond().Take(1).SelectMany(o => frame.ListViewProcessSelectedItem(() => o)).ToUnit()
-                : frame.DashboardViewItems(ViewType.ListView).ToNowObservable().Select(item => item.Frame)
+        public static IObservable<Frame> ProcessListViewSelectedItem(this Frame frame) 
+            => frame.View is not DashboardView ? frame.WhenObjects().ToSecond().Take(1).SelectMany(o => frame.ListViewProcessSelectedItem(() => o))
+                : frame.DashboardViewItems(ViewType.ListView).ToNowObservable().ToFrame()
                     .SelectMany(frame1 => frame1.View.ToListView().WhenObjects().Take(1)
-                        .SelectMany(o => frame1.ListViewProcessSelectedItem(() => o))).ToUnit();
+                        .SelectMany(o => frame1.ListViewProcessSelectedItem(() => o)));
 
         public static IObservable<(GridControl gridControl, Frame frame)> WhenGridControl(this IObservable<Frame> source) 
             => source.OfView<DetailView>().SelectMany(frame =>

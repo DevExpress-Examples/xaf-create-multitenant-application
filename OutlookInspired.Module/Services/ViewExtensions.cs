@@ -27,10 +27,12 @@ namespace OutlookInspired.Module.Services{
             => view is DetailView ? ((T)view.CurrentObject).YieldItem().ToArray()
                 : view.ToListView().CollectionSource.Objects<T>();
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
+        public static IEnumerable<NestedFrame> ToFrame(this IEnumerable<DashboardViewItem> source)
+            => source.Select(item => item.Frame).Cast<NestedFrame>();
 
         public static NestedFrame MasterFrame(this DashboardView view)
             => view.Items.OfType<DashboardViewItem>().Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide)
-                .Select(item => item.Frame).Cast<NestedFrame>().First();
+                .ToFrame().First();
         
         public static IEnumerable<DashboardViewItem> Items(this DashboardView dashboardView,params ViewType[] viewTypes)
             => dashboardView.GetItems<DashboardViewItem>().Where(item =>viewTypes.Length==0|| viewTypes.Any(viewType =>item.Model.View.Is(viewType) ));
@@ -40,11 +42,11 @@ namespace OutlookInspired.Module.Services{
                 viewType == ViewType.ListView ? modelView is IModelListView : modelView is IModelDashboardView);
 
         public static IEnumerable<NestedFrame> NestedFrames(this DashboardView dashboardView,params ViewType[] viewTypes)
-            => dashboardView.Items(viewTypes).Select(item => item.Frame).Cast<NestedFrame>();
+            => dashboardView.Items(viewTypes).ToFrame();
         public static IEnumerable<NestedFrame> NestedFrames<TView>(this DashboardView dashboardView,params Type[] objectTypes) where TView:View 
             => dashboardView.GetItems<DashboardViewItem>()
                 .Where(item => item.InnerView is TView && (!objectTypes.Any()||objectTypes.Contains(item.InnerView.ObjectTypeInfo.Type)))
-                .Select(item => item.Frame).Cast<NestedFrame>();
+                .ToFrame();
 
         public static IEnumerable<TControl> Controls<TControl>(this CompositeView compositeView) 
             => compositeView.GetItems<ControlViewItem>().Select(item => item.Control)
