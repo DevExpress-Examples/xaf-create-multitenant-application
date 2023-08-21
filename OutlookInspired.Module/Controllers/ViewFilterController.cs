@@ -66,6 +66,7 @@ namespace OutlookInspired.Module.Controllers{
 
         protected override void OnActivated(){
             base.OnActivated();
+            
             FilterAction.Active[nameof(ViewFilterController)] = Frame.ParentIsDashboardView();
             AddFilterItems();
         }

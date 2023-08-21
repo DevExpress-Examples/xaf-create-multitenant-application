@@ -2,7 +2,9 @@
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
@@ -122,14 +124,56 @@ namespace XAF.Testing.XAF{
                     return t.frame.GetController<DeleteObjectsViewController>().DeleteAction
                         .Trigger(t.frame.WhenDisposedFrame().Select(_ => (type,keyValue,application,t.source)));
             });
-        
+        public static IEnumerable<IObjectSpaceProvider> ObjectSpaceProviders(this XafApplication application, params Type[] objectTypes) 
+            => objectTypes.Select(application.GetObjectSpaceProvider).Distinct();
+        public static IObjectSpace CreateObjectSpace(this XafApplication application, bool useObjectSpaceProvider,Type type=null,bool nonSecuredObjectSpace=false,
+            [CallerMemberName] string caller = "") {
+            if (type != null) {
+                if (type.IsArray) {
+                    type = type.GetElementType();
+                }
+                if (!XafTypesInfo.Instance.FindTypeInfo(type).IsPersistent) {
+                    throw new InvalidOperationException($"{caller} {type?.FullName} is not a persistent object");
+                }
+            }
+            if (!useObjectSpaceProvider)
+                return application.CreateObjectSpace(type ?? typeof(object));
+            var applicationObjectSpaceProvider = application.ObjectSpaceProviders(type ?? typeof(object)).First();
+            IObjectSpace objectSpace;
+            if (!nonSecuredObjectSpace) {
+                objectSpace = applicationObjectSpaceProvider.CreateObjectSpace();
+            }
+            else if (applicationObjectSpaceProvider is INonsecuredObjectSpaceProvider nonsecuredObjectSpaceProvider) {
+                objectSpace= nonsecuredObjectSpaceProvider.CreateNonsecuredObjectSpace();
+            }
+            else {
+                objectSpace= applicationObjectSpaceProvider.CreateUpdatingObjectSpace(false);    
+            }
 
-        public static IObservable<(Frame frame, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame source)> source)
-            => source.SelectMany(t => t.frame.Observe().WhenSaveObject().To(t));
+            if (objectSpace is CompositeObjectSpace compositeObjectSpace) {
+                compositeObjectSpace.PopulateAdditionalObjectSpaces(application);
+            }
+            return objectSpace;
+        }
+
+        public static IObservable<T> UseObjectSpace<T>(this XafApplication application,Func<IObjectSpace,IObservable<T>> factory,bool useObjectSpaceProvider=false,[CallerMemberName]string caller="") 
+            => Observable.Using(() => application.CreateObjectSpace(useObjectSpaceProvider, typeof(T), caller: caller), factory);
         
-        public static IObservable<Frame> WhenSaveObject(this IObservable<Frame> source)
-            => source.Do(frame => frame.GetController<ModificationsController>().SaveAction.DoExecute());
-        
+        public static IObservable<(ITypeInfo typeInfo, object keyValue, Type controllerType, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame parent)> source)
+            => source.If(t => t.frame.GetController<DialogController>()==null,t => {
+                    var currentObjectInfo = t.frame.View.CurrentObjectInfo();
+                    (t.frame.GetController<ModificationsController>()??t.parent.GetController<ModificationsController>()).SaveAction.DoExecute();
+                    return currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,typeof(ModificationsController),source: t.parent));
+                },
+                t => {
+                    var currentObjectInfo = t.frame.View.CurrentObjectInfo();
+                    var acceptAction = t.frame.GetController<DialogController>().AcceptAction;
+                    return acceptAction.Trigger(acceptAction.WhenExecuteCompleted()
+                        .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,typeof(DialogController),t.parent))));
+                }
+            );
+
+
         public static IObservable<IObjectSpace> WhenObjectSpaceCreated(this XafApplication application,bool includeNonPersistent=true,bool includeNested=false) 
             => application.WhenEvent<ObjectSpaceCreatedEventArgs>(nameof(XafApplication.ObjectSpaceCreated)).InversePair(application)
                 .Where(t => (includeNonPersistent || t.source.ObjectSpace is not NonPersistentObjectSpace)&& (includeNested || t.source.ObjectSpace is not INestedObjectSpace)).Select(t => t.source.ObjectSpace);

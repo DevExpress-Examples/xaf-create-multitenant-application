@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
@@ -70,12 +72,30 @@ namespace XAF.Testing.XAF{
                 .SelectMany(item => item.WhenControlCreated().StartWith(item.Control).WhenNotDefault().Take(1).To(item).Cast<IFrameContainer>())
                 .NestedFrameContainers(view, objectTypes);
 
-        public static IEnumerable<PropertyEditor> CloneRequiredMembers(this CompositeView compositeView,object existingObject=null) {
+        public static (ITypeInfo typeInfo, object keyValue) CurrentObjectInfo(this View view) 
+            => (view.ObjectTypeInfo,view.ObjectSpace.GetKeyValue(view.CurrentObject));
+
+        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this CompositeView compositeView,bool inLineEdit, object existingObject = null) 
+            => compositeView is DetailView detailView?detailView.CloneExistingObjectMembers(existingObject).IgnoreElements()
+                    .Select(_ => default((string name, object value))) :compositeView.ToListView().CloneExistingObjectMembers(inLineEdit,existingObject);
+
+        public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
             return compositeView.GetItems<PropertyEditor>().Where(editor => !editor.MemberInfo.IsKey&&!editor.MemberInfo.IsList)
-                    .Do(editor => editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.GetValue(existingObject)))
-                ;
+                .Do(editor => editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.GetValue(existingObject)))
+                .IgnoreElements().ToUnit();
         }
+        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null){
+            existingObject ??= listView.Objects().First();
+            if (inLineEdit){
+                return listView.ToListView().Model.MemberViewItems().Where(item => !item.ModelMember.MemberInfo.IsKey)
+                    .Select(item =>(item.ModelMember.MemberInfo.Name,item.ModelMember.MemberInfo.GetValue(existingObject)) );    
+            }
+            return listView.CloneExistingObjectMembers(true,existingObject)
+                .Do(t => listView.EditView.ObjectTypeInfo.FindMember(t.name).SetValue(listView.EditView.CurrentObject,t.value)).ToArray();
+        }
+
+        
 
         public static bool IsNewObject(this CompositeView compositeView)
             => compositeView.ObjectSpace.IsNewObject(compositeView.CurrentObject);

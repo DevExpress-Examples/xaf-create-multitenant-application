@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.ViewVariantsModule;
+using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Utils.Controls;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
@@ -208,10 +209,15 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> OfView<TView>(this IObservable<Frame> source)
             => source.Where(item => item.View is TView);
         
-        public static IObservable<Frame> CreateNewObject(this Frame frame)
-            => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                .SelectMany(frame1 => frame1.View.ToDetailView().CloneRequiredMembers().ToNowObservable().IgnoreElements()
-                    .To< Frame>().Concat(frame1.Observe()));
+        public static IObservable<Frame> CreateNewObject(this Frame frame,bool inLine=false)
+            => !inLine?frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
+                    .SelectMany(frame1 => frame1.View.ToCompositeView()
+                        .CloneExistingObjectMembers(inLine).Select(_ => default(Frame)).IgnoreElements()
+                        .Concat(frame1.YieldItem())):
+                Observable.Defer(() => {
+                    ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(frame.View.ToCompositeView().CloneExistingObjectMembers(true).ToArray());
+                    return frame.Observe();
+                });
 
         private static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame)
             => frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
@@ -219,7 +225,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> CreateNewObject(this IObservable<Frame> source)
             => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
                 .SelectMany(action => action.Trigger(action.Application
-                    .WhenRootFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)));
+                    .WhenRootFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)
+                    .Merge(action.Controller.Frame.View.ToListView().EditView.Observe().WhenNotDefault()
+                        .SelectMany(view => view.WhenCurrentObjectChanged().Where(detailView => detailView.IsNewObject()))
+                        .To(action.Controller.Frame))
+                    .Take(1)));
         
         private static IObservable<Frame> ListViewCreateNewObject(this Frame frame) 
             => (frame.View is not DashboardView ? frame.Observe()
@@ -227,7 +237,7 @@ namespace XAF.Testing.XAF{
                     .ToFrame().ToNowObservable()).CreateNewObject();
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame listViewFrame) 
-            => (listViewFrame.WhenGridControl().Select(t => t)
+            => (listViewFrame.WhenGridControl()
                 .Publish(source => source.SelectMany(t => listViewFrame.Application.WhenFrame(((NestedFrame)t.frame)
                             .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
                         .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)

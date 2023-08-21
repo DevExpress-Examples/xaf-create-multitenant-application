@@ -8,6 +8,9 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class ActionExtensions{
+        public static IObservable<ItemsChangedEventArgs> WhenItemsChanged(this SingleChoiceAction action) 
+            => action.WhenEvent<ItemsChangedEventArgs>(nameof(SingleChoiceAction.ItemsChanged)).TakeUntil(action.WhenDisposed());
+
         public static Frame Frame(this ActionBase action) => action.Controller?.Frame;
         public static IEnumerable<ChoiceActionItem> Items<T>(this SingleChoiceAction action)
             => action.Items.Where(item => item.Data is T);

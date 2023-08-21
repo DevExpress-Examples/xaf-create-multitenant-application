@@ -66,10 +66,13 @@ namespace XAF.Testing.RX{
                 return disposable;
             });
         
-        public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action)
+        public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action,Action<TSource> actionElse=null)
             => source.Do(source1 => {
                 if (predicate(source1)) {
                     action(source1);
+                }
+                else{
+                    actionElse?.Invoke(source1);
                 }
             });
 
