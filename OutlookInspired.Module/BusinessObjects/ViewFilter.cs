@@ -9,6 +9,8 @@ using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Services;
+using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
     public interface IViewFilter{
@@ -38,7 +40,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual string Criteria { get; set; }
 
         [Browsable(false)]
-        public int Count => ObjectSpace.GetObjectsCount(DataType, CriteriaOperator.Parse(Criteria));
+        public int Count(CriteriaOperator criteria=null) => ObjectSpace.GetObjectsCount(DataType, criteria.Combine(Criteria));
 
         public void SetCriteria<T>(string criteria) where T : IViewFilter{
             DataType = typeof(T);

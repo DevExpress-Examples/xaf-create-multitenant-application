@@ -25,7 +25,7 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<(IObjectSpace objectSpace, IEnumerable<T> objects)> WhenCommitted<T>(
             this IObjectSpace objectSpace, ObjectModification objectModification ,[CallerMemberName]string caller="") 
-            => objectSpace.WhenCommitingDetailed<T>(objectModification, true,caller:caller)
+            => objectSpace.WhenCommitingDetailed<T>(objectModification, true)
                 .Select(t => (t.objectSpace,t.details.Select(t1 => t1.instance)));
         
         public static IObservable<T> ToObjects<T>(this IObservable<(IObjectSpace objectSpace, T[] objects)> source)
@@ -39,12 +39,16 @@ namespace XAF.Testing.XAF{
                 .Select(t => (t.objectSpace,t.details.Select(t1 => t1.instance)));
 
         public static IObservable<(IObjectSpace objectSpace, (T instance, ObjectModification modification)[] details)>
-            WhenCommitingDetailed<T>(this IObjectSpace objectSpace, ObjectModification objectModification, bool emitAfterCommit,Func<T,bool> criteria=null,[CallerMemberName]string caller="") 
+            WhenCommitingDetailed<T>(this IObjectSpace objectSpace, ObjectModification objectModification, bool emitAfterCommit,Func<T,bool> criteria=null) 
             => objectSpace.WhenCommitingDetailed(emitAfterCommit, objectModification,criteria);
         public static IObservable<CancelEventArgs> WhenCommiting(this IObjectSpace objectSpace) 
             => objectSpace.WhenEvent<CancelEventArgs>(nameof(IObjectSpace.Committing))
                 .TakeUntil(objectSpace.WhenDisposed());
 
+        public static IObservable<IObjectSpace> WhenModifyChanged(this IObjectSpace objectSpace) 
+            => objectSpace.WhenEvent(nameof(IObjectSpace.ModifiedChanged)).To(objectSpace)
+                .TakeUntil(objectSpace.WhenDisposed());
+        
         public static IObservable<(IObjectSpace objectSpace, (T instance, ObjectModification modification)[] details)> WhenCommitingDetailed<T>(
             this IObjectSpace objectSpace, bool emitAfterCommit, ObjectModification objectModification,Func<T,bool> criteria=null) 
             => objectSpace.WhenCommiting().SelectMany(_ => {

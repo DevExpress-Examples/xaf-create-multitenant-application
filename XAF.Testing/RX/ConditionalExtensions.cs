@@ -28,11 +28,6 @@ namespace XAF.Testing.RX{
         public static IObservable<T> If<T>(this IObservable<T> source, Func<bool> predicate,
             Func<IObservable<T>, IObservable<T>> ifTrue, Func<IObservable<T>, IObservable<T>> ifFalse=null) 
             => Observable.Defer(() => predicate() ? ifTrue(source) : ifFalse?.Invoke(source)??source);
-        public static IObservable<T> If<T>(this IObservable<T> source, bool predicate,
-            Func<IObservable<T>, IObservable<T>> ifTrue, Func<IObservable<T>, IObservable<T>> ifFalse=null) 
-            => Observable.Defer(() => predicate ? ifTrue(source) : ifFalse?.Invoke(source)??source);
         
-        public static IObservable<TSource> TakeWhileInclusive<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate) 
-            => source.TakeUntil(source.SkipWhile(predicate).Skip(1));
     }
 }

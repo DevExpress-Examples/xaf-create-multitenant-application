@@ -1,13 +1,18 @@
 using System.Reflection;
 using System.Text;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions{
-        
-        
+        public static CriteriaOperator Combine(this CriteriaOperator criteriaOperator,string criteria,GroupOperatorType type=GroupOperatorType.And){
+            var @operator = CriteriaOperator.Parse(criteria);
+            return criteriaOperator != null ? new GroupOperator(type, @operator, criteriaOperator) : @operator;
+        }
+
+
         public static string GetString(this byte[] bytes, Encoding encoding = null) 
             => bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);
         public static byte[] Bytes(this Stream stream){

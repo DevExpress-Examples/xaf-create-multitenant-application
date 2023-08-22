@@ -1,6 +1,7 @@
 namespace XAF.Testing{
     public static class EnumerableExtensions{
-        public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source) => Enumerable.Empty<T>();
+        public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source) => source.ToList() is var _ ? Enumerable.Empty<T>() : null;
+
 
         public static IEnumerable<int> Range(this int start, int count)
             => Enumerable.Range(start, count);

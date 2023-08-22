@@ -20,7 +20,7 @@ namespace OutlookInspired.Module.Controllers{
                 if (!ManagerFilters(e)) FilterView();
             };
         }
-
+        
         public SingleChoiceAction FilterAction{ get; }
 
         
@@ -67,17 +67,30 @@ namespace OutlookInspired.Module.Controllers{
         protected override void OnActivated(){
             base.OnActivated();
             
-            FilterAction.Active[nameof(ViewFilterController)] = Frame.ParentIsDashboardView();
+            FilterAction.Active[nameof(ViewFilterController)] = Frame.ParentIsNull();
             AddFilterItems();
+            if (View is ListView listView){
+                listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
+            }
         }
-        
+
+        protected override void OnDeactivated(){
+            base.OnDeactivated();
+            if (View is ListView listView){
+                listView.CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
+            }
+        }
+
+        private void CollectionSourceOnCriteriaApplied(object sender, EventArgs e) => AddFilterItems();
+
         private void AddFilterItems(){
             FilterAction.Items.Clear();
+            var viewCriteria =View is ListView listView? listView.CollectionSource.GetTotalCriteria():null;
             FilterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),
-                    (caption:$"All ({ObjectSpace.GetObjectsCount(View.ObjectTypeInfo.Type, null)})",data:"All") }
+                    (caption:$"All ({ObjectSpace.GetObjectsCount(View.ObjectTypeInfo.Type, viewCriteria)})",data:"All") }
                 .Select(t => new ChoiceActionItem(t.caption, t.data)).Concat(ObjectSpace.GetObjectsQuery<ViewFilter>()
                     .Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToArray()
-                    .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count})",filter))).ToArray());
+                    .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count(viewCriteria)})",filter))).ToArray());
             FilterAction.SelectedItem = FilterAction.Items.First(item => item.Data as string == "All");
         }
     }

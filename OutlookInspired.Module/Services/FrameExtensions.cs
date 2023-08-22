@@ -26,7 +26,7 @@ namespace OutlookInspired.Module.Services{
         public static object ParentObject(this Frame frame) => frame.ParentObject<object>() ;
         public static T ParentObject<T>(this Frame frame) where T : class => frame.As<NestedFrame>()?.ViewItem.View.CurrentObject as T;
         
-        public static bool ParentIsDashboardView(this Frame frame)  => frame.ParentObject<object>()==null;
+        public static bool ParentIsNull(this Frame frame)  => frame.ParentObject<object>()==null;
         
         public static T As<T>(this object obj) 
             => obj is T variable ? variable : default;

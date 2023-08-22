@@ -6,11 +6,11 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.RX{
     public static class TransformExtension{
+        public static IObservable<TSource> TakeWhileInclusive<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate) 
+            => source.TakeUntil(source.SkipWhile(predicate).Skip(1));
         public static IObservable<TTarget> ConcatIgnoredValue<TSource,TTarget>(this IObservable<TSource> source, TTarget value) 
             => source.Select(_ => default(TTarget)).WhenNotDefault().Concat(value.Observe());
-
-        public static IObservable<T> ConcatIgnored<T, T2>(this IObservable<T> source, IObservable<T2> secondSelector)
-            => source.ConcatIgnored(_ => secondSelector);
+        
         public static IObservable<T> ConcatIgnored<T,T2>(this IObservable<T> source,Func<T,IObservable<T2>> secondSelector,Func<T,bool> merge=null)
             => source.SelectMany(arg => {
                 merge ??= _ => true;

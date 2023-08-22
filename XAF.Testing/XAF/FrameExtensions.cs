@@ -38,15 +38,13 @@ namespace XAF.Testing.XAF{
         public static bool When<T>(this T frame, params Type[] types) where T : Frame 
             => types.Any(item => frame.View is ObjectView objectView && objectView.Is(objectType:item));
         
-        public static IObservable<Frame> ListViewProcessSelectedItem(this Frame frame,Action<SimpleActionExecuteEventArgs> executed) 
-            => frame.ListViewProcessSelectedItem(() => frame.View.SelectedObjects.Cast<object>().First() ,executed);
 
-        public static IObservable<Frame> ListViewProcessSelectedItem<T>(this Frame frame, Func<T> selectedObject,Action<SimpleActionExecuteEventArgs> executed=null){
+        public static IObservable<Frame> ListViewProcessSelectedItem<T>(this Frame frame, Func<T> selectedObject){
             var action = frame.GetController<ListViewProcessCurrentObjectController>().ProcessCurrentObjectAction;
-            var invoke = selectedObject.Invoke()??default(T);
-            var afterNavigation = action.WhenExecuted().DoWhen(_ => executed != null, e => executed!(e))
-                .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type)).Take(1);
-            return action.Trigger(afterNavigation,invoke.YieldItem().Cast<object>().ToArray());
+            var afterExecuted = action.WhenExecuted()
+                .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type,ViewType.DetailView))
+                .Take(1);
+            return action.Trigger(afterExecuted,selectedObject().YieldItem().Cast<object>().ToArray());
         }
 
         
@@ -61,14 +59,13 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<Window> CloseWindow<TFrame>(this IObservable<TFrame> source) where TFrame:Frame
             => source.Cast<Window>().Do(frame => frame.Close()).IgnoreElements();
-
         
-        public static IObservable<DashboardViewItem> MasterDashboardViewItem(this IObservable<Frame> source, Func<DashboardViewItem, bool> masterItem=null) 
-            => source.SelectMany(frame => frame.MasterDashboardViewItem(masterItem));
+        public static IObservable<DashboardViewItem> DashboardViewItem(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector) 
+            => source.SelectMany(frame => frame.DashboardViewItem(itemSelector));
 
-        public static IObservable<DashboardViewItem> MasterDashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> masterItem=null) 
-            => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(masterItem)).ToNowObservable()
-                .SwitchIfEmpty(frame.AssertDashboardViewItems(ViewType.ListView));
+        public static IObservable<DashboardViewItem> DashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> itemSelector=null) 
+            => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable()
+                .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).ToNowObservable());
 
         public static IObservable<Frame> DashboardListViewEditFrame(this Frame frame) 
             => frame.DashboardViewItems(ViewType.ListView).Where(item =>item.MasterViewItem()).ToNowObservable()
@@ -209,15 +206,23 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> OfView<TView>(this IObservable<Frame> source)
             => source.Where(item => item.View is TView);
         
-        public static IObservable<Frame> CreateNewObject(this Frame frame,bool inLine=false)
-            => !inLine?frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                    .SelectMany(frame1 => frame1.View.ToCompositeView()
-                        .CloneExistingObjectMembers(inLine).Select(_ => default(Frame)).IgnoreElements()
-                        .Concat(frame1.YieldItem())):
-                Observable.Defer(() => {
-                    ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(frame.View.ToCompositeView().CloneExistingObjectMembers(true).ToArray());
-                    return frame.Observe();
-                });
+        public static IObservable<Frame> CreateNewObject(this Frame frame,bool inLine=false) 
+            => !inLine ? frame.CreateNewObjectController() : frame.CreateNewObjectEditor();
+
+        private static IObservable<Frame> CreateNewObjectEditor(this Frame frame) 
+            => Observable.Defer(() => frame.View.WhenControlsCreated()
+                .StartWith(frame.View.ToListView().Editor.Control).WhenNotDefault()
+                .Do(_ => ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(frame.View
+                    .ToCompositeView().CloneExistingObjectMembers(true).ToArray()))
+                .To(frame));
+
+        private static IObservable<Frame> CreateNewObjectController(this Frame frame) 
+            => frame.View.WhenSelectedObjects().Take(1)
+                .SelectMany(selectedObject => frame.ColumnViewCreateNewObject()
+                    .SwitchIfEmpty(frame.ListViewCreateNewObject())
+                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView()
+                        .CloneExistingObjectMembers(false, selectedObject)
+                        .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
 
         private static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame)
             => frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
@@ -226,7 +231,7 @@ namespace XAF.Testing.XAF{
             => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
                 .SelectMany(action => action.Trigger(action.Application
                     .WhenRootFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)
-                    .Merge(action.Controller.Frame.View.ToListView().EditView.Observe().WhenNotDefault()
+                    .Merge(action.Controller.Frame.View.AsListView().Observe().WhenNotDefault().Select(view => view.EditView).WhenNotDefault()
                         .SelectMany(view => view.WhenCurrentObjectChanged().Where(detailView => detailView.IsNewObject()))
                         .To(action.Controller.Frame))
                     .Take(1)));
@@ -237,13 +242,13 @@ namespace XAF.Testing.XAF{
                     .ToFrame().ToNowObservable()).CreateNewObject();
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame listViewFrame) 
-            => (listViewFrame.WhenGridControl()
+            => listViewFrame.WhenGridControl()
                 .Publish(source => source.SelectMany(t => listViewFrame.Application.WhenFrame(((NestedFrame)t.frame)
                             .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
                         .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
                             .Equals(((ColumnView)t.gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
                     .Merge(Observable.Defer(() => source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
-                .SwitchIfEmpty(listViewFrame.ProcessListViewSelectedItem()))
+                .SwitchIfEmpty(listViewFrame.ProcessListViewSelectedItem())
                 .Select(detailViewFrame => (frame: listViewFrame,detailViewFrame));
 
         public static DetailView DashboardChildDetailView(this NestedFrame listViewFrame) 

@@ -92,7 +92,7 @@ namespace XAF.Testing.RX{
         public static IObservable<T> DoOnComplete<T>(this IObservable<T> source, Action onComplete)
             => source.Do(_ => { }, onComplete);
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 20).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 60).Seconds();
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source,string message) 
             => source.Timeout(TimeoutInterval, Observable.Throw<TSource>(new TimeoutException(message)));

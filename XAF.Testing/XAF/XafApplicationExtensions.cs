@@ -116,13 +116,17 @@ namespace XAF.Testing.XAF{
                     return frame.GetController<DeleteObjectsViewController>().DeleteAction
                         .Trigger(frame.WhenDisposedFrame().Select(_ => (type,keyValue,application)));
             });
-        public static IObservable<(Type type, object keyValue, XafApplication application, Frame source)> WhenDeleteObject(this IObservable<(Frame frame,Frame source)> source)
+        public static IObservable<(Type type, object keyValue, XafApplication application, Frame parent,bool isAggregated)> WhenDeleteObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
             => source.SelectMany(t => {
                     var keyValue = t.frame.View.ObjectSpace.GetKeyValue(t.frame.View.CurrentObject);
                     var type = t.frame.View.ObjectTypeInfo.Type;
                     var application = t.frame.Application;
                     return t.frame.GetController<DeleteObjectsViewController>().DeleteAction
-                        .Trigger(t.frame.WhenDisposedFrame().Select(_ => (type,keyValue,application,t.source)));
+                        .Trigger(!t.isAggregated ? t.frame.WhenDisposedFrame().Take(1) : t.parent.Observe().WhenNotDefault()
+                                .SelectMany(frame => frame.View.ObjectSpace.WhenModifyChanged().Take(1)
+                                    .Select(_ => frame.GetController<ModificationsController>().SaveAction)
+                                    .SelectMany(simpleAction => simpleAction.Trigger())))
+                        .Select(_ => (type, keyValue, application, t.parent, t.isAggregated)).Take(1);
             });
         public static IEnumerable<IObjectSpaceProvider> ObjectSpaceProviders(this XafApplication application, params Type[] objectTypes) 
             => objectTypes.Select(application.GetObjectSpaceProvider).Distinct();
@@ -159,17 +163,22 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> UseObjectSpace<T>(this XafApplication application,Func<IObjectSpace,IObservable<T>> factory,bool useObjectSpaceProvider=false,[CallerMemberName]string caller="") 
             => Observable.Using(() => application.CreateObjectSpace(useObjectSpaceProvider, typeof(T), caller: caller), factory);
         
-        public static IObservable<(ITypeInfo typeInfo, object keyValue, Type controllerType, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame parent)> source)
+        public static IObservable<(XafApplication application, ListViewCreatingEventArgs e)> WhenListViewCreating(this XafApplication application,Type objectType=null,bool? isRoot=null) 
+            => application.WhenEvent<ListViewCreatingEventArgs>(nameof(XafApplication.ListViewCreating))
+                .Where(pattern => (!isRoot.HasValue || pattern.IsRoot == isRoot) &&
+                                  (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type))).InversePair(application);
+        
+        public static IObservable<(ITypeInfo typeInfo, object keyValue, bool needsDelete, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
             => source.If(t => t.frame.GetController<DialogController>()==null,t => {
                     var currentObjectInfo = t.frame.View.CurrentObjectInfo();
                     (t.frame.GetController<ModificationsController>()??t.parent.GetController<ModificationsController>()).SaveAction.DoExecute();
-                    return currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,typeof(ModificationsController),source: t.parent));
+                    return currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,false,source: t.parent));
                 },
                 t => {
                     var currentObjectInfo = t.frame.View.CurrentObjectInfo();
                     var acceptAction = t.frame.GetController<DialogController>().AcceptAction;
                     return acceptAction.Trigger(acceptAction.WhenExecuteCompleted()
-                        .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,typeof(DialogController),t.parent))));
+                        .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,true,t.parent))));
                 }
             );
 

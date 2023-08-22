@@ -82,7 +82,10 @@ namespace XAF.Testing.XAF{
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
             return compositeView.GetItems<PropertyEditor>().Where(editor => !editor.MemberInfo.IsKey&&!editor.MemberInfo.IsList)
-                .Do(editor => editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.GetValue(existingObject)))
+                .Do(editor => {
+                    var existingValue = editor.MemberInfo.GetValue(existingObject);
+                    editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.IsPersistent?compositeView.ObjectSpace.GetObject(existingValue): existingValue);
+                })
                 .IgnoreElements().ToUnit();
         }
         public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null){
@@ -154,9 +157,14 @@ namespace XAF.Testing.XAF{
         public static IObservable<TView> TakeUntilViewDisposed<TView>(this IObservable<TView> source) where TView:View 
             => source.TakeWhileInclusive(view => !view.IsDisposed);
 
+        internal static ListView AsListView(this View view) => view as ListView;
         internal static ListView ToListView(this View view) => ((ListView)view);
-        
-        
+
+
+        public static IObservable<object> WhenSelectedObjects(this View view) 
+            => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
+                .StartWith(view.SelectedObjects.Cast<object>());
+
         private static IObservable<TFrameContainer> NestedFrameContainers<TView,TFrameContainer>(this IObservable<TFrameContainer> lazyListPropertyEditors, TView view, Type[] objectTypes) where TView : CompositeView where TFrameContainer:IFrameContainer{
             var listFrameContainers = view.GetItems<ViewItem>().OfType<TFrameContainer>().Where(editor => editor.Frame?.View != null)
                 .ToNowObservable().Merge(lazyListPropertyEditors);
