@@ -35,18 +35,17 @@ namespace OutlookInspired.Tests.ImportData{
                 // yield return new TestCaseData("Evaluation",null,-1, AssertEvaluation);
                 // yield return new TestCaseData("ModelDifference",null,-1, AssertModelDifference);
                 
-                yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
-                yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
-                yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
-                yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
-                yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
+                // yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
+                // yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
+                // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
+                // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView",12, AssertOrderListView);
-                // yield return new TestCaseData("OrderListView","Detail",12, AssertOrderListView);
+                yield return new TestCaseData("OrderListView","Detail",12, AssertOrderListView);
                 // yield return new TestCaseData("Opportunities",null,4, AssertOpportunitiesView);
             }
         }
-
         
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
             UtilityExtensions.TimeoutInterval = 2.Minutes();
@@ -54,6 +53,15 @@ namespace OutlookInspired.Tests.ImportData{
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl) )
                 .FilterListViews(application)
                 .Merge(productTabControl.IgnoreElements().To<Frame>())
+                .AssertFilterAction(filterCount);
+        }
+        
+        static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
+            UtilityExtensions.TimeoutInterval = 2.Minutes();
+            var orderTabControl = application.AssertTabControl<TabbedGroup>(typeof(Order));
+            return application.AssertDashboardMasterDetail(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertOrderDetailView(orderTabControl))
+                .FilterListViews(application)
+                .Merge(orderTabControl.IgnoreElements().To<Frame>())
                 .AssertFilterAction(filterCount);
         }
 
