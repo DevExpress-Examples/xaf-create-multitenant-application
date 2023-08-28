@@ -3,8 +3,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
-using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
 using XAF.Testing.XAF;
 
 namespace XAF.Testing.RX{
@@ -97,21 +95,26 @@ namespace XAF.Testing.RX{
             this IObservable<TSource> source,string message) 
             => source.Timeout(TimeoutInterval, Observable.Throw<TSource>(new TimeoutException(message)));
 
-        public static IObservable<SingleChoiceAction> AssertSingleChoiceAction<TItemDataType>(this IObservable<Frame> source,string actionId,int itemsCount) 
-            => source.Select(frame => frame.Action<SingleChoiceAction>(actionId)).Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
-                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction))
-                .Assert($"{nameof(AssertSingleChoiceAction)} {actionId} {itemsCount}");
-
         public static IObservable<TSource> Assert<TSource>(
             this IObservable<TSource> source, TimeSpan? timeout = null, [CallerMemberName] string caller = "") 
             => source.Assert(_ => "",timeout,caller);
 
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
             => source.Assert(_ => message,timeout,caller);
+
+        public static TimeSpan? AssertDelayOnContextInterval=null;
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller="") 
-            => source.Log(messageFactory, caller).ThrowIfEmpty(messageFactory.MessageFactory( caller)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval,messageFactory.MessageFactory( caller));
+            => source.DelayOnContext(AssertDelayOnContextInterval).Log(messageFactory, caller).ThrowIfEmpty(messageFactory.MessageFactory( caller)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval,messageFactory.MessageFactory( caller));
 
         private static string MessageFactory<TSource>(this Func<TSource, string> messageFactory, string caller) => $"{caller}: {messageFactory(default)}";
+
+        public static IObservable<T> ReplayFirstTake<T>(this IObservable<T> source,ConnectionMode mode=ConnectionMode.AutoConnect){
+            var takeAndReplay = source.TakeAndReplay(1);
+            return mode==ConnectionMode.AutoConnect?takeAndReplay.AutoConnect():takeAndReplay.RefCount();
+        }
+
+        public static IObservable<T> AutoConnectAndReplayFirstTake<T>(this IObservable<T> source) 
+            => source.ReplayFirstTake();
 
         public static TestObserver<T> Test<T>(this IObservable<T> source){
             var testObserver = new TestObserver<T>();
@@ -139,4 +142,10 @@ namespace XAF.Testing.RX{
                 })
                 .Dematerialize();
     }
+    
+    public enum ConnectionMode{
+        AutoConnect,
+        RefCount
+    }
+
 }

@@ -6,7 +6,7 @@ using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
 
 namespace OutlookInspired.Module.Services{
-    public static class ObjectSpaceExtensions{
+    internal static class ObjectSpaceExtensions{
         
         public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
             => new(){ KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,

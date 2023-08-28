@@ -6,7 +6,7 @@ using DevExpress.ExpressApp.Model;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
-    public static class XafApplicationExtensions{
+    internal static class XafApplicationExtensions{
         public static DetailView NewDetailView(this XafApplication application, Type objectType){
             var objectSpace = application.CreateObjectSpace(objectType);
             return application.CreateDetailView(objectSpace, objectSpace.CreateObject(objectType));

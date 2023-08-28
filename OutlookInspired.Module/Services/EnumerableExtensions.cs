@@ -1,7 +1,7 @@
 ﻿using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
-    public static class EnumerableExtensions{
+    internal static class EnumerableExtensions{
         
 
         public static IEnumerable<T> Finally<T>(this IEnumerable<T> source, Action action){

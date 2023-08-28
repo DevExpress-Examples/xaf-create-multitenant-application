@@ -97,7 +97,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
 		
-		public virtual ObservableCollection<CustomerCommunication> Employees{ get; set; } = new();
+		public virtual ObservableCollection<CustomerCommunication> CustomerCommunications{ get; set; } = new();
 
 		[Browsable(false)]
 		public virtual Guid? ProbationReasonId{ get; set; }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.UserControls
@@ -19,10 +18,10 @@ namespace OutlookInspired.Win.UserControls
 
         public override void Refresh(object currentObject)
         {
-            DataSource = ((Customer)currentObject).CustomerStores;
+            DataSource = ((Customer)currentObject)?.CustomerStores??new ObservableCollection<CustomerStore>();
             base.Refresh(currentObject);
         }
 
-        protected override Type GetObjectType() => typeof(CustomerStore);
+        public override Type ObjectType => typeof(CustomerStore);
     }
 }

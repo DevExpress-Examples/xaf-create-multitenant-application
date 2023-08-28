@@ -7,7 +7,7 @@ using OutlookInspired.Win.Extensions;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.ImportData.Extensions{
+namespace OutlookInspired.Tests.ImportData{
     public abstract class TestBase{
         protected static TimeSpan Timeout = UtilityExtensions.TimeoutInterval;
 

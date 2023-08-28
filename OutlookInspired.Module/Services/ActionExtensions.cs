@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Actions;
 
 namespace OutlookInspired.Module.Services{
-    public static class ActionExtensions{
+    internal static class ActionExtensions{
         public static IEnumerable<ChoiceActionItem> ChoiceActionItem(this object[] objects) 
             => objects.Select(o => new ChoiceActionItem(o.ToString(),o));
         public static View View(this ActionBase actionBase) => actionBase.View<View>();

@@ -9,7 +9,6 @@ using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.Controllers{
-    
     public interface IModelDashboardViewMasterDetail{
         [Category(OutlookInspiredModule.ModelCategory)]
         bool MasterDetail{ get; set; }

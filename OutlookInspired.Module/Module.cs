@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
@@ -7,7 +8,7 @@ using DevExpress.ExpressApp.ReportsV2;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Model;
 using OutlookInspired.Module.Services;
-
+[assembly:InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
 
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.ModuleBase.

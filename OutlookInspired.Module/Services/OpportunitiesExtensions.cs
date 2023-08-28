@@ -2,7 +2,7 @@
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
-    public static class OpportunitiesExtensions{
+    internal static class OpportunitiesExtensions{
         public static IEnumerable<QuoteMapItem> Opportunities(this IQueryable<Quote> quotes)
             => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)
                 .Select(stage => new QuoteMapItem{ Stage = stage, Value = quotes.GetQuotes( stage).CustomSum(q => q.Total) });

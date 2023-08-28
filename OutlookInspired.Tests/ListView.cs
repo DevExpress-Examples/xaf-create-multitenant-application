@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData{

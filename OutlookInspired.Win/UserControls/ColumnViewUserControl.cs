@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq.Expressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.XtraGrid.Views.Base;
@@ -14,25 +15,23 @@ namespace OutlookInspired.Win.UserControls
         protected ColumnView ColumnView;
         protected IList DataSource;
         private string _criteria;
-
+        public ColumnViewUserControl() => Load += (_, _) => Refresh();
         public event EventHandler CurrentObjectChanged;
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionTypeChanged;
         public event EventHandler ProcessObject;
-
-        public ColumnViewUserControl(){
-            Disposed+=OnDisposed;
-        }
-
-        private void OnDisposed(object sender, EventArgs e){
-            
-        }
+        
+        public void SetCriteria<T>(Expression<Func<T, bool>> lambda) 
+            => SetCriteria((LambdaExpression)lambda);
+        
+        public void SetCriteria(LambdaExpression lambda) 
+            => SetCriteria(lambda.ToCriteria(ObjectType).ToString());
 
         public void SetCriteria(string criteria){
             _criteria = criteria;
             Refresh();
         }
-
+        
         public virtual void Refresh(object currentObject) => Refresh();
 
         public void Setup(IObjectSpace objectSpace, XafApplication application){
@@ -45,14 +44,14 @@ namespace OutlookInspired.Win.UserControls
             ColumnView.DoubleClick += (_, _) => ProcessObject?.Invoke(this, EventArgs.Empty);
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();
-            Refresh();
         }
 
         public override void Refresh() 
-            => ColumnView.GridControl.DataSource = (object)DataSource ?? _objectSpace.NewEntityServerModeSource(GetObjectType(), _criteria);
+            => ColumnView.GridControl.DataSource = (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
 
-        protected virtual Type GetObjectType() => throw new NotImplementedException();
-        public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,GetObjectType());
+        public virtual Type ObjectType => throw new NotImplementedException();
+
+        public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,ObjectType);
 
         public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();
         public SelectionType SelectionType => SelectionType.Full;

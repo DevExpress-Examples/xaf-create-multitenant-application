@@ -75,14 +75,16 @@ namespace XAF.Testing.XAF{
                 .WhenNotDefault(e => e.Row).StartWith(columnView.FocusedRowObject).WhenNotDefault()
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
-                .Merge(Observable.Defer(() => {
-                    var row = columnView.FindRow(columnView.YieldDataSource().First());
-                    columnView.Focus();
-                    columnView.SelectRow(row);
-                    columnView.SelectRow(2);
-                    columnView.FocusedRowHandle = 2;
-                    return Observable.Empty<ColumnView>();
-                }).To<ColumnView>());
+                .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
+                    .SelectMany(o => {
+                        var row = columnView.FindRow(columnView.YieldDataSource().First());
+                        columnView.Focus();
+                        columnView.SelectRow(row);
+                        columnView.SelectRow(2);
+                        columnView.FocusedRowHandle = 2;
+                        return Observable.Empty<ColumnView>();
+
+                    }));
 
         private static BaseViewHandler ViewHandler(this ColumnView columnView) 
             => columnView is LayoutView layoutView ? new LayoutViewHandler(layoutView) : new GridHandler((GridView)columnView);

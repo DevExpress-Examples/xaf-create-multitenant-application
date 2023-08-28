@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using DevExpress.Data.Filtering;
@@ -6,7 +7,11 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services{
-    public static class Extensions{
+    internal static class Extensions{
+        public static Type GetExpressionType(this LambdaExpression expression) 
+            => expression.Parameters[0].Type;
+        public static CriteriaOperator ToCriteria<T>(this Expression<Func<T, bool>> expression) 
+            => CriteriaOperator.FromLambda(expression);
         public static CriteriaOperator Combine(this CriteriaOperator criteriaOperator,string criteria,GroupOperatorType type=GroupOperatorType.And){
             var @operator = CriteriaOperator.Parse(criteria);
             return criteriaOperator != null ? new GroupOperator(type, @operator, criteriaOperator) : @operator;

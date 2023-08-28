@@ -1,7 +1,8 @@
 ﻿using DevExpress.ExpressApp.SystemModule;
 
 namespace OutlookInspired.Module.Services{
-    public static class ControllerExtensions{
+    internal static class ControllerExtensions{
+        [Obsolete]
         public static void UseObjectDefaultDetailView(this NewObjectViewController controller){
             controller.ObjectCreating += (_, e) => e.Cancel = true;
             controller.NewObjectAction.Executed += (_, e) => {

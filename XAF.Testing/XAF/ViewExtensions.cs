@@ -81,10 +81,10 @@ namespace XAF.Testing.XAF{
 
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
-            return compositeView.GetItems<PropertyEditor>().Where(editor => !editor.MemberInfo.IsKey&&!editor.MemberInfo.IsList)
-                .Do(editor => {
-                    var existingValue = editor.MemberInfo.GetValue(existingObject);
-                    editor.MemberInfo.SetValue(compositeView.CurrentObject, editor.MemberInfo.IsPersistent?compositeView.ObjectSpace.GetObject(existingValue): existingValue);
+            return compositeView.ObjectTypeInfo.Members.Where(memberInfo => !memberInfo.IsKey&&!memberInfo.IsList)
+                .Do(memberInfo => {
+                    var existingValue = memberInfo.GetValue(existingObject);
+                    memberInfo.SetValue(compositeView.CurrentObject, memberInfo.IsPersistent?compositeView.ObjectSpace.GetObject(existingValue): existingValue);
                 })
                 .IgnoreElements().ToUnit();
         }
@@ -160,7 +160,8 @@ namespace XAF.Testing.XAF{
         internal static ListView AsListView(this View view) => view as ListView;
         internal static ListView ToListView(this View view) => ((ListView)view);
 
-
+        public static IObservable<T> WhenControlsCreated<T>(this IObservable<T> source) where T:View 
+            => source.SelectMany(view => view.WhenViewEvent(nameof(View.ControlsCreated)));
         public static IObservable<object> WhenSelectedObjects(this View view) 
             => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
                 .StartWith(view.SelectedObjects.Cast<object>());

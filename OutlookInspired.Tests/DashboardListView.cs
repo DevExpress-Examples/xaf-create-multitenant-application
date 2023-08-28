@@ -1,18 +1,13 @@
 ﻿using System.Collections;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
+using DevExpress.XtraLayout;
+using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
-using OutlookInspired.Module.Services;
-using OutlookInspired.Tests.ImportData.Extensions;
+using OutlookInspired.Tests.ImportData.Assert;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
-using Assert = XAF.Testing.XAF.Assert;
-using TabbedGroup = DevExpress.XtraLayout.TabbedGroup;
 
 namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]
@@ -39,10 +34,10 @@ namespace OutlookInspired.Tests.ImportData{
                 // yield return new TestCaseData("Evaluation",null,-1, AssertEvaluation);
                 // yield return new TestCaseData("ModelDifference",null,-1, AssertModelDifference);
                 
-                yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
-                // yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
-                // yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
+                yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
+                yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
                 // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
                 // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView",12, AssertOrderListView);
@@ -54,35 +49,29 @@ namespace OutlookInspired.Tests.ImportData{
         
 
         public static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
-            var tabControl = application.AssertTabControl<TabbedGroup>();
-            var assert = application.AssertDashboardMasterDetail(navigationView, viewVariant, assertExistingObjectDetailview: AssertEmployeeDetailView)
-                .Merge(tabControl.IgnoreElements().To<Frame>().IgnoreElements())
-                .ConcatIgnored(frame => frame.Observe().DashboardViewItem(item => !item.MasterViewItem()).ToFrame()
-                    .SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation()
-                        .ConcatDefer(() => {
-                            var assertTabControl = application.AssertTabControl<TabbedGroup>();
-                            return tabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1, frame1 => frame1.AssertRootEmployeeTask(assertTabControl),Assert.All^Assert.Delete)
-                                .Merge(assertTabControl.IgnoreElements().To<Unit>());
-                        })))
-                
-                .DashboardViewItem(item => item.MasterViewItem()).ToFrame()
-                .AssertFilterAction(filterCount);
-            return application.FilterEmployeeListViews()
-                .TakeUntilCompleted(assert).ToFirst().To<Frame>();
+            var assert = application.AssertNavigation(navigationView)
+                // .DelayOnContext(TimeSpan.Zero)
+                // .Publish(source => source.Merge(application.FilterEmployeeListViews().IgnoreElements().To<Window>()).Merge(source))
+                // .ReplayFirstTake()
+                .AssertDashboardMasterDetail(viewVariant, existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
+                .AssertEmployeeDashboardChildView(application)
+                // .AssertFilterAction(filterCount)
+                ;
+            return assert
+                .Merge(application.FilterEmployeeListViews().IgnoreElements().TakeUntilCompleted(assert));
         }
 
-        private static IObservable<Unit> AssertEmployeeDetailView(Frame employeeDetailViewFrame) 
-            => employeeDetailViewFrame.Defer(() => {
-                    // return Observable.Empty<Unit>();
-                    var tabControl = employeeDetailViewFrame.Application.AssertTabControl<TabbedGroup>();
-                    return employeeDetailViewFrame.AssertNestedEmployeeTask( tabControl)
-                        .Concat(employeeDetailViewFrame.AssertNestedEvaluation())
-                        .Merge(tabControl.To<Unit>().IgnoreElements());
-                })
-                .TakeAndReplay(1).RefCount();
-
-        
-
+        internal static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
+            UtilityExtensions.TimeoutInterval = 120.Seconds();
+            var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
+            var assert = application.AssertNavigation(navigationView)
+                    .AssertDashboardMasterDetail(viewVariant, existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame))
+                    .AssertFilterAction(filterCount);
+            return assert
+                .Merge(application.FilterCustomerListViews().IgnoreElements().TakeUntilCompleted(assert).To<Frame>())
+                .Merge(customerTabControl.IgnoreElements().To<Frame>());
+            
+        }
 
         // public static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant, int filterCount){
         //     return Observable.Empty<Frame>();
@@ -96,11 +85,7 @@ namespace OutlookInspired.Tests.ImportData{
         // public static IObservable<Frame> AssertModelDifference(XafApplication application, string navigationView, string viewVariant, int filterCount){
         //     return Observable.Empty<Frame>();
         // }
-        // internal static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
-        //     return application.AssertDashboardMasterDetail(navigationView, viewVariant)
-        //         .MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount);
-        //     // return itemSource.AssertDetailViewGridControlHasObjects().ToUnit();
-        // }
+        
         // internal static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
         //     => application.AssertDashboardMasterDetail(navigationView, viewVariant)
         //         .MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount);
@@ -116,42 +101,5 @@ namespace OutlookInspired.Tests.ImportData{
         //     => application.AssertDashboardMasterDetail(navigationView, viewVariant,
         //             frame => viewVariant=="OrderListView"?frame.DashboardListViewEditFrame():frame.DashboardDetailViewFrame())
         //         .MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount);
-    }
-    
-    
-
-    static class AssertExtensions{
-        internal static IObservable<Unit> AssertNestedEmployeeTask(this Frame frame, IObservable<TabbedGroup> tabControl) 
-            => frame.AssertNestedListView(typeof(EmployeeTask), taskDetailViewFrame => taskDetailViewFrame.AssertRootEmployeeTask(tabControl), 
-                    assert: Assert.All ^ Assert.Delete).ToUnit();
-
-        internal static IObservable<Unit> AssertRootEmployeeTask(this  Frame taskDetailViewFrame,IObservable<TabbedGroup> tabControl) 
-            => tabControl.AssertNestedListView(taskDetailViewFrame, typeof(TaskAttachedFile),1,_ => Observable.Empty<Unit>(), assert:Assert.All^Assert.Process)
-                .Concat(tabControl.AssertNestedListView(taskDetailViewFrame,typeof(Employee),2,_ => Observable.Empty<Unit>(),Assert.HasObject));
-
-        internal static IObservable<Unit> AssertNestedEvaluation(this Frame frame) 
-            => frame.AssertNestedListView(typeof(Evaluation), _ => Observable.Empty<Unit>(), assert: Assert.All ^ Assert.Delete).ToUnit();
-
-        internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
-            => source.AssertSingleChoiceAction<ViewFilter>(ViewFilterController.FilterViewActionId, filtersCount)
-                .AssertFilterAction(filtersCount);
-
-        private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source, int filtersCount) 
-            => source.AssertFilters(filtersCount).IgnoreElements()
-                .Concat(source.AssertItemsAdded(source.AssertDialogControllerListView(typeof(ViewFilter), Assert.All ^ Assert.Process ^ Assert.Delete, true).ToSecond()));
-
-        internal static IObservable<(XafApplication application, ListViewCreatingEventArgs e)> FilterEmployeeListViews(this XafApplication application) 
-            => application.WhenListViewCreating(typeof(Employee))
-                .Do(t => t.e.CollectionSource.SetCriteria<Employee>(employee =>employee.Evaluations.Any()&& employee.AssignedTasks.Any(task => task.AttachedFiles.Any())))
-                .Merge(application.WhenListViewCreating(typeof(EmployeeTask))
-                    .Do(t => t.e.CollectionSource.SetCriteria<EmployeeTask>(employeeTask =>employeeTask.AttachedFiles.Any())));
-
-        private static IObservable<Frame> AssertFilters(this IObservable<SingleChoiceAction> source,int filtersCount) 
-            => source.SelectMany(filterAction => filterAction.Items<ViewFilter>().ToNowObservable()
-                    .SelectManySequential(item => filterAction.Trigger(filterAction.View()
-                            .AssertObjectsCount(Convert.ToInt32(Regex.Match(item.Caption, @"\((\d+)\)").Groups[1].Value)), () => item)
-                        .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame()))
-                .Skip(filtersCount - 1)
-                .Assert();
     }
 }

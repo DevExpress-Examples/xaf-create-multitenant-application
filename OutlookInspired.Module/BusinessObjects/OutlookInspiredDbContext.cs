@@ -63,6 +63,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
     public DbSet<TaskAttachedFile> TaskAttachedFiles { get; set; }
     public DbSet<ViewFilter> ViewFilters { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
         
@@ -98,15 +99,10 @@ static class ModelCreating{
 
 	internal static ModelBuilder OnEvaluation(this ModelBuilder modelBuilder){
 	    var evaluation = modelBuilder.Entity<Evaluation>();
-	    // evaluation.HasOne(item => item.Manager).WithMany(employee => employee.EvaluationsCreatedBy);
-	    // evaluation.HasOne(e => e.Manager).WithMany().HasForeignKey(e => e.ManagerId).OnDelete(DeleteBehavior.Cascade);
 	    evaluation.HasOne(e => e.Manager)
 		    .WithMany(employee => employee.EvaluationsCreatedBy)
 		    .HasForeignKey(e => e.ManagerId)
 		    .OnDelete(DeleteBehavior.Cascade);
-
-	    // evaluation.HasOne(e => e.RecurrencePattern).WithMany(e => e.RecurrenceEvaluations).HasForeignKey(e => e.RecurrencePatternId);
-	    // evaluation.HasOne(e => e.RecurrencePattern).WithMany().OnDelete(DeleteBehavior.Restrict);
 	    return modelBuilder;
     }
 
@@ -122,7 +118,7 @@ static class ModelCreating{
 	internal static ModelBuilder OnCustomerCommunication(this ModelBuilder modelBuilder){
 	    var customerCommunication = modelBuilder.Entity<CustomerCommunication>();
 	    customerCommunication.HasOne(communication => communication.CustomerEmployee).WithMany(employee => employee.CustomerCommunications);
-	    customerCommunication.HasOne(communication => communication.Employee).WithMany(employee => employee.Employees);
+	    customerCommunication.HasOne(communication => communication.Employee).WithMany(employee => employee.CustomerCommunications);
 	    return modelBuilder;
     }
 
@@ -195,24 +191,18 @@ static class ModelCreating{
 
 	internal static ModelBuilder OnEmployeeTask(this ModelBuilder modelBuilder){
 	    var employeeTask = modelBuilder.Entity<EmployeeTask>();
-	    // employeeTask.Ignore(task => task.AssignedEmployees);
 	    employeeTask.HasOne(task => task.AssignedEmployee).WithMany(employee => employee.AssignedTasks).HasForeignKey(task => task.AssignedEmployeeId).OnDelete(DeleteBehavior.SetNull);
-	    
-	    employeeTask.HasOne(task => task.CustomerEmployee).WithMany(employee => employee.EmployeeTasks);
 	    return modelBuilder;
     }
 
 	internal static ModelBuilder OnEmployee(this ModelBuilder modelBuilder){
 	    var employee = modelBuilder.Entity<Employee>();
-	    // employee.Ignore(employee1 => employee1.AssignedEmployeeTasks);
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
 	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);
-	    
 	    return modelBuilder;
-
-
 	}
+	
 	internal static ModelBuilder OnProductImage(this ModelBuilder modelBuilder){
 		var productImage = modelBuilder.Entity<ProductImage>();
 		productImage.HasOne(image => image.Picture).WithMany(picture => picture.ProductImages);

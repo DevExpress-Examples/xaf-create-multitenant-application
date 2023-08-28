@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
@@ -23,8 +25,21 @@ namespace XAF.Testing.XAF{
         public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
             => source.Select(_ => _.e.View);
         
+        public static IObservable<Unit> FilterListViews(this XafApplication application,Func<DetailView,LambdaExpression,IObservable<object>> userControlSelector,params LambdaExpression[] expressions) 
+            => expressions.ToObservable()
+                .Select(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
+                    .SelectMany(view => view.WhenControlsCreated())
+                    .SelectMany(view => userControlSelector(view, expression.FuseAny(expressions)))
+                )
+                .Merge()
+                .MergeToUnit(expressions.ToObservable().Select(expression => application
+                        .WhenListViewCreating(expression.Parameters.First().Type)
+                        .Do(t => t.e.CollectionSource.SetCriteria(expression.Parameters.First().Type, expression.FuseAny(expressions)))).Merge()
+                    .Select(t => t.e));
+
+        
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
-            => application.WhenDetailViewCreated().Where(_ => objectType.IsAssignableFrom(_.e.View.ObjectTypeInfo.Type));
+            => application.WhenDetailViewCreated().Where(_ =>objectType?.IsAssignableFrom(_.e.View.ObjectTypeInfo.Type)??true);
 
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application) 
             => application.WhenEvent<DetailViewCreatedEventArgs>(nameof(XafApplication.DetailViewCreated)).InversePair(application);
@@ -162,11 +177,22 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<T> UseObjectSpace<T>(this XafApplication application,Func<IObjectSpace,IObservable<T>> factory,bool useObjectSpaceProvider=false,[CallerMemberName]string caller="") 
             => Observable.Using(() => application.CreateObjectSpace(useObjectSpaceProvider, typeof(T), caller: caller), factory);
+        public static IObservable<ListView> ToListView(this IObservable<(XafApplication application, ListViewCreatedEventArgs e)> source) 
+            => source.Select(_ => _.e.ListView);
+
         
+        public static IObservable<TView> ToObjectView<TView>(this IObservable<(ObjectView view, EventArgs e)> source) where TView:View 
+            => source.Where(_ => _.view is TView).Select(_ => _.view).Cast<TView>();
+
+        
+        public static IObservable<(XafApplication application, DetailViewCreatingEventArgs e)> WhenDetailViewCreating(this XafApplication application,params Type[] objectTypes) 
+            => application.WhenEvent<DetailViewCreatingEventArgs>(nameof(XafApplication.DetailViewCreating)).InversePair(application)
+                .Where(t => !objectTypes.Any() || objectTypes.Contains(application.Model.Views[t.source.ViewID].AsObjectView.ModelClass.TypeInfo.Type));
         public static IObservable<(XafApplication application, ListViewCreatingEventArgs e)> WhenListViewCreating(this XafApplication application,Type objectType=null,bool? isRoot=null) 
             => application.WhenEvent<ListViewCreatingEventArgs>(nameof(XafApplication.ListViewCreating))
                 .Where(pattern => (!isRoot.HasValue || pattern.IsRoot == isRoot) &&
-                                  (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type))).InversePair(application);
+                                  (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type)))
+                .InversePair(application);
         
         public static IObservable<(ITypeInfo typeInfo, object keyValue, bool needsDelete, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
             => source.If(t => t.frame.GetController<DialogController>()==null,t => {

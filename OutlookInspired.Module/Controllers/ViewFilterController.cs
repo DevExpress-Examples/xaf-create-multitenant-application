@@ -26,7 +26,7 @@ namespace OutlookInspired.Module.Controllers{
         
         private void FilterView(){
             var criteria = FilterAction.SelectedItem.Data is ViewFilter viewFilter ? viewFilter.Criteria : null;
-            var userControl = View.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>().FirstOrDefault();
+            var userControl = View.UserControl();
             if (userControl != null){
                 userControl.SetCriteria(criteria);
             }
@@ -34,6 +34,8 @@ namespace OutlookInspired.Module.Controllers{
                 View.ToListView().CollectionSource.Criteria[nameof(ViewFilterController)] = CriteriaOperator.Parse(criteria);
             }
         }
+
+        
 
         private bool ManagerFilters(ActionBaseEventArgs e){
             if (FilterAction.SelectedItem.Data as string != "Manage") return false;

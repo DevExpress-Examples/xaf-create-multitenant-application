@@ -2,7 +2,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 
 namespace OutlookInspired.Module.Services{
-    public static class ModelExtensions{
+    internal static class ModelExtensions{
         public static PropertyEditor NewPropertyEditor(this IModelMemberViewItem modelMemberViewItem) 
             => modelMemberViewItem.PropertyEditorType.HasPublicParameterlessConstructor()
                 ? (PropertyEditor)modelMemberViewItem.PropertyEditorType.CreateInstance()

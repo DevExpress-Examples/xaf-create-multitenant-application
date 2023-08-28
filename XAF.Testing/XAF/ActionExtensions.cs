@@ -5,9 +5,12 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using XAF.Testing.RX;
+using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class ActionExtensions{
+        public static T View<T>(this ActionBase actionBase) where T : View => actionBase.Controller.Frame?.View as T;
+        public static View View(this ActionBase actionBase) => actionBase.View<View>();
         public static IObservable<ItemsChangedEventArgs> WhenItemsChanged(this SingleChoiceAction action) 
             => action.WhenEvent<ItemsChangedEventArgs>(nameof(SingleChoiceAction.ItemsChanged)).TakeUntil(action.WhenDisposed());
 

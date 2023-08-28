@@ -15,10 +15,6 @@ namespace OutlookInspired.Win.UserControls
             labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
         }
 
-        protected override Type GetObjectType()
-        {
-            return typeof(Product);
-        }
-
+        public override Type ObjectType => typeof(Product);
     }
 }

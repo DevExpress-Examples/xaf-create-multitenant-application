@@ -7,7 +7,6 @@ using DevExpress.XtraLayout;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
-using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 

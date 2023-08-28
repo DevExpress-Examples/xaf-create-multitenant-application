@@ -2,7 +2,7 @@ using System.Reactive.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.ImportData.Extensions;
+using OutlookInspired.Tests.ImportData.Import;
 using Shouldly;
 using XAF.Testing.XAF;
 

@@ -9,9 +9,6 @@ namespace OutlookInspired.Win.UserControls
             InitializeComponent();
         }
 
-        protected override Type GetObjectType()
-        {
-            return typeof(Order);
-        }
+        public override Type ObjectType => typeof(Order);
     }
 }
