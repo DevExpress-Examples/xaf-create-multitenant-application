@@ -11,7 +11,6 @@ namespace OutlookInspired.Tests.ImportData.Assert{
 
         internal static IObservable<Unit> AssertCustomerDetailView(this IObservable<TabbedGroup> source,Frame frame) 
             => frame.Defer(() => frame.AssertNestedCustomerEmployee()
-                        // .DelayOnContext(50)
                     .Concat(source.AssertNestedOrder(frame)).IgnoreElements()
                     .Concat(source.AssertNestedQuote(frame)).IgnoreElements()
                     .Concat(source.AssertNestedCustomerStore(frame)).IgnoreElements()

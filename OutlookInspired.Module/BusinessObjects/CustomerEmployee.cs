@@ -18,7 +18,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[RuleRequiredField, Attributes.Validation.EmailAddress]
 		public virtual string Email { get; set; }
 		public virtual Picture Picture { get; set; }
-		[RuleRequiredField]
+		
 		public virtual Customer Customer { get; set; }
 		[Browsable(false)]
 		public virtual Guid CustomerId { get; set; }

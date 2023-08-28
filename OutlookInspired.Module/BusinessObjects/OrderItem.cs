@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations;
 namespace OutlookInspired.Module.BusinessObjects{
     public class OrderItem :OutlookInspiredBaseObject{
         public virtual Order Order { get; set; }
-        public virtual Product Product { get; set; }
+
+        public virtual Product Product{ get; set; }
+
         [Browsable(false)]
         public virtual Guid? ProductID { get; set; }
         

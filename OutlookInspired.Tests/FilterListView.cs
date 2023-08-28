@@ -25,17 +25,24 @@ namespace OutlookInspired.Tests.ImportData{
                 )
                 .ToFirst().To<Frame>();
 
+
+        internal static IObservable<Frame> FilterListViews(this IObservable<Frame> source, XafApplication application)
+            => source.Merge(application.FilterAllListViews(source));
         
-        internal static IObservable<Unit> FilterAllListViews(this XafApplication application) 
-            => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions());
+        internal static IObservable<Frame> FilterAllListViews(this XafApplication application,IObservable<Frame> assert) 
+            => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
+                .IgnoreElements().TakeUntilCompleted(assert).To<Frame>();
 
         private static LambdaExpression[] Expressions()
             => new LambdaExpression[]{
                 Customers(), CustomerEmployees(), Orders(), Quotes(), CustomerStores(),
-                Employees(),Tasks()
+                Employees(),Tasks(),
+                Products()
             };
         private static Expression<Func<Customer, bool>> Customers() 
             => customer => customer.Employees.Any() && customer.Orders.Any() && customer.Quotes.Any() && customer.CustomerStores.Any();
+        private static Expression<Func<Product, bool>> Products() 
+            => product => product.OrderItems.Any();
         
         private static Expression<Func<Employee, bool>> Employees() 
             => employee => employee.AssignedTasks.Any()&&employee.Evaluations.Any();

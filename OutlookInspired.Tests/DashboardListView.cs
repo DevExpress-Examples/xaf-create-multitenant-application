@@ -39,8 +39,8 @@ namespace OutlookInspired.Tests.ImportData{
                 yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
                 yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
                 yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
-                // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
-                // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
+                yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
+                yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView",12, AssertOrderListView);
                 // yield return new TestCaseData("OrderListView","Detail",12, AssertOrderListView);
                 // yield return new TestCaseData("Opportunities",null,4, AssertOpportunitiesView);
@@ -48,27 +48,32 @@ namespace OutlookInspired.Tests.ImportData{
         }
 
         
-
-        public static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
-            // UtilityExtensions.AssertDelayOnContextInterval = 500.Milliseconds();
+        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
             UtilityExtensions.TimeoutInterval = 2.Minutes();
-            var assert = application
-                    .AssertDashboardMasterDetail(navigationView,viewVariant, existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
-                    .AssertEmployeeDashboardChildView(application)
-                .AssertFilterAction(filterCount)
-                ;
-            return assert
-                .Merge(application.FilterAllListViews().IgnoreElements().TakeUntilCompleted(assert).To<Frame>());
+            var productTabControl = application.AssertTabControl<TabbedGroup>(typeof(Product));
+            return application.AssertDashboardMasterDetail(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl) )
+                .FilterListViews(application)
+                .Merge(productTabControl.IgnoreElements().To<Frame>())
+                .AssertFilterAction(filterCount);
         }
 
-        internal static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
+        static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
+            UtilityExtensions.TimeoutInterval = 2.Minutes();
+            return application
+                .AssertDashboardMasterDetail(navigationView,viewVariant, existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
+                .AssertEmployeeDashboardChildView(application)
+                .AssertFilterAction(filterCount)
+                .FilterListViews(application);
+        }
+
+        static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
             UtilityExtensions.TimeoutInterval = 2.Minutes();
             var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
             var assert = application
                     .AssertDashboardMasterDetail(navigationView,viewVariant, existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame))
                     .AssertFilterAction(filterCount);
             return assert
-                .Merge(application.FilterAllListViews().IgnoreElements().TakeUntilCompleted(assert).To<Frame>())
+                .Merge(application.FilterAllListViews(assert))
                 .Merge(customerTabControl.IgnoreElements().To<Frame>());
             
         }
@@ -86,9 +91,7 @@ namespace OutlookInspired.Tests.ImportData{
         //     return Observable.Empty<Frame>();
         // }
         
-        // internal static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
-        //     => application.AssertDashboardMasterDetail(navigationView, viewVariant)
-        //         .MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount);
+        
 
         // internal static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
         //     => application.AssertDashboardListView(navigationView, viewVariant,_ => Observable.Empty<Frame>())

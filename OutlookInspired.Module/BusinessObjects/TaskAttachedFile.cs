@@ -8,7 +8,7 @@ using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
     public class TaskAttachedFile :OutlookInspiredBaseObject{
-        [RuleRequiredField]
+        
         public virtual EmployeeTask EmployeeTask { get; set; }
         [ExpandObjectMembers(ExpandObjectMembers.Never), RuleRequiredField()]
         public virtual FileData File { get; set; }
