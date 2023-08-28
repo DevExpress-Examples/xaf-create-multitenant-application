@@ -24,6 +24,13 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
             => source.Select(_ => _.e.View);
+
+        public static IObservable<ListViewCreatingEventArgs> FilterListViews(this XafApplication application, params LambdaExpression[] expressions)
+            => expressions.ToObservable().Select(expression => application
+                    .WhenListViewCreating(expression.Parameters.First().Type)
+                    .Do(t => t.e.CollectionSource.SetCriteria(expression.Parameters.First().Type,
+                        expression.FuseAny(expressions)))).Merge()
+                .Select(t => t.e);
         
         public static IObservable<Unit> FilterListViews(this XafApplication application,Func<DetailView,LambdaExpression,IObservable<object>> userControlSelector,params LambdaExpression[] expressions) 
             => expressions.ToObservable()
@@ -32,10 +39,7 @@ namespace XAF.Testing.XAF{
                     .SelectMany(view => userControlSelector(view, expression.FuseAny(expressions)))
                 )
                 .Merge()
-                .MergeToUnit(expressions.ToObservable().Select(expression => application
-                        .WhenListViewCreating(expression.Parameters.First().Type)
-                        .Do(t => t.e.CollectionSource.SetCriteria(expression.Parameters.First().Type, expression.FuseAny(expressions)))).Merge()
-                    .Select(t => t.e));
+                .MergeToUnit(application.FilterListViews(expressions));
 
         
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 

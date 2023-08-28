@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing.RX;
@@ -14,16 +15,16 @@ namespace OutlookInspired.Tests.ImportData.Assert{
                 .ReplayFirstTake();
         internal static IObservable<Frame> AssertEmployeeDashboardChildView(this IObservable<Frame> source,XafApplication application){
             var employeeTabControl = application.AssertTabControl<TabbedGroup>(typeof(Employee));
-            return source
-                .Merge(employeeTabControl.IgnoreElements().To<Frame>().IgnoreElements())
-                .ConcatIgnored(frame => frame.Observe().DashboardViewItem(item => !item.MasterViewItem()).ToFrame()
-                    .SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation()
-                        .ConcatDefer(() => {
-                            var employeeTaskTabControl = application.AssertTabControl<TabbedGroup>(typeof(EmployeeTask));
-                            return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
-                                    frame1 => frame1.AssertRootEmployeeTask(employeeTaskTabControl), AssertAction.AllButDelete)
-                                .Merge(employeeTaskTabControl.IgnoreElements().To<Unit>());
-                        })));
+            return source.DashboardViewItem(item => !item.MasterViewItem())
+                .Merge(employeeTabControl.IgnoreElements().To<DashboardViewItem>())
+                .SelectMany(item => item.Frame.Observe().SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation().IgnoreElements()
+                    .ConcatDefer(() => {
+                        var employeeTaskTabControl = application.AssertTabControl<TabbedGroup>(typeof(EmployeeTask));
+                        return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
+                                frame1 => frame1.AssertRootEmployeeTask(employeeTaskTabControl), AssertAction.AllButDelete)
+                            .Merge(employeeTaskTabControl.IgnoreElements().To<Unit>()).IgnoreElements();
+                    }).To<Frame>()))
+                .ConcatDefer(() => source);
         }
         
         internal static IObservable<Unit> AssertNestedEmployeeTask(this Frame frame){

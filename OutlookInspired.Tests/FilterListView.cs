@@ -19,14 +19,14 @@ namespace OutlookInspired.Tests.ImportData{
                 .TakeUntilCompleted(source);
         internal static IObservable<Frame> FilterEmployeeListViews(this XafApplication application) 
             => application.WhenListViewCreating(typeof(Employee))
-                // .Do(t => t.e.CollectionSource.SetCriteria<Employee>(employee =>employee.Evaluations.Any()&& employee.AssignedTasks.Any(task => task.AttachedFiles.Any())))
+                .Do(t => t.e.CollectionSource.SetCriteria<Employee>(employee =>employee.Evaluations.Any()&& employee.AssignedTasks.Any(task => task.AttachedFiles.Any())))
                 .Merge(application.WhenListViewCreating(typeof(EmployeeTask))
-                    // .Do(t => t.e.CollectionSource.SetCriteria<EmployeeTask>(employeeTask =>employeeTask.AttachedFiles.Any()))
+                    .Do(t => t.e.CollectionSource.SetCriteria<EmployeeTask>(employeeTask =>employeeTask.AttachedFiles.Any()))
                 )
                 .ToFirst().To<Frame>();
 
         
-        internal static IObservable<Unit> FilterCustomerListViews(this XafApplication application) 
+        internal static IObservable<Unit> FilterAllListViews(this XafApplication application) 
             => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions());
 
         private static LambdaExpression[] Expressions()

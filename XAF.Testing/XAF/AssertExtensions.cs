@@ -164,8 +164,8 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<Frame> AssertDashboardMasterDetail(this XafApplication application, string navigationView,
             string viewVariant, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null, Func<DashboardViewItem, bool> listViewFrameSelector=null,Func<Frame, IObservable<Unit>> existingObjectDetailview=null) 
-            => application.Defer(() => application.AssertNavigation(navigationView)
-                .AssertDashboardMasterDetail(viewVariant, detailViewFrameSelector, listViewFrameSelector, existingObjectDetailview));
+            => application.AssertNavigation(navigationView)
+                .AssertDashboardMasterDetail(viewVariant, detailViewFrameSelector, listViewFrameSelector, existingObjectDetailview);
 
         public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Window> source,string viewVariant=null, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null,
             Func<DashboardViewItem, bool> listViewFrameSelector=null, Func<Frame, IObservable<Unit>> existingObjectDetailview=null,AssertAction assert = AssertAction.All) 
