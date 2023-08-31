@@ -14,11 +14,13 @@ namespace OutlookInspired.Module.BusinessObjects {
 	[CloneView(CloneViewType.DetailView, ChildDetailViewId)]
 	[CloneView(CloneViewType.DetailView, CustomerLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, CustomerGridViewDetailView)]
+	[CloneView(CloneViewType.DetailView, CustomerDetailViewMaps)]
 	[XafDefaultProperty(nameof(Name))]
-	public class Customer:OutlookInspiredBaseObject,IViewFilter{
+	public class Customer:OutlookInspiredBaseObject,IViewFilter,ISalesMapsMarker{
 		public const string ChildDetailViewId = "Customer_DetailView_Child";
 		public const string CustomerGridViewDetailView = "CustomerGridView_DetailView";
 		public const string CustomerLayoutViewDetailView = "CustomerLayoutView_DetailView";
+		public const string CustomerDetailViewMaps = "Customer_DetailView_Maps";
 		[FontSizeDelta(4)]
 		public  virtual string HomeOfficeLine { get; set; }
 		[XafDisplayName("City")]
@@ -66,9 +68,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual int TotalEmployees { get; set; }
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual CustomerStatus Status { get; set; }
-		[InverseProperty(nameof(Order.Customer))]
-		[Aggregated]
-		public virtual ObservableCollection<Order> Orders{ get; set; }
+		
 
 		[InverseProperty(nameof(Quote.Customer))]
 		[Aggregated]
@@ -84,8 +84,15 @@ namespace OutlookInspired.Module.BusinessObjects {
 			DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual byte[] Logo { get; set; }
+		string IBaseMapsMarker.Title => Name;
+		double IBaseMapsMarker.Latitude => BillingAddressLatitude;
+		double IBaseMapsMarker.Longitude => BillingAddressLongitude;
 		
-		
+		[InverseProperty(nameof(Order.Customer))]
+		[Aggregated]
+		public virtual ObservableCollection<Order> Orders{ get; set; }
+
+		IEnumerable<Order> ISalesMapsMarker.Orders => Orders;
 	}
 	public enum CustomerStatus {
 		Active, Suspended

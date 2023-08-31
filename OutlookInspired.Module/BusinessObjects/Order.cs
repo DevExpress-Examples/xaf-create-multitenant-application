@@ -42,7 +42,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
-        public virtual byte[] ShipmentStatusImage => ShipmentStatus.ImageBytes();
+        public virtual byte[] ShipmentStatusImage => ShipmentStatus.ImageInfo().ImageBytes;
         public  virtual string Comments { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal RefundTotal { get; set; }
@@ -56,7 +56,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
-        public byte[] PaymentStatusImage => PaymentStatus.ImageBytes();
+        public byte[] PaymentStatusImage => PaymentStatus.ImageInfo().ImageBytes;
         [NotMapped]
         public double ActualWeight 
             => OrderItems == null ? 0 : OrderItems.Where(item => item.Product != null)

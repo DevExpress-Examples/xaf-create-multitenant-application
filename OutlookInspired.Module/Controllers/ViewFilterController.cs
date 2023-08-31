@@ -14,7 +14,7 @@ namespace OutlookInspired.Module.Controllers{
         public const string FilterViewActionId = "FilterView";
         public ViewFilterController(){
             FilterAction = new SingleChoiceAction(this,FilterViewActionId,PredefinedCategory.Filters){
-                ImageName = "Action_Filter",PaintStyle = ActionItemPaintStyle.Image,
+                ImageName = "Action_Filter",PaintStyle = ActionItemPaintStyle.Image
             };
             FilterAction.Executed += (_, e) => {
                 if (!ManagerFilters(e)) FilterView();
@@ -22,7 +22,6 @@ namespace OutlookInspired.Module.Controllers{
         }
         
         public SingleChoiceAction FilterAction{ get; }
-
         
         private void FilterView(){
             var criteria = FilterAction.SelectedItem.Data is ViewFilter viewFilter ? viewFilter.Criteria : null;
@@ -34,9 +33,7 @@ namespace OutlookInspired.Module.Controllers{
                 View.ToListView().CollectionSource.Criteria[nameof(ViewFilterController)] = CriteriaOperator.Parse(criteria);
             }
         }
-
         
-
         private bool ManagerFilters(ActionBaseEventArgs e){
             if (FilterAction.SelectedItem.Data as string != "Manage") return false;
             CreateViewFilterListView(e.ShowViewParameters);

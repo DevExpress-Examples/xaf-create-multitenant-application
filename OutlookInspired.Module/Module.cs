@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Model;
+using OutlookInspired.Module.Model.HideViewActions;
 using OutlookInspired.Module.Services;
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
@@ -74,8 +76,8 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    updaters.Add(new ModelViewClonerUpdater());
-	    updaters.Add(new MasterDetailViewUpdater());
+	    new IModelNodesGeneratorUpdater[]{new ModelViewClonerUpdater(),new MasterDetailViewUpdater(),new MapsViewUpdater()}
+		    .Do(updaters.Add).Enumerate();
     }
     
     

@@ -24,8 +24,10 @@ namespace OutlookInspired.Module.Services{
             => types.Any(item => frame.View is ObjectView objectView && objectView.Is(objectType:item));
 
         public static object ParentObject(this Frame frame) => frame.ParentObject<object>() ;
-        public static T ParentObject<T>(this Frame frame) where T : class => frame.As<NestedFrame>()?.ViewItem.View.CurrentObject as T;
-        
+
+        public static T ParentObject<T>(this Frame frame) where T : class
+            => frame is NestedFrame nestedFrame ? nestedFrame.View.CurrentObject as T : frame.View.CurrentObject as T;
+
         public static bool ParentIsNull(this Frame frame)  => frame.ParentObject<object>()==null;
         
         public static T As<T>(this object obj) 

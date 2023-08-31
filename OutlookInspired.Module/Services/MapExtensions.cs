@@ -2,7 +2,28 @@
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
-    internal static class OpportunitiesExtensions{
+    internal static class MapExtensions{
+        public static IEnumerable<CustomerStore> Stores(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default)
+            => salesMapsMarker.Orders.Where(period,dateTime)
+                .GroupBy(order => order.Store).Select(orders => orders.Key);
+
+        static IEnumerable<Order> Where(this IEnumerable<Order> source,Period period,DateTime dateTime=default) 
+            => source.Where(order => period == Period.ThisYear ? order.OrderDate.Year == DateTime.Now.Year : period == Period.ThisMonth
+                ? order.OrderDate.Month == DateTime.Now.Month && order.OrderDate.Year == DateTime.Now.Year
+                : period != Period.FixedDate || order.OrderDate.Month == dateTime.Month &&
+                order.OrderDate.Year == dateTime.Year && order.OrderDate.Day == dateTime.Day);
+
+        public static MapItem[] SaleMapItems(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default) 
+            => salesMapsMarker.Orders.Where(period,dateTime).SelectMany(order => order.OrderItems)
+                .Select(orderItem => new MapItem {
+                    Customer = orderItem.Order.Customer,
+                    Product = orderItem.Product,
+                    Total = orderItem.Total,
+                    Latitude = orderItem.Order.Store.Latitude,
+                    Longitude = orderItem.Order.Store.Longitude,
+                    City = orderItem.Order.Store.City
+                }).ToArray();
+
         public static IEnumerable<QuoteMapItem> Opportunities(this IQueryable<Quote> quotes)
             => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)
                 .Select(stage => new QuoteMapItem{ Stage = stage, Value = quotes.GetQuotes( stage).CustomSum(q => q.Total) });

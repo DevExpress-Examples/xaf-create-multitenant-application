@@ -30,7 +30,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual EmployeeTaskPriority Priority { get; set; }
 
         [VisibleInDetailView(false)][XafDisplayName(nameof(Priority))]
-        public byte[] PriorityImage => Priority.ImageBytes();
+        public byte[] PriorityImage => Priority.ImageInfo().ImageBytes;
         
         [EditorAlias(EditorAliases.ProgressEditor)]
         public virtual int Completion { get; set; }

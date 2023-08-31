@@ -1,19 +1,21 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using DevExpress.ExpressApp.DC;
+using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes.Validation;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
 	[XafDefaultProperty(nameof(Crest))]
-	public class CustomerStore :OutlookInspiredBaseObject{
-		public virtual string AddressLine { get; set; }
-		public virtual string AddressCity { get; set; }
-		public virtual StateEnum AddressState { get; set; }
+	public class CustomerStore :OutlookInspiredBaseObject,IMapsMarker{
+		
+		public virtual string Line { get; set; }
+		public virtual string City { get; set; }
+		public virtual StateEnum State { get; set; }
 		[ZipCode]
 		public virtual string ZipCode { get; set; }
-		public virtual double AddressLatitude { get; set; }
-		public virtual double AddressLongitude { get; set; }
+		public virtual double Latitude { get; set; }
+		public virtual double Longitude { get; set; }
 		public virtual Customer Customer { get; set; }
 		[Attributes.Validation.Phone]
 		public virtual string Phone { get; set; }
@@ -31,7 +33,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
 		[Aggregated]
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
-		
-
+		string IBaseMapsMarker.Title => Location;
 	}
 }

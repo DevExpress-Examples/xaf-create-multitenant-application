@@ -11,6 +11,9 @@ using LambdaExpression = System.Linq.Expressions.LambdaExpression;
 
 namespace OutlookInspired.Module.Services{
     public static class ViewExtensions{
+        public static object DefaultMemberValue(this View view)
+            => view.ObjectTypeInfo.DefaultMember?.GetValue(view.CurrentObject);
+        
         public static IUserControl UserControl(this CompositeView view) 
             => view.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>().FirstOrDefault();
         public static NestedFrame MasterFrame(this DashboardView view)

@@ -2,11 +2,10 @@ using System.Reactive.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.ImportData.Import;
 using Shouldly;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.ImportData{
+namespace OutlookInspired.Tests.ImportData.Import{
     public class ImportData:TestBase{
         [Test][Description("Deletes the sqlsever database if exists and imports from $(SQLiteFilePath)")]
         // [Ignore("")]

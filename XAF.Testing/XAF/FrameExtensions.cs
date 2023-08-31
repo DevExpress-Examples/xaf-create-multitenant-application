@@ -217,7 +217,7 @@ namespace XAF.Testing.XAF{
                 .To(frame));
 
         private static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-            => frame.View.WhenSelectedObjects().Take(1)
+            => frame.View.WhenObjects().Take(1)
                 .SelectMany(selectedObject => frame.ColumnViewCreateNewObject()
                     .SwitchIfEmpty(frame.ListViewCreateNewObject())
                     .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView()

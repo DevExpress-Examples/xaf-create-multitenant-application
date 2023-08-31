@@ -375,11 +375,11 @@ namespace OutlookInspired.Tests.ImportData.Import{
                     store.Phone = sqlLite.Phone;
                     store.Fax = sqlLite.Fax;
                     store.Location = sqlLite.Location;
-                    store.AddressCity = sqlLite.Address_City;
-                    store.AddressLatitude = sqlLite.Address_Latitude;
-                    store.AddressLongitude = sqlLite.Address_Longitude;
-                    store.AddressState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.Address_State.ToString());
-                    store.AddressLine = sqlLite.AddressLine;
+                    store.City = sqlLite.Address_City;
+                    store.Latitude = sqlLite.Address_Latitude;
+                    store.Longitude = sqlLite.Address_Longitude;
+                    store.State = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.Address_State.ToString());
+                    store.Line = sqlLite.AddressLine;
                     store.ZipCode = sqlLite.Address_ZipCode;
                     store.AnnualSales = sqlLite.AnnualSales;
                     store.SquereFootage = sqlLite.SquereFootage;

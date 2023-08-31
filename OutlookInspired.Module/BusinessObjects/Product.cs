@@ -14,10 +14,13 @@ namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("BO_Product")]
     [CloneView(CloneViewType.DetailView, ProductBrochureDetailView)]
     [CloneView(CloneViewType.DetailView, ProductCardViewDetailView)]
+    [CloneView(CloneViewType.DetailView, ProductDetailViewMaps)]
     [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = FontStyle.Strikeout)]
-    public class Product :OutlookInspiredBaseObject, IViewFilter{
+    public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
+        
         public const string ProductCardViewDetailView = "ProductCardView_DetailView";
         public const string ProductBrochureDetailView = "Product_Brochure_DetailView";
+        public const string ProductDetailViewMaps = "Product_DetailView_Maps";
         public  virtual string Name { get; set; }
         [FieldSize(-1)]
         public  virtual string Description { get; set; }
@@ -49,8 +52,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [InverseProperty(nameof(ProductCatalog.Product))][Aggregated]
         public virtual ObservableCollection<ProductCatalog> Catalogs{ get; set; } = new();
 
-        [InverseProperty(nameof(OrderItem.Product))][Aggregated]
-        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
+        
 
         [Aggregated]
         public virtual ObservableCollection<ProductImage> Images{ get; set; } = new();
@@ -59,8 +61,14 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
         [EditorAlias(EditorAliases.PdfViewerEditor)]
         public byte[] Brochure => Catalogs.Select(catalog => catalog.PDF).FirstOrDefault();
-        
+        string IBaseMapsMarker.Title => Name;
+        double IBaseMapsMarker.Latitude => throw new NotImplementedException();
+        double IBaseMapsMarker.Longitude => throw new NotImplementedException();
+        [InverseProperty(nameof(OrderItem.Product))][Aggregated]
+        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
 
+
+        IEnumerable<Order> ISalesMapsMarker.Orders => OrderItems.Select(item => item.Order).Distinct();
     }
 
     public enum ProductCategory {

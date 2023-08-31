@@ -38,8 +38,6 @@
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
     <ListView Id="Customer_CustomerStores_ListView" IsFooterVisible="True">
       <Columns>
-        <ColumnInfo Id="AddressLatitude" Index="-1" />
-        <ColumnInfo Id="AddressLongitude" Index="-1" />
         <ColumnInfo Id="Customer" Index="-1" />
         <ColumnInfo Id="Location" Index="-1" />
         <ColumnInfo Id="Phone" Index="4" />
@@ -99,14 +97,14 @@
             <LayoutGroup Id="Employees" RelativeSize="100">
               <LayoutItem Id="Employees" RelativeSize="100" />
             </LayoutGroup>
-            <LayoutGroup Id="Orders" RelativeSize="100">
-              <LayoutItem Id="Orders" RelativeSize="100" />
-            </LayoutGroup>
             <LayoutGroup Id="Quotes" RelativeSize="100">
               <LayoutItem Id="Quotes" RelativeSize="100" />
             </LayoutGroup>
             <LayoutGroup Id="CustomerStores" RelativeSize="100">
               <LayoutItem Id="CustomerStores" RelativeSize="100" />
+            </LayoutGroup>
+            <LayoutGroup Id="Orders" RelativeSize="100">
+              <LayoutItem Id="Orders" RelativeSize="100" />
             </LayoutGroup>
           </TabbedGroup>
         </LayoutGroup>
@@ -129,6 +127,18 @@
             </LayoutGroup>
           </LayoutGroup>
           <LayoutItem Id="CustomerStore" ViewItem="CustomerStore" Index="1" RelativeSize="91.30747126436782" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="Customer_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          </LayoutGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>
@@ -270,7 +280,6 @@
         <ColumnInfo Id="AttachedCollectionsChanged" Index="-1" />
         <ColumnInfo Id="AttachedFilesCount" Index="-1" />
         <ColumnInfo Id="Category" Index="-1" />
-        <ColumnInfo Id="CustomerEmployee" Index="-1" />
         <ColumnInfo Id="FollowUp" Index="-1" />
         <ColumnInfo Id="Overdue" Index="-1" />
         <ColumnInfo Id="Owner" Index="-1" />
@@ -300,7 +309,6 @@
         <ColumnInfo Id="AttachedCollectionsChanged" Index="-1" />
         <ColumnInfo Id="AttachedFilesCount" Index="-1" />
         <ColumnInfo Id="Category" Index="-1" />
-        <ColumnInfo Id="CustomerEmployee" Index="-1" />
         <ColumnInfo Id="FollowUp" Index="-1" />
         <ColumnInfo Id="Overdue" Index="-1" />
         <ColumnInfo Id="Owner" Index="-1" />
@@ -454,6 +462,18 @@
                 </LayoutGroup>
               </LayoutGroup>
             </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="Employee_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
@@ -818,6 +838,18 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="Product_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <ListView Id="Product_Images_ListView">
       <Columns>
         <ColumnInfo Id="Product" Index="-1" />
@@ -865,7 +897,6 @@
     <ListView Id="Product_QuoteItems_ListView">
       <Columns>
         <ColumnInfo Id="Product" Index="-1" />
-        <ColumnInfo Id="ProductId" Index="-1" />
         <ColumnInfo Id="ProductUnits" Index="1" Width="87" />
         <ColumnInfo Id="ProductPrice" Index="2" Width="86" />
         <ColumnInfo Id="Discount" Index="3" />

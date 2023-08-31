@@ -73,11 +73,7 @@
     <EmbeddedResource Include="Images\Terminated.png" />
   </ItemGroup>
   <ItemGroup>
-<!--    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />-->
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <!--    <Reference Include="Microsoft.Data.SqlClient">-->
-    <!--      <HintPath>..\OutlookInspired.MiddleTier\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll</HintPath>-->
-    <!--    </Reference>-->
     <PackageReference Include="DevExpress.ExpressApp" Version="23.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Chart" Version="23.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.4" />
@@ -111,7 +107,16 @@
     <None Update="UnusableNodes10.xml">
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
     </None>
+    <None Update="UnusableNodes12.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes13.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
     <None Update="UnusableNodes14.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes15.xml">
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes2.xml">

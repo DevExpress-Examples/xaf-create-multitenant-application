@@ -24,6 +24,11 @@
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
     </DetailView>
+    <DetailView Id="Customer_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
+      </Items>
+    </DetailView>
     <ListView Id="Customer_ListView">
       <Columns>
         <ColumnInfo Id="Logo" ImageSizeMode="CenterImage" />
@@ -58,6 +63,11 @@
       <Items>
         <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Title" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+      </Items>
+    </DetailView>
+    <DetailView Id="Employee_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
       </Items>
     </DetailView>
     <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
@@ -154,11 +164,15 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="Product_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
+      </Items>
+    </DetailView>
     <ListView Id="Product_ListView" ShowFindPanel="True" />
     <ListView Id="Quote_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor" DataAccessMode="DataView">
       <Columns>
         <ColumnInfo Id="Opportunity" Width="127" />
-        <ColumnInfo Id="City" PropertyName="CustomerStore.AddressCity" IsNewNode="True" />
         <ColumnInfo Id="Customer" Width="106" Removed="True" />
         <ColumnInfo Id="CustomerStore" Width="153" Removed="True" />
         <ColumnInfo Id="Date" Width="83" Removed="True" />
@@ -166,7 +180,6 @@
         <ColumnInfo Id="ID" Removed="True" />
         <ColumnInfo Id="Number" Width="94" Removed="True" />
         <ColumnInfo Id="ShippingAmount" Width="170" Removed="True" />
-        <ColumnInfo Id="State" PropertyName="CustomerStore.AddressState" Caption="State" IsNewNode="True" />
         <ColumnInfo Id="SubTotal" Width="104" Removed="True" />
         <ColumnInfo Id="Total" PropertyName="Total" IsNewNode="True" Removed="True" />
       </Columns>

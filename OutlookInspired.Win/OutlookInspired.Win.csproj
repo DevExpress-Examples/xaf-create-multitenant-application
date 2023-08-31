@@ -45,6 +45,8 @@
     <PackageReference Include="DevExpress.ExpressApp.Validation.Win" Version="23.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Win.Design" Version="23.1.4" />
+    
+    <PackageReference Include="DevExpress.Win.Map" Version="23.1.4" />
     <PackageReference Include="DevExpress.Persistent.Base" Version="23.1.4" />
     <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.4" />
     <PackageReference Include="DevExpress.RichEdit.Export" Version="23.1.4" />
@@ -72,6 +74,9 @@
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes1.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes10.xml">
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes2.xml">

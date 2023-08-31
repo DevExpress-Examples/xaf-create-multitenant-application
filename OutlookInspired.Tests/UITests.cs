@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Templates;
 using DevExpress.XtraLayout;
 using Humanizer;
 using NUnit.Framework;
@@ -12,29 +13,16 @@ using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]
-    public class DashboardListView:TestBase{
+    public class UITests:TestBase{
         [TestCaseSource(nameof(TestCases))]
         public async Task Test(string navigationView, string viewVariant,int filtersCount,Func<XafApplication,string,string,int,IObservable<Frame>> assert) {
             using var application = await SetupWinApplication();
             application.Model.Options.UseServerMode = false;
-            
-            // var dashboardListView = assert(application);
-            
-            // var assertFilterAction = dashboardListView.AssertFilterAction(filtersCount);
-            
-            application.StartWinTest(assert(application,navigationView, viewVariant,filtersCount)
-                    // .MergeToUnit(assertFilterAction)
-                    // .DoNotComplete()
-            );
+            application.StartWinTest(assert(application,navigationView, viewVariant,filtersCount));
         }
         
         private static IEnumerable TestCases{
             get{
-                // yield return new TestCaseData("Role",null,-1, AssertRole);
-                // yield return new TestCaseData("Users",null,-1, AssertUsers);
-                // yield return new TestCaseData("Evaluation",null,-1, AssertEvaluation);
-                // yield return new TestCaseData("ModelDifference",null,-1, AssertModelDifference);
-                
                 // yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
                 // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
                 // yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
@@ -42,11 +30,24 @@ namespace OutlookInspired.Tests.ImportData{
                 // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
                 // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView",12, AssertOrderListView);
-                yield return new TestCaseData("OrderListView","Detail",12, AssertOrderListView);
-                // yield return new TestCaseData("Opportunities",null,4, AssertOpportunitiesView);
+                // yield return new TestCaseData("OrderListView","Detail",12, AssertOrderListView);
+                // yield return new TestCaseData("Evaluation_ListView",null,-1, AssertEvaluation);
+                yield return new TestCaseData("Opportunities",null,4, AssertOpportunitiesView);
             }
         }
         
+        public static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant, int filterCount) 
+            => application.AssertListView(navigationView, viewVariant);
+        internal static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
+            => application.AssertDashboardMasterDetail(navigationView, viewVariant, _ => Observable.Empty<Frame>(),
+                    existingObjectDetailview: frame => frame.AssertNestedQuoteItems().ToUnit())
+                .FilterListViews(application)
+                .CloseWindow()
+                .Concat(application.AssertDashboardMasterDetail(navigationView, viewVariant,
+                    _ => Observable.Empty<Frame>(), item => !item.MasterViewItem(),existingObjectDetailview: frame => frame.AssertNestedQuoteItems().ToUnit())
+                    .FilterListViews(application))
+                .AssertFilterAction(filterCount);
+
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
             UtilityExtensions.TimeoutInterval = 2.Minutes();
             var productTabControl = application.AssertTabControl<TabbedGroup>(typeof(Product));
@@ -86,31 +87,7 @@ namespace OutlookInspired.Tests.ImportData{
             
         }
 
-        // public static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant, int filterCount){
-        //     return Observable.Empty<Frame>();
-        // }
-        // public static IObservable<Frame> AssertUsers(XafApplication application, string navigationView, string viewVariant, int filterCount){
-        //     return Observable.Empty<Frame>();
-        // }
-        // public static IObservable<Frame> AssertRole(XafApplication application, string navigationView, string viewVariant, int filterCount){
-        //     return Observable.Empty<Frame>();
-        // }
-        // public static IObservable<Frame> AssertModelDifference(XafApplication application, string navigationView, string viewVariant, int filterCount){
-        //     return Observable.Empty<Frame>();
-        // }
         
         
-
-        // internal static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
-        //     => application.AssertDashboardListView(navigationView, viewVariant,_ => Observable.Empty<Frame>())
-        //         .SelectMany(frame => frame.Observe().MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount).To(frame))
-        //         // .CloseWindow()
-        //         // .Concat(application.AssertDashboardListView(navigationView, viewVariant,_ => Observable.Empty<Frame>(), item => item.Model.ActionsToolbarVisibility==ActionsToolbarVisibility.Hide))
-        //     ;
-
-        // internal static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant,int filterCount) 
-        //     => application.AssertDashboardMasterDetail(navigationView, viewVariant,
-        //             frame => viewVariant=="OrderListView"?frame.DashboardListViewEditFrame():frame.DashboardDetailViewFrame())
-        //         .MasterDashboardViewItem().ToFrame().AssertFilterAction(filterCount);
     }
 }

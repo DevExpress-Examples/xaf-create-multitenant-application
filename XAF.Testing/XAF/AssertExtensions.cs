@@ -89,11 +89,10 @@ namespace XAF.Testing.XAF{
             => frame.DashboardViewItems(viewType,objectTypes).Where(match).ToNowObservable()
                 .Assert(item => $"{viewType} {item?.View} {item?.InnerView}");
 
-        public static IObservable<Frame> AssertListView(this XafApplication application,string navigation, string viewVariant=null) 
+        public static IObservable<Frame> AssertListView(this XafApplication application,string navigation, string viewVariant=null,Func<Frame, IObservable<Unit>> assertExistingObjectDetailview = null) 
             => application.AssertNavigation(navigation)
                 .AssertChangeViewVariant(viewVariant)
-                .AssertListView()
-                .Assert($"{nameof(AssertListView)} {navigation} {viewVariant}");
+                .AssertListView(assertExistingObjectDetailview);
 
         public static IObservable<Frame> AssertListView(this DashboardViewItem[] items, Type objectType,
             Func<Frame, IObservable<Unit>> assertExistingObjectDetailview = null, AssertAction assert = AssertAction.All) 
@@ -152,20 +151,12 @@ namespace XAF.Testing.XAF{
         private static IObservable<(Frame frame, Frame parent, bool isAggregated)> AssertCreateNewObject(this IObservable<(Frame frame, Frame parent, bool aggregated)> source, 
             AssertAction assert, bool inlineEdit) 
             => source.If(_ => assert.HasFlag(AssertAction.New),t => t.Observe().AssertCreateNewObject(inlineEdit));
-
-        // private static IObservable<Window> AssertExistingObjectRootDetailView(this IObservable<(Frame listViewFrame, Frame detailViewFrame)> source,Func<Window,IObservable<Unit>> assert) 
-        //     => source.Where(t => !t.detailViewFrame.View.ToDetailView().IsNewObject())
-        //         .If(t => t.listViewFrame.View is ListView,t => t.listViewFrame.Action<SimpleAction>(ListViewProcessCurrentObjectController.ListViewShowObjectActionId)
-        //                 .WhenExecuteCompleted().To(t.detailViewFrame).Cast<Window>()
-        //                 .ConcatIgnored(window => assert?.Invoke(window)??Observable.Empty<Unit>())
-        //                 .Assert(window => $"{window?.View}")
-        //                 .Do(frame => frame.Close()), t => t.detailViewFrame.Observe().Assert(window => $"{window?.View}")).Cast<Window>()
-        //         .TakeAndReplay(1).RefCount();
         
-        public static IObservable<Frame> AssertDashboardMasterDetail(this XafApplication application, string navigationView,
-            string viewVariant, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null, Func<DashboardViewItem, bool> listViewFrameSelector=null,Func<Frame, IObservable<Unit>> existingObjectDetailview=null) 
+        public static IObservable<Frame> AssertDashboardMasterDetail(this XafApplication application, string navigationView, string viewVariant, 
+            Func<Frame, IObservable<Frame>> detailViewFrameSelector = null, Func<DashboardViewItem, bool> listViewFrameSelector = null,
+            Func<Frame, IObservable<Unit>> existingObjectDetailview = null,AssertAction assert=AssertAction.All) 
             => application.AssertNavigation(navigationView)
-                .AssertDashboardMasterDetail(viewVariant, detailViewFrameSelector, listViewFrameSelector, existingObjectDetailview);
+                .AssertDashboardMasterDetail(viewVariant, detailViewFrameSelector, listViewFrameSelector, existingObjectDetailview,assert);
 
         public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Window> source,string viewVariant=null, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null,
             Func<DashboardViewItem, bool> listViewFrameSelector=null, Func<Frame, IObservable<Unit>> existingObjectDetailview=null,AssertAction assert = AssertAction.All) 

@@ -16,7 +16,9 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[VisibleInReports][ImageName("BO_Person")]
 	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
-	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource{
+	[CloneView(CloneViewType.DetailView, EmployeeDetailViewMaps)]
+	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,IRouteMapsMarker{
+		public const string EmployeeDetailViewMaps = "Employee_DetailView_Maps";
 		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
 		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";
 
@@ -28,19 +30,22 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual  EmployeeDepartment Department { get; set; }
 		[RuleRequiredField][FontSizeDelta(8)]
 		public virtual string Title { get; set; }
+		double IBaseMapsMarker.Latitude => AddressLatitude;
+		double IBaseMapsMarker.Longitude => AddressLongitude;
+
 		[VisibleInListView(false)]
 		public virtual EmployeeStatus Status { get; set; }
 		[VisibleInListView(false)]
 		public virtual DateTime? HireDate { get; set; }
 
-		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][DevExpress.ExpressApp.DC.Aggregated]
+		[InverseProperty(nameof(EmployeeTask.AssignedEmployee))][Aggregated]
 		public virtual ObservableCollection<EmployeeTask> AssignedTasks{ get; set; } = new();
 		
 		[InverseProperty(nameof(EmployeeTask.AssignedEmployees))]
 		public virtual ObservableCollection<EmployeeTask> AssignedEmployeeTasks{ get; set; } = new();
 		[InverseProperty(nameof(EmployeeTask.Owner))]
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
-		[InverseProperty(nameof(Evaluation.Employee))][DevExpress.ExpressApp.DC.Aggregated]
+		[InverseProperty(nameof(Evaluation.Employee))][Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
 		[VisibleInListView(false)]
 		public virtual string PersonalProfile { get; set; }
@@ -59,7 +64,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[VisibleInDetailView(false)]
 		[XafDisplayName(nameof(Prefix))]
-		public virtual byte[] PrefixImage => Prefix.ImageBytes();
+		public virtual byte[] PrefixImage => Prefix.ImageInfo().ImageBytes;
 		
 		[Phone][VisibleInListView(false)]
 		public virtual string HomePhone { get; set; }
@@ -85,20 +90,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string City { get; set; }
         [ZipCode]
 		public virtual string ZipCode { get; set; }
-
-		
 		public virtual ObservableCollection<Evaluation> EvaluationsCreatedBy{ get; set; } = new();
-		
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
-		
 		public virtual ObservableCollection<Product> Products{ get; set; } = new();
-		
 		public virtual ObservableCollection<Product> SupportedProducts{ get; set; } = new();
-		
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
-		
 		public virtual ObservableCollection<CustomerCommunication> CustomerCommunications{ get; set; } = new();
-
 		[Browsable(false)]
 		public virtual Guid? ProbationReasonId{ get; set; }
 

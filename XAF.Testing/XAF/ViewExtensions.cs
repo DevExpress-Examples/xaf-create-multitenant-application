@@ -165,6 +165,10 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenSelectedObjects(this View view) 
             => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
                 .StartWith(view.SelectedObjects.Cast<object>());
+        public static IObservable<object> WhenObjects(this View view) 
+            => view is ListView listView?listView.CollectionSource.WhenCollectionChanged().SelectMany(_ => listView.Objects())
+                .StartWith(listView.Objects()):view.ToDetailView().WhenCurrentObjectChanged()
+                .Select(detailView => detailView.CurrentObject).StartWith(view.CurrentObject).WhenNotDefault();
 
         private static IObservable<TFrameContainer> NestedFrameContainers<TView,TFrameContainer>(this IObservable<TFrameContainer> lazyListPropertyEditors, TView view, Type[] objectTypes) where TView : CompositeView where TFrameContainer:IFrameContainer{
             var listFrameContainers = view.GetItems<ViewItem>().OfType<TFrameContainer>().Where(editor => editor.Frame?.View != null)
