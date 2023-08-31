@@ -673,6 +673,18 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="Order_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <ListView Id="Order_ListView" MasterDetailMode="ListViewAndDetailView" IsFooterVisible="True" MasterDetailView="Order_DetailView_Child">
       <Columns>
         <ColumnInfo Id="ActualWeight" Index="-1" />

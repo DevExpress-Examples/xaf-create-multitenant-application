@@ -27,18 +27,38 @@ namespace OutlookInspired.Module.Controllers{
     public class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
         public const string Key = "AgPa0XVf4_HaN5BOPbTUw5KNvYEGOx-EftnjNRnCILfNgobxJC_deESiKqcfEgLd";
         public MapsViewController(){
-            MapItAction = new SimpleAction(this, "MapIt", PredefinedCategory.View){
+            MapItAction = MapIt();
+            TravelModeAction = TravelMode();
+            ExportMapAction = Export();
+            PrintPreviewMapAction = PrintPreview();
+            PrintAction = Print();
+            SalesPeriodAction=SalesPeriod();
+        }
+
+        private SingleChoiceAction SalesPeriod() 
+            => NewSingleChoiceAction("SalesPeriod","Period", Enum.GetValues<Period>().Where(period => period!=Period.FixedDate)
+                    .Select(period => new ChoiceActionItem(period.ToString(), period){ImageName = period.ImageName()}).ToArray());
+
+        private SimpleAction Print() 
+            => new(this,"MapPrint",PredefinedCategory.View){ImageName = "Print"};
+
+        private SimpleAction PrintPreview() 
+            => new(this,"MapPrintPreview",PredefinedCategory.View){ImageName = "PrintPreview"};
+
+        private SimpleAction Export() 
+            => new(this,"MapExport",PredefinedCategory.View){ImageName = "Export"};
+
+        private SingleChoiceAction TravelMode() 
+            => NewSingleChoiceAction("TravelMode", new ChoiceActionItem("Driving", "Driving"){ ImageName = "Driving" },
+                new ChoiceActionItem("Walking", "Walking"){ ImageName = "Walking" });
+
+        private SimpleAction MapIt(){
+            var action = new SimpleAction(this, "MapIt", PredefinedCategory.View){
                 SelectionDependencyType = SelectionDependencyType.RequireSingleObject, ImageName = "MapIt",
                 PaintStyle = ActionItemPaintStyle.Image
             };
-            MapItAction.Executed+=(_, e) => e.NewDetailView(GetViewId(),TargetWindow.NewModalWindow);
-            TravelModeAction = NewSingleChoiceAction("TravelMode", new ChoiceActionItem("Driving", "Driving"){ ImageName = "Driving" },
-                new ChoiceActionItem("Walking", "Walking"){ ImageName = "Walking" });
-            ExportMapAction = new SimpleAction(this,"ExportMap",PredefinedCategory.View){ImageName = "Export",Caption = "Export"};
-            PrintPreviewMapAction = new SimpleAction(this,"PrintPreviewMap",PredefinedCategory.View){ImageName = "PrintPreview",Caption = "PrintPreview"};
-            PrintAction = new SimpleAction(this,"PrintMap",PredefinedCategory.View){ImageName = "Print",Caption = "Print"};
-            SalesPeriodAction=NewSingleChoiceAction("SalesPeriod","Period", Enum.GetValues<Period>().Where(period => period!=Period.FixedDate)
-                .Select(period => new ChoiceActionItem(period.ToString(), period){ImageName = period.ImageName()}).ToArray());
+            action.Executed+=(_, e) => e.NewDetailView(GetViewId(),TargetWindow.NewModalWindow);
+            return action;
         }
 
         private SingleChoiceAction NewSingleChoiceAction(string actionId,string caption, params ChoiceActionItem[] items){
@@ -59,10 +79,13 @@ namespace OutlookInspired.Module.Controllers{
         private SingleChoiceAction NewSingleChoiceAction(string actionId,params ChoiceActionItem[] items) => NewSingleChoiceAction(actionId, null, items);
 
         private string GetViewId() 
-            => View.ObjectTypeInfo.Type == typeof(Employee) ? Employee.EmployeeDetailViewMaps
-                : View.ObjectTypeInfo.Type == typeof(Customer) ? Customer.CustomerDetailViewMaps
-                    : View.ObjectTypeInfo.Type == typeof(Product) ? Product.ProductDetailViewMaps
-                        : throw new NotImplementedException(View.ObjectTypeInfo.Type.Name);
+            => View.ObjectTypeInfo.Type switch{
+                { } t when t == typeof(Employee) => Employee.EmployeeDetailViewMaps,
+                { } t when t == typeof(Customer) => Customer.CustomerDetailViewMaps,
+                { } t when t == typeof(Product) => Product.ProductDetailViewMaps,
+                { } t when t == typeof(Order) => Order.OrderDetailViewMaps,
+                _ => throw new NotImplementedException(View.ObjectTypeInfo.Type.Name)
+            };
 
         public SingleChoiceAction SalesPeriodAction{ get; }
         public SimpleAction PrintAction{ get;  }
@@ -74,7 +97,7 @@ namespace OutlookInspired.Module.Controllers{
         protected override void OnActivated(){
             base.OnActivated();
             MapItAction.Active[nameof(MapsViewController)] = Frame.ParentIsNull();
-            TravelModeAction.Active[nameof(MapsViewController)] = typeof(IRouteMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
+            TravelModeAction.Active[nameof(MapsViewController)] = typeof(ITravelModeMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
             TravelModeAction.Active[nameof(MapItAction)] =!MapItAction.Active&& Frame.Context == TemplateContext.View&&!Frame.View.IsRoot;
             SalesPeriodAction.Active[nameof(MapsViewController)]= typeof(ISalesMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
             SalesPeriodAction.Active[nameof(MapItAction)] =TravelModeAction.Active[nameof(MapItAction)];
@@ -83,6 +106,10 @@ namespace OutlookInspired.Module.Controllers{
             PrintPreviewMapAction.Active[nameof(MapsViewController)] =TravelModeAction.Active||SalesPeriodAction.Active;
             if (typeof(ISalesMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type)){
                 MapItAction.Caption = "Sales Map";
+                MapItAction.ToolTip = MapItAction.Caption;
+            }
+            if (typeof(Order).IsAssignableFrom(View.ObjectTypeInfo.Type)){
+                MapItAction.Caption = "Shipping Map";
                 MapItAction.ToolTip = MapItAction.Caption;
             }
         }

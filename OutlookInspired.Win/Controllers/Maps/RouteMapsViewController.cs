@@ -15,7 +15,6 @@ namespace OutlookInspired.Win.Controllers.Maps{
         
         private GeoPoint _currentObjectPoint;
 
-        
         protected override void OnActivated(){
             base.OnActivated();
             if (Frame is NestedFrame)return;

@@ -11,9 +11,11 @@ namespace OutlookInspired.Module.BusinessObjects{
     [XafDefaultProperty(nameof(InvoiceNumber))]
     [CloneView(CloneViewType.DetailView, OrderInvoiceDetailView)]
     [CloneView(CloneViewType.DetailView, OrderGridViewDetailView)]
+    [CloneView(CloneViewType.DetailView, OrderDetailViewMaps)]
     
     [ImageName("BO_Order")]
-    public class Order :OutlookInspiredBaseObject, IViewFilter{
+    public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
+        public const string OrderDetailViewMaps = "Order_DetailView_Maps";
         public const string OrderInvoiceDetailView = "Order_DetailView_Child";
         public const string OrderGridViewDetailView = "OrderGridView_DetailView";
         
@@ -61,6 +63,12 @@ namespace OutlookInspired.Module.BusinessObjects{
         public double ActualWeight 
             => OrderItems == null ? 0 : OrderItems.Where(item => item.Product != null)
                     .Sum(item => item.Product.Weight * item.ProductUnits);
+
+        string IBaseMapsMarker.Title => InvoiceNumber;
+
+        double IBaseMapsMarker.Latitude => Store.Latitude;
+
+        double IBaseMapsMarker.Longitude => Store.Longitude;
     }
     
     public enum OrderShipMethod {

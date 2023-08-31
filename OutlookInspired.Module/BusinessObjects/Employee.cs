@@ -17,7 +17,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
 	[CloneView(CloneViewType.DetailView, EmployeeDetailViewMaps)]
-	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,IRouteMapsMarker{
+	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,ITravelModeMapsMarker{
 		public const string EmployeeDetailViewMaps = "Employee_DetailView_Maps";
 		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
 		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";

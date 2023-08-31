@@ -1,7 +1,7 @@
 ﻿using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Model.HideViewActions{
-    public class MasterDetailViewUpdater:HideViewActionsUpdater{
+    public class MasterDetailUpdater:HideViewActionsUpdater{
         protected override string[] ActionIds() 
             => new[]{ "Save", "SaveAndClose", "SaveAndNew", "ShowAllContexts", "NextObject", "PreviousObject" };
 

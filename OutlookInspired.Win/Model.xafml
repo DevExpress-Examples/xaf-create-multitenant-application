@@ -148,6 +148,11 @@
         <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
     </DetailView>
+    <DetailView Id="Order_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
+      </Items>
+    </DetailView>
     <ListView Id="Order_ListView" ShowFindPanel="True" />
     <DetailView Id="OrderGridView_DetailView">
       <Items>

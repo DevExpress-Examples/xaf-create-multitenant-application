@@ -3,6 +3,9 @@ using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
+    public interface ITravelModeMapsMarker:IRouteMapsMarker{
+        
+    }
     public interface IRouteMapsMarker:IMapsMarker{
         
     }

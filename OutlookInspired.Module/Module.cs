@@ -76,7 +76,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    new IModelNodesGeneratorUpdater[]{new ModelViewClonerUpdater(),new MasterDetailViewUpdater(),new MapsViewUpdater()}
+	    new IModelNodesGeneratorUpdater[]{new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater()}
 		    .Do(updaters.Add).Enumerate();
     }
     
