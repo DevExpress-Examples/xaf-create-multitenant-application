@@ -12,7 +12,6 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, OrderInvoiceDetailView)]
     [CloneView(CloneViewType.DetailView, OrderGridViewDetailView)]
     [CloneView(CloneViewType.DetailView, OrderDetailViewMaps)]
-    
     [ImageName("BO_Order")]
     public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
         public const string OrderDetailViewMaps = "Order_DetailView_Maps";

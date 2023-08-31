@@ -68,7 +68,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    if (e.ObjectSpace is NonPersistentObjectSpace objectSpace){
 		    objectSpace.ObjectsGetting+= (o, args) => {
 			    if (args.ObjectType == typeof(QuoteMapItem)){
-				    args.Objects = new BindingList<QuoteMapItem>(((NonPersistentObjectSpace)o)!.GetObjectsQuery<Quote>().Opportunities().ToArray());
+				    args.Objects = new BindingList<QuoteMapItem>(((NonPersistentObjectSpace)o)!.Opportunities().ToArray());
 			    }
 		    };
 	    }

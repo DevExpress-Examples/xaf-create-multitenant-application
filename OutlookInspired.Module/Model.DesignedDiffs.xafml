@@ -955,6 +955,22 @@
         <Variant Id="ProductListView" ViewID="ProductListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <DetailView Id="Quote_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="SimpleEditors" RelativeSize="100" Caption="SimpleEditors">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+            <LayoutGroup Id="Quote" Removed="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="QuoteItems_Group" Direction="Vertical" RelativeSize="81.92133131618759" Removed="True">
+            <LayoutItem Id="QuoteItems" ViewItem="QuoteItems" RelativeSize="100" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <ListView Id="QuoteMapItem_ListView" DataAccessMode="Client" />
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>

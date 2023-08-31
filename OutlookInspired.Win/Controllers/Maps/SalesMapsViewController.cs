@@ -1,8 +1,6 @@
-﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
+﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Extensions;
 using MapItem = OutlookInspired.Module.BusinessObjects.MapItem;
@@ -14,24 +12,22 @@ namespace OutlookInspired.Win.Controllers.Maps{
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            if (Frame is NestedFrame)return;
+            if (!Active)return;
             _itemsLayer.DataLoaded-=ItemsLayerOnDataLoaded;
-            Frame.GetController<MapsViewController>().SalesPeriodAction.Executed-=SalesPeriodActionOnExecuted;
+            MapsViewController.SalesPeriodAction.Executed-=SalesPeriodActionOnExecuted;
         }
 
         protected override void OnActivated(){
             base.OnActivated();
-            if (Frame is NestedFrame)return;
-            Frame.GetController<MapsViewController>().SalesPeriodAction.Executed+=SalesPeriodActionOnExecuted;
+            if (!Active)return;
+            MapsViewController.SalesPeriodAction.Executed+=SalesPeriodActionOnExecuted;
         }
 
-        private void SalesPeriodActionOnExecuted(object sender, ActionBaseEventArgs e){
-            SetPieAdapterDataSource();
-        }
+        private void SalesPeriodActionOnExecuted(object sender, ActionBaseEventArgs e) 
+            => SetPieAdapterDataSource();
 
         protected override void CustomizeMapControl(){
             MapControl.Layers.AddRange(new LayerBase[]{
-                new ImageLayer{ DataProvider = MapDataProvider },
                 _itemsLayer=new VectorItemsLayer(){
                     Colorizer =new Colorizer{ItemKeyProvider = new ArgumentItemKeyProvider()},
                     ToolTipPattern = $"{nameof(MapItem.City)}:%A% {nameof(MapItem.Total)}:%V%",
@@ -49,13 +45,13 @@ namespace OutlookInspired.Win.Controllers.Maps{
 
         private void SetPieAdapterDataSource() 
             => _pieChartDataAdapter.DataSource = ((ISalesMapsMarker)View.CurrentObject)
-                .SaleMapItems((Period)Frame.GetController<MapsViewController>().SalesPeriodAction.SelectedItem.Data);
+                .SaleMapItems((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data);
 
         private void ItemsLayerOnDataLoaded(object sender, DataLoadedEventArgs e){
             var mapItem = _itemsLayer.Data.Items.FirstOrDefault();
             _itemsLayer.SelectedItem = mapItem != null ? _itemsLayer.Data.GetItemSourceObject(mapItem) : null;
-            ZoomToRegionService.ZoomTo(((ISalesMapsMarker)View.CurrentObject)
-                .Stores((Period)Frame.GetController<MapsViewController>().SalesPeriodAction.SelectedItem.Data).ToArray());
+            Zoom.To(((ISalesMapsMarker)View.CurrentObject)
+                .Stores((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data).ToArray());
         }
     }
 }

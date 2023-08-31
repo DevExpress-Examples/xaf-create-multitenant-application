@@ -3,10 +3,11 @@ using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
-    public class QuoteMapItem{
+    public class QuoteMapItem:IMapsMarker{
         public Stage Stage { get; init; }
         public DateTime Date { get; set; }
         public string City{ get; set; }
+        string IBaseMapsMarker.Title => City;
         public double Latitude{ get; set; }
         public double Longitude { get; set; }
         public string Name => Enum.GetName(typeof (Stage), Stage);

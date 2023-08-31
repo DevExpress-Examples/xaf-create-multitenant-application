@@ -30,7 +30,7 @@ namespace OutlookInspired.Module.Controllers{
             if (((IModelDashboardViewMasterDetail)View.Model).MasterDetail){
                 _masterFrame = View.MasterFrame();
                  _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
-                _childFrame = View.NestedFrames(ViewType.DetailView).First(nestedFrame => nestedFrame != _masterFrame);
+                _childFrame = View.ChildFrame();
                 var controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
                 if (controlViewItem != null){
                     controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;

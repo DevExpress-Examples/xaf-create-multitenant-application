@@ -9,9 +9,10 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Controllers.Maps{
     public abstract class WinMapsViewController<T>:ObjectViewController<DetailView,T>{
-        protected readonly BingMapDataProvider MapDataProvider=new(){ BingKey = MapsViewController.Key,Kind = BingMapKind.Road};
+        readonly BingMapDataProvider _mapDataProvider=new(){ BingKey = MapsViewController.Key,Kind = BingMapKind.Road};
         protected MapControl MapControl;
-        protected IZoomToRegionService ZoomToRegionService;
+        protected IZoomToRegionService Zoom;
+        protected MapsViewController MapsViewController;
 
         static WinMapsViewController(){
             var _ = typeof(MapControl);
@@ -19,24 +20,24 @@ namespace OutlookInspired.Win.Controllers.Maps{
 
         protected override void OnDeactivated(){
             base.OnActivated();
-            if (Frame is NestedFrame)return;
-            var mapsViewController = Frame.GetController<MapsViewController>();
-            mapsViewController.ExportMapAction.Executed-=ExportMapActionOnExecuted;
-            mapsViewController.PrintAction.Executed-=PrintActionOnExecuted;
-            mapsViewController.PrintPreviewMapAction.Executed-=PrintPreviewMapActionOnExecuted;
+            if (!Active)return;
+            MapsViewController.ExportMapAction.Executed-=ExportMapActionOnExecuted;
+            MapsViewController.PrintAction.Executed-=PrintActionOnExecuted;
+            MapsViewController.PrintPreviewMapAction.Executed-=PrintPreviewMapActionOnExecuted;
         }
 
         protected override void OnActivated(){
             base.OnActivated();
-            if (Frame is  NestedFrame)return;
-            var mapsViewController = Frame.GetController<MapsViewController>();
-            mapsViewController.ExportMapAction.Executed+=ExportMapActionOnExecuted;
-            mapsViewController.PrintAction.Executed+=PrintActionOnExecuted;
-            mapsViewController.PrintPreviewMapAction.Executed+=PrintPreviewMapActionOnExecuted;
+            if (!(Active[nameof(NestedFrame)] = Frame is not NestedFrame&&View.CurrentObject!=null))return;
+            MapsViewController = Frame.GetController<MapsViewController>();
+            MapsViewController.ExportMapAction.Executed+=ExportMapActionOnExecuted;
+            MapsViewController.PrintAction.Executed+=PrintActionOnExecuted;
+            MapsViewController.PrintPreviewMapAction.Executed+=PrintPreviewMapActionOnExecuted;
             View.CustomizeViewItemControl<ControlViewItem>(this, item => {
                 MapControl = (MapControl)item.Control;
                 MapControl.ZoomLevel = 8;
-                ZoomToRegionService = (IZoomToRegionService)((IServiceProvider)MapControl).GetService(typeof(IZoomToRegionService));
+                Zoom = (IZoomToRegionService)((IServiceProvider)MapControl).GetService(typeof(IZoomToRegionService));
+                MapControl.Layers.Add(new ImageLayer{ DataProvider = _mapDataProvider });
                 CustomizeMapControl();
             });
         }

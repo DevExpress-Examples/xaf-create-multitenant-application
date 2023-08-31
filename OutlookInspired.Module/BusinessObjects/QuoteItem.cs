@@ -4,9 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OutlookInspired.Module.BusinessObjects{
     public class QuoteItem :OutlookInspiredBaseObject{
-        
         public virtual Quote Quote { get; set; }
-        
         public virtual Product Product { get; set; }
         [Browsable(false)]
         public virtual Guid? ProductId { get; set; }

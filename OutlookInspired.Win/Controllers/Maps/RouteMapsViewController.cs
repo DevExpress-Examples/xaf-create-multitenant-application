@@ -2,7 +2,6 @@
 using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Extensions;
@@ -17,11 +16,9 @@ namespace OutlookInspired.Win.Controllers.Maps{
 
         protected override void OnActivated(){
             base.OnActivated();
-            if (Frame is NestedFrame)return;
-            var mapsViewController = Frame.GetController<MapsViewController>();
-            Active[View.ObjectTypeInfo.Name] = mapsViewController.TravelModeAction.Active;
+            if (!Active)return;
             _currentObjectPoint = ((IMapsMarker)View.CurrentObject).ToGeoPoint();
-            mapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
+            MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
             _geocodeDataProvider.LocationInformationReceived+=OnLocationInformationReceived;
             _routeDataProvider.RouteCalculated+=OnRouteCalculated;
             _routeDataProvider.LayerItemsGenerating+=OnLayerItemsGenerating;
@@ -30,7 +27,6 @@ namespace OutlookInspired.Win.Controllers.Maps{
         protected override void CustomizeMapControl(){
             MapControl.CenterPoint = ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice.ToGeoPoint();
             MapControl.Layers.AddRange(new LayerBase[]{
-                new ImageLayer{ DataProvider = MapDataProvider },
                 new InformationLayer{ DataProvider = _geocodeDataProvider },
                 new InformationLayer{ DataProvider = _searchDataProvider },
                 RouteLayer()
@@ -39,7 +35,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
         }
         
         void CalculateRoute(){
-            _routeDataProvider.RouteOptions.Mode = Enum.Parse<BingTravelMode>(Frame.GetController<MapsViewController>()
+            _routeDataProvider.RouteOptions.Mode = Enum.Parse<BingTravelMode>(MapsViewController
                 .TravelModeAction.SelectedItem.Data.ToString()!);
             _routeDataProvider.CalculateRoute(new[]
                 { new RouteWaypoint("Point A", (GeoPoint)MapControl.CenterPoint), new RouteWaypoint("Point B", _currentObjectPoint) }.ToList());
@@ -81,7 +77,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
             // foreach(BingItineraryItem item in leg.Itinerary)
             //     routePoints.Add(new RoutePoint(item));
             // UpdateRouteList(routePoints);
-            ZoomToRegionService.ZoomTo((GeoPoint)MapControl.CenterPoint, _currentObjectPoint);
+            Zoom.To((GeoPoint)MapControl.CenterPoint, _currentObjectPoint);
         }
 
         private void OnLocationInformationReceived(object sender, LocationInformationReceivedEventArgs e){
@@ -102,12 +98,11 @@ namespace OutlookInspired.Win.Controllers.Maps{
         }
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            if (Frame is NestedFrame)return;
-            var mapsViewController = Frame.GetController<MapsViewController>();
+            if (!Active)return;
             _geocodeDataProvider.LocationInformationReceived-=OnLocationInformationReceived;
             _routeDataProvider.RouteCalculated-=OnRouteCalculated;
             _routeDataProvider.LayerItemsGenerating-=OnLayerItemsGenerating;
-            mapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
+            MapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
         }
     }
 }

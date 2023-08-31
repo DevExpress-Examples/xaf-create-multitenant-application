@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
@@ -24,16 +25,50 @@ namespace OutlookInspired.Module.Services{
                     City = orderItem.Order.Store.City
                 }).ToArray();
 
-        public static IEnumerable<QuoteMapItem> Opportunities(this IQueryable<Quote> quotes)
-            => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)
-                .Select(stage => new QuoteMapItem{ Stage = stage, Value = quotes.GetQuotes( stage).CustomSum(q => q.Total) });
+        public static decimal Opportunity(this IObjectSpace objectSpace,Stage stage,string city)
+            => objectSpace.Quotes(stage).Where(q => q.CustomerStore.City == city).TotalSum(q => q.Total);
 
-        static decimal CustomSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
+        public static CustomerStore[] Stores(this IObjectSpace objectSpace, Stage stage){
+            return objectSpace.Quotes(stage).Select(quote => quote.CustomerStore).Distinct().ToArray();
+            // return from q in objectSpace.Quotes(stage)
+            //     join s in stores on q.CustomerStoreId equals s.Id
+            //     select s;
+        }
+
+        public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage)
+            => objectSpace.Quotes(stage).Select(quote => new QuoteMapItem{
+                Stage = stage,
+                Value = quote.Total,
+                Date = quote.Date,
+                City = quote.CustomerStore.City,
+                Latitude = quote.CustomerStore.Latitude,
+                Longitude = quote.CustomerStore.Longitude
+            }).ToArray();
+                // .Join(objectSpace.GetObjectsQuery<Customer>(), q => q.Customer.ID, c => c.ID,
+                //     (q, c) => new QuoteMapItem{
+                //         Stage = stage,
+                //         Value = q.Total,
+                //         Date = q.Date,
+                //         City = q.CustomerStore.City,
+                //         Latitude = q.CustomerStore.Latitude,
+                //         Longitude = q.CustomerStore.Longitude
+                //     });
+
+         
+         
+        public static IEnumerable<QuoteMapItem> Opportunities(this IObjectSpace objectSpace)
+            => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)
+                .Select(stage => new QuoteMapItem{ Stage = stage, Value = objectSpace.Quotes( stage).TotalSum(q => q.Total) });
+
+        private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage) 
+            => objectSpace.GetObjectsQuery<Quote>().Where( stage);
+
+        static decimal TotalSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
             var source = query.AsQueryable().Select(selector);
             return !source.Any() ? 0M : source.AsEnumerable().Sum();
         }
 
-        static IQueryable<Quote> GetQuotes(this IQueryable<Quote> quotes, Stage stage){
+        static IQueryable<Quote> Where(this IQueryable<Quote> quotes, Stage stage){
             double min;
             double max;
             switch (stage){
@@ -58,8 +93,7 @@ namespace OutlookInspired.Module.Services{
                     max = 0.12;
                     break;
             }
-
-            return quotes.Where((Expression<Func<Quote, bool>>)(q => q.Opportunity > min && q.Opportunity < max));
+            return quotes.Where(quote =>  quote.Opportunity > min && quote.Opportunity < max);
         }
 
     }

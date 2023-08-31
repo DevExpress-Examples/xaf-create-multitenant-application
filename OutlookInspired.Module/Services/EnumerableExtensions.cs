@@ -2,7 +2,17 @@
 
 namespace OutlookInspired.Module.Services{
     internal static class EnumerableExtensions{
-        
+        public static IEnumerable<T> SwitchIfEmpty<T>(this IEnumerable<T> source, T defaultValue){
+            return _();
+            IEnumerable<T> _(){
+                var isEmpty = true;
+                foreach (var item in source){
+                    isEmpty = false;
+                    yield return item;
+                }
+                if (isEmpty) yield return defaultValue;
+            }
+        }
 
         public static IEnumerable<T> Finally<T>(this IEnumerable<T> source, Action action){
             return _();

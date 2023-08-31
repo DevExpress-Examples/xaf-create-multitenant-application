@@ -16,6 +16,12 @@ namespace OutlookInspired.Module.Services{
         
         public static IUserControl UserControl(this CompositeView view) 
             => view.GetItems<ControlViewItem>().Select(item => item.Control).OfType<IUserControl>().FirstOrDefault();
+        public static NestedFrame ChildFrame(this DashboardView view){
+            var masterFrame = view.MasterFrame();
+            return view.NestedFrames(ViewType.DetailView, ViewType.ListView)
+                .First(nestedFrame => nestedFrame != masterFrame);
+        }
+
         public static NestedFrame MasterFrame(this DashboardView view)
             => view.Items.OfType<DashboardViewItem>().Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide)
                 .ToFrame().First();

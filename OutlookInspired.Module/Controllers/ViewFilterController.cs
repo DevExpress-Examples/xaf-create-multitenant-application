@@ -1,7 +1,6 @@
 ﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
@@ -65,8 +64,7 @@ namespace OutlookInspired.Module.Controllers{
 
         protected override void OnActivated(){
             base.OnActivated();
-            
-            FilterAction.Active[nameof(ViewFilterController)] = Frame.ParentIsNull();
+            FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame;
             AddFilterItems();
             if (View is ListView listView){
                 listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;

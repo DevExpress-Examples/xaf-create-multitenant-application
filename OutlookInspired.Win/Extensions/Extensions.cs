@@ -14,7 +14,7 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Extensions{
     public static class Extensions{
-        public static void ZoomTo(this IZoomToRegionService zoomService, GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
+        public static void To(this IZoomToRegionService zoomService, GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
             if(pointA == null || pointB == null || zoomService == null) return;
             var latPadding = CalculatePadding(pointB.Latitude - pointA.Latitude, margin);
             var longPadding = CalculatePadding(pointB.Longitude - pointA.Longitude, margin);
@@ -25,7 +25,7 @@ namespace OutlookInspired.Win.Extensions{
 
         }
         
-        public static void ZoomTo(this IZoomToRegionService zoomService, IEnumerable<IMapsMarker> mapsMarkers, double margin = 0.25) {
+        public static void To(this IZoomToRegionService zoomService, IEnumerable<IMapsMarker> mapsMarkers, double margin = 0.25) {
             GeoPoint ptA = null;
             GeoPoint ptB = null;
             foreach(var address in mapsMarkers) {
@@ -42,7 +42,7 @@ namespace OutlookInspired.Win.Extensions{
                 ptB.Latitude = Math.Max(ptB.Latitude, pt.Latitude);
                 ptB.Longitude = Math.Max(ptB.Longitude, pt.Longitude);
             }
-            zoomService.ZoomTo( ptA, ptB, margin);
+            zoomService.To( ptA, ptB, margin);
         }
 
         
