@@ -5,7 +5,7 @@ using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [XafDefaultProperty(nameof(CityName))]
-    [DefaultClassOptions]
+    [DefaultClassOptions][VisibleInReports(false)]
     public class Crest:OutlookInspiredBaseObject {
         public virtual string CityName { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

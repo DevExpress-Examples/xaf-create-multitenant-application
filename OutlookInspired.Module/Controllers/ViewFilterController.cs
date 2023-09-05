@@ -67,14 +67,14 @@ namespace OutlookInspired.Module.Controllers{
             FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame;
             AddFilterItems();
             if (View is ListView listView){
-                listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
+                // listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
             }
         }
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (View is ListView listView){
-                listView.CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
+                // listView.CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
             }
         }
 

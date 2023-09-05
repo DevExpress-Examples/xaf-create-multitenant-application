@@ -63,7 +63,7 @@ namespace OutlookInspired.Module.Services{
         private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage) 
             => objectSpace.GetObjectsQuery<Quote>().Where( stage);
 
-        static decimal TotalSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
+        public static decimal TotalSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
             var source = query.AsQueryable().Select(selector);
             return !source.Any() ? 0M : source.AsEnumerable().Sum();
         }

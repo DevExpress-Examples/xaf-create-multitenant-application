@@ -2,25 +2,28 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Attributes.Validation;
 using OutlookInspired.Module.Services;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
 	
 	[DefaultProperty(nameof(FullName))]
-	[VisibleInReports][ImageName("BO_Person")]
-	[CloneView(CloneViewType.DetailView, EmployeeLayoutViewDetailView)]
-	[CloneView(CloneViewType.DetailView, EmployeeDetailViewChild)]
-	[CloneView(CloneViewType.DetailView, EmployeeDetailViewMaps)]
+	[ImageName("BO_Person")]
+	[CloneView(CloneViewType.DetailView, LayoutViewDetailView)]
+	[CloneView(CloneViewType.DetailView, ChildDetailView)]
+	[CloneView(CloneViewType.DetailView, MapsDetailView)]
 	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,ITravelModeMapsMarker{
-		public const string EmployeeDetailViewMaps = "Employee_DetailView_Maps";
-		public const string EmployeeDetailViewChild = "Employee_DetailView_Child";
-		public const string EmployeeLayoutViewDetailView = "EmployeeLayoutView_DetailView";
+		public const string MapsDetailView = "Employee_DetailView_Maps";
+		public const string ChildDetailView = "Employee_DetailView_Child";
+		public const string LayoutViewDetailView = "EmployeeLayoutView_DetailView";
 
 		[VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
 		public object Id => ID;

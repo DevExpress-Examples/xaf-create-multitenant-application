@@ -12,15 +12,15 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("BO_Product")]
-    [CloneView(CloneViewType.DetailView, ProductBrochureDetailView)]
-    [CloneView(CloneViewType.DetailView, ProductCardViewDetailView)]
-    [CloneView(CloneViewType.DetailView, ProductDetailViewMaps)]
+    [CloneView(CloneViewType.DetailView, BrochureDetailView)]
+    [CloneView(CloneViewType.DetailView, CardViewDetailView)]
+    [CloneView(CloneViewType.DetailView, MapsDetailView)]
     [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = FontStyle.Strikeout)]
     public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
         
-        public const string ProductCardViewDetailView = "ProductCardView_DetailView";
-        public const string ProductBrochureDetailView = "Product_Brochure_DetailView";
-        public const string ProductDetailViewMaps = "Product_DetailView_Maps";
+        public const string CardViewDetailView = "ProductCardView_DetailView";
+        public const string BrochureDetailView = "Product_Brochure_DetailView";
+        public const string MapsDetailView = "Product_DetailView_Maps";
         public  virtual string Name { get; set; }
         [FieldSize(-1)]
         public  virtual string Description { get; set; }

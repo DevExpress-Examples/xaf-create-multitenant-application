@@ -1,9 +1,9 @@
-﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
+﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Win.Editors;
 using OutlookInspired.Win.Extensions;
 
 namespace OutlookInspired.Win.Controllers.Maps{

@@ -4,10 +4,18 @@ using DevExpress.Data.Linq.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
+using DevExpress.Persistent.BaseImpl.EF;
 
 namespace OutlookInspired.Module.Services{
     internal static class ObjectSpaceExtensions{
-        
+
+        public static RichTextMailMergeData NewMailMergeData(this IObjectSpace objectSpace, string name ,Type dataType,byte[] bytes ){
+            var richTextMailMergeData = objectSpace.CreateObject<RichTextMailMergeData>();
+            richTextMailMergeData.Name = name;
+            richTextMailMergeData.Template = bytes;
+            richTextMailMergeData.DataType = dataType;
+            return richTextMailMergeData;
+        }
         public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
             => new(){ KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
                 QueryableSource = objectSpace.Query( objectType,criteria) };
@@ -34,5 +42,8 @@ namespace OutlookInspired.Module.Services{
             => objectSpace.GetObjectsQuery<T>().Where(expression??(arg =>true) ).Count();
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);
+
+        public static RichTextMailMergeData MailMergeData(this IObjectSpace space,string name) 
+            => space.FindObject<RichTextMailMergeData>(data => data.Name==name);
     }
 }

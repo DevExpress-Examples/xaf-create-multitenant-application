@@ -1,7 +1,9 @@
 using System.ComponentModel;
+using System.Linq.Expressions;
 using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.SystemModule;
@@ -14,6 +16,7 @@ namespace OutlookInspired.Module.Controllers{
         bool MasterDetail{ get; set; }
     }
 
+    
     public class DashboardMasterDetailController:ViewController<DashboardView>,IModelExtender{
         private readonly SimpleAction _processMasterViewSelectedObjectAction;
         private NestedFrame _masterFrame;
@@ -24,20 +27,23 @@ namespace OutlookInspired.Module.Controllers{
             _processMasterViewSelectedObjectAction.Executed+=(_, e) 
                 => e.ShowViewParameters.CreatedView = Application.NewDetailView(e.Action.SelectionContext.CurrentObject);
         }
-        
+
+        protected override void OnActivated(){
+            base.OnActivated();
+            Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = ((IModelDashboardViewMasterDetail)View.Model).MasterDetail;
+        }
+
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            if (((IModelDashboardViewMasterDetail)View.Model).MasterDetail){
-                _masterFrame = View.MasterFrame();
-                 _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
-                _childFrame = View.ChildFrame();
-                var controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
-                if (controlViewItem != null){
-                    controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
-                }
-                else{
-                    _masterFrame.View.SelectionChanged += (_, _) => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
-                }
+            _masterFrame = View.MasterFrame();
+            _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
+            _childFrame = View.ChildFrame();
+            var controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
+            if (controlViewItem != null){
+                controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
+            }
+            else{
+                _masterFrame.View.SelectionChanged += (_, _) => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
             }
         }
 
@@ -66,5 +72,14 @@ namespace OutlookInspired.Module.Controllers{
 
         public void ExtendModelInterfaces(ModelInterfaceExtenders extenders) 
             => extenders.Add<IModelDashboardView, IModelDashboardViewMasterDetail>();
+    }
+    
+    public interface IUserControl:ISelectionContext,IComplexControl{
+        void Refresh(object currentObject);
+        event EventHandler ProcessObject;
+        void SetCriteria<T>(Expression<Func<T, bool>> lambda);
+        void SetCriteria(string criteria);
+        void SetCriteria(LambdaExpression lambda);
+        Type ObjectType{ get; }
     }
 }

@@ -68,11 +68,11 @@ namespace OutlookInspired.Module.Controllers{
 
         private string GetViewId() 
             => View.ObjectTypeInfo.Type switch{
-                { } t when t == typeof(Employee) => Employee.EmployeeDetailViewMaps,
-                { } t when t == typeof(Customer) => Customer.CustomerDetailViewMaps,
-                { } t when t == typeof(Product) => Product.ProductDetailViewMaps,
-                { } t when t == typeof(Order) => Order.OrderDetailViewMaps,
-                { } t when t == typeof(Quote) => Quote.QuoteDetailViewMaps,
+                { } t when t == typeof(Employee) => Employee.MapsDetailView,
+                { } t when t == typeof(Customer) => Customer.MapsDetailView,
+                { } t when t == typeof(Product) => Product.MapsDetailView,
+                { } t when t == typeof(Order) => Order.MapsDetailView,
+                { } t when t == typeof(Quote) => Quote.MapsDetailView,
                 _ => throw new NotImplementedException(View.ObjectTypeInfo.Type.Name)
             };
 

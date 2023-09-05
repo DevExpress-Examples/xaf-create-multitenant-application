@@ -31,8 +31,8 @@
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.1.4.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.1.5.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.5.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
@@ -651,7 +651,7 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
-    <DetailView Id="Order_DetailView_Child" FreezeLayout="True">
+    <DetailView Id="Order_DetailView_Child" FreezeLayout="True" AllowEdit="False">
       <Items>
         <PropertyEditor Id="Customer" PropertyName="Customer.Name" IsNewNode="True" />
         <PropertyEditor Id="Logo" PropertyName="Customer.Logo" IsNewNode="True" />
@@ -659,33 +659,56 @@
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Direction="Vertical" Caption="SimpleEditors" IsNewNode="True">
-            <LayoutGroup Id="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da" ShowCaption="False" Caption="" Direction="Horizontal" Index="0" RelativeSize="14.019138755980862" IsNewNode="True">
-              <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" SizeConstraintsType="Custom" MinSize="168, 38" Index="0" RelativeSize="13.498738435660218" IsNewNode="True" />
-              <LayoutGroup Id="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c" ShowCaption="False" Caption="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c(4)" Index="1" RelativeSize="86.50126156433979" IsNewNode="True">
-                <LayoutItem Id="Customer" ShowCaption="False" ViewItem="Customer" CaptionLocation="Top" Index="0" RelativeSize="15.017064846416382" IsNewNode="True" />
-                <LayoutItem Id="Item1" Index="1" RelativeSize="22.18430034129693" IsNewNode="True" />
-                <LayoutItem Id="InvoiceNumber" ViewItem="InvoiceNumber" Index="2" RelativeSize="10.921501706484642" IsNewNode="True" />
-                <LayoutItem Id="Item2" Index="3" RelativeSize="51.877133105802045" IsNewNode="True" />
+            <LayoutGroup Id="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da" ShowCaption="False" Caption="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da(3)" Direction="Horizontal" Index="0" RelativeSize="14.022988505747126" IsNewNode="True">
+              <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" SizeConstraintsType="Custom" MinSize="168, 38" Index="0" RelativeSize="14.408233276157805" IsNewNode="True" />
+              <LayoutGroup Id="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c" ShowCaption="False" Caption="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c(4)" Index="1" RelativeSize="85.5917667238422" IsNewNode="True">
+                <LayoutItem Id="Customer" ShowCaption="False" ViewItem="Customer" CaptionLocation="Top" Index="0" RelativeSize="26.229508196721312" IsNewNode="True" />
+                <LayoutItem Id="Item1" Index="1" RelativeSize="18.852459016393443" IsNewNode="True" />
+                <LayoutItem Id="InvoiceNumber" ViewItem="InvoiceNumber" Index="2" RelativeSize="19.672131147540984" IsNewNode="True" />
+                <LayoutItem Id="Item2" Index="3" RelativeSize="35.24590163934426" IsNewNode="True" />
               </LayoutGroup>
             </LayoutGroup>
-            <LayoutItem Id="Item3" Index="1" RelativeSize="85.98086124401914" IsNewNode="True" />
+            <LayoutItem Id="InvoiceDocument" ViewItem="InvoiceDocument" Index="1" RelativeSize="85.97701149425288" SizeConstraintsType="Custom" MinSize="172, 24" CaptionLocation="Top" ShowCaption="False" IsNewNode="True" />
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>
     <DetailView Id="Order_DetailView_Maps" FreezeLayout="True">
       <Items>
+        <PropertyEditor Id="Customer" PropertyName="Customer.Name" IsNewNode="True" />
+        <PropertyEditor Id="Logo" PropertyName="Customer.Logo" IsNewNode="True" />
         <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
-          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
-            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Direction="Horizontal" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="66.89536878216124" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+            <LayoutGroup Id="Auto13cb3f67-43cc-480f-865f-41efcd1565e4" ShowCaption="False" Caption="Auto13cb3f67-43cc-480f-865f-41efcd1565e4(4)" Index="1" RelativeSize="33.104631217838765" IsNewNode="True">
+              <LayoutGroup Id="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da" ShowCaption="False" Caption="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da(3)" Direction="Horizontal" Index="0" RelativeSize="15.74712643678161" IsNewNode="True">
+                <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" SizeConstraintsType="Custom" MinSize="168, 38" MaxSize="168, 0" Index="0" RelativeSize="43.523316062176164" IsNewNode="True" />
+                <LayoutGroup Id="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c" ShowCaption="False" Caption="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c(4)" Index="1" RelativeSize="56.476683937823836" IsNewNode="True">
+                  <LayoutItem Id="Customer" ShowCaption="False" ViewItem="Customer" CaptionLocation="Top" Index="0" RelativeSize="23.357664233576642" IsNewNode="True" />
+                  <LayoutItem Id="Item1" Index="1" RelativeSize="26.277372262773724" IsNewNode="True" />
+                  <LayoutItem Id="InvoiceNumber" ViewItem="InvoiceNumber" Index="2" RelativeSize="17.51824817518248" IsNewNode="True" />
+                  <LayoutItem Id="Item2" Index="3" RelativeSize="32.846715328467155" IsNewNode="True" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="ShipmentDetail" ViewItem="ShipmentDetail" Index="1" RelativeSize="84.25287356321839" SizeConstraintsType="Custom" MinSize="386, 24" CaptionLocation="Top" ShowCaption="False" MaxSize="386, 0" IsNewNode="True" />
+            </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Order_ListView" MasterDetailMode="ListViewAndDetailView" IsFooterVisible="True" MasterDetailView="Order_DetailView_Child">
+    <DetailView Id="Order_Invoice_DetailView" FreezeLayout="True">
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="InvoiceDocument" ViewItem="InvoiceDocument" Index="0" RelativeSize="100" CaptionLocation="Top" ShowCaption="False" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <ListView Id="Order_ListView" MasterDetailMode="ListViewAndDetailView" IsFooterVisible="True" Filter="IsOutlookIntervalYesterday([OrderDate]) Or IsOutlookIntervalToday([OrderDate])" MasterDetailView="Order_DetailView_Child">
       <Columns>
         <ColumnInfo Id="ActualWeight" Index="-1" />
         <ColumnInfo Id="Comments" Index="-1" />
@@ -720,7 +743,7 @@
     <DashboardView Id="OrderGridView" Caption="Order" ImageName="BO_Order" MasterDetail="True" RequiredFieldMark="c" IsNewNode="True">
       <Items IsNewNode="True">
         <DashboardViewItem Id="Order_DetailView_Child" ViewId="Order_DetailView_Child" ActionsToolbarVisibility="Hide" Caption="Order" IsNewNode="True" />
-        <DashboardViewItem Id="OrderGridView_DetailView" ViewId="OrderGridView_DetailView" IsNewNode="True" />
+        <DashboardViewItem Id="OrderGridView_DetailView" ViewId="OrderGridView_DetailView" Criteria="" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True">
         <LayoutGroup Id="Main" ShowCaption="False" Direction="Horizontal" Index="0" RelativeSize="100" Caption="Order" IsNewNode="True">
@@ -743,7 +766,7 @@
     </DetailView>
     <DashboardView Id="OrderListView" CaptionColon=":" EnableCaptionColon="True" CaptionLocation="Default" CaptionHorizontalAlignment="Default" CaptionVerticalAlignment="Default" CaptionWordWrap="Default" EnableLayoutGroupImages="True" CustomizationEnabled="True" RequiredFieldMark="*" Caption="Order" ImageName="BO_Order" IsNewNode="True">
       <Items IsNewNode="True">
-        <DashboardViewItem Id="Order_ListView" ViewId="Order_ListView" IsNewNode="True" />
+        <DashboardViewItem Id="Order_ListView" ViewId="Order_ListView" Criteria="" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True">
         <LayoutGroup Id="Main" ShowCaption="False" Direction="Vertical" Index="0" RelativeSize="100" Caption="Main" IsNewNode="True">

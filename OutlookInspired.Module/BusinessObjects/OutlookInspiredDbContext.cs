@@ -62,6 +62,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
     public DbSet<CustomerCommunication> CustomerCommunications { get; set; }
     public DbSet<TaskAttachedFile> TaskAttachedFiles { get; set; }
     public DbSet<ViewFilter> ViewFilters { get; set; }
+    public DbSet<RichTextMailMergeData> RichTextMailMergeData { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

@@ -11,13 +11,13 @@ using OutlookInspired.Module.Attributes;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(StartOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontStyle = FontStyle.Bold,Context = "Employee_Evaluations_ListView")]
-    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = FontStyle.Bold,Context = EmployeeEvaluationsListViewChild)]
-    [Appearance(nameof(StartOn)+"_"+EmployeeEvaluationsListViewChild,AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontColor = "Blue",Context = EmployeeEvaluationsListViewChild)]
+    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = FontStyle.Bold,Context = EmployeeEvaluationsChildListView)]
+    [Appearance(nameof(StartOn)+"_"+EmployeeEvaluationsChildListView,AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontColor = "Blue",Context = EmployeeEvaluationsChildListView)]
     [Appearance(nameof(Rating),AppearanceItemType.ViewItem, nameof(Rating)+"='"+nameof(EvaluationRating.Good)+"'",TargetItems = "*",FontColor = "Green",Context = "Employee_Evaluations_ListView")]
-    [CloneView(CloneViewType.ListView, EmployeeEvaluationsListViewChild)]
-    [DefaultClassOptions][ImageName("EvaluationYes")]
+    [CloneView(CloneViewType.ListView, EmployeeEvaluationsChildListView)]
+    [DefaultClassOptions][ImageName("EvaluationYes")][VisibleInReports(false)]
     public class Evaluation :OutlookInspiredBaseObject,IEvent{
-        public const string EmployeeEvaluationsListViewChild="Employee_Evaluations_ListView_Child";
+        public const string EmployeeEvaluationsChildListView="Employee_Evaluations_ListView_Child";
 	    private const int NoneReminder = -1;
 		
 		private int _remindInSeconds = NoneReminder;

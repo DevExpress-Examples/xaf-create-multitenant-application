@@ -67,12 +67,22 @@ public class Updater : ModuleUpdater {
 		userAdmin.Roles.Add(adminRole);
         if (ObjectSpace.ModifiedObjects.Any()){
             CreateViewFilters();
+            CreateMailMergeTemplates();
         }
         ObjectSpace.CommitChanges(); //This line persists created object(s).
 
 
 #endif
     }
+
+    private void CreateMailMergeTemplates() 
+        => new[]{
+                (type: typeof(Order), name: "FollowUp"), (type: typeof(Order), name: "Order"), (type: typeof(OrderItem), name: "OrderItem"),
+                (type: typeof(Employee), name: "Probation Notice"),(type: typeof(Employee), name: "Service Excellence"),(type: typeof(Employee), name: "Thank You Note")
+                ,(type: typeof(Employee), name: "Welcome to DevAV"),(type: typeof(Employee), name: "Month Award"),
+            }
+            .ForEach(t => ObjectSpace.NewMailMergeData(t.name,t.type,GetType().Assembly
+                .GetManifestResourceStream(s => s.Contains("MailMerge")  && s.EndsWith($"{t.name}.docx")).Bytes()));
 
     private void CreateViewFilters(){
         EmployeeFilters();

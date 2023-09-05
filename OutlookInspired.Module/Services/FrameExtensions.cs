@@ -1,8 +1,17 @@
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Office;
 
 namespace OutlookInspired.Module.Services{
     internal static class FrameExtensions{
+        
+        public static void ShowInDocument(this Frame frame, string template){
+            var showInDocumentAction = frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction;
+            showInDocumentAction.Active.RemoveItem("ByAppearance");
+            showInDocumentAction.DoExecute(showInDocumentAction.Items.First(item => ((MailMergeDataInfo)item.Data).DisplayName == template));
+            showInDocumentAction.Active["ByAppearance"] = false;
+        }
+
         public static IEnumerable<ActionBase> ActiveActions(this Frame frame, params string[] actionsIds)
             => frame.Actions(actionsIds).Where(action => action.Active);
         public static IEnumerable<ActionBase> Actions(this Frame frame,params string[] actionsIds) 

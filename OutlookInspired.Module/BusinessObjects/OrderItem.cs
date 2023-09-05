@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using DevExpress.Persistent.Base;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
+    [VisibleInReports(true)][DefaultClassOptions]
     public class OrderItem :OutlookInspiredBaseObject{
         public virtual Order Order { get; set; }
 

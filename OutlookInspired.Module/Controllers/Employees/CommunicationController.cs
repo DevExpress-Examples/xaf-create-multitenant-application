@@ -2,9 +2,9 @@
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 
-namespace OutlookInspired.Module.Controllers{
-    public class EmployeeCommunicationController:ObjectViewController<ObjectView,BusinessObjects.Employee>{
-        public EmployeeCommunicationController(){
+namespace OutlookInspired.Module.Controllers.Employees{
+    public class CommunicationController:ObjectViewController<ObjectView,BusinessObjects.Employee>{
+        public CommunicationController(){
             NewAction(nameof(BusinessObjects.Employee.HomePhone), "icon-home-phone-16",
                 _ => throw new UserFriendlyException($"Call {((BusinessObjects.Employee)View.CurrentObject).HomePhone}"));
             NewAction(nameof(BusinessObjects.Employee.MobilePhone), "icon-mobile-phone-16",

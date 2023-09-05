@@ -6,10 +6,13 @@ using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
+using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Model;
 using OutlookInspired.Module.Model.HideViewActions;
 using OutlookInspired.Module.Services;
+
+
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
 
@@ -22,8 +25,9 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		// 
 		AdditionalExportedTypes.Add(typeof(ApplicationUser));
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.ModelDifference));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.ModelDifferenceAspect));
+		AdditionalExportedTypes.Add(typeof(ModelDifference));
+		AdditionalExportedTypes.Add(typeof(ModelDifferenceAspect));
+		
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Security.SecurityModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule));
@@ -40,12 +44,13 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ViewVariantsModule.ViewVariantsModule));
 		DevExpress.ExpressApp.Security.SecurityModule.UsedExportedTypes = UsedExportedTypes.Custom;
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.FileData));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.FileAttachment));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.Analysis));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.Event));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.Resource));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.HCategory));
+		AdditionalExportedTypes.Add(typeof(FileData));
+		AdditionalExportedTypes.Add(typeof(FileAttachment));
+		AdditionalExportedTypes.Add(typeof(Analysis));
+		AdditionalExportedTypes.Add(typeof(Event));
+		AdditionalExportedTypes.Add(typeof(Resource));
+		AdditionalExportedTypes.Add(typeof(HCategory));
+		AdditionalExportedTypes.Add(typeof(RichTextMailMergeData));
 		FixGridRendering();
     }
 
@@ -55,8 +60,12 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
 
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
+	    var predefinedReportsUpdater = new PredefinedReportsUpdater(Application, objectSpace, versionFromDB);
+	    predefinedReportsUpdater.AddOrderReports().AddCustomerReports().AddProductReports();
+	    yield return predefinedReportsUpdater;
         yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
     }
+    
     public override void Setup(XafApplication application) {
 	    base.Setup(application);
 	    application.ObjectSpaceCreated += Application_ObjectSpaceCreated;
@@ -72,8 +81,9 @@ public sealed class OutlookInspiredModule : ModuleBase{
 			    }
 		    };
 	    }
-
     }
+    
+    
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
 	    new IModelNodesGeneratorUpdater[]{new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater()}

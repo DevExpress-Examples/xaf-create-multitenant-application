@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Security.ClientServer;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
+using DevExpress.ExpressApp.EFCore;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Win.Extensions;
 namespace OutlookInspired.Win;

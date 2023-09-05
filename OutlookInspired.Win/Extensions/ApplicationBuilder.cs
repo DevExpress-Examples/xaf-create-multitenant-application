@@ -5,6 +5,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
+using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace OutlookInspired.Win.Extensions{
@@ -46,17 +47,17 @@ namespace OutlookInspired.Win.Extensions{
                 .AddCharts()
                 .AddConditionalAppearance()
                 .AddDashboards(options => {
-                    options.DashboardDataType = typeof(DevExpress.Persistent.BaseImpl.EF.DashboardData);
+                    options.DashboardDataType = typeof(DashboardData);
                     options.DesignerFormStyle = DevExpress.XtraBars.Ribbon.RibbonFormStyle.Ribbon;
                 })
                 .AddFileAttachments()
                 .AddNotifications()
-                .AddOffice()
+                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
                 .AddPivotChart(options => options.ShowAdditionalNavigation = true)
                 .AddPivotGrid()
                 .AddReports(options => {
                     options.EnableInplaceReports = true;
-                    options.ReportDataType = typeof(DevExpress.Persistent.BaseImpl.EF.ReportDataV2);
+                    options.ReportDataType = typeof(ReportDataV2);
                     options.ReportStoreMode = DevExpress.ExpressApp.ReportsV2.ReportStoreModes.XML;
                     options.ShowAdditionalNavigation = true;
                 })

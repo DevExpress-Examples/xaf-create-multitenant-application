@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module;
 
-
 namespace OutlookInspired.Win;
 
 [ToolboxItemFilter("Xaf.Platform.Win")]
@@ -25,7 +24,9 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
         RequiredModuleTypes.Add(typeof(OutlookInspiredModule));
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
-        return ModuleUpdater.EmptyModuleUpdaters;
+        var updater = new ModuleUpdater(objectSpace, versionFromDB);
+        
+        return new[] { updater };
     }
     public override void Setup(XafApplication application) {
         base.Setup(application);

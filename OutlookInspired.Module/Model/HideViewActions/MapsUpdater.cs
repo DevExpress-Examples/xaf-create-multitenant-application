@@ -7,8 +7,8 @@ namespace OutlookInspired.Module.Model.HideViewActions{
 
         protected override string[] ViewIds() 
             => new[]{
-                Customer.CustomerDetailViewMaps,Employee.EmployeeDetailViewMaps,
-                Product.ProductDetailViewMaps, Order.OrderDetailViewMaps,Quote.QuoteDetailViewMaps
+                Customer.MapsDetailView,Employee.MapsDetailView,
+                Product.MapsDetailView, Order.MapsDetailView,Quote.MapsDetailView
             };
     }
 }

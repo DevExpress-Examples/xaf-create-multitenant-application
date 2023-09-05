@@ -1,22 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Services;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
     [XafDefaultProperty(nameof(InvoiceNumber))]
-    [CloneView(CloneViewType.DetailView, OrderInvoiceDetailView)]
-    [CloneView(CloneViewType.DetailView, OrderGridViewDetailView)]
-    [CloneView(CloneViewType.DetailView, OrderDetailViewMaps)]
-    [ImageName("BO_Order")]
+    [CloneView(CloneViewType.DetailView, ChildDetailView)]
+    [CloneView(CloneViewType.DetailView, GridViewDetailView)]
+    [CloneView(CloneViewType.DetailView, MapsDetailView)]
+    [CloneView(CloneViewType.DetailView, InvoiceDetailView)]
+    [ImageName("BO_Order")][VisibleInReports(true)][DefaultClassOptions]
+    [Appearance("Hide ShowInDocument action",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Hide)]
     public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
-        public const string OrderDetailViewMaps = "Order_DetailView_Maps";
-        public const string OrderInvoiceDetailView = "Order_DetailView_Child";
-        public const string OrderGridViewDetailView = "OrderGridView_DetailView";
+        public const string MapsDetailView = "Order_DetailView_Maps";
+        public const string InvoiceDetailView = "Order_Invoice_DetailView";
+        public const string ChildDetailView = "Order_DetailView_Child";
+        public const string GridViewDetailView = "OrderGridView_DetailView";
         
         [XafDisplayName("Invoice #")]
         [FontSizeDelta(4)]
@@ -44,6 +50,20 @@ namespace OutlookInspired.Module.BusinessObjects{
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
         public virtual byte[] ShipmentStatusImage => ShipmentStatus.ImageInfo().ImageBytes;
+
+        [EditorAlias(EditorAliases.PdfViewerEditor)]
+        [VisibleInDetailView(false)]
+        [NotMapped]
+        public virtual byte[] ShipmentDetail{ get; set; } = Array.Empty<byte>();
+        // [EditorAlias(EditorAliases.MailMergeEditor)]
+        // [VisibleInDetailView(false)]
+        // // [NotMapped]
+        // public virtual string InvoiceDocument{ get; set; }
+        
+        [EditorAlias(EditorAliases.PdfViewerEditor)]
+        [VisibleInDetailView(false)]
+        [NotMapped]
+        public virtual byte[] InvoiceDocument{ get; set; } = Array.Empty<byte>();
         public  virtual string Comments { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal RefundTotal { get; set; }

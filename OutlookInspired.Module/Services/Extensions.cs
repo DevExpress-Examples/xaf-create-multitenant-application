@@ -73,10 +73,12 @@ namespace OutlookInspired.Module.Services{
             task.ContinueWith(_ => cts.Cancel(), TaskScheduler.Default);
             return cts.Token;
         }
+    
         
     }
     
     public struct EditorAliases {
+        public const string PrintLayoutRichTextEditor = "PrintLayoutRichTextEditor";
         public const string PdfViewerEditor = "PdfViewerEditor";
         public const string LabelPropertyEditor = "LabelPropertyEditor";
         public const string HyperLinkPropertyEditor = "HyperLinkPropertyEditor";

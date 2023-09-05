@@ -11,16 +11,16 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[ImageName("BO_Customer")]
-	[CloneView(CloneViewType.DetailView, ChildDetailViewId)]
-	[CloneView(CloneViewType.DetailView, CustomerLayoutViewDetailView)]
-	[CloneView(CloneViewType.DetailView, CustomerGridViewDetailView)]
-	[CloneView(CloneViewType.DetailView, CustomerDetailViewMaps)]
+	[CloneView(CloneViewType.DetailView, ChildDetailView)]
+	[CloneView(CloneViewType.DetailView, LayoutViewDetailView)]
+	[CloneView(CloneViewType.DetailView, GridViewDetailView)]
+	[CloneView(CloneViewType.DetailView, MapsDetailView)]
 	[XafDefaultProperty(nameof(Name))]
 	public class Customer:OutlookInspiredBaseObject,IViewFilter,ISalesMapsMarker{
-		public const string ChildDetailViewId = "Customer_DetailView_Child";
-		public const string CustomerGridViewDetailView = "CustomerGridView_DetailView";
-		public const string CustomerLayoutViewDetailView = "CustomerLayoutView_DetailView";
-		public const string CustomerDetailViewMaps = "Customer_DetailView_Maps";
+		public const string ChildDetailView = "Customer_DetailView_Child";
+		public const string GridViewDetailView = "CustomerGridView_DetailView";
+		public const string LayoutViewDetailView = "CustomerLayoutView_DetailView";
+		public const string MapsDetailView = "Customer_DetailView_Maps";
 		[FontSizeDelta(4)]
 		public  virtual string HomeOfficeLine { get; set; }
 		[XafDisplayName("City")]

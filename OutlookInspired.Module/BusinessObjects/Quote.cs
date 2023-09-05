@@ -7,9 +7,9 @@ using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("BO_Quote")]
-    [CloneView(CloneViewType.DetailView, QuoteDetailViewMaps)]
+    [CloneView(CloneViewType.DetailView, MapsDetailView)]
     public class Quote :OutlookInspiredBaseObject, IViewFilter,IMapsMarker{
-        public const string QuoteDetailViewMaps = "Quote_DetailView_Maps";
+        public const string MapsDetailView = "Quote_DetailView_Maps";
         public  virtual string Number { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual CustomerStore CustomerStore { get; set; }

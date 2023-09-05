@@ -1,7 +1,13 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Office;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Map.Dashboard;
+using DevExpress.Office.Services;
+using DevExpress.Pdf;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
@@ -9,11 +15,33 @@ using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraMap;
 using DevExpress.XtraPivotGrid;
+using DevExpress.XtraReports.UI;
+using DevExpress.XtraRichEdit;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Extensions{
     public static class Extensions{
+        
+
+        
+
+        
+
+        
+
+        [DllImport("USER32.dll", CharSet = CharSet.Auto)]  
+        static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
+
+        [SecuritySafeCritical]
+        public static void LockRedraw(this Control control, Action action){
+            SendMessage(control.Handle, 0x000B, 0, IntPtr.Zero);
+            action();
+            SendMessage(control.Handle, 0x000B, 1, IntPtr.Zero);
+        }
+        
+
         public static void To(this IZoomToRegionService zoomService, GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
             if(pointA == null || pointB == null || zoomService == null) return;
             var latPadding = CalculatePadding(pointB.Latitude - pointA.Latitude, margin);
