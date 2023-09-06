@@ -4,7 +4,16 @@ using DevExpress.ExpressApp.Office;
 
 namespace OutlookInspired.Module.Services{
     internal static class FrameExtensions{
-        
+        public static List<T> GetControllers<T>(this Frame frame) where T:class{
+            var controllers = new List<T>();
+            foreach (var controller in frame.Controllers){
+                if (controller is T t)
+                    controllers.Add(t);
+            }
+            return  controllers;
+
+        }
+
         public static void ShowInDocument(this Frame frame, string template){
             var showInDocumentAction = frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction;
             showInDocumentAction.Active.RemoveItem("ByAppearance");

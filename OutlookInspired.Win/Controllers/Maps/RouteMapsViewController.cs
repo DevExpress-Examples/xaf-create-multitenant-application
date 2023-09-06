@@ -1,13 +1,15 @@
-﻿using DevExpress.ExpressApp.Actions;
+﻿using System.Text.RegularExpressions;
+using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Maps;
 using OutlookInspired.Module.Services;
-using OutlookInspired.Win.Editors;
 using OutlookInspired.Win.Extensions;
+using BingManeuverType = OutlookInspired.Module.BusinessObjects.BingManeuverType;
 
 namespace OutlookInspired.Win.Controllers.Maps{
-    public class RouteMapsViewController:WinMapsViewController<IRouteMapsMarker>{
+    public class RouteMapsViewController:WinMapsViewController<IRouteMapsMarker>,IMapsRouteController{
         private readonly BingGeocodeDataProvider _geocodeDataProvider=new(){BingKey = MapsViewController.Key};
         private readonly BingRouteDataProvider _routeDataProvider=new(){BingKey = MapsViewController.Key,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile}};
         private readonly BingSearchDataProvider _searchDataProvider=new(){BingKey = MapsViewController.Key};
@@ -67,23 +69,27 @@ namespace OutlookInspired.Win.Controllers.Maps{
             // AddRoutePoints(_routeLayer);
         }
 
+        private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
         private void OnRouteCalculated(object sender, BingRouteCalculatedEventArgs e){
             if(e.Error != null || e.Cancelled || e.CalculationResult is not{ ResultCode: RequestResultCode.Success })
                 return;
-            // ViewModel.RouteDistance = routeResult.Distance;
-            // ViewModel.RouteTime = routeResult.Time;
-            // List<RoutePoint> routePoints = new List<RoutePoint>();
-            // foreach(BingRouteLeg leg in routeResult.Legs)
-            // foreach(BingItineraryItem item in leg.Itinerary)
-            //     routePoints.Add(new RoutePoint(item));
-            // UpdateRouteList(routePoints);
+            var bingRouteResult = e.CalculationResult.RouteResults.First();
+            OnRouteCalculated(new RouteCalculatedArgs(bingRouteResult.Legs.SelectMany(leg => leg.Itinerary)
+                .Select(item => {
+                    var point = ObjectSpace.CreateObject<RoutePoint>();
+                    point.ManeuverInstruction = RemoveTagRegex.Replace(item.ManeuverInstruction, string.Empty);
+                    point.Distance = (item.Distance > 0.9) ? $"{Math.Ceiling(item.Distance):0} mi"
+                        : $"{Math.Ceiling(item.Distance * 52.8) * 100:0} ft";
+                    point.Maneuver = (BingManeuverType)item.Maneuver;
+                    return point;
+                }).ToArray(),bingRouteResult.Distance,bingRouteResult.Time));
             Zoom.To((GeoPoint)MapControl.CenterPoint, _currentObjectPoint);
         }
 
         private void OnLocationInformationReceived(object sender, LocationInformationReceivedEventArgs e){
             if(e.Error != null || e.Cancelled || e.Result == null || e.Result.ResultCode != RequestResultCode.Success)
                 return;
-            LocationInformation[] locations = e.Result.Locations;
+            var locations = e.Result.Locations;
             if(locations.Length > 0) {
                 // LocationInformation loc = locations[0];
                 throw new NotImplementedException();
@@ -104,5 +110,9 @@ namespace OutlookInspired.Win.Controllers.Maps{
             _routeDataProvider.LayerItemsGenerating-=OnLayerItemsGenerating;
             MapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
         }
+
+        public event EventHandler<RouteCalculatedArgs> RouteCalculated;
+
+        protected virtual void OnRouteCalculated(RouteCalculatedArgs e) => RouteCalculated?.Invoke(this, e);
     }
 }

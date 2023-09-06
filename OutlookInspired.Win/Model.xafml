@@ -67,6 +67,10 @@
     </DetailView>
     <DetailView Id="Employee_DetailView_Maps">
       <Items>
+        <PropertyEditor Id="AAddress" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+        <PropertyEditor Id="Address" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+        <PropertyEditor Id="BAddress" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
+        <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
       </Items>
     </DetailView>

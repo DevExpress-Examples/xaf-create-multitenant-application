@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Maps;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.Controllers.Orders{

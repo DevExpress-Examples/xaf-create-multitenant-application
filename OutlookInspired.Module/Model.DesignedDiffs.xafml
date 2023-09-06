@@ -469,11 +469,24 @@
     <DetailView Id="Employee_DetailView_Maps" FreezeLayout="True">
       <Items>
         <ControlDetailItem Id="MapsControl" ControlTypeName="MapsControl" Caption="Map" IsNewNode="True" />
+        <PropertyEditor Id="Picture" PropertyName="Picture.Data" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
-          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
-            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" Direction="Horizontal" IsNewNode="True">
+            <LayoutItem Id="MapsControl" ViewItem="MapsControl" Index="0" RelativeSize="67.23842195540308" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+            <LayoutGroup Id="Auto55738e8a-ad25-43c5-8135-f7030b1fbeb6" ShowCaption="False" Caption="Auto55738e8a-ad25-43c5-8135-f7030b1fbeb6(7)" Index="1" RelativeSize="32.76157804459691" IsNewNode="True">
+              <LayoutGroup Id="Auto545e433b-2786-4e52-bd8b-09fc12509e50" ShowCaption="False" Caption="Auto545e433b-2786-4e52-bd8b-09fc12509e50(5)" Direction="Horizontal" Index="0" RelativeSize="13.793103448275861" IsNewNode="True">
+                <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="132, 120" MaxSize="132, 120" Index="0" RelativeSize="34.55497382198953" IsNewNode="True" />
+                <LayoutGroup Id="Auto5ce01d17-5e7e-4055-b926-eeb5c8eef21e" ShowCaption="False" Caption="Auto5ce01d17-5e7e-4055-b926-eeb5c8eef21e(7)" Index="1" RelativeSize="65.44502617801047" IsNewNode="True">
+                  <LayoutItem Id="FullName" ShowCaption="False" ViewItem="FullName" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="127, 32" Index="0" RelativeSize="45" IsNewNode="True" />
+                  <LayoutItem Id="Address" ShowCaption="False" ViewItem="Address" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="65, 24" Index="1" RelativeSize="55" IsNewNode="True" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="AAddress" ViewItem="AAddress" Index="1" RelativeSize="2.7586206896551726" IsNewNode="True" />
+              <LayoutItem Id="BAddress" ViewItem="BAddress" Index="2" RelativeSize="2.7586206896551726" IsNewNode="True" />
+              <LayoutItem Id="RoutePoints" ViewItem="RoutePoints" Index="3" RelativeSize="80.6896551724138" IsNewNode="True" />
+            </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
@@ -522,6 +535,13 @@
         <ColumnInfo Id="ZipCode" Index="6" />
         <ColumnInfo Id="Email" Index="7" />
       </Columns>
+    </ListView>
+    <ListView Id="Employee_RoutePoints_ListView">
+      <HiddenActions>
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+        <ActionLink ActionId="New" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+      </HiddenActions>
     </ListView>
     <DashboardView Id="EmployeeCardListView" MasterDetail="True" ImageName="BO_Person" Caption="Employee" IsNewNode="True">
       <HiddenActions IsNewNode="True">

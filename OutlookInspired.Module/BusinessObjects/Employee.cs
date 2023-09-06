@@ -20,6 +20,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[CloneView(CloneViewType.DetailView, LayoutViewDetailView)]
 	[CloneView(CloneViewType.DetailView, ChildDetailView)]
 	[CloneView(CloneViewType.DetailView, MapsDetailView)]
+	[VisibleInReports(true)]
 	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,ITravelModeMapsMarker{
 		public const string MapsDetailView = "Employee_DetailView_Maps";
 		public const string ChildDetailView = "Employee_DetailView_Child";
@@ -76,18 +77,26 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[RuleRequiredField, EmailAddress]
 		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)]
 		public virtual string Email { get; set; }
+
+		[VisibleInDetailView(false)]
+		[NotMapped]
+		public virtual ObservableCollection<RoutePoint> RoutePoints{ get; set; } = new();
 		[VisibleInListView(false)]
 		public virtual string Skype { get; set; }
 		[VisibleInListView(false)]
 		public virtual DateTime? BirthDate { get; set; }
 		[VisibleInListView(false)]
 		public virtual Picture Picture { get; set; }
+		[NotMapped][VisibleInListView(false)][VisibleInDetailView(false)][VisibleInLookupListView(false)][XafDisplayName("A")]
+		public string AAddress{ get; set; }
+		[NotMapped][VisibleInListView(false)][VisibleInDetailView(false)][VisibleInLookupListView(false)][XafDisplayName("B")]
+		public string BAddress{ get; set; }
 		public virtual StateEnum State { get; set; }
 		[VisibleInListView(false)]
 		public virtual double AddressLatitude { get; set; }
 		[VisibleInListView(false)]
 		public virtual double AddressLongitude { get; set; }
-		[RuleRequiredField]
+		[RuleRequiredField][FontSizeDelta(2)]
 		public virtual string Address { get; set; }
 		[RuleRequiredField]
 		public virtual string City { get; set; }

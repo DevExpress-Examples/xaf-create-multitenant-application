@@ -91,6 +91,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[InverseProperty(nameof(Order.Customer))]
 		[Aggregated]
 		public virtual ObservableCollection<Order> Orders{ get; set; }
+		
 
 		IEnumerable<Order> ISalesMapsMarker.Orders => Orders;
 	}

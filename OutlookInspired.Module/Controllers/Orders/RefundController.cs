@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Maps;
 
 namespace OutlookInspired.Module.Controllers.Orders{
     public class RefundController:ViewController{

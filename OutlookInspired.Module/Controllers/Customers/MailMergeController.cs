@@ -3,6 +3,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Maps;
 
 namespace OutlookInspired.Module.Controllers.Customers{
     public class MailMergeController:ObjectViewController<ObjectView,Employee>{

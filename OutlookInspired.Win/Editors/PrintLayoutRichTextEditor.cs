@@ -9,7 +9,6 @@ namespace OutlookInspired.Win.Editors{
     public class PrintLayoutRichTextEditor : RichTextPropertyEditor {
         public PrintLayoutRichTextEditor(Type objectType, IModelMemberViewItem info)  
             : base(objectType, info) {
-            
         }
 
         protected override object CreateControlCore(){
