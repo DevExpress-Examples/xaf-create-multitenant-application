@@ -39,9 +39,9 @@ namespace OutlookInspired.Module.Controllers.Orders{
                 e.NewDetailView(Order.InvoiceDetailView, TargetWindow.NewModalWindow);
             }
         }
-        
-        protected override void OnActivated(){
-            base.OnActivated();
+
+        protected override void OnViewControllersActivated(){
+            base.OnViewControllersActivated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
         }
     }

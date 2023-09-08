@@ -5,18 +5,20 @@ using OutlookInspired.Module.BusinessObjects;
 namespace OutlookInspired.Module.Services{
     internal static class MapExtensions{
         public static IEnumerable<CustomerStore> Stores(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default)
-            => salesMapsMarker.Orders.Where(period,dateTime)
+            => salesMapsMarker.Orders.Where(period,dateTime:dateTime)
                 .GroupBy(order => order.Store).Select(orders => orders.Key);
 
-        static IEnumerable<Order> Where(this IEnumerable<Order> source,Period period,DateTime dateTime=default) 
+        static IEnumerable<Order> Where(this IEnumerable<Order> source, Period period, string city=null,DateTime dateTime = default) 
             => source.Where(order => period == Period.ThisYear ? order.OrderDate.Year == DateTime.Now.Year : period == Period.ThisMonth
                 ? order.OrderDate.Month == DateTime.Now.Month && order.OrderDate.Year == DateTime.Now.Year
                 : period != Period.FixedDate || order.OrderDate.Month == dateTime.Month &&
-                order.OrderDate.Year == dateTime.Year && order.OrderDate.Day == dateTime.Day);
+                order.OrderDate.Year == dateTime.Year && order.OrderDate.Day == dateTime.Day)
+                .Where(order => city==null||order.Store.City==city);
 
-        public static MapItem[] SaleMapItems(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default) 
-            => salesMapsMarker.Orders.Where(period,dateTime).SelectMany(order => order.OrderItems)
-                .Select(orderItem => new MapItem {
+        public static MapItem[] Sales(this ISalesMapsMarker salesMapsMarker,Period period,string city=null,DateTime dateTime=default){
+            var orders = salesMapsMarker.Orders;
+            return orders.Where(period,city, dateTime).SelectMany(order => order.OrderItems)
+                .Select(orderItem => new MapItem{
                     Customer = orderItem.Order.Customer,
                     Product = orderItem.Product,
                     Total = orderItem.Total,
@@ -24,6 +26,7 @@ namespace OutlookInspired.Module.Services{
                     Longitude = orderItem.Order.Store.Longitude,
                     City = orderItem.Order.Store.City
                 }).ToArray();
+        }
 
         public static decimal Opportunity(this IObjectSpace objectSpace,Stage stage,string city)
             => objectSpace.Quotes(stage).Where(q => q.CustomerStore.City == city).TotalSum(q => q.Total);

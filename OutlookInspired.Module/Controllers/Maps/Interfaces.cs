@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using DevExpress.ExpressApp.Model;
+using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 
@@ -30,13 +31,15 @@ namespace OutlookInspired.Module.Controllers.Maps{
     public class RouteCalculatedArgs:EventArgs{
         public RoutePoint[] RoutePoints{ get; }
 
-        public RouteCalculatedArgs(RoutePoint[] routePoints,double distance,TimeSpan time){
+        public RouteCalculatedArgs(RoutePoint[] routePoints,double distance,TimeSpan time,TravelMode travelMode){
             RoutePoints = routePoints;
             Distance = distance;
             Time = time;
+            TravelMode = travelMode;
         }
 
         public double Distance{ get;  }
         public TimeSpan Time{ get;  }
+        public TravelMode TravelMode{ get; }
     }
 }

@@ -109,7 +109,4 @@
       <DependentUpon>Model.xafml</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\Employees\" />
-  </ItemGroup>
 </Project>

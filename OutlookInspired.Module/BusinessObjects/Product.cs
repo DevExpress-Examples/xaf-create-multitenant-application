@@ -21,6 +21,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public const string CardViewDetailView = "ProductCardView_DetailView";
         public const string BrochureDetailView = "Product_Brochure_DetailView";
         public const string MapsDetailView = "Product_DetailView_Maps";
+        [FontSizeDelta(8)]
         public  virtual string Name { get; set; }
         [FieldSize(-1)]
         public  virtual string Description { get; set; }
@@ -37,7 +38,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual int? CurrentInventory { get; set; }
         public  virtual int Backorder { get; set; }
         public  virtual int Manufacturing { get; set; }
-        
+        [NotMapped][VisibleInDetailView(false)]
+        public ObservableCollection<MapItem> CitySales{ get; set; } = new();
         public virtual Picture PrimaryImage { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal Cost { get; set; }

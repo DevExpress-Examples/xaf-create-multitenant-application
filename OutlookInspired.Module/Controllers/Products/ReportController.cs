@@ -26,29 +26,13 @@ namespace OutlookInspired.Module.Controllers.Products{
 
         public SingleChoiceAction ReportAction{ get; }
 
-        private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e){
-            var selectedItemData = (string)ReportAction.SelectedItem.Data;
-            if (selectedItemData == "Sales"){
-                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<OrderItem>(
-                    orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
-            }
-            else if (selectedItemData == "Orders"){
-                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<OrderItem>(
-                    orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
-            }
-            else if (selectedItemData == "Profile"){
-                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<Product>(
-                    product => product.ID == ((Product)View.CurrentObject).ID));
-            }
-            else if (selectedItemData == "Top Sales Person"){
-                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<OrderItem>(
-                    orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
-            }
-            
-        }
-        
-        protected override void OnActivated(){
-            base.OnActivated();
+        private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e) 
+            => ReportAction.ShowReportPreview((string)ReportAction.SelectedItem.Data=="Profile"?CriteriaOperator.FromLambda<Product>(
+                product => product.ID == ((Product)View.CurrentObject).ID):CriteriaOperator.FromLambda<OrderItem>(
+                orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
+
+        protected override void OnViewControlsCreated(){
+            base.OnViewControlsCreated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
         }
     }

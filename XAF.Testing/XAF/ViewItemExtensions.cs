@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Templates;
 using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{

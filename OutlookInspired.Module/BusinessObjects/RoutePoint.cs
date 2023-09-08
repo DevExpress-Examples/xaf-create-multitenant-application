@@ -1,18 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using DevExpress.ExpressApp.DC;
+﻿using DevExpress.ExpressApp.DC;
+using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
     public class RoutePoint {
-        // static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
-        
-        public RoutePoint() {
-            // _item = item;
-            // ManeuverInstruction = RemoveTagRegex.Replace(item.ManeuverInstruction, string.Empty);
-            // double itemDistance = item.Distance;
-            // Distance = (itemDistance > 0.9) ? $"{Math.Ceiling(itemDistance):0} mi"
-            //     : $"{Math.Ceiling(itemDistance * 52.8) * 100:0} ft";
-        }
+        [VisibleInListView(false)]
         public BingManeuverType Maneuver{ get; set; }
 
         public string ManeuverInstruction{ get; set; }

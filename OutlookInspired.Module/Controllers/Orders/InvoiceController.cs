@@ -1,5 +1,4 @@
 ﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
@@ -27,11 +26,8 @@ namespace OutlookInspired.Module.Controllers.Orders{
             View.CurrentObjectChanged+=ViewOnCurrentObjectChanged;
         }
         
-        private void ViewOnCurrentObjectChanged(object sender, EventArgs e){
-            var order = (Order)View.CurrentObject;
-            order.InvoiceDocument = order.MailMergeInvoice().ToPdf();
-            View.GetItems<PropertyEditor>().First(editor => editor.MemberInfo.Name==nameof(Order.InvoiceDocument)).ReadValue();
-        }
-
+        private void ViewOnCurrentObjectChanged(object sender, EventArgs e) 
+            => View.SetNonPersistentMemberValue<Order, byte[]>(order1 => order1.InvoiceDocument,
+                ((Order)View.CurrentObject).MailMergeInvoice().ToPdf());
     }
 }

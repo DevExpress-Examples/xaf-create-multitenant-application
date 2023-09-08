@@ -1,16 +1,23 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.Controllers;
-using Remote.Linq.Expressions;
 using LambdaExpression = System.Linq.Expressions.LambdaExpression;
 
 namespace OutlookInspired.Module.Services{
     public static class ViewExtensions{
+        public static void SetNonPersistentMemberValue<T,T2>(this CompositeView view, Expression<Func<T, T2>> expression,T2 value){
+            var propertyEditor = view.GetItems<PropertyEditor>()
+                .First(editor => editor.MemberInfo.Name == expression.MemberExpressionName());
+            propertyEditor.MemberInfo.SetValue(view.CurrentObject,value);
+            propertyEditor.ReadValue();
+        }
+
         public static object DefaultMemberValue(this View view)
             => view.ObjectTypeInfo.DefaultMember?.GetValue(view.CurrentObject);
         

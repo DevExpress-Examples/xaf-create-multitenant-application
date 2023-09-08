@@ -1,6 +1,7 @@
 ﻿using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Win.Editors;
+using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using OutlookInspired.Module.Attributes;
@@ -20,7 +21,8 @@ namespace OutlookInspired.Win.Editors{
                 AutoSizeMode = LabelAutoSizeMode.None,
                 ShowLineShadow = false,
                 Appearance ={
-                    FontSizeDelta = MemberInfo.FindAttribute<FontSizeDeltaAttribute>()?.Delta??0
+                    FontSizeDelta = MemberInfo.FindAttribute<FontSizeDeltaAttribute>()?.Delta??0,
+                    TextOptions = { WordWrap =MemberInfo.Size==-1? WordWrap.Wrap:WordWrap.Default}
                 }
             };
 

@@ -12,6 +12,9 @@ namespace OutlookInspired.Module.Services{
                 .ShowPreview(ReportDataProvider.GetReportStorage(action.Application.ServiceProvider)
                     .GetReportContainerHandle(action.View().ObjectSpace
                         .FindObject<ReportDataV2>(data =>data.DataTypeName==reportDataType.FullName&& data.DisplayName == (string)action.SelectedItem.Data)),criteria);
+        
+        public static void ShowReportPreview(this SingleChoiceAction action,CriteriaOperator criteria=null) 
+            => action.ShowReportPreview(action.View().ObjectTypeInfo.Type,criteria);
 
         public static View NewDetailView(this ActionBaseEventArgs e,string viewId,TargetWindow targetWindow=TargetWindow.Default,bool isRoot=false){
             e.ShowViewParameters.TargetWindow = targetWindow;

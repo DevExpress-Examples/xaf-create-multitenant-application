@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
@@ -60,9 +59,8 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
 
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
-	    var predefinedReportsUpdater = new PredefinedReportsUpdater(Application, objectSpace, versionFromDB);
-	    predefinedReportsUpdater.AddOrderReports().AddCustomerReports().AddProductReports();
-	    yield return predefinedReportsUpdater;
+	    yield return new PredefinedReportsUpdater(Application, objectSpace, versionFromDB)
+		    .AddOrderReports().AddCustomerReports().AddProductReports();
         yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
     }
     
@@ -83,11 +81,9 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    }
     }
     
-    
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    new IModelNodesGeneratorUpdater[]{new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater()}
-		    .Do(updaters.Add).Enumerate();
+	    updaters.Add(new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater());
     }
     
     

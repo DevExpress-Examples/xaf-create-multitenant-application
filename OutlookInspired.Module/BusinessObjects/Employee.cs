@@ -125,6 +125,10 @@ namespace OutlookInspired.Module.BusinessObjects{
 			get => FullName;
 			set => FullName=value;
 		}
+
+		[NotMapped][VisibleInListView(false)][VisibleInDetailView(false)][VisibleInLookupListView(false)]
+		[FontSizeDelta(2)]
+		public virtual string RouteResult{ get; set; }
 	}
 
 	public enum EmployeeDepartment {

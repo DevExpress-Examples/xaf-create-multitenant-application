@@ -1,10 +1,19 @@
 ﻿using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers.Maps;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.Controllers.Employees{
+    public class RoutePointListViewController:ObjectViewController<ListView,RoutePoint>{
+        public RoutePointListViewController() => TargetViewNesting=Nesting.Nested;
+        
+        protected override void OnViewControlsCreated(){
+            base.OnViewControlsCreated();
+            ((ISupportActionsToolbarVisibility)Frame.Template).SetVisible(false);
+        }
+    }
     public class RoutePointController:ObjectViewController<DetailView,Employee>{
         private IMapsRouteController _mapsRouteController;
         public RoutePointController() => TargetViewId = Employee.MapsDetailView;
@@ -25,8 +34,11 @@ namespace OutlookInspired.Module.Controllers.Employees{
         }
 
         private void OnRouteCalculated(object sender, RouteCalculatedArgs e){
-            ((Employee)View.CurrentObject).RoutePoints.Clear();
-            e.RoutePoints.ForEach(((Employee)View.CurrentObject).RoutePoints.Add);
+            var employee = (Employee)View.CurrentObject;
+            employee.RoutePoints.Clear();
+            e.RoutePoints.ForEach(employee.RoutePoints.Add);
+            View.SetNonPersistentMemberValue<Employee, string>(employee1 => employee1.RouteResult,
+                $"{e.Distance:F1} mi, {e.Time:hh\\:mm} min {e.TravelMode}");
         }
     }
 }

@@ -3,7 +3,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.XtraPdfViewer;
-using OutlookInspired.Win.Extensions;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Win.Editors{
@@ -25,7 +24,6 @@ namespace OutlookInspired.Win.Editors{
             if (PropertyValue is not byte[]{ Length: > 0 } bytes) return;
             using var memoryStream = new MemoryStream(bytes);
             Control.LoadDocument(memoryStream);
-            // Control.LockRedraw(() => Control.LoadDocument(memoryStream));
         }
     }
 }

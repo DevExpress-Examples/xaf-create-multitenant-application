@@ -55,10 +55,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [VisibleInDetailView(false)]
         [NotMapped]
         public virtual byte[] ShipmentDetail{ get; set; } = Array.Empty<byte>();
-        // [EditorAlias(EditorAliases.MailMergeEditor)]
-        // [VisibleInDetailView(false)]
-        // // [NotMapped]
-        // public virtual string InvoiceDocument{ get; set; }
+        
         
         [EditorAlias(EditorAliases.PdfViewerEditor)]
         [VisibleInDetailView(false)]
@@ -69,7 +66,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual decimal RefundTotal { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal PaymentTotal { get; set; }
-        [NotMapped]
+        
         public PaymentStatus PaymentStatus 
             => PaymentTotal == decimal.Zero && RefundTotal == decimal.Zero ? PaymentStatus.Unpaid :
                 RefundTotal == TotalAmount ? PaymentStatus.RefundInFull :
@@ -78,7 +75,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
         public byte[] PaymentStatusImage => PaymentStatus.ImageInfo().ImageBytes;
-        [NotMapped]
+        
         public double ActualWeight 
             => OrderItems == null ? 0 : OrderItems.Where(item => item.Product != null)
                     .Sum(item => item.Product.Weight * item.ProductUnits);

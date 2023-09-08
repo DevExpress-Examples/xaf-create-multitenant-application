@@ -27,15 +27,15 @@ namespace OutlookInspired.Module.Controllers.Customers{
 
         private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e){
             var selectedItemData = (string)ReportAction.SelectedItem.Data;
-            if (selectedItemData == "Customer Sales Summary Report"){
+            if (selectedItemData == "Sales Summary Report"){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type, CriteriaOperator.FromLambda<OrderItem>(item 
                     => item.Order.Customer.ID == ((Customer)View.CurrentObject).ID));
             }
-            else if (selectedItemData == "Customer Locations"){
+            else if (selectedItemData == "Locations"){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<Customer>(customer
                     => customer.ID == ((Customer)View.CurrentObject).ID));
             }
-            else if (selectedItemData == "Customer Contacts"){
+            else if (selectedItemData == "Contacts"){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<CustomerEmployee>(customerEmployee
                     => customerEmployee.Customer.ID == ((Customer)View.CurrentObject).ID));
             }

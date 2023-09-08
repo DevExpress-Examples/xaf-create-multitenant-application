@@ -21,6 +21,8 @@ namespace OutlookInspired.Module.Controllers{
         private readonly SimpleAction _processMasterViewSelectedObjectAction;
         private NestedFrame _masterFrame;
         private NestedFrame _childFrame;
+        private ControlViewItem _controlViewItem;
+        private IUserControl _userControl;
 
         public DashboardMasterDetailController(){
             _processMasterViewSelectedObjectAction = new SimpleAction(this,"ProcessMasterViewSelectedObject",PredefinedCategory.ListView);
@@ -28,33 +30,58 @@ namespace OutlookInspired.Module.Controllers{
                 => e.ShowViewParameters.CreatedView = Application.NewDetailView(e.Action.SelectionContext.CurrentObject);
         }
 
-        protected override void OnActivated(){
-            base.OnActivated();
-            Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = ((IModelDashboardViewMasterDetail)View.Model).MasterDetail;
+        // protected override void OnActivated(){
+        //     base.OnActivated();
+        //     Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = ((IModelDashboardViewMasterDetail)View.Model).MasterDetail;
+        // }
+        //
+        // protected override void OnDeactivated(){
+        //     base.OnDeactivated();
+        //     Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = true;
+        // }
+
+        protected override void OnDeactivated(){
+            base.OnDeactivated();
+            if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
+            if (_controlViewItem != null){
+                _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
+                _userControl.CurrentObjectChanged-=UserControlOnCurrentObjectChanged;
+                _userControl.ProcessObject-=UserControlOnProcessObject;
+                _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
+            }
+            else{
+                _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;
+            }
         }
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
+            if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
             _masterFrame = View.MasterFrame();
             _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
             _childFrame = View.ChildFrame();
-            var controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
-            if (controlViewItem != null){
-                controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
+            _controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
+            if (_controlViewItem != null){
+                _controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
             }
             else{
-                _masterFrame.View.SelectionChanged += (_, _) => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
+                _masterFrame.View.SelectionChanged += ViewOnSelectionChanged;
             }
         }
 
+        private void ViewOnSelectionChanged(object sender, EventArgs e) 
+            => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
+
         private void ControlViewItemOnControlCreated(object sender, EventArgs e){
-            var userControl = (IUserControl)((ControlViewItem)sender).Control;
-            _masterFrame.ActiveActions().ForEach(action => action.SelectionContext = userControl);
-            userControl.CurrentObjectChanged += UserControlOnCurrentObjectChanged;
-            userControl.ProcessObject+=UserControlOnProcessObject;
-            _masterFrame.View.ObjectSpace.Committed += (_, _) => userControl.Refresh();
+            _userControl = (IUserControl)((ControlViewItem)sender).Control;
+            _masterFrame.ActiveActions().ForEach(action => action.SelectionContext = _userControl);
+            _userControl.CurrentObjectChanged += UserControlOnCurrentObjectChanged;
+            _userControl.ProcessObject+=UserControlOnProcessObject;
+            _masterFrame.View.ObjectSpace.Committed += ObjectSpaceOnCommitted;
         }
-        
+
+        private void ObjectSpaceOnCommitted(object sender, EventArgs e) => _userControl.Refresh();
+
         private void UserControlOnProcessObject(object sender, EventArgs e){
             var userControl = (IUserControl)sender;
             _processMasterViewSelectedObjectAction.SelectionContext = userControl;

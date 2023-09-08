@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
@@ -82,7 +83,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
                         : $"{Math.Ceiling(item.Distance * 52.8) * 100:0} ft";
                     point.Maneuver = (BingManeuverType)item.Maneuver;
                     return point;
-                }).ToArray(),bingRouteResult.Distance,bingRouteResult.Time));
+                }).ToArray(),bingRouteResult.Distance,bingRouteResult.Time,(TravelMode)_routeDataProvider.RouteOptions.Mode));
             Zoom.To((GeoPoint)MapControl.CenterPoint, _currentObjectPoint);
         }
 

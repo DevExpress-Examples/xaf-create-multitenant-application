@@ -1,36 +1,34 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Security;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.Office;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Map.Dashboard;
-using DevExpress.Office.Services;
-using DevExpress.Pdf;
 using DevExpress.Persistent.Base;
+using DevExpress.Utils.Extensions;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraMap;
 using DevExpress.XtraPivotGrid;
-using DevExpress.XtraReports.UI;
-using DevExpress.XtraRichEdit;
 using OutlookInspired.Module.Attributes;
-using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
+using IColorizer = DevExpress.XtraCharts.IColorizer;
+using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
 
 namespace OutlookInspired.Win.Extensions{
     public static class Extensions{
+        public static ChartControl ApplyColors(this ChartControl chartControl,KeyColorColorizer colorizer){
+            colorizer.Colors.Clear();
+            colorizer.Colors.BeginUpdate();
+            chartControl.GetPaletteEntries(20).ForEach(entry => colorizer.Colors.Add(entry.Color));
+            colorizer.Colors.EndUpdate();
+            chartControl.Series[0].View.Colorizer = (IColorizer)colorizer;
+            return chartControl;
+        }
         
-
-        
-
-        
-
-        
-
         [DllImport("USER32.dll", CharSet = CharSet.Auto)]  
         static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
 

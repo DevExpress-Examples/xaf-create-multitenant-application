@@ -23,11 +23,9 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
         FormattingProvider.UseMaskSettings = true;
         RequiredModuleTypes.Add(typeof(OutlookInspiredModule));
     }
-    public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
-        var updater = new ModuleUpdater(objectSpace, versionFromDB);
-        
-        return new[] { updater };
-    }
+    public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) 
+        => new[] { new ModuleUpdater(objectSpace, versionFromDB) };
+
     public override void Setup(XafApplication application) {
         base.Setup(application);
         // application.CreateCustomModelDifferenceStore += Application_CreateCustomModelDifferenceStore;

@@ -3,7 +3,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.XtraCharts;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Controllers.Maps;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Controllers.Maps;
