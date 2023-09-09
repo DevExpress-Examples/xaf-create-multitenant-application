@@ -23,10 +23,10 @@ namespace OutlookInspired.Tests.ImportData{
         
         private static IEnumerable TestCases{
             get{
-                yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
-                // yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
-                // yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeListView",5, AssertEmployeeListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",5, AssertEmployeeListView);
+                yield return new TestCaseData("CustomerListView","CustomerListView",5, AssertCustomerListView);
+                yield return new TestCaseData("CustomerListView","CustomerCardListView",5, AssertCustomerListView);
                 // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
                 // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView",12, AssertOrderListView);
@@ -79,7 +79,7 @@ namespace OutlookInspired.Tests.ImportData{
 
         static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
             UtilityExtensions.TimeoutInterval = 30.Seconds();
-            UtilityExtensions.AssertDelayOnContextInterval = 100.Milliseconds();
+            UtilityExtensions.AssertDelayOnContextInterval = 250.Milliseconds();
             var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
             var assert = application
                     .AssertDashboardMasterDetail(navigationView,viewVariant, existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame))

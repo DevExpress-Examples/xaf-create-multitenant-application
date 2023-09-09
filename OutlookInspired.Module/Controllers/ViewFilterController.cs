@@ -64,7 +64,7 @@ namespace OutlookInspired.Module.Controllers{
 
         protected override void OnActivated(){
             base.OnActivated();
-            FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame;
+            FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame&&Frame.View.IsRoot;
             AddFilterItems();
             if (View is ListView listView){
                 // listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;

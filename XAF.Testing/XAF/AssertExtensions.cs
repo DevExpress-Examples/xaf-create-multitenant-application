@@ -58,10 +58,10 @@ namespace XAF.Testing.XAF{
         public static IObservable<(ITypeInfo typeInfo, object keyValue, bool needsDelete, Frame frame, Frame parent,bool isAggregated)> AssertSaveNewObject(this IObservable<Frame> source)
             => source.Select(frame => (frame,default(Frame),false)).AssertSaveNewObject();
 
-        static IObservable<(Frame frame, Frame parent,bool isAggregated)> AssertDeleteObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
+        static IObservable<(Frame frame, Frame parent,bool isAggregated)> AssertDeleteObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source,[CallerMemberName]string caller="")
             => source.WhenDeleteObject().SelectMany(t => t.application.CreateObjectSpace(t.type)
                     .Use(space => space.GetObjectByKey(t.type,t.keyValue).Observe().WhenDefault()))
-                .Assert().To<(Frame frame, Frame parent,bool)>();
+                .Assert(caller).To<(Frame frame, Frame parent,bool)>();
         
         public static IObservable<Frame> AssertDeleteObject(this IObservable<Frame> source)
             => source.Select(frame => (frame,default(Frame),false)).AssertDeleteObject().ToFirst();
@@ -76,9 +76,10 @@ namespace XAF.Testing.XAF{
                 .Assert(viewId => $"{nameof(AssertExistingObjectDetailView)} {objectType?.Name} {viewId}")
                 .ConcatIgnored(assertDetailview);
         public static IObservable<SingleChoiceAction> AssertSingleChoiceAction<TItemDataType>(this IObservable<Frame> source,string actionId,int itemsCount) 
-            => source.Select(frame => frame.Action<SingleChoiceAction>(actionId)).Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
-                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction))
-                .Assert($"{nameof(AssertSingleChoiceAction)} {actionId} {itemsCount}");
+            => source.SelectMany(frame => frame.Actions<SingleChoiceAction>(actionId).ToNowObservable().Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
+                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction)
+                    .Assert($"{nameof(AssertSingleChoiceAction)} {actionId} {itemsCount}")))
+                ;
         
         public static IObservable<Frame> AssertExistingObjectDetailView(this XafApplication application,Type objectType=null) 
             => application.AssertExistingObjectDetailView(_ => Observable.Empty<Unit>(),objectType);
@@ -142,8 +143,8 @@ namespace XAF.Testing.XAF{
             IObservable<(Frame frame, Frame parent, bool aggregated)> source, AssertAction assert, bool inlineEdit) 
             => source.ConcatIgnored(_ => processSelectedObject).AssertCreateNewObject(assert, inlineEdit).AssertSaveNewObject(assert).AssertDeleteObject(assert);
 
-        private static IObservable<Unit> AssertDeleteObject(this IObservable<(Frame frame, Frame parent, bool isAggregated)> source,AssertAction assert) 
-            => source.If(_ => assert.HasFlag(AssertAction.Delete),t => t.Observe().AssertDeleteObject().ToUnit(),t => t.frame.Observe().DelayOnContext().CloseWindow().ToUnit());
+        private static IObservable<Unit> AssertDeleteObject(this IObservable<(Frame frame, Frame parent, bool isAggregated)> source,AssertAction assert,[CallerMemberName]string caller="") 
+            => source.If(_ => assert.HasFlags(AssertAction.Delete,AssertAction.Process),t => t.Observe().AssertDeleteObject(caller).ToUnit(),t => t.frame.Observe().DelayOnContext().CloseWindow().ToUnit());
 
         private static IObservable<(Frame frame, Frame parent, bool isAggregated)> AssertSaveNewObject(this IObservable<(Frame frame, Frame parent, bool isAggregated)> source, AssertAction assert) 
             => source.If(_ => assert.HasFlag(AssertAction.Save),t => t.Observe().AssertSaveNewObject().Select(t1 => (t1.frame,t1.parent,t1.isAggregated)));

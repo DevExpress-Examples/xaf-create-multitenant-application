@@ -90,7 +90,7 @@ namespace OutlookInspired.Module.Controllers.Maps{
             ChangeMapItAction(typeof(ISalesMapsMarker),"Sales Map");
             ChangeMapItAction(typeof(Order),"Shipping Map");
             ChangeMapItAction(typeof(Quote),"Opportunities Map");
-            MapItAction.Active[nameof(MapsViewController)] = Frame is NestedFrame;
+            MapItAction.Active[nameof(MapsViewController)] = Frame is NestedFrame&&Frame.View.IsRoot;
             TravelModeAction.Active[nameof(MapsViewController)] = typeof(ITravelModeMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
             TravelModeAction.Active[nameof(MapItAction)] =!MapItAction.Active&& Frame.Context == TemplateContext.View&&!Frame.View.IsRoot;
             if (View.Id==Employee.MapsDetailView){

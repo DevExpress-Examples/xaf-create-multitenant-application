@@ -22,8 +22,9 @@ namespace OutlookInspired.Tests.ImportData.Assert{
             => source.SelectMany(filterAction => filterAction.Items<ViewFilter>().ToNowObservable()
                     .SelectManySequential(item => filterAction.Trigger(filterAction.View()
                             .AssertObjectsCount(Convert.ToInt32(Regex.Match(item.Caption, @"\((\d+)\)").Groups[1].Value)), () => item)
-                        .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame()))
-                .Skip(filtersCount - 1)
-                .Assert();
+                        .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame())
+                    .Skip(filtersCount - 1)
+                    .Assert())
+                ;
     }
 }
