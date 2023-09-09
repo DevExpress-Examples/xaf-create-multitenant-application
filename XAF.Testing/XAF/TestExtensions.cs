@@ -17,8 +17,9 @@ namespace XAF.Testing.XAF{
                 .Merge(application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
                     .Do(e => e.Exception.ThrowCaptured()).To<T>())
                 .Catch<T, Exception>(exception => {
+                    exception=exception.AddScreenshot();
                     context.Send(_ => application.Exit(),null);
-                    return Observable.Throw<T>(exception);
+                    return exception.Throw<T>();
                 })
             );
 

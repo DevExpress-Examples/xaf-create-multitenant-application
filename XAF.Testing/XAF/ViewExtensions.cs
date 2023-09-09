@@ -107,13 +107,11 @@ namespace XAF.Testing.XAF{
         static IObservable<T> SelectObject<T>(this IObservable<ListView> source,params T[] objects) where T : class 
             => source.SelectMany(view => {
                 var gridView = (view.Editor as GridListEditor)?.GridView;
-                return gridView == null ? throw new NotImplementedException(nameof(view.Editor))
-                    : objects.ToNowObservable().Select(row => gridView.SelectRow( row)).BufferUntilCompleted()
-                        .DoWhen(ints => ints.Length == 1, ints => gridView.FocusedRowHandle = ints.First())
+                return gridView == null
+                    ? throw new NotImplementedException(nameof(view.Editor))
+                    : objects.ToNowObservable().SelectMany(obj => gridView.WhenSelectRow(obj))
                         .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
             });
-
-        
 
         public static IObservable<object> SelectObject(this ListView listView, params object[] objects)
             => listView.SelectObject<object>(objects);
@@ -137,13 +135,15 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenTabControl(this DetailView detailView, Func<IModelTabbedGroup, bool> match=null)
             => detailView.WhenTabControl(detailView.LayoutGroupItem(element => element is IModelTabbedGroup group&& (match?.Invoke(group) ?? true)));
 
+        public static IObservable<TView> When<TView>(this IObservable<TView> source,string viewId) where TView:View 
+            => source.Where(view =>view.Id==viewId);
+        
         public static IModelViewLayoutElement LayoutGroupItem(this DetailView detailView,Func<IModelViewLayoutElement,bool> match)
             => detailView.Model.Layout.Flatten().FirstOrDefault(match);
 
         public static IObservable<object> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element)
             => detailView.LayoutManager.WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
-                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup))
-                .Select(o => o);
+                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup));
         public static IObservable<TViewItem> NestedViewItems<TView,TViewItem>(this TView view, params Type[] objectTypes ) where TView : DetailView where TViewItem:ViewItem,IFrameContainer 
             => view.NestedFrameContainers(objectTypes).OfType<TViewItem>();
         

@@ -12,7 +12,7 @@ namespace OutlookInspired.Module.Controllers.Orders{
         public ReportController(){
             TargetObjectType = typeof(Order);
             ReportAction = new SingleChoiceAction(this, "OrderReport", PredefinedCategory.Reports){
-                ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.Independent,PaintStyle = ActionItemPaintStyle.Image,
+                ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.RequireSingleObject,PaintStyle = ActionItemPaintStyle.Image,
                 Items ={
                     new ChoiceActionItem("Revenue",null){ImageName ="CostAnalysis", Items ={
                         new ChoiceActionItem("Report", "Revenue Report"){ImageName = "CustomerProfileReport"},

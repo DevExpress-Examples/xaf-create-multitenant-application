@@ -185,10 +185,8 @@ namespace XAF.Testing.XAF{
             var detailViewFrame = source.SelectMany(detailViewFrameSelector??(frame =>frame.DashboardDetailViewFrame()) ).TakeAndReplay(1).AutoConnect();
             return detailViewFrame.IsEmpty()
                 .If(isEmpty => isEmpty, _ => source, _ => {
-                    // var detailViewDoesNotDisplayData = detailViewFrame.AssertDetailViewNotHaveObject();
-                    var detailViewDoesNotDisplayData=Observable.Empty<Unit>();
-                    var selectListViewObject = source.Cast<Window>().ConcatIgnored(_ => detailViewDoesNotDisplayData)
-                        .AssertSelectListViewObject(listViewFrameSelector ?? (item => item.MasterViewItem()));
+                    
+                    var selectListViewObject = source.Cast<Window>().AssertSelectListViewObject(listViewFrameSelector ?? (item => item.MasterViewItem()));
                     var detailViewDisplaysData = selectListViewObject.SelectMany(_ => detailViewFrame)
                         .AssertDetailViewHasObject();
         
@@ -231,10 +229,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<TTabbedControl> AssertTabControl<TTabbedControl>(this XafApplication application,Type objectType=null) 
             => application.WhenDetailViewCreated(objectType).ToDetailView()
                 .SelectMany(detailView => detailView.WhenTabControl()).Cast<TTabbedControl>()
-                .Assert();
-
-        public static IObservable<TTabbedControl> AssertTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
-            => source.WhenTabControl<TTabbedControl>().Assert();
+                .Assert(objectType?.Name);
 
         public static IObservable<object> AssertWindowHasObjects(this IObservable<Frame> source)
             => source.If(window => window.DashboardViewItems<DetailView>().Any(),window => window.Observe().WhenObjects().ToSecond()
@@ -265,16 +260,18 @@ namespace XAF.Testing.XAF{
         public static IObservable<Unit> AssertDetailViewHasObject(this IObservable<DashboardViewItem> source) 
             => source.AsView<DetailView>()
                 .SelectMany(detailView => detailView.WhenSelectionChanged()
-                    .Merge(detailView.WhenCurrentObjectChanged()).To(detailView).StartWith(detailView))
-                .WhenNotDefault(detailView => detailView.CurrentObject)
-                .Assert(view => $"{view}").ToUnit();
+                    .Merge(detailView.WhenCurrentObjectChanged()).To(detailView).StartWith(detailView)
+                    .WhenNotDefault(view => view.CurrentObject)
+                    .Assert(_ => $"{detailView.Id}").ToUnit())
+                ;
         
         public static IObservable<Unit> AssertDetailViewHasObject(this IObservable<Frame> source) 
             => source.ToDetailView()
                 .SelectMany(detailView => detailView.WhenSelectionChanged()
-                    .Merge(detailView.WhenCurrentObjectChanged()).To(detailView).StartWith(detailView))
-                .WhenNotDefault(detailView => detailView.CurrentObject)
-                .Assert(view => $"{view}").ToUnit();
+                    .Merge(detailView.WhenCurrentObjectChanged()).To(detailView).StartWith(detailView)
+                    .WhenNotDefault(view => view.CurrentObject)
+                    .Assert(_ => $"{detailView.Id}").ToUnit())
+                ;
 
         public static IObservable<(Frame frame, object o)> AssertListViewHasObjects(this IObservable<Frame> source)
             => source.AssertObjectViewHasObjects();
@@ -283,19 +280,18 @@ namespace XAF.Testing.XAF{
             => source.WhenObjects().Take(1).Select(t => (msg:$"{t.frame.View.Id} {t.o}", t)).Assert(t => t.msg,caller:caller).ToSecond();
 
         public static IObservable<Unit> AssertNestedListView(this IObservable<TabbedGroup> source, Frame frame, Type objectType, int selectedTabPageIndex,
-            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, AssertAction assert = AssertAction.All,bool inlineEdit=false)
-            => source.AssertNestedListView(frame, objectType, group => group.SelectedTabPageIndex=selectedTabPageIndex,existingObjectDetailview,assert,inlineEdit);
+            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, AssertAction assert = AssertAction.All,bool inlineEdit=false,[CallerMemberName]string caller="")
+            => source.AssertNestedListView(frame, objectType, group => group.SelectedTabPageIndex=selectedTabPageIndex,existingObjectDetailview,assert,inlineEdit,caller);
         
         public static IObservable<Unit> AssertNestedListView(this IObservable<TabbedGroup> source, Frame frame, Type objectType, Action<TabbedGroup> tabGroupAction,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, AssertAction assert = AssertAction.All,bool inlineEdit=false,[CallerMemberName]string caller="") 
             => frame.AssertNestedListView(objectType,existingObjectDetailview,assert,inlineEdit,caller)
-                .MergeToUnit(source.Do(tabGroupAction).IgnoreElements())
-                .Assert();
+                .MergeToUnit(source.Do(tabGroupAction).IgnoreElements());
 
         public static IObservable<Frame> AssertNestedListView(this Frame frame, Type objectType,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, AssertAction assert = AssertAction.All,bool inlineEdit=false, [CallerMemberName] string caller = "") 
-            => frame.NestedListViews(objectType)
-                .Assert($"{nameof(AssertNestedListView)} {objectType.Name}")
+            => frame.NestedListViews(objectType).Select(editor => editor)
+                .Assert($"{nameof(AssertNestedListView)} {objectType.Name}",caller:caller)
                 .Select(editor => (editor.Frame,frame,editor.MemberInfo.IsAggregated))
                 .AssertListView(existingObjectDetailview, assert,inlineEdit,caller:caller);
 

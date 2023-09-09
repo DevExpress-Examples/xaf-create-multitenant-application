@@ -6,7 +6,7 @@ using OutlookInspired.Module.Attributes.Validation;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
-	[XafDefaultProperty(nameof(Crest))]
+	[XafDefaultProperty(nameof(Crest))][ImageName("Shopping_Store")]
 	public class CustomerStore :OutlookInspiredBaseObject,IMapsMarker{
 		
 		public virtual string Line { get; set; }

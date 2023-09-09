@@ -10,9 +10,20 @@ namespace XAF.Testing{
             var validString = new string(input.Where(ch => !invalidChars.Contains(ch)).ToArray()).Replace(" ", "_");
             return Regex.Replace(validString.Length > 250 ? validString.Substring(0, 250) : validString, "[^a-zA-Z0-9_]", "");
         }
+        public static bool HasFlags(this Enum flag,params Enum[] values) 
+            => values.All(flag.HasFlag);
 
+        public static Exception AddScreenshot(this Exception exception) 
+            => new($"{exception.Message} {ScreenCapture.CaptureActiveWindowAndSave()}", exception);
+
+        public class ScreenCaptureException:Exception{
+            public ScreenCaptureException(string message, Exception innerException) : base(message, innerException){
+            }
+        }
         public static void ThrowCaptured(this Exception exception)
-            =>ExceptionDispatchInfo.Capture(exception).Throw();
+            =>exception.Capture().Throw();
+        public static ExceptionDispatchInfo Capture(this Exception exception)
+            =>ExceptionDispatchInfo.Capture(exception);
 
         public static IOrderedEnumerable<MemberInfo> GetMembers(this Type type, MemberTypes memberType,  BindingFlags? flags=null) 
             => type.GetMembers(flags??BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)

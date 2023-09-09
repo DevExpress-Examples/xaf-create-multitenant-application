@@ -17,9 +17,6 @@ static class ReportsExtensions {
     public static PredefinedReportsUpdater AddCustomerReports(this PredefinedReportsUpdater predefinedReportsUpdater){
         predefinedReportsUpdater.AddPredefinedReport<CustomerContactsDirectory>("Contacts", typeof(Customer));
         predefinedReportsUpdater.AddPredefinedReport<CustomerLocationsDirectory>("Locations", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerSalesDetailReport>("Sales Detail Report", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerSalesDetail>("Sales Detail", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerSalesSummary>("Sales Summary", typeof(Customer));
         predefinedReportsUpdater.AddPredefinedReport<CustomerSalesSummaryReport>("Sales Summary Report", typeof(Customer));
         predefinedReportsUpdater.AddPredefinedReport<CustomerProfile>("Profile", typeof(Customer));
         return predefinedReportsUpdater;
@@ -31,10 +28,7 @@ static class ReportsExtensions {
         predefinedReportsUpdater.AddPredefinedReport<ProductTopSalesperson>("Top Sales Person", typeof(Product));
         return predefinedReportsUpdater;
     }
-
-
     
-
     public static byte[] ToPdf(this XtraReport report,string waterMarkText=null){
         using var memoryStream = new MemoryStream();
         report.ExportToPdf(memoryStream);

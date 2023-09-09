@@ -1,5 +1,7 @@
 ﻿using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraLayout;
@@ -13,8 +15,8 @@ namespace OutlookInspired.Tests.ImportData.Assert{
             => frame.AssertNestedEmployeeTask( ).IgnoreElements()
                 .Concat(frame.AssertNestedEvaluation())
                 .ReplayFirstTake();
-        internal static IObservable<Frame> AssertEmployeeDashboardChildView(this IObservable<Frame> source,XafApplication application){
-            var employeeTabControl = application.AssertTabControl<TabbedGroup>(typeof(Employee));
+        internal static IObservable<Frame> AssertEmployeeDashboardChildView(this IObservable<Frame> source,XafApplication application,string viewVariant){
+            var employeeTabControl = source.WhenEmployeeTabControl( application, viewVariant); ;
             return source.DashboardViewItem(item => !item.MasterViewItem())
                 .Merge(employeeTabControl.IgnoreElements().To<DashboardViewItem>())
                 .SelectMany(item => item.Frame.Observe().SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation().IgnoreElements()
@@ -26,7 +28,13 @@ namespace OutlookInspired.Tests.ImportData.Assert{
                     }).To<Frame>()))
                 .ConcatDefer(() => source);
         }
-        
+
+        private static IObservable<TabbedGroup> WhenEmployeeTabControl(this IObservable<Frame> source, XafApplication application, string viewVariant) 
+            => application.WhenDashboardViewTabControl( viewVariant,typeof(Employee))
+                .Select(group => group).Replay(1).AutoConnect()
+                .TakeUntil(source.DashboardViewItem(item => !item.MasterViewItem())
+                    .ToFrame().ToDetailView().SelectMany(view => view.NestedListViews(typeof(EmployeeTask))).Take(1));
+
         internal static IObservable<Unit> AssertNestedEmployeeTask(this Frame frame){
             var tabControl = frame.Application.AssertTabControl<TabbedGroup>(typeof(EmployeeTask));
             return frame.AssertNestedListView(typeof(EmployeeTask),

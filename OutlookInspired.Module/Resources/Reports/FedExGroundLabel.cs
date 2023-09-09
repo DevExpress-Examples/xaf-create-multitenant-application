@@ -843,7 +843,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // bindingSource1
             // 
             this.bindingSource1.Name = "bindingSource1";
-            this.bindingSource1.ObjectTypeName = null;
+            this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.Order";
             this.bindingSource1.TopReturnedRecords = 0;
             // 
             // barcodeData
@@ -892,8 +892,9 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private void xrLabelFromState_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
 			// ((XRLabel)sender).Text = AddressHelper.DevAVHomeOffice.State.ToString();
 		}
+		
 		private void SubBand3_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
-			var shipmentCourier = (ShipmentCourier)GetCurrentColumnValue("ShipmentCourier");
+			var shipmentCourier = (ShipmentCourier)GetCurrentColumnValue(nameof(Order.ShipmentCourier));
 			switch(shipmentCourier) {
 				case ShipmentCourier.DHL:
 					xrPictureBoxDLH.Visible = true;
@@ -906,9 +907,10 @@ namespace OutlookInspired.Module.Resources.Reports {
 					break;
 			}
 		}
+		
 		private void xrLabel10_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
-			var currentStore = (CustomerStore)GetCurrentColumnValue("Store");
-			var currentCustomer = (Customer)GetCurrentColumnValue("Customer");
+			var currentStore = (CustomerStore)GetCurrentColumnValue(nameof(Order.Store));
+			var currentCustomer = (Customer)GetCurrentColumnValue(nameof(Order.Customer));
 			var storeIndex = currentCustomer.CustomerStores.IndexOf(currentStore);
 			((XRLabel)sender).Text = currentCustomer.Employees[storeIndex].FullName;
 		}

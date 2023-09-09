@@ -82,9 +82,9 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         string IBaseMapsMarker.Title => InvoiceNumber;
 
-        double IBaseMapsMarker.Latitude => Store.Latitude;
+        double IBaseMapsMarker.Latitude => Store?.Latitude??0;
 
-        double IBaseMapsMarker.Longitude => Store.Longitude;
+        double IBaseMapsMarker.Longitude => Store?.Longitude??0;
     }
     
     public enum OrderShipMethod {

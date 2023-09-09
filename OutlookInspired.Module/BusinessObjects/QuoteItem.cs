@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using DevExpress.Persistent.Base;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
+    [ImageName("Shopping_Sales")]
     public class QuoteItem :OutlookInspiredBaseObject{
         public virtual Quote Quote { get; set; }
         public virtual Product Product { get; set; }

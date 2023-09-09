@@ -6,6 +6,7 @@ using DevExpress.Persistent.Validation;
 
 namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultProperty(nameof(FullName))]
+	[ImageName("BO_Employee")]
 	public class CustomerEmployee :OutlookInspiredBaseObject{
 		[RuleRequiredField]
 		public virtual string FirstName { get; set; }

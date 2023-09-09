@@ -7,6 +7,7 @@ using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
+    [ImageName("AttachFile")]
     public class TaskAttachedFile :OutlookInspiredBaseObject{
         
         public virtual EmployeeTask EmployeeTask { get; set; }

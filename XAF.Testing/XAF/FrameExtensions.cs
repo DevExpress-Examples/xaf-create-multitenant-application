@@ -187,9 +187,9 @@ namespace XAF.Testing.XAF{
         public static NestedFrame ToNestedFrame(this Frame frame) => (NestedFrame)frame;
         public static IObservable<Unit> SelectListViewObject(this IObservable<Window> source, Func<DashboardViewItem, bool> itemSelector=null) 
             => source.SelectColumnViewObject(itemSelector).Select(unit => unit)
-                .SwitchIfEmpty(source.SelectMany(window => window.DashboardViewItems(ViewType.ListView).ToNowObservable()
+                .SwitchIfEmpty(Observable.Defer(() => source.SelectMany(window => window.DashboardViewItems(ViewType.ListView).ToNowObservable()
                     .Where(itemSelector??(_ =>true) ).Select(item => item.InnerView.ToListView())
-                    .SelectMany(listView => listView.SelectObject(listView.Objects().Take(1).ToArray())).ToUnit()));
+                    .SelectMany(listView => listView.SelectObject(listView.Objects().Take(1).ToArray())).ToUnit())));
 
         private static IObservable<ColumnView> SelectColumnViewObject(this IObservable<DashboardViewItem> source)
             => source.SelectMany(item => item.InnerView.ToDetailView().WhenControlViewItemGridControl()

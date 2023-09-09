@@ -4,7 +4,7 @@ using DevExpress.Persistent.Base;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
-    [VisibleInReports(true)][DefaultClassOptions]
+    [VisibleInReports(true)][ImageName("BO_Sale")]
     public class OrderItem :OutlookInspiredBaseObject{
         public virtual Order Order { get; set; }
 

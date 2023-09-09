@@ -30,20 +30,10 @@ namespace OutlookInspired.Module.Controllers{
                 => e.ShowViewParameters.CreatedView = Application.NewDetailView(e.Action.SelectionContext.CurrentObject);
         }
 
-        // protected override void OnActivated(){
-        //     base.OnActivated();
-        //     Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = ((IModelDashboardViewMasterDetail)View.Model).MasterDetail;
-        // }
-        //
-        // protected override void OnDeactivated(){
-        //     base.OnDeactivated();
-        //     Active[nameof(IModelDashboardViewMasterDetail.MasterDetail)] = true;
-        // }
-
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
-            if (_controlViewItem != null){
+            if (_userControl != null){
                 _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
                 _userControl.CurrentObjectChanged-=UserControlOnCurrentObjectChanged;
                 _userControl.ProcessObject-=UserControlOnProcessObject;

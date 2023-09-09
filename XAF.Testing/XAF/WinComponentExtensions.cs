@@ -17,12 +17,16 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class WinComponentExtensions{
-        public static int SelectRow<T>(this GridView gridView, T row) where T : class{
-            var rowHandle = gridView.FindRow(row);
-            gridView.MakeRowVisible(rowHandle);
-            gridView.SelectRow(rowHandle);
-            return rowHandle;
-        }
+        
+        public static IObservable<int> WhenSelectRow<T>(this GridView gridView, T row) where T : class 
+            => gridView.Defer(() => {
+                var rowHandle = gridView.FindRow(row);
+                gridView.MakeRowVisible(rowHandle);
+                gridView.FocusedRowHandle = rowHandle;
+                return Observable.While(() => gridView.IsRowVisible(rowHandle) == RowVisibleState.Hidden, Observable.Never<int>())
+                    .ConcatDefer(() => rowHandle.Observe().Do(i => gridView.SelectRow(rowHandle)));
+            });
+
         public static object FocusedRowObjectKey(this ColumnView columnView, IObjectSpace objectSpace) 
             => columnView.IsServerMode ? columnView.FocusedRowObject : objectSpace.GetKeyValue(columnView.FocusedRowObject);
         public static object FocusRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
@@ -76,7 +80,7 @@ namespace XAF.Testing.XAF{
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
-                    .SelectMany(o => {
+                    .SelectMany(_ => {
                         var row = columnView.FindRow(columnView.YieldDataSource().First());
                         columnView.Focus();
                         columnView.SelectRow(row);

@@ -68,6 +68,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    base.Setup(application);
 	    application.ObjectSpaceCreated += Application_ObjectSpaceCreated;
     }
+    
     private void Application_ObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e) {
 	    if (e.ObjectSpace is CompositeObjectSpace{ Owner: not CompositeObjectSpace } compositeObjectSpace) {
 		    compositeObjectSpace.PopulateAdditionalObjectSpaces((XafApplication)sender);
@@ -85,8 +86,5 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    base.AddGeneratorUpdaters(updaters);
 	    updaters.Add(new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater());
     }
-    
-    
-
 }
 

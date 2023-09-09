@@ -23,7 +23,7 @@ namespace XAF.Testing.XAF{
                 .Where(view => objectType==null||objectType.IsAssignableFrom(view.ObjectTypeInfo.Type));
         
         public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
-            => source.Select(_ => _.e.View);
+            => source.Select(t => t.e.View);
 
         public static IObservable<ListViewCreatingEventArgs> FilterListViews(this XafApplication application, params LambdaExpression[] expressions)
             => expressions.ToObservable().Select(expression => application
@@ -43,7 +43,7 @@ namespace XAF.Testing.XAF{
 
         
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
-            => application.WhenDetailViewCreated().Where(_ =>objectType?.IsAssignableFrom(_.e.View.ObjectTypeInfo.Type)??true);
+            => application.WhenDetailViewCreated().Where(t =>objectType?.IsAssignableFrom(t.e.View.ObjectTypeInfo.Type)??true);
 
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application) 
             => application.WhenEvent<DetailViewCreatedEventArgs>(nameof(XafApplication.DetailViewCreated)).InversePair(application);
@@ -95,6 +95,14 @@ namespace XAF.Testing.XAF{
         public static IObservable<Window> Navigate(this XafApplication application,string viewId) 
             => application.Navigate(viewId,application.WhenFrame(viewId).Take(1)).Cast<Window>();
 
+        public static IObservable<DashboardView> WhenDashboardViewCreated(this XafApplication application) 
+            => application.WhenEvent<DashboardViewCreatedEventArgs>(nameof(XafApplication.DashboardViewCreated)).Select(e => e.View);
+        
+        public static IObservable<DevExpress.XtraLayout.TabbedGroup> WhenDashboardViewTabControl(this XafApplication application, string viewVariant,Type objectType) 
+            => application.WhenDashboardViewCreated().When(viewVariant)
+                .Select(_ => application.WhenDetailViewCreated(objectType).ToDetailView()).Switch()
+                .SelectMany(detailView => detailView.WhenTabControl()).Cast<DevExpress.XtraLayout.TabbedGroup>();
+        
         public static IObservable<Frame> Navigate(this XafApplication application,string viewId, IObservable<Frame> afterNavigation) 
             => afterNavigation.Publish(source => application.MainWindow == null ? application.WhenWindowCreated(true)
                     .SelectMany(window => window.Navigate(viewId, source))
@@ -182,11 +190,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> UseObjectSpace<T>(this XafApplication application,Func<IObjectSpace,IObservable<T>> factory,bool useObjectSpaceProvider=false,[CallerMemberName]string caller="") 
             => Observable.Using(() => application.CreateObjectSpace(useObjectSpaceProvider, typeof(T), caller: caller), factory);
         public static IObservable<ListView> ToListView(this IObservable<(XafApplication application, ListViewCreatedEventArgs e)> source) 
-            => source.Select(_ => _.e.ListView);
+            => source.Select(t => t.e.ListView);
 
         
         public static IObservable<TView> ToObjectView<TView>(this IObservable<(ObjectView view, EventArgs e)> source) where TView:View 
-            => source.Where(_ => _.view is TView).Select(_ => _.view).Cast<TView>();
+            => source.Where(t => t.view is TView).Select(t => t.view).Cast<TView>();
 
         
         public static IObservable<(XafApplication application, DetailViewCreatingEventArgs e)> WhenDetailViewCreating(this XafApplication application,params Type[] objectTypes) 

@@ -14,7 +14,7 @@ namespace XAF.Testing.RX{
         }
 
         public static IObservable<T> Log<T>(this IObservable<T> source,Func<T,string> messageFactory,[CallerMemberName]string caller="") 
-            => source.Do(_ => Console.WriteLine($"{caller}: {messageFactory(_)}"));
+            => source.Do(x => Console.WriteLine($"{caller}: {messageFactory(x)}"));
 
         public static IObservable<T> ReplayConnect<T>(this IObservable<T> source, int bufferSize = 0) 
             => source.SubscribeReplay(bufferSize);
@@ -103,9 +103,14 @@ namespace XAF.Testing.RX{
             => source.Assert(_ => message,timeout,caller);
 
         public static TimeSpan? AssertDelayOnContextInterval=null;
-        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller="") 
-            => source.DelayOnContext(AssertDelayOnContextInterval).Log(messageFactory, caller).ThrowIfEmpty(messageFactory.MessageFactory( caller)).TakeAndReplay(1).RefCount().Timeout(timeout??TimeoutInterval,messageFactory.MessageFactory( caller));
+        public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
+            var timeoutMessage = messageFactory.MessageFactory(caller);
+            return source.DelayOnContext(AssertDelayOnContextInterval).Log(messageFactory, caller)
+                .ThrowIfEmpty(timeoutMessage).TakeAndReplay(1).RefCount()
+                .Timeout(timeout ?? TimeoutInterval, timeoutMessage);
+        }
 
+        public static IObservable<T> Throw<T>(this Exception exception) => Observable.Throw<T>(exception);
         private static string MessageFactory<TSource>(this Func<TSource, string> messageFactory, string caller) => $"{caller}: {messageFactory(default)}";
 
         public static IObservable<T> ReplayFirstTake<T>(this IObservable<T> source,ConnectionMode mode=ConnectionMode.AutoConnect){
