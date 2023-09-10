@@ -33,7 +33,7 @@ namespace OutlookInspired.Tests.ImportData.Assert{
 
         internal static IObservable<Unit> AssertNestedCustomerEmployee(this Frame frame) 
             => frame.AssertNestedListView(typeof(CustomerEmployee), existingObjectDetailViewFrame => 
-                existingObjectDetailViewFrame.AssertRootCustomerEmployee(),AssertAction.AllButDelete^AssertAction.Save^AssertAction.New).ToUnit();
+                existingObjectDetailViewFrame.AssertRootCustomerEmployee(),AssertAction.AllButDelete^AssertAction.DetailViewSave^AssertAction.DetailViewNew).ToUnit();
         static IObservable<Unit> AssertRootCustomerEmployee(this  Frame frame)
             => frame.AssertNestedListView(typeof(CustomerCommunication),assert:AssertAction.AllButDelete).ToUnit();
         

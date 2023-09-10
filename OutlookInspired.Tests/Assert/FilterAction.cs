@@ -10,9 +10,9 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class FilterAction{
         internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
-            => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
+            => source.Select(frame => frame).DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .AssertSingleChoiceAction<ViewFilter>(ViewFilterController.FilterViewActionId, filtersCount)
-                .AssertFilterAction(filtersCount);
+                .AssertFilterAction(filtersCount).IgnoreElements().Concat(source);
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source, int filtersCount) 
             => source.AssertFilters(filtersCount).IgnoreElements()

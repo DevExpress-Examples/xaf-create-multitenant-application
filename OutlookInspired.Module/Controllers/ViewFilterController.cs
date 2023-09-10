@@ -8,7 +8,7 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.Controllers{
-
+    
     public class ViewFilterController:ObjectViewController<ObjectView,IViewFilter>{
         public const string FilterViewActionId = "FilterView";
         public ViewFilterController(){

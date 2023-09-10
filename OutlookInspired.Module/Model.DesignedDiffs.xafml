@@ -775,7 +775,6 @@
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
-      <SplitLayout SplitterPosition="1500" />
     </ListView>
     <DashboardView Id="OrderGridView" Caption="Order" ImageName="BO_Order" MasterDetail="True" RequiredFieldMark="c" IsNewNode="True">
       <Items IsNewNode="True">
@@ -974,7 +973,6 @@
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
-      <SplitLayout SplitterPosition="1500" />
     </ListView>
     <ListView Id="Product_QuoteItems_ListView">
       <Columns>

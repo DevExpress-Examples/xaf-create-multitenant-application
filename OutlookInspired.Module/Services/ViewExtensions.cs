@@ -11,10 +11,11 @@ using LambdaExpression = System.Linq.Expressions.LambdaExpression;
 
 namespace OutlookInspired.Module.Services{
     public static class ViewExtensions{
-        public static void SetNonPersistentMemberValue<T,T2>(this CompositeView view, Expression<Func<T, T2>> expression,T2 value){
+        public static void SetNonTrackedMemberValue<T,T2>(this CompositeView view, Expression<Func<T, T2>> expression,Func<T,T2> valueSelector){
+            if (view.CurrentObject==null)return;
             var propertyEditor = view.GetItems<PropertyEditor>()
                 .First(editor => editor.MemberInfo.Name == expression.MemberExpressionName());
-            propertyEditor.MemberInfo.SetValue(view.CurrentObject,value);
+            propertyEditor.MemberInfo.SetValue(view.CurrentObject,valueSelector((T)view.CurrentObject));
             propertyEditor.ReadValue();
         }
 

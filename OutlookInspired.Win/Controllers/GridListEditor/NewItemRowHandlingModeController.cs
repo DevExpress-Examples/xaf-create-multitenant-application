@@ -1,7 +1,7 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win.Editors;
 using OutlookInspired.Module.Attributes;
-using OutlookInspired.Module.BusinessObjects;
+using ViewFilter = OutlookInspired.Module.BusinessObjects.ViewFilter;
 
 namespace OutlookInspired.Win.Controllers.GridListEditor{
     public class NewItemRowHandlingModeController:ObjectViewController<ListView,ViewFilter>{

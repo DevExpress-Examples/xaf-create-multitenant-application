@@ -14,15 +14,14 @@ namespace XAF.Testing.XAF{
                 .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
                 .IgnoreElements().To<T>()
                 .Merge(test.BufferUntilCompleted().Do(_ => application.Exit()).SelectMany())
-                .Merge(application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
-                    .Do(e => e.Exception.ThrowCaptured()).To<T>())
+                .Merge(application.ThrowWhenHandledExceptions().To<T>())
                 .Catch<T, Exception>(exception => {
                     exception=exception.AddScreenshot();
                     context.Send(_ => application.Exit(),null);
                     return exception.Throw<T>();
                 })
             );
-
+        
         public static void DeleteModelDiffs(this WinApplication application){
             using var objectSpace = application.CreateObjectSpace(typeof(ModelDifference));
             objectSpace.Delete(objectSpace.GetObjectsQuery<ModelDifference>().ToArray());

@@ -27,7 +27,7 @@ namespace OutlookInspired.Module.Controllers.Orders{
         }
         
         private void ViewOnCurrentObjectChanged(object sender, EventArgs e) 
-            => View.SetNonPersistentMemberValue<Order, byte[]>(order1 => order1.InvoiceDocument,
-                ((Order)View.CurrentObject).MailMergeInvoice().ToPdf());
+            => View.SetNonTrackedMemberValue<Order, byte[]>(order => order.InvoiceDocument,
+                order => order.MailMergeInvoice().ToPdf());
     }
 }

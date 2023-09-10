@@ -8,6 +8,9 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
+using DevExpress.ExpressApp.Win;
+using DevExpress.ExpressApp.Win.Editors;
+using DevExpress.XtraGrid.Views.Base;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using View = DevExpress.ExpressApp.View;
@@ -240,6 +243,19 @@ namespace XAF.Testing.XAF{
             => application.WhenRootFrame(objectType,viewTypes).Select(frame => frame.View);
         public static IObservable<Frame> WhenRootFrame(this XafApplication application,Type objectType,params ViewType[] viewTypes) 
             => application.WhenFrame(objectType,viewTypes).When(TemplateContext.View);
+
+        public static IObservable<Unit> ThrowWhenHandledExceptions(this WinApplication application) 
+            => application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
+                .Select(e => e.Exception).Merge(application.WhenGridListEditorDataError())
+                .Do(exception => exception.ThrowCaptured()).ToUnit();
+        public static IObservable<Exception> WhenGridListEditorDataError(this WinApplication application) 
+            => application.WhenFrame(typeof(object),ViewType.ListView)
+                .SelectUntilViewClosed(frame => frame.View.ToListView().Editor is GridListEditor gridListEditor
+                    ? gridListEditor.WhenControlsCreated().StartWith(gridListEditor.Control).WhenNotDefault().Take(1)
+                        .SelectMany(_ => gridListEditor.GridView
+                            .WhenEvent<ColumnViewDataErrorEventArgs>(nameof(gridListEditor.GridView.DataError))
+                            .Select(e => e.DataException))
+                    : Observable.Empty<Exception>());
 
     }
 }

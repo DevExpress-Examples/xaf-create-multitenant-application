@@ -3,6 +3,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.ConditionalAppearance;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.BaseImpl.EF;
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -10,6 +12,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         long IdInt64{ get; set; }
     }
 
+    [Appearance("Hide ShowInDocument",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Hide)]
     public abstract class OutlookInspiredBaseObject:BaseObject, IOutlookInspiredBaseObject{
         [Browsable(false)]
         public virtual long IdInt64{ get; set; }

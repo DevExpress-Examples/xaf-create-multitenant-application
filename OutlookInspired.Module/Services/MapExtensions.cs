@@ -4,6 +4,11 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
     internal static class MapExtensions{
+        public static void SetRoutePoints(this Employee employee,params RoutePoint[] routePoints){
+            employee.RoutePoints.Clear();
+            routePoints.Do(employee.RoutePoints.Add).Enumerate();
+        }
+        
         public static IEnumerable<CustomerStore> Stores(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default)
             => salesMapsMarker.Orders.Where(period,dateTime:dateTime)
                 .GroupBy(order => order.Store).Select(orders => orders.Key);
