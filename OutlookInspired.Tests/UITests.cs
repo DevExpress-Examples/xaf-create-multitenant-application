@@ -28,12 +28,12 @@ namespace OutlookInspired.Tests.ImportData{
         
         private static IEnumerable TestCases{
             get{
-                // yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
-                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeListView);
-                // yield return new TestCaseData("CustomerListView","CustomerListView",AssertCustomerListView);
+                yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
+                yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeListView);
+                yield return new TestCaseData("CustomerListView","CustomerListView",AssertCustomerListView);
                 yield return new TestCaseData("CustomerListView","CustomerCardListView", AssertCustomerListView);
-                // yield return new TestCaseData("ProductListView","ProductCardView",7, AssertProductListView);
-                // yield return new TestCaseData("ProductListView","ProductListView",7, AssertProductListView);
+                yield return new TestCaseData("ProductListView","ProductCardView", AssertProductListView);
+                yield return new TestCaseData("ProductListView","ProductListView", AssertProductListView);
                 // yield return new TestCaseData("OrderListView","OrderListView", AssertOrderListView);
                 // yield return new TestCaseData("OrderListView","Detail", AssertOrderListView);
                 // yield return new TestCaseData("Evaluation_ListView",null, AssertEvaluation);
@@ -51,13 +51,13 @@ namespace OutlookInspired.Tests.ImportData{
                 .CloseWindow()
                 .ConcatDefer(() => application.AssertDashboardListView(navigationView, viewVariant,listViewFrameSelector:item => !item.MasterViewItem(),assert:AssertAction.AllButProcess));
 
-        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant,int filterCount){
+        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
             var productTabControl = application.AssertTabControl<TabbedGroup>(typeof(Product));
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl) )
                 .FilterListViews(application)
                 .Merge(productTabControl.IgnoreElements().To<Frame>())
-                .AssertFilterAction(filterCount);
+                .AssertFilterAction(7);
         }
         
         static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant){
