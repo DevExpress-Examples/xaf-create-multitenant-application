@@ -9,7 +9,6 @@ namespace OutlookInspired.Module.Controllers.Customers{
     public class MailMergeController:ObjectViewController<ObjectView,Employee>{
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            
             Frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction.ItemsChanged-=ShowInDocumentActionOnItemsChanged;
         }
 

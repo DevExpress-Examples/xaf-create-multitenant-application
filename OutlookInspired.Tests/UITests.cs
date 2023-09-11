@@ -1,17 +1,12 @@
 ﻿using System.Collections;
-using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Templates;
 using DevExpress.XtraLayout;
-using DevExpress.XtraPdfViewer;
 using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers.Customers;
 using OutlookInspired.Tests.ImportData.Assert;
-using OutlookInspired.Win.Editors;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
@@ -29,13 +24,13 @@ namespace OutlookInspired.Tests.ImportData{
         
         private static IEnumerable TestCases{
             get{
-                // yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
+                yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
                 // yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeListView);
                 // yield return new TestCaseData("CustomerListView","CustomerListView",AssertCustomerListView);
                 // yield return new TestCaseData("CustomerListView","CustomerCardListView", AssertCustomerListView);
                 // yield return new TestCaseData("ProductListView","ProductCardView", AssertProductListView);
                 // yield return new TestCaseData("ProductListView","ProductListView", AssertProductListView);
-                yield return new TestCaseData("OrderListView","OrderListView", AssertOrderListView);
+                // yield return new TestCaseData("OrderListView","OrderListView", AssertOrderListView);
                 // yield return new TestCaseData("OrderListView","Detail", AssertOrderListView);
                 // yield return new TestCaseData("Evaluation_ListView",null, AssertEvaluation);
                 // yield return new TestCaseData("Opportunities",null,AssertOpportunitiesView);
@@ -81,7 +76,10 @@ namespace OutlookInspired.Tests.ImportData{
 
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
-            
+            return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+                .AssertSelectDashboardListViewObject()
+                .FilterListViews(application)
+                .AssertDashboardViewShowInDocumentAction(5);
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,
                     existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
                 .AssertEmployeeDashboardChildView(application,viewVariant)

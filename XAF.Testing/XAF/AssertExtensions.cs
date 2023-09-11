@@ -1,12 +1,14 @@
 ﻿using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using DevExpress.Data.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.ReportsV2.Win;
 using DevExpress.XtraGrid;
 using DevExpress.XtraPdfViewer;
@@ -102,6 +104,19 @@ namespace XAF.Testing.XAF{
             => source.SelectMany(frame => frame.Actions<SingleChoiceAction>(actionId).ToNowObservable().Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
                 .SelectMany(action => action.AssertSingleChoiceActionItems(action.Items.ToArray(),itemsCount,nestedCountItemsSelector).Concat(action.Observe())))
                 .ReplayFirstTake();
+
+        public static IObservable<Frame> AssertDashboardViewShowInDocumentAction(this IObservable<Frame> source,int itemsCount) 
+            => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
+                .AssertSingleChoiceAction("ShowInDocument",itemsCount)
+                .SelectMany(action => action.Items.ToNowObservable()
+                    .SelectManySequential(item => action.Trigger(action.Frame().GetController<RichTextServiceController>()
+                        .WhenEvent<CustomRichTextRibbonFormEventArgs>(nameof(RichTextServiceController.CustomCreateRichTextRibbonForm)).Take(1)
+                        .Do(e => e.RichTextRibbonForm.WindowState=FormWindowState.Maximized)
+                        .SelectMany(e => e.RichTextRibbonForm.RichEditControl.Observe().AssertRichEditControl(caller:$"{nameof(AssertDashboardViewShowInDocumentAction)} {item}")
+                            .Buffer(e.RichTextRibbonForm.WhenEvent(nameof(e.RichTextRibbonForm.Activated)).DelayOnContext()).SelectMany().Take(1)
+                            .Do(richEditControl => richEditControl.FindForm()?.Close())
+                            .DelayOnContext()).Take(1).To<Frame>(),() => item)))
+                .IgnoreElements().Concat(source).ReplayFirstTake();
 
         public static IObservable<Frame> AssertDashboardViewReportsAction(this IObservable<Frame> source, string actionId,
             int reportsCount, Func<ChoiceActionItem, bool> itemSelector = null,
@@ -290,15 +305,18 @@ namespace XAF.Testing.XAF{
                 .Assert();
 
 
+        public static IObservable<RichEditControl> AssertRichEditControl(this IObservable<RichEditControl> source, bool assertMailMerge = false,[CallerMemberName]string caller="")
+            => source.SelectMany(control => control.WhenEvent(nameof(control.DocumentLoaded)).To(control))
+                .WhenNotDefault(control => control.DocumentLayout.GetPageCount())
+                .Assert($"{caller} {nameof(RichEditControl.DocumentLoaded)}")
+                .If(_ => assertMailMerge, control => control.WhenEvent(nameof(control.MailMergeFinished)).To(control)
+                    .Assert($"{caller} {nameof(RichEditControl.MailMergeFinished)}"),control => control.Observe());
+        
         public static IObservable<RichEditControl> AssertRichEditControl(this DetailView detailView, bool assertMailMerge = false)
             => detailView.WhenPropertyEditorControl().OfType<Control>()
                 .SelectMany(control => control.Controls.Cast<Control>().Prepend(control)
                     .SelectManyRecursive(control1 => control1.Controls.Cast<Control>())).OfType<RichEditControl>()
-                .SelectMany(control => control.WhenEvent(nameof(control.DocumentLoaded)).To(control))
-                .WhenNotDefault(control => control.DocumentLayout.GetPageCount())
-                .Assert($"{nameof(AssertRichEditControl)} {nameof(RichEditControl.DocumentLoaded)}")
-                .If(_ => assertMailMerge, control => control.WhenEvent(nameof(control.MailMergeFinished)).To(control)
-                        .Assert($"{nameof(AssertRichEditControl)} {nameof(RichEditControl.MailMergeFinished)}"),control => control.Observe());
+                .AssertRichEditControl(assertMailMerge);
 
         public static IObservable<Frame> AssertDashboardListViewEditView(this IObservable<Frame> source, Func<Frame,IObservable<Frame>> detailView=null,Func<DashboardViewItem, bool> itemSelector = null)
             => source.AssertSelectDashboardListViewObject(itemSelector).AssertDashboardListViewEditViewHasObject(detailView).IgnoreElements()
