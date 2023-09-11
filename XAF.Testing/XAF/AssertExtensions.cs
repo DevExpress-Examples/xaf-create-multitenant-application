@@ -2,12 +2,17 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
+using DevExpress.Data.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.ReportsV2.Win;
 using DevExpress.XtraGrid;
 using DevExpress.XtraPdfViewer;
+using DevExpress.XtraPrinting;
+using DevExpress.XtraReports.UI;
+using DevExpress.XtraRichEdit;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using TabbedGroup = DevExpress.XtraLayout.TabbedGroup;
@@ -42,13 +47,12 @@ namespace XAF.Testing.XAF{
                     return t.Observe();
                 }),t => t.Observe());
 
-        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,int seconds=1) 
-            => source.DelayOnContext(seconds.Seconds());
-        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan? timeSpan) 
+        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,int seconds=1,bool delayOnEmpty=false) 
+            => source.DelayOnContext(seconds.Seconds(),delayOnEmpty);
+        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan? timeSpan,bool delayOnEmpty=false) 
             => source.If(_ => timeSpan.HasValue,arg => arg.DelayOnContext( (TimeSpan)timeSpan!),arg => arg.Observe())
-                .SwitchIfEmpty(timeSpan.Observe().WhenNotDefault().SelectMany(span => span.DelayOnContext((TimeSpan)span!)
-                    .Select(_ => default(T)).IgnoreElements()))
-            ;
+                .SwitchIfEmpty(timeSpan.Observe().Where(_ => delayOnEmpty).WhenNotDefault().SelectMany(span => span.DelayOnContext((TimeSpan)span!)
+                    .Select(_ => default(T)).IgnoreElements()));
 
         private static IObservable<T> DelayOnContext<T>(this T arg,TimeSpan timeSpan) 
             => arg.Observe().Delay(timeSpan, new SynchronizationContextScheduler(SynchronizationContext.Current!));
@@ -81,11 +85,46 @@ namespace XAF.Testing.XAF{
             => application.WhenExistingObjectRootDetailViewFrame(objectType)
                 .Assert(viewId => $"{nameof(AssertExistingObjectDetailView)} {objectType?.Name} {viewId}")
                 .ConcatIgnored(assertDetailview);
-        public static IObservable<SingleChoiceAction> AssertSingleChoiceAction<TItemDataType>(this IObservable<Frame> source,string actionId,int itemsCount) 
+
+        static IObservable<SingleChoiceAction> AssertSingleChoiceActionItems(
+            this SingleChoiceAction action, ChoiceActionItem[] source, int itemsCount,Func<ChoiceActionItem,int> nestedItemsCountSelector=null){
+            if (source.Length != itemsCount){
+                throw new AssertException(
+                    $"{action.Id} {action.GetType().Name} has {source.Length} items but should have {itemsCount}");
+            }
+            return source.ToNowObservable().SelectMany(item => action.AssertSingleChoiceActionItems(item.Items.ToArray(),
+                    nestedItemsCountSelector?.Invoke(item) ?? 0)).IgnoreElements();
+
+        }
+
+        public static IObservable<SingleChoiceAction> AssertSingleChoiceAction(this IObservable<Frame> source,
+            string actionId, int itemsCount, Func<ChoiceActionItem, int> nestedCountItemsSelector = null) 
             => source.SelectMany(frame => frame.Actions<SingleChoiceAction>(actionId).ToNowObservable().Assert($"{nameof(AssertSingleChoiceAction)} {actionId}")
-                .SelectMany(choiceAction => choiceAction.Items<TItemDataType>().Skip(itemsCount - 1).ToNowObservable().To(choiceAction)
-                    .Assert($"{nameof(AssertSingleChoiceAction)} {actionId} {itemsCount}")))
-                ;
+                .SelectMany(action => action.AssertSingleChoiceActionItems(action.Items.ToArray(),itemsCount,nestedCountItemsSelector).Concat(action.Observe())))
+                .ReplayFirstTake();
+
+        public static IObservable<Frame> AssertDashboardViewReportsAction(this IObservable<Frame> source, string actionId,
+            int reportsCount, Func<ChoiceActionItem, bool> itemSelector = null,
+            Func<ChoiceActionItem, int> nestedItemsCountSelector = null)
+            => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
+                .AssertSingleChoiceAction(actionId, reportsCount,nestedItemsCountSelector)
+                .AssertReports(itemSelector)
+                .IgnoreElements().To<Frame>().Concat(source).ReplayFirstTake();
+
+        public static IObservable<SingleChoiceAction> AssertReports(this IObservable<SingleChoiceAction> source,Func<ChoiceActionItem,bool> itemSelector=null)
+            => source.SelectMany(action => action.Items.SelectManyRecursive(item => item.Items).ToNowObservable().Where(item => itemSelector?.Invoke(item)??true)
+                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.GetController<WinReportServiceController>()
+                        .WhenEvent<WinReportServiceController.CustomizePrintToolEventArgs>(nameof(WinReportServiceController.CustomizePrintTool)).Take(1)
+                        .SelectMany(e => e.PrintTool.PrintingSystem.WhenEvent(nameof(e.PrintTool.PrintingSystem.CreateDocumentException))
+                            .Select(pattern => ((ExceptionEventArgs)pattern.EventArgs).Exception)
+                            .Buffer(((XtraReport)e.PrintTool.Report).WhenEvent(nameof(XtraReport.AfterPrint))).Take(1)
+                            .Select(exceptions => (exceptions:exceptions.Count,pages:((XtraReport)e.PrintTool.Report).Pages.Count))
+                            .DelayOnContext()
+                            .Do(_ => e.PrintTool.PreviewRibbonForm.Close())
+                            .WhenDefault(t => t.exceptions)
+                            .WhenNotDefault(t => t.pages).Select(_ => default(Frame))
+                            .DelayOnContext()).Assert(_ => item.ToString()), () => item)))
+                .IgnoreElements().To<SingleChoiceAction>().Concat(source);
         
         public static IObservable<Frame> AssertExistingObjectDetailView(this XafApplication application,Type objectType=null) 
             => application.AssertExistingObjectDetailView(_ => Observable.Empty<Unit>(),objectType);
@@ -117,11 +156,7 @@ namespace XAF.Testing.XAF{
             => source.SelectMany(action => action.WhenItemsChanged().Where(e => e.ChangedItemsInfo.Any(pair => pair.Value==ChoiceActionItemChangesType.ItemsAdd)).To(action.Frame()));
 
         public static IObservable<Frame> AssertListView(this IObservable<Frame> source, Func<Frame, IObservable<Unit>> assertExistingObjectDetailview = null, AssertAction assert = AssertAction.All,bool inlineEdit=false,[CallerMemberName]string caller="") 
-            => source.Select(frame => {
-                caller = caller;
-                var valueTuple = (frame, default(Frame), false);
-                return valueTuple;
-            }).AssertListView(assertExistingObjectDetailview,assert,inlineEdit,caller);
+            => source.Select(frame => (frame, default(Frame), false)).AssertListView(assertExistingObjectDetailview,assert,inlineEdit,caller);
 
         private static IObservable<Frame> AssertListView(this IObservable<(Frame frame, Frame parent,bool aggregated)> source,
             Func<Frame, IObservable<Unit>> assertExistingObjectDetailview = null, AssertAction assert = AssertAction.All, bool inlineEdit = false,[CallerMemberName]string caller="") 
@@ -249,12 +284,21 @@ namespace XAF.Testing.XAF{
                     .Concat(detailView?.Invoke(view.EditFrame)?? Observable.Empty<Frame>()))).IgnoreElements().To<Frame>().Concat(source)
                 .ReplayFirstTake();
 
-        public static IObservable<PdfViewer> AssertPdfViewerHasPages(this DetailView detailView) 
-            => detailView.GetItems<PropertyEditor>().ToNowObservable()
-                .SelectMany(editor => editor.WhenControlCreated().Select(propertyEditor => propertyEditor.Control).StartWith(editor.Control).WhenNotDefault())
-                .WhenNotDefault().OfType<PdfViewer>()
+        public static IObservable<PdfViewer> AssertPdfViewer(this DetailView detailView) 
+            => detailView.WhenPropertyEditorControl().OfType<PdfViewer>()
                 .WhenNotDefault(viewer => viewer.PageCount)
                 .Assert();
+
+
+        public static IObservable<RichEditControl> AssertRichEditControl(this DetailView detailView, bool assertMailMerge = false)
+            => detailView.WhenPropertyEditorControl().OfType<Control>()
+                .SelectMany(control => control.Controls.Cast<Control>().Prepend(control)
+                    .SelectManyRecursive(control1 => control1.Controls.Cast<Control>())).OfType<RichEditControl>()
+                .SelectMany(control => control.WhenEvent(nameof(control.DocumentLoaded)).To(control))
+                .WhenNotDefault(control => control.DocumentLayout.GetPageCount())
+                .Assert($"{nameof(AssertRichEditControl)} {nameof(RichEditControl.DocumentLoaded)}")
+                .If(_ => assertMailMerge, control => control.WhenEvent(nameof(control.MailMergeFinished)).To(control)
+                        .Assert($"{nameof(AssertRichEditControl)} {nameof(RichEditControl.MailMergeFinished)}"),control => control.Observe());
 
         public static IObservable<Frame> AssertDashboardListViewEditView(this IObservable<Frame> source, Func<Frame,IObservable<Frame>> detailView=null,Func<DashboardViewItem, bool> itemSelector = null)
             => source.AssertSelectDashboardListViewObject(itemSelector).AssertDashboardListViewEditViewHasObject(detailView).IgnoreElements()
@@ -291,7 +335,8 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<Unit> AssertDetailViewGridControlHasObjects(this IObservable<DashboardViewItem> source)
             => source.SelectMany(item => item.InnerView.ToDetailView().WhenControlViewItemGridControl().HasObjects()).ToUnit().Assert();
-        public static IObservable<Unit> AssertDetailViewPdfViewerHasPages(this IObservable<DashboardViewItem> source)
+        
+        public static IObservable<Unit> AssertPdfViewer(this IObservable<DashboardViewItem> source)
             => source.SelectMany(item => item.InnerView.ToDetailView().WhenViewItemWinControl<PropertyEditor>(typeof(PdfViewer)))
                 .SelectMany(t => t.item.WhenEvent(nameof(PropertyEditor.ValueRead))
                     .WhenNotDefault(_ => ((PdfViewer)t.control).PageCount))
@@ -342,7 +387,15 @@ namespace XAF.Testing.XAF{
                 .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
 
     }
-    
+
+    public class AssertException:Exception{
+        public AssertException(string message) : base(message){
+        }
+
+        public AssertException(string message, Exception innerException) : base(message, innerException){
+        }
+    }
+
     [Flags]
     public enum AssertAction{
         [Obsolete]

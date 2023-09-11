@@ -1,9 +1,12 @@
 using DevExpress.ExpressApp;
 using DevExpress.XtraEditors;
+using OutlookInspired.Module.Controllers;
 
 namespace OutlookInspired.Win.Controllers{
-    public class SplitterPositionController : ViewController<ListView> {
+    
+    public class SplitterPositionRelativeSizeController : Module.Controllers.SplitterPositionRelativeSizeController {
         Control _container;
+
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
             if(View.Model.MasterDetailMode == MasterDetailMode.ListViewAndDetailView) {
@@ -16,7 +19,7 @@ namespace OutlookInspired.Win.Controllers{
         }
 
         private void Container_Layout(object sender, LayoutEventArgs e){
-            var width = (int)(_container.ClientSize.Width * 0.7);
+            var width = _container.ClientSize.Width * ((IModelListViewSplitterRelativePosition)View.Model.SplitLayout).RelativePosition / 100;
             switch (_container){
                 case SplitContainerControl splitContainerControl:
                     splitContainerControl.SplitterPosition = width;
@@ -33,5 +36,6 @@ namespace OutlookInspired.Win.Controllers{
                 _container.Layout -= Container_Layout ;
             }
         }
+
     }
 }

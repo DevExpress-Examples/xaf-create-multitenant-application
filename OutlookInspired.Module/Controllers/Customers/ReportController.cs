@@ -9,9 +9,10 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.Controllers.Customers{
     public class ReportController:ViewController{
+        public const string ReportActionId = "CustomerReport";
         public ReportController(){
             TargetObjectType = typeof(Customer);
-            ReportAction = new SingleChoiceAction(this, "CustomerReport", PredefinedCategory.Reports){
+            ReportAction = new SingleChoiceAction(this, ReportActionId, PredefinedCategory.Reports){
                 ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.RequireSingleObject,PaintStyle = ActionItemPaintStyle.Image,
                 Items ={
                     new ChoiceActionItem("Sales","Sales Summary Report"){ImageName ="CustomerQuickSales"},

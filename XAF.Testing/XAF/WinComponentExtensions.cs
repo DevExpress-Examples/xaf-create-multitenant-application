@@ -11,6 +11,7 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.Handler;
 using DevExpress.XtraGrid.Views.Layout;
 using DevExpress.XtraGrid.Views.Layout.Handler;
+using DevExpress.XtraRichEdit;
 using DevExpress.XtraScheduler;
 using DevExpress.XtraScheduler.Xml;
 using XAF.Testing.RX;

@@ -17,7 +17,6 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
     [CloneView(CloneViewType.DetailView, InvoiceDetailView)]
     [ImageName("BO_Order")][VisibleInReports(true)]
-    [Appearance("Hide ShowInDocument action",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Hide)]
     public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
         public const string MapsDetailView = "Order_DetailView_Maps";
         public const string InvoiceDetailView = "Order_Invoice_DetailView";

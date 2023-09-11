@@ -86,7 +86,7 @@ namespace OutlookInspired.Module.Services{
     }
     
     public struct EditorAliases {
-        [Obsolete]
+        
         public const string PrintLayoutRichTextEditor = "PrintLayoutRichTextEditor";
         public const string PdfViewerEditor = "PdfViewerEditor";
         public const string LabelPropertyEditor = "LabelPropertyEditor";

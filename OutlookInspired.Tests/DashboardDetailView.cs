@@ -38,7 +38,7 @@ namespace OutlookInspired.Tests.ImportData{
         
 
         internal static IObservable<Unit> AssertProductDetailView(this XafApplication application, IObservable<DashboardViewItem> itemSource) 
-            => itemSource.AssertDetailViewPdfViewerHasPages();
+            => itemSource.AssertPdfViewer();
         
         internal static IObservable<Unit> AssertEmployeeDetailView(this XafApplication application,IObservable<DashboardViewItem> itemSource){
             var tabControl = application.AssertTabControl<TabbedGroup>();

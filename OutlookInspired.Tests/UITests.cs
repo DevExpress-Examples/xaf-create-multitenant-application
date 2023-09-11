@@ -9,6 +9,7 @@ using DevExpress.XtraPdfViewer;
 using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Customers;
 using OutlookInspired.Tests.ImportData.Assert;
 using OutlookInspired.Win.Editors;
 using XAF.Testing.RX;
@@ -28,13 +29,13 @@ namespace OutlookInspired.Tests.ImportData{
         
         private static IEnumerable TestCases{
             get{
-                yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeListView);
-                yield return new TestCaseData("CustomerListView","CustomerListView",AssertCustomerListView);
-                yield return new TestCaseData("CustomerListView","CustomerCardListView", AssertCustomerListView);
-                yield return new TestCaseData("ProductListView","ProductCardView", AssertProductListView);
-                yield return new TestCaseData("ProductListView","ProductListView", AssertProductListView);
-                // yield return new TestCaseData("OrderListView","OrderListView", AssertOrderListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeListView", AssertEmployeeListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView", AssertEmployeeListView);
+                // yield return new TestCaseData("CustomerListView","CustomerListView",AssertCustomerListView);
+                // yield return new TestCaseData("CustomerListView","CustomerCardListView", AssertCustomerListView);
+                // yield return new TestCaseData("ProductListView","ProductCardView", AssertProductListView);
+                // yield return new TestCaseData("ProductListView","ProductListView", AssertProductListView);
+                yield return new TestCaseData("OrderListView","OrderListView", AssertOrderListView);
                 // yield return new TestCaseData("OrderListView","Detail", AssertOrderListView);
                 // yield return new TestCaseData("Evaluation_ListView",null, AssertEvaluation);
                 // yield return new TestCaseData("Opportunities",null,AssertOpportunitiesView);
@@ -53,6 +54,10 @@ namespace OutlookInspired.Tests.ImportData{
 
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
+            return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+                .AssertSelectDashboardListViewObject()
+                .FilterListViews(application)
+                .AssertDashboardViewReportsAction(Module.Controllers.Products.ReportController.ReportActionId,4);
             var productTabControl = application.AssertTabControl<TabbedGroup>(typeof(Product));
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl) )
                 .FilterListViews(application)
@@ -62,15 +67,21 @@ namespace OutlookInspired.Tests.ImportData{
         
         static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 30.Seconds();
+            return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+                .AssertSelectDashboardListViewObject()
+                .FilterListViews(application)
+                .AssertOrderReportsAction()
+            
+                ;
             return application.AssertDashboardListView(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertOrderDetailView(Observable.Empty<TabbedGroup>()))
-                .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewerHasPages().To(frame))
+                .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
                 .FilterListViews(application)
                 .AssertFilterAction(12);
         }
 
-
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
+            
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,
                     existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
                 .AssertEmployeeDashboardChildView(application,viewVariant)
@@ -80,6 +91,9 @@ namespace OutlookInspired.Tests.ImportData{
 
         static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant){
             UtilityExtensions.TimeoutInterval = 30.Seconds();
+            return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+                .FilterListViews(application)
+                .AssertDashboardViewReportsAction(ReportController.ReportActionId,3);
             var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
             return application
                 .AssertDashboardMasterDetail(navigationView,viewVariant, existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame))

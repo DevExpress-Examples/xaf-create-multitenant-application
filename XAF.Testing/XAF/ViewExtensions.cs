@@ -19,6 +19,12 @@ namespace XAF.Testing.XAF{
             => source.Select(item => item.Frame).Cast<NestedFrame>();
         public static IObservable<NestedFrame> ToFrame(this IObservable<DashboardViewItem> source)
             => source.Select(item => item.Frame).Cast<NestedFrame>();
+
+        public static IObservable<object> WhenPropertyEditorControl(this DetailView detailView)
+            => detailView.WhenViewItemControl<PropertyEditor>();
+        public static IObservable<object> WhenViewItemControl<T>(this DetailView detailView) where T:ViewItem 
+            => detailView.GetItems<T>().ToNowObservable()
+                .SelectMany(editor => editor.WhenControlCreated().Select(propertyEditor => propertyEditor.Control).StartWith(editor.Control).WhenNotDefault());
         
         public static IObservable<T> WhenClosing<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);

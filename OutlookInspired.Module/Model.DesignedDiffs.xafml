@@ -604,7 +604,9 @@
         <Variant Id="EmployeeListView" ViewID="EmployeeListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
-    <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView" />
+    <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView">
+      <SplitLayout RelativePosition="30" />
+    </ListView>
     <DetailView Id="EmployeeTask_DetailView" FreezeLayout="True">
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
@@ -775,6 +777,7 @@
         <ActionLink ActionId="Save" IsNewNode="True" />
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
+      <SplitLayout RelativePosition="70" />
     </ListView>
     <DashboardView Id="OrderGridView" Caption="Order" ImageName="BO_Order" MasterDetail="True" RequiredFieldMark="c" IsNewNode="True">
       <Items IsNewNode="True">
@@ -1082,6 +1085,7 @@
           </Summary>
         </ColumnInfo>
       </Columns>
+      <SplitLayout RelativePosition="30" />
     </ListView>
     <DashboardView Id="Welcome_Dashboard" Caption="Welcome" ImageName="Action_AboutInfo" IsNewNode="True">
       <Items IsNewNode="True">
