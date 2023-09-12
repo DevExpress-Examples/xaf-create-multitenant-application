@@ -3,11 +3,22 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Controllers.Customers;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class CustomerExtensions{
+        public static IObservable<Frame> AssertCustomerListView(this XafApplication application, string navigationView, string viewVariant, int reportsCount, int filtersCount){
+            var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
+            return application.AssertDashboardMasterDetail(navigationView, viewVariant,
+                    existingObjectDetailview: customerTabControl.AssertCustomerDetailView)
+                .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount)
+                .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: AssertAction.HasObject))
+                .AssertFilterAction(filtersCount)
+                .FilterListViews(application)
+                .Merge(customerTabControl.IgnoreElements().To<Frame>());
+        }
 
         internal static IObservable<Unit> AssertCustomerDetailView(this IObservable<TabbedGroup> source,Frame frame) 
             => frame.Defer(() => frame.AssertNestedCustomerEmployee()

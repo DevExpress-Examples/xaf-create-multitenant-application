@@ -4,7 +4,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Map.Dashboard;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Controllers.Maps;
 using OutlookInspired.Module.Services;
 
@@ -14,6 +13,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
         protected MapControl MapControl;
         protected IZoomToRegionService Zoom;
         protected MapsViewController MapsViewController;
+        private ImageLayer _imageLayer;
 
         static WinMapsViewController(){
             var _ = typeof(MapControl);
@@ -25,6 +25,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
             MapsViewController.ExportMapAction.Executed-=ExportMapActionOnExecuted;
             MapsViewController.PrintAction.Executed-=PrintActionOnExecuted;
             MapsViewController.PrintPreviewMapAction.Executed-=PrintPreviewMapActionOnExecuted;
+            _imageLayer.Error-=ImageLayerOnError;
         }
 
         protected override void OnActivated(){
@@ -38,10 +39,14 @@ namespace OutlookInspired.Win.Controllers.Maps{
                 MapControl = (MapControl)item.Control;
                 MapControl.ZoomLevel = 8;
                 Zoom = (IZoomToRegionService)((IServiceProvider)MapControl).GetService(typeof(IZoomToRegionService));
-                MapControl.Layers.Add(new ImageLayer{ DataProvider = _mapDataProvider });
+                _imageLayer = new ImageLayer{ DataProvider = _mapDataProvider };
+                _imageLayer.Error+=ImageLayerOnError;
+                MapControl.Layers.Add(_imageLayer);
                 CustomizeMapControl();
             });
         }
+
+        private void ImageLayerOnError(object sender, MapErrorEventArgs e) => throw new AggregateException(e.Exception.Message, e.Exception);
 
         protected abstract void CustomizeMapControl();
 

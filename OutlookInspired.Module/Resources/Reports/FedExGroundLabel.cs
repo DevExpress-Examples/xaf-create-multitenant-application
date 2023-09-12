@@ -844,7 +844,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.Order";
-            this.bindingSource1.TopReturnedRecords = 0;
+            this.bindingSource1.TopReturnedRecords = 1;
             // 
             // barcodeData
             // 

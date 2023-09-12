@@ -12,7 +12,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         long IdInt64{ get; set; }
     }
 
-    [Appearance("Hide ShowInDocument",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Show,Context = "Any;Employee_ListView;"+Employee.LayoutViewDetailView)]
+    [Appearance("Hide ShowInDocument",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Hide,Context = "Any;Employee_ListView;"+Employee.LayoutViewDetailView)]
     public abstract class OutlookInspiredBaseObject:BaseObject, IOutlookInspiredBaseObject{
         [Browsable(false)]
         public virtual long IdInt64{ get; set; }

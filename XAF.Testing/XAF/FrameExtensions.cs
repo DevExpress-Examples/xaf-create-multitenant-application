@@ -65,8 +65,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<DashboardViewItem> DashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> itemSelector=null) 
             => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable()
-                .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable())
-                ;
+                .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable());
 
         public static IObservable<Frame> DashboardListViewEditFrame(this Frame frame) 
             => frame.DashboardViewItems(ViewType.ListView).Where(item =>item.MasterViewItem()).ToNowObservable()
@@ -106,8 +105,8 @@ namespace XAF.Testing.XAF{
             => frame.NestedFrameContainers(objectTypes).OfType<ViewItem>();
         
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,params Type[] objectTypes) 
-            => frame.View.ToCompositeView().GetItems<DashboardViewItem>().Where(item => item.InnerView.Is(objectTypes));
-        
+            => frame.View.ToCompositeView().DashboardViewItems(objectTypes);
+
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,ViewType viewType,params Type[] objectTypes) 
             => frame.DashboardViewItems(objectTypes).When(viewType);
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,Type objectType,params ViewType[] viewTypes) 

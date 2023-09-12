@@ -44,6 +44,7 @@ namespace OutlookInspired.Win.UserControls
             ColumnView.DoubleClick += (_, _) => ProcessObject?.Invoke(this, EventArgs.Empty);
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();
+            ColumnView.DataError+=(_, e) => throw new AggregateException(e.DataException.Message,e.DataException);
         }
 
         public override void Refresh() 

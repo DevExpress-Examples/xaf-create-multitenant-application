@@ -51,7 +51,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual double BillingAddressLongitude { get; set; }
 		[NotMapped][VisibleInDetailView(false)]
-		public ObservableCollection<MapItem> CitySales{ get; set; } = new();
+		public virtual ObservableCollection<MapItem> CitySales{ get; set; } = new();
 		[Aggregated]
 		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } = new(); 
 		[Attributes.Validation.Phone]

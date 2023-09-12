@@ -21,8 +21,7 @@ namespace XAF.Testing.RX{
                         handler => eventInfo.add.Invoke(source, new object[] { handler }),
                         handler => eventInfo.remove.Invoke(source, new object[] { handler }),ImmediateScheduler)
                     .Select(pattern => new EventPattern<TArgs>(pattern.Sender, pattern.EventArgs))
-                    .TakeUntilDisposed(source as IComponent,caller)
-                    ;
+                    .TakeUntilDisposed(source as IComponent,caller);
             }
 
             if (eventInfo.add is{ IsPublic: true, IsStatic: false }) {

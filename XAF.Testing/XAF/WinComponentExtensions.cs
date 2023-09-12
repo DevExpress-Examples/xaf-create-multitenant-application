@@ -28,6 +28,10 @@ namespace XAF.Testing.XAF{
                     .ConcatDefer(() => rowHandle.Observe().Do(i => gridView.SelectRow(rowHandle)));
             });
 
+        public static IObservable<Control> SelectControlRecursive(this IObservable<Control> source)
+            => source.SelectMany(control => control.Controls.Cast<Control>().Prepend(control)
+                .SelectManyRecursive(control1 => control1.Controls.Cast<Control>()));
+        
         public static object FocusedRowObjectKey(this ColumnView columnView, IObjectSpace objectSpace) 
             => columnView.IsServerMode ? columnView.FocusedRowObject : objectSpace.GetKeyValue(columnView.FocusedRowObject);
         public static object FocusRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 

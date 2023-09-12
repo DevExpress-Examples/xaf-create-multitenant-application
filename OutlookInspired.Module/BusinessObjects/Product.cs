@@ -39,7 +39,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual int Backorder { get; set; }
         public  virtual int Manufacturing { get; set; }
         [NotMapped][VisibleInDetailView(false)]
-        public ObservableCollection<MapItem> CitySales{ get; set; } = new();
+        public virtual ObservableCollection<MapItem> CitySales{ get; set; } = new();
         public virtual Picture PrimaryImage { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal Cost { get; set; }

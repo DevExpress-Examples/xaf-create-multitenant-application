@@ -37,6 +37,8 @@ namespace XAF.Testing.XAF{
         
         public static void DoExecute(this SingleChoiceAction action,ChoiceActionItem selectedItem, params object[] objectSelection) 
             => action.DoExecute( () => action.DoExecute(selectedItem), objectSelection);
+        public static bool Available(this ActionBase actionBase) 
+            => actionBase.Active && actionBase.Enabled;
         public static void DoExecute(this ActionBase action, Action execute, object[] objectSelection){
             if (objectSelection.Any()) {
                 var context = action.SelectionContext;

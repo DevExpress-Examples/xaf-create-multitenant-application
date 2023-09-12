@@ -1,7 +1,5 @@
 ﻿using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraLayout;
@@ -11,13 +9,21 @@ using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class EmployeeExtensions{
+        public static IObservable<Frame> AssertEmployeeListView(this XafApplication application,string navigationView,string viewVariant,int filterCount) 
+            => application.AssertDashboardMasterDetail(navigationView, viewVariant,
+                    existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
+                .AssertEmployeeDashboardChildView(application,viewVariant)
+                .AssertMapItAction(typeof(Employee),frame => frame.AssertNestedListView(typeof(RoutePoint),assert:AssertAction.HasObject))
+                .AssertFilterAction(filterCount)
+                .FilterListViews(application);
+
         internal static IObservable<Unit> AssertEmployeeDetailView(this Frame frame)
             => frame.AssertNestedEmployeeTask( ).IgnoreElements()
                 .Concat(frame.AssertNestedEvaluation())
                 .ReplayFirstTake();
         
         internal static IObservable<Frame> AssertEmployeeDashboardChildView(this IObservable<Frame> source,XafApplication application,string viewVariant){
-            var employeeTabControl = source.WhenEmployeeTabControl( application, viewVariant); ;
+            var employeeTabControl = source.WhenEmployeeTabControl( application, viewVariant);
             return source.DashboardViewItem(item => !item.MasterViewItem())
                 .Merge(employeeTabControl.IgnoreElements().To<DashboardViewItem>())
                 .SelectMany(item => item.Frame.Observe()

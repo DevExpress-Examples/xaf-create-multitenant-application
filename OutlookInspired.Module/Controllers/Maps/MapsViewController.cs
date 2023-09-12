@@ -11,6 +11,7 @@ using OutlookInspired.Module.Services;
 namespace OutlookInspired.Module.Controllers.Maps{
     public class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
         public const string Key = "AgPa0XVf4_HaN5BOPbTUw5KNvYEGOx-EftnjNRnCILfNgobxJC_deESiKqcfEgLd";
+        public const string MapItActionId = "MapIt";
         public MapsViewController(){
             MapItAction = MapIt();
             TravelModeAction = TravelMode();
@@ -42,7 +43,7 @@ namespace OutlookInspired.Module.Controllers.Maps{
                 new ChoiceActionItem("Walking", "Walking"){ ImageName = "Walking" });
 
         private SimpleAction MapIt(){
-            var action = new SimpleAction(this, "MapIt", PredefinedCategory.View){
+            var action = new SimpleAction(this, MapItActionId, PredefinedCategory.View){
                 SelectionDependencyType = SelectionDependencyType.RequireSingleObject, ImageName = "MapIt",
                 PaintStyle = ActionItemPaintStyle.Image
             };

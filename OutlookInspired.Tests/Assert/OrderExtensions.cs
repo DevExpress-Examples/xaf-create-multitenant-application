@@ -2,7 +2,6 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
 using XAF.Testing.RX;
@@ -10,6 +9,14 @@ using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class OrderExtensions{
+        public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant, int filtersCount) 
+            => application.AssertDashboardListView(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertOrderDetailView())
+                .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .FilterListViews(application)
+                .AssertOrderReportsAction()
+                .AssertMapItAction(typeof(Order),frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .AssertFilterAction(filtersCount);
+
         internal static IObservable<Frame> AssertOrderReportsAction(this IObservable<Frame> source){
             return source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .AssertSingleChoiceAction(Module.Controllers.Orders.ReportController.ReportActionId, 2,item => item.Data == null ? 2 : 0)
@@ -23,8 +30,7 @@ namespace OutlookInspired.Tests.ImportData.Assert{
                     .SelectUntilViewClosed(frame => ((DetailView)frame.View).AssertRichEditControl().To(frame)
                         .CloseWindow().To(action.Frame())),() => item)));
         
-        internal static IObservable<Unit> AssertOrderDetailView(this Frame frame, IObservable<TabbedGroup> orderTabControl) 
-            => frame.AssertNestedOrderItems( )
-                .ReplayFirstTake();    
+        internal static IObservable<Unit> AssertOrderDetailView(this Frame frame) 
+            => frame.AssertNestedOrderItems( ).ReplayFirstTake();    
     }
 }

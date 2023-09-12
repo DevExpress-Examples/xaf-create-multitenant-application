@@ -90,7 +90,7 @@ namespace XAF.Testing.RX{
         public static IObservable<T> DoOnComplete<T>(this IObservable<T> source, Action onComplete)
             => source.Do(_ => { }, onComplete);
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 60).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 30).Seconds();
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source,string message) 
             => source.Timeout(TimeoutInterval, Observable.Throw<TSource>(new TimeoutException(message)));
@@ -102,7 +102,7 @@ namespace XAF.Testing.RX{
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
             => source.Assert(_ => message,timeout,caller);
 
-        public static TimeSpan? AssertDelayOnContextInterval=null;
+        public static TimeSpan? AssertDelayOnContextInterval=400.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
             return source.DelayOnContext(AssertDelayOnContextInterval).Log(messageFactory, caller)

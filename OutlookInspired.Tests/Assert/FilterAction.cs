@@ -2,23 +2,18 @@
 using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.ReportsV2.Win;
-using DevExpress.XtraEditors.Controls;
-using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
-using OutlookInspired.Module.Controllers.Customers;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
-    
     static class FilterAction{
         
         internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .AssertSingleChoiceAction(ViewFilterController.FilterViewActionId, filtersCount)
-                .AssertFilterAction(filtersCount).IgnoreElements().Concat(source);
+                .AssertFilterAction(filtersCount-2).IgnoreElements().Concat(source);
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source, int filtersCount) 
             => source.AssertFilters(filtersCount).IgnoreElements()

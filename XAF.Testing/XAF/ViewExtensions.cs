@@ -22,10 +22,15 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<object> WhenPropertyEditorControl(this DetailView detailView)
             => detailView.WhenViewItemControl<PropertyEditor>();
+        public static IObservable<object> WhenControlViewItemControl(this DetailView detailView)
+            => detailView.WhenViewItemControl<ControlViewItem>();
         public static IObservable<object> WhenViewItemControl<T>(this DetailView detailView) where T:ViewItem 
             => detailView.GetItems<T>().ToNowObservable()
                 .SelectMany(editor => editor.WhenControlCreated().Select(propertyEditor => propertyEditor.Control).StartWith(editor.Control).WhenNotDefault());
-        
+
+        public static IEnumerable<DashboardViewItem> DashboardViewItems(this CompositeView compositeView,params Type[] objectTypes) 
+            => compositeView.GetItems<DashboardViewItem>().Where(item => item.InnerView.Is(objectTypes));
+
         public static IObservable<T> WhenClosing<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);
         internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
@@ -68,7 +73,10 @@ namespace XAF.Testing.XAF{
             => listView.Objects().ToNowObservable()
                 .MergeToObject(listView.CollectionSource.WhenCollectionChanged()
                     .SelectMany(_ => listView.Objects()))
-                .MergeToObject(listView.CollectionSource.WhenCriteriaApplied().SelectMany(@base => @base.Objects() ));
+                .MergeToObject(listView.CollectionSource.WhenCriteriaApplied().SelectMany(@base => @base.Objects() ))
+                .MergeToObject(listView.Editor.WhenEvent(nameof(listView.Editor.DataSourceChanged)).To(listView.Editor.DataSource)
+                    .StartWith(listView.Editor.DataSource).WhenNotDefault()
+                    .Select(datasource => ((IEnumerable)datasource).Cast<object>()));
         
         public static IEnumerable<object> Objects(this View view) => view.Objects<object>();
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
@@ -113,18 +121,20 @@ namespace XAF.Testing.XAF{
         static IObservable<T> SelectObject<T>(this IObservable<ListView> source,params T[] objects) where T : class 
             => source.SelectMany(view => {
                 var gridView = (view.Editor as GridListEditor)?.GridView;
-                return gridView == null
-                    ? throw new NotImplementedException(nameof(view.Editor))
-                    : objects.ToNowObservable().SelectMany(obj => gridView.WhenSelectRow(obj))
-                        .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
+                if (gridView == null)
+                    throw new NotImplementedException(nameof(view.Editor));
+                gridView.ClearSelection();
+                return objects.ToNowObservable().SelectMany(obj => gridView.WhenSelectRow(obj))
+                    .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
             });
 
         public static IObservable<object> SelectObject(this ListView listView, params object[] objects)
             => listView.SelectObject<object>(objects);
         
         public static IObservable<TO> SelectObject<TO>(this ListView listView,params TO[] objects) where TO : class 
-            => listView.Editor.WhenControlsCreated()
-                .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged").StartWith(editor.Control.GetPropertyValue("DataSource")).WhenNotDefault()).To(listView)
+            => listView.Editor.WhenControlsCreated().To(listView.Editor).StartWith(listView.Editor).WhenNotDefault(editor => editor.Control).Take(1)
+                .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged").To(editor.Control.GetPropertyValue("DataSource")).StartWith(editor.Control.GetPropertyValue("DataSource")).WhenNotDefault()).To(listView)
+                .Select(view => view)
                 .SelectObject(objects);
 
         public static IObservable<T> WhenControlsCreated<T>(this T view) where T : View 
