@@ -14,9 +14,8 @@ namespace OutlookInspired.Module.Services{
             => CriteriaOperator.FromLambda(expression);
         public static CriteriaOperator Combine(this CriteriaOperator criteriaOperator,string criteria,GroupOperatorType type=GroupOperatorType.And){
             var @operator = CriteriaOperator.Parse(criteria);
-            return criteriaOperator != null ? new GroupOperator(type, @operator, criteriaOperator) : @operator;
+            return !criteriaOperator.ReferenceEquals(null) ? new GroupOperator(type, @operator, criteriaOperator) : @operator;
         }
-
 
         public static string GetString(this byte[] bytes, Encoding encoding = null) 
             => bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);

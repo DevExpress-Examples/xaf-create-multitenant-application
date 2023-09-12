@@ -50,14 +50,8 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		AdditionalExportedTypes.Add(typeof(Resource));
 		AdditionalExportedTypes.Add(typeof(HCategory));
 		AdditionalExportedTypes.Add(typeof(RichTextMailMergeData));
-		FixGridRendering();
     }
-
-    [Obsolete]
-    private void FixGridRendering(){
-	    DevExpress.Data.Helpers.ServerModeCache.DefaultForceStaSafeForReentryProtected = true;
-    }
-
+    
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
 	    yield return new PredefinedReportsUpdater(Application, objectSpace, versionFromDB)
 		    .AddOrderReports().AddCustomerReports().AddProductReports();

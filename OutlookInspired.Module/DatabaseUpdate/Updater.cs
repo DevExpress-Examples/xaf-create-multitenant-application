@@ -106,7 +106,7 @@ public class Updater : ModuleUpdater {
         viewFilter = ObjectSpace.CreateObject<ViewFilter>();
         viewFilter.SetCriteria<Order>(order => order.TotalAmount<5000);
         viewFilter.Name = "Sales < $5000";
-        new[]{ "Jim Packard", "Harv Mudd", "Clark Morgan", "Todd Hofman" }
+        new[]{ "Jim Packard", "Harv Mudd", "Clark Morgan" }
             .Do(name => {
                 viewFilter = ObjectSpace.CreateObject<ViewFilter>();
                 viewFilter.SetCriteria<Order>(order => order.Employee.FullName == name);

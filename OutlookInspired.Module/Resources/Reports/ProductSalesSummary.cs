@@ -613,7 +613,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 			// bool isEmptyYears = string.IsNullOrEmpty(stringYears);
 			// this.ReportFooter.Visible = !isEmptyYears;
 			// if(isEmptyYears) 
-				// return; 
+			// 	return; 
 			// string[] years = stringYears.Split(',').ToArray();
 			// SetOrdersText(years);
 			// SetFilterString(years);	 

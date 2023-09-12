@@ -9,6 +9,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\_Completed.png" />
     <None Remove="Images\_Deferred.png" />

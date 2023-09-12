@@ -8,7 +8,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
-using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Services;
 using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
@@ -18,7 +17,6 @@ namespace OutlookInspired.Module.BusinessObjects{
     }
 
     [XafDefaultProperty(nameof(Name))]
-    [NewItemRowHandlingMode]
     public class ViewFilter:BaseObject{
         
         [RuleRequiredField]

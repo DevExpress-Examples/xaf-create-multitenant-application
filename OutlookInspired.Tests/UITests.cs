@@ -37,13 +37,13 @@ namespace OutlookInspired.Tests.ImportData{
         internal static IObservable<Frame> AssertReports(XafApplication application, string navigationView, string viewVariant)
             => application.AssertReports(navigationView, viewVariant, reportsCount: 11);
         internal static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOpportunitiesView( navigationView, viewVariant,filtersCount: 4);
+            => application.AssertOpportunitiesView( navigationView, viewVariant,filtersCount: 6);
 
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertProductListView( navigationView, viewVariant, reportsCount: 4, filtersCount: 9);
 
         static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOrderListView( navigationView, viewVariant, filtersCount: 14);
+            => application.AssertOrderListView( navigationView, viewVariant, filtersCount: 13);
 
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertEmployeeListView(navigationView, viewVariant, filterCount: 7);

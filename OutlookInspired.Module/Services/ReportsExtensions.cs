@@ -45,7 +45,7 @@ static class ReportsExtensions {
 
     public static void AddWatermark(this PdfDocumentProcessor processor, string watermark){
         var pages = processor.Document.Pages;
-        using Font font = new Font("Segoe UI", 48, FontStyle.Regular);
+        using var font = new Font("Segoe UI", 48, FontStyle.Regular);
         foreach (var t in pages){
             using var graphics = processor.CreateGraphics();
             var pageLayout = new RectangleF(
@@ -58,7 +58,7 @@ static class ReportsExtensions {
             graphics.TranslateTransform(-pageLayout.X, -pageLayout.Y);
             graphics.RotateTransform((float)angle);
 
-            using(SolidBrush textBrush = new SolidBrush(Color.FromArgb(100, Color.Red)))
+            using(var textBrush = new SolidBrush(Color.FromArgb(100, Color.Red)))
                 graphics.DrawString(watermark, font, textBrush, new PointF(50, 50));
             graphics.AddToPageForeground(t);
         }
