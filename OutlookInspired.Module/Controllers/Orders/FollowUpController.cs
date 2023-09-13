@@ -20,8 +20,8 @@ namespace OutlookInspired.Module.Controllers.Orders{
             => Frame.ShowInDocument("FollowUp");
 
 
-        protected override void OnActivated(){
-            base.OnActivated();
+        protected override void OnViewControllersActivated(){
+            base.OnViewControllersActivated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
         }
     }

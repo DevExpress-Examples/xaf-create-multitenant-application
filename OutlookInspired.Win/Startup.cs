@@ -4,18 +4,24 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Security.ClientServer;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
-using DevExpress.ExpressApp.EFCore;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Win.Extensions;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
+
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
-    public static WinApplication BuildApplication(){
+    public static WinApplication BuildApplication(bool useMiddleTier){
         var builder = WinApplication.CreateBuilder();
         builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
         builder.AddModules();
-        builder.AddObjectSpaceProviders(options => options.UseSqlServer("Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired"));
-        // builder.AddObjectSpaceProviders();
-        // builder.AddSecurity();
+        builder.AddObjectSpaceProviders(options => {
+            if (useMiddleTier) return false;
+            options.UseSqlServer(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            return true;
+        });
+        if (useMiddleTier){
+            builder.AddSecurity();
+        }
         builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
         return builder.Build();
     }
@@ -23,6 +29,6 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
     XafApplication IDesignTimeApplicationFactory.Create() {
         MiddleTierClientSecurityBase.DesignModeUserType = typeof(Module.BusinessObjects.ApplicationUser);
         MiddleTierClientSecurityBase.DesignModeRoleType = typeof(PermissionPolicyRole);
-        return BuildApplication();
+        return BuildApplication(false);
     }
 }

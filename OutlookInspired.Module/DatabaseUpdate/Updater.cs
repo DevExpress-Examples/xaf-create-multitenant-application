@@ -118,9 +118,9 @@ public class Updater : ModuleUpdater {
         var viewFilter = ObjectSpace.CreateObject<ViewFilter>();
         viewFilter.SetCriteria<T>($"IsOutlookIntervalToday([{dateProperty}])");
         viewFilter.Name = "Today";
-        viewFilter = ObjectSpace.CreateObject<ViewFilter>();
-        viewFilter.SetCriteria<T>($"IsOutlookIntervalYesterday([{dateProperty}])");
-        viewFilter.Name = "Yesterday";
+        // viewFilter = ObjectSpace.CreateObject<ViewFilter>();
+        // viewFilter.SetCriteria<T>($"IsOutlookIntervalYesterday([{dateProperty}])");
+        // viewFilter.Name = "Yesterday";
         viewFilter = ObjectSpace.CreateObject<ViewFilter>();
         viewFilter.SetCriteria<T>($"IsThisMonth([{dateProperty}])");
         viewFilter.Name = "This Month";

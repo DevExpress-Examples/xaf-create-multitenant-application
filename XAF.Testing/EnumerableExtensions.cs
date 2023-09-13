@@ -1,5 +1,20 @@
 namespace XAF.Testing{
     public static class EnumerableExtensions{
+        public static async IAsyncEnumerable<T> TakeOrOriginal<T>(this IAsyncEnumerable<T> source, int count){
+            var i = 0;
+            await foreach (var item in source)
+                if (count == 0 || i++ < count) yield return item;
+                else break;
+        }
+        
+        public static IEnumerable<T> Finally<T>(this IEnumerable<T> source, Action action){
+            return _();
+            IEnumerable<T> _(){
+                foreach (var element in source) yield return element;
+                action();
+            }
+        }
+
         public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source) => source.ToList() is var _ ? Enumerable.Empty<T>() : null;
 
 

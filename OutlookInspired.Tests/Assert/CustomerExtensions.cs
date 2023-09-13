@@ -4,12 +4,17 @@ using DevExpress.ExpressApp;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers.Customers;
+using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class CustomerExtensions{
         public static IObservable<Frame> AssertCustomerListView(this XafApplication application, string navigationView, string viewVariant, int reportsCount, int filtersCount){
+            // return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+            //     .AssertSelectDashboardListViewObject()
+            //     .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: AssertAction.HasObject))
+            //     .FilterListViews(application);
             var customerTabControl = application.AssertTabControl<TabbedGroup>(typeof(Customer));
             return application.AssertDashboardMasterDetail(navigationView, viewVariant,
                     existingObjectDetailview: customerTabControl.AssertCustomerDetailView)
@@ -47,12 +52,5 @@ namespace OutlookInspired.Tests.ImportData.Assert{
                 existingObjectDetailViewFrame.AssertRootCustomerEmployee(),AssertAction.AllButDelete^AssertAction.DetailViewSave^AssertAction.DetailViewNew).ToUnit();
         static IObservable<Unit> AssertRootCustomerEmployee(this  Frame frame)
             => frame.AssertNestedListView(typeof(CustomerCommunication),assert:AssertAction.AllButDelete).ToUnit();
-        
-        [Obsolete]
-        internal static IObservable<Frame> AssertCustomerDashboardChildView(this IObservable<Frame> source,XafApplication application){
-            return source;
-        }
-    
-        
     }
 }

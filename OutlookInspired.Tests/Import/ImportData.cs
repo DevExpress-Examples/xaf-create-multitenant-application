@@ -12,7 +12,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
         public async Task Test(){
             
             using var application = await SetupWinApplication(application => 
-                application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync());
+                application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync(),useServer:false);
             
             var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
             await objectSpace.ImportFromSqlLite();

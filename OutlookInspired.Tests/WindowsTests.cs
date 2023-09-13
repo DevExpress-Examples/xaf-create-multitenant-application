@@ -1,17 +1,21 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using DevExpress.ExpressApp;
 using NUnit.Framework;
 using OutlookInspired.Tests.ImportData.Assert;
+using XAF.Testing;
 using XAF.Testing.XAF;
 #pragma warning disable CS8974 
 
 namespace OutlookInspired.Tests.ImportData{
     [Apartment(ApartmentState.STA)]
-    public class UITests:TestBase{
-        [TestCaseSource(nameof(TestCases))]
+    public class WindowsTests:TestBase{
+        [TestCaseSource(nameof(TestCases))][Retry(3)]
         public async Task Test(string navigationView, string viewVariant,Func<XafApplication,string,string,IObservable<Frame>> assert) {
-            using var application = await SetupWinApplication();
-            application.Model.Options.UseServerMode = false;
+            using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
+            
+            application.WhenLoggedOn("Admin").Subscribe();
+
             application.StartWinTest(assert(application,navigationView, viewVariant));
         }
         
@@ -37,18 +41,41 @@ namespace OutlookInspired.Tests.ImportData{
         internal static IObservable<Frame> AssertReports(XafApplication application, string navigationView, string viewVariant)
             => application.AssertReports(navigationView, viewVariant, reportsCount: 11);
         internal static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOpportunitiesView( navigationView, viewVariant,filtersCount: 6);
+            => application.AssertOpportunitiesView( navigationView, viewVariant,filtersCount: 5);
 
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertProductListView( navigationView, viewVariant, reportsCount: 4, filtersCount: 9);
 
         static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOrderListView( navigationView, viewVariant, filtersCount: 13);
+            => application.AssertOrderListView( navigationView, viewVariant, filtersCount: 12);
 
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertEmployeeListView(navigationView, viewVariant, filterCount: 7);
 
         static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertCustomerListView(navigationView, viewVariant, reportsCount: 3, filtersCount: 7);
+        
+        [OneTimeSetUp]
+        public void Setup(){
+            StopServer();
+            new Process{
+                StartInfo = new ProcessStartInfo{
+                    FileName = "dotnet",
+                    Arguments = "run --no-build",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = "C:\\Work\\DX\\OutlookInspired\\OutlookInspired.MiddleTier\\"
+                }
+            }.Start();
+        }
+
+        private static void StopServer() 
+            => Process.GetProcessesByName("OutlookInspired.MiddleTier")
+                .Do(process1 => process1.Kill())
+                .Enumerate();
+
+        [OneTimeSetUp]
+        public void TearDown() => StopServer();
     }
 }

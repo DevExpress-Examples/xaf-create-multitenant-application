@@ -50,10 +50,13 @@ namespace OutlookInspired.Win.Controllers.Maps{
             MapControl.SelectionChanged+=MapControlOnSelectionChanged;
         }
 
-        private void MapControlOnSelectionChanged(object sender, MapSelectionChangedEventArgs e) 
-            => ((ChartListEditor)View.GetItems<ListPropertyEditor>().First(editor => editor.ListView?.Editor is ChartListEditor)
-                .HideToolBar().ListView.Editor).ChartControl.ApplyColors((KeyColorColorizer)_itemsLayer.Colorizer).DataSource =
-            _salesMapsMarker.Sales(Period, ((MapItem)_itemsLayer.SelectedItem)?.City);
+        private void MapControlOnSelectionChanged(object sender, MapSelectionChangedEventArgs e){
+            var chartListEditor = (ChartListEditor)View.GetItems<ListPropertyEditor>()
+                .First(editor => editor.ListView?.Editor is ChartListEditor)
+                .HideToolBar().ListView.Editor;
+            chartListEditor.DataSource = _salesMapsMarker.Sales(Period, ((MapItem)_itemsLayer.SelectedItem)?.City);
+            chartListEditor.ChartControl.ApplyColors((KeyColorColorizer)_itemsLayer.Colorizer);
+        }
 
         private Period Period => (Period)MapsViewController.SalesPeriodAction.SelectedItem.Data;
         private void SetPieAdapterDataSource() 

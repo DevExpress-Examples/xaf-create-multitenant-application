@@ -24,7 +24,7 @@ static class Program {
         }
         Tracing.Initialize();
 
-        var winApplication = ApplicationBuilder.BuildApplication();
+        var winApplication = ApplicationBuilder.BuildApplication(true);
 
         try {
             winApplication.Setup();

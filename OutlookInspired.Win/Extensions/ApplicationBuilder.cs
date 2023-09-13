@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
+using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
@@ -27,17 +28,14 @@ namespace OutlookInspired.Win.Extensions{
                 })
                 .UsePasswordAuthentication();
 
-        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,Action<DbContextOptionsBuilder> configure=null) 
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,Func<DbContextOptionsBuilder,bool> configure=null) 
             => builder.ObjectSpaceProviders
                 .AddEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((application, options) => {
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
-                    if (configure != null){
-                        configure(options);
-                    }
-                    else{
-                        options.UseMiddleTier(application.Security);    
+                    if (!(configure?.Invoke(options) ?? false)){
+                        options.UseMiddleTier(application.Security);
                     }
                 })
                 .AddNonPersistent();
@@ -52,19 +50,24 @@ namespace OutlookInspired.Win.Extensions{
                 })
                 .AddFileAttachments()
                 .AddNotifications()
-                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
+                .AddOffice(options => OptionsRichTextMailMergeDataType(options))
                 .AddPivotChart(options => options.ShowAdditionalNavigation = true)
                 .AddPivotGrid()
                 .AddReports(options => {
                     options.EnableInplaceReports = true;
                     options.ReportDataType = typeof(ReportDataV2);
                     options.ReportStoreMode = DevExpress.ExpressApp.ReportsV2.ReportStoreModes.XML;
-                    options.ShowAdditionalNavigation = true;
+                    options.ShowAdditionalNavigation = false;
                 })
                 .AddScheduler()
                 .AddTreeListEditors()
                 .AddValidation(options => options.AllowValidationDetailsAccess = false)
                 .AddViewVariants()
                 .Add<OutlookInspiredWinModule>();
+
+        [Obsolete]
+        private static void OptionsRichTextMailMergeDataType(OfficeOptions options){
+            // options.RichTextMailMergeDataType=typeof(RichTextMailMergeData);
+        }
     }
 }

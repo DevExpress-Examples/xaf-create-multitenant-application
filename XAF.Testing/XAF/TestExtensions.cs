@@ -1,7 +1,8 @@
-﻿using System.Reactive.Linq;
+﻿using System.Data.SqlClient;
+using System.Reactive.Linq;
+using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
-using DevExpress.Persistent.BaseImpl.EF;
 using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
@@ -22,10 +23,13 @@ namespace XAF.Testing.XAF{
                 })
             );
         
-        public static void DeleteModelDiffs(this WinApplication application){
-            using var objectSpace = application.CreateObjectSpace(typeof(ModelDifference));
-            objectSpace.Delete(objectSpace.GetObjectsQuery<ModelDifference>().ToArray());
-            objectSpace.CommitChanges();
+        public static void DeleteModelDiffs(this WinApplication application,string connectionString,string modelDifferenceTableName,string modelDifferenceAspectTableName){
+            using var sqlConnection = new SqlConnection(connectionString);
+            sqlConnection.Open();
+            using var sqlCommand = sqlConnection.CreateCommand();
+            sqlCommand.CommandText=new[]{modelDifferenceTableName,modelDifferenceAspectTableName}
+                .Select(table => $"Delete FROM {table};").StringJoin("");
+            sqlCommand.ExecuteNonQuery();
         }
 
         public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 

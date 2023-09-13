@@ -3,19 +3,29 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class OrderExtensions{
-        public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant, int filtersCount) 
-            => application.AssertDashboardListView(navigationView, viewVariant,existingObjectDetailview: frame => frame.AssertOrderDetailView())
+        public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant, int filtersCount){
+            // return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+            //     // .AssertFilterAction(filtersCount);
+            //     .AssertMasterFrame().ToFrame()
+            //     .AssertGridControlDetailViewObjects().To<Frame>();
+                // .AssertSelectDashboardListViewObject();
+                // .AssertListView(assert: AssertAction.HasObject);
+                // .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame));
+            return application.AssertDashboardListView(navigationView, viewVariant,
+                    existingObjectDetailview: frame => frame.AssertOrderDetailView())
                 .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
                 .FilterListViews(application)
                 .AssertOrderReportsAction()
-                .AssertMapItAction(typeof(Order),frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
                 .AssertFilterAction(filtersCount);
+        }
 
         internal static IObservable<Frame> AssertOrderReportsAction(this IObservable<Frame> source){
             return source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()

@@ -5,6 +5,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
 using DevExpress.Persistent.BaseImpl.EF;
+using Type = System.Type;
 
 namespace OutlookInspired.Module.Services{
     internal static class ObjectSpaceExtensions{
@@ -16,9 +17,12 @@ namespace OutlookInspired.Module.Services{
             richTextMailMergeData.DataType = dataType;
             return richTextMailMergeData;
         }
+        
         public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
-            => new(){ KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
-                QueryableSource = objectSpace.Query( objectType,criteria) };
+            => new(){
+                KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
+                QueryableSource = objectSpace.Query(objectType, criteria)
+            };
 
         public static IQueryable Query(this EFCoreObjectSpace objectSpace,Type objectType, string criteria){
             var queryable = objectSpace.GetQueryable(objectType.FullName);

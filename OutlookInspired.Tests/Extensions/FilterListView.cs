@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
@@ -7,7 +6,7 @@ using OutlookInspired.Module.Services;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.ImportData{
+namespace OutlookInspired.Tests.ImportData.Extensions{
     static class FilterListView{
         internal static IObservable<Frame> FilterEmployeeListViews<T>(this XafApplication application,IObservable<T> source) 
             => application.WhenListViewCreating(typeof(Employee))

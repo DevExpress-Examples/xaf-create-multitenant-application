@@ -16,13 +16,13 @@
     <Items>
       <Item Id="Default">
         <Items>
+          <Item Id="Welcome_Dashboard" ViewId="Welcome_Dashboard" Index="0" IsNewNode="True" />
           <Item Id="CustomerListView" ViewId="CustomerListView" IsNewNode="True" />
           <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
           <Item Id="ModelDifference_ListView" ViewId="ModelDifference_ListView" IsNewNode="True" />
           <Item Id="Opportunities" ViewId="Opportunities" IsNewNode="True" />
           <Item Id="Order" ViewId="OrderListView" IsNewNode="True" />
           <Item Id="Product" ViewId="ProductListView" IsNewNode="True" />
-          <Item Id="Welcome_Dashboard" ViewId="Welcome_Dashboard" IsNewNode="True" />
         </Items>
       </Item>
     </Items>
@@ -747,7 +747,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Order_ListView" MasterDetailMode="ListViewAndDetailView" IsFooterVisible="True" Filter="IsLastMonth([OrderDate]) Or IsThisMonth([OrderDate])" AutoExpandAllGroups="True" MasterDetailView="Order_DetailView_Child">
+    <ListView Id="Order_ListView" MasterDetailMode="ListViewAndDetailView" IsFooterVisible="True" Filter="" AutoExpandAllGroups="True" MasterDetailView="Order_DetailView_Child">
       <Columns>
         <ColumnInfo Id="ActualWeight" Index="-1" />
         <ColumnInfo Id="Comments" Index="-1" />

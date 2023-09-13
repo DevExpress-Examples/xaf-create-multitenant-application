@@ -117,6 +117,21 @@ namespace XAF.Testing.XAF{
                     () => controller.FindNavigationItemByViewShortcut(new ViewShortcut(viewId, null)));
         }
 
+        public static IObservable<Unit> WhenLoggedOn<TParams>(
+            this XafApplication application, string userName, string pass=null) where TParams:IAuthenticationStandardLogonParameters
+            => application.WhenFrame(typeof(TParams), ViewType.DetailView).Take(1)
+                .Do(frame => {
+                    var logonParameters = ((TParams)frame.View.CurrentObject);
+                    logonParameters.UserName = userName;
+                    logonParameters.Password = pass;
+                })
+                .ToController<DialogController>().WhenAcceptTriggered();
+        public static IObservable<Unit> WhenLoggedOn(this XafApplication application, string userName, string pass=null) 
+            => application.WhenLoggedOn<AuthenticationStandardLogonParameters>(userName,pass);
+
+        public static IObservable<(XafApplication application, LogonEventArgs e)> WhenLoggedOn(this XafApplication application) 
+            => application.WhenEvent<LogonEventArgs>(nameof(XafApplication.LoggedOn)).InversePair(application);
+        
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
             => application.WhenFrameCreated().Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
                 .WhenViewChanged();
@@ -246,7 +261,11 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<Unit> ThrowWhenHandledExceptions(this WinApplication application) 
             => application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
-                .Select(e => e.Exception).Merge(application.WhenGridListEditorDataError())
+                .Do(e =>e.Handled= e.Exception.ToString().Contains("DevExpress.XtraMap.Drawing.RenderController.Render"))
+                .Where(e => !e.Handled)
+                .Select(e => e.Exception)
+                .Merge(application.WhenGridListEditorDataError())
+                
                 .Do(exception => exception.ThrowCaptured()).ToUnit();
         public static IObservable<Exception> WhenGridListEditorDataError(this WinApplication application) 
             => application.WhenFrame(typeof(object),ViewType.ListView)

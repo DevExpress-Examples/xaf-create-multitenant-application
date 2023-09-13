@@ -15,6 +15,7 @@
     <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.5" />
     <PackageReference Include="DevExpress.Win.Map" Version="23.1.5" />
     <PackageReference Include="DevExpress.Win.PdfViewer" Version="23.1.5" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 </Project>

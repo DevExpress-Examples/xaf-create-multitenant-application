@@ -47,38 +47,41 @@ namespace XAF.Testing.XAF{
         public static bool Is(this View view, params Type[] objectTypes ) 
             => objectTypes.All(objectType => view.Is(ViewType.Any,Nesting.Any,objectType));
         
-        public static IEnumerable<object> Objects(this CollectionSourceBase collectionSourceBase) => collectionSourceBase.Objects<object>();
+        public static IAsyncEnumerable<object> Objects(this CollectionSourceBase collectionSourceBase,int count=0) => collectionSourceBase.Objects<object>(count);
 
-        public static IEnumerable<T> Objects<T>(this CollectionSourceBase collectionSourceBase) {
+        public static IAsyncEnumerable<T> Objects<T>(this CollectionSourceBase collectionSourceBase,int count=0) {
             if (collectionSourceBase.Collection is IEnumerable collection)
-                return collection.Cast<T>();
+                return collection.Cast<T>().ToAsyncEnumerable();
             if (collectionSourceBase.Collection is IListSource listSource)
-                return listSource.GetList().Cast<T>();
+                return listSource.YieldItems(count).Cast<T>();
             if (collectionSourceBase is PropertyCollectionSource propertyCollectionSource) {
                 var masterObject = propertyCollectionSource.MasterObject;
-                return masterObject != null ? ((IEnumerable)propertyCollectionSource.MemberInfo.GetValue(masterObject)).Cast<T>() : Enumerable.Empty<T>();
+                return masterObject != null ? ((IEnumerable)propertyCollectionSource.MemberInfo.GetValue(masterObject)).Cast<T>().ToAsyncEnumerable() : AsyncEnumerable.Empty<T>();
             }
             return collectionSourceBase.Collection is QueryableCollection queryableCollection
-                ? ((IEnumerable<T>)queryableCollection.Queryable).ToArray() : throw new NotImplementedException($"{collectionSourceBase}");
+                ? ((IEnumerable<T>)queryableCollection.Queryable).ToArray().ToAsyncEnumerable() : throw new NotImplementedException($"{collectionSourceBase}");
         }
         
-        public static IEnumerable<T> Objects<T>(this View view) 
-            => view is DetailView ? ((T)view.CurrentObject).YieldItem().ToArray()
-                : view.ToListView().CollectionSource.Objects<T>();
-       
+        public static IAsyncEnumerable<T> Objects<T>(this View view,int count=0) 
+            => view is DetailView ? ((T)view.CurrentObject).YieldItem().ToArray().ToAsyncEnumerable()
+                : view.ToListView().CollectionSource.Objects<T>(count);
         
         public static IObservable<DashboardViewItem> When(this IObservable<DashboardViewItem> source, params ViewType[] viewTypes) 
             => source.Where(item => viewTypes.All(viewType => item.InnerView.Is(viewType)));
-        public static IObservable<object> WhenObjects(this ListView listView) 
-            => listView.Objects().ToNowObservable()
-                .MergeToObject(listView.CollectionSource.WhenCollectionChanged()
-                    .SelectMany(_ => listView.Objects()))
-                .MergeToObject(listView.CollectionSource.WhenCriteriaApplied().SelectMany(@base => @base.Objects() ))
-                .MergeToObject(listView.Editor.WhenEvent(nameof(listView.Editor.DataSourceChanged)).To(listView.Editor.DataSource)
-                    .StartWith(listView.Editor.DataSource).WhenNotDefault()
-                    .Select(datasource => ((IEnumerable)datasource).Cast<object>()));
         
-        public static IEnumerable<object> Objects(this View view) => view.Objects<object>();
+        public static IObservable<object> WhenObjects(this ListView listView,int count=0) 
+            => listView.Objects(count).ToObservable()
+                .SwitchIfEmpty(Observable.Defer(() => listView.CollectionSource.WhenCollectionChanged()
+                    .SelectMany(_ => listView.Objects(count).ToObservable())
+                    .MergeToObject(listView.CollectionSource.WhenCriteriaApplied()
+                        .SelectMany(@base => @base.Objects(count).ToObservable()))
+                    .MergeToObject(listView.Editor.WhenEvent(nameof(listView.Editor.DataSourceChanged))
+                        .To(listView.Editor.DataSource)
+                        .StartWith(listView.Editor.DataSource).WhenNotDefault()
+                        .SelectMany(datasource => datasource.YieldItems(count).ToObservable())))
+                );
+
+        public static IAsyncEnumerable<object> Objects(this View view,int count=0) => view.Objects<object>(count);
         public static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
         public static DashboardView ToDashboardView(this View view) => (DashboardView)view ;
         public static IObservable<IFrameContainer> NestedFrameContainers<TView>(this TView view, params Type[] objectTypes ) where TView : CompositeView  
@@ -89,7 +92,7 @@ namespace XAF.Testing.XAF{
         public static (ITypeInfo typeInfo, object keyValue) CurrentObjectInfo(this View view) 
             => (view.ObjectTypeInfo,view.ObjectSpace.GetKeyValue(view.CurrentObject));
 
-        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this CompositeView compositeView,bool inLineEdit, object existingObject = null) 
+        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this CompositeView compositeView,bool inLineEdit, object existingObject ) 
             => compositeView is DetailView detailView?detailView.CloneExistingObjectMembers(existingObject).IgnoreElements()
                     .Select(_ => default((string name, object value))) :compositeView.ToListView().CloneExistingObjectMembers(inLineEdit,existingObject);
 
@@ -102,17 +105,13 @@ namespace XAF.Testing.XAF{
                 })
                 .IgnoreElements().ToUnit();
         }
-        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null){
-            existingObject ??= listView.Objects().First();
-            if (inLineEdit){
-                return listView.ToListView().Model.MemberViewItems().Where(item => !item.ModelMember.MemberInfo.IsKey)
-                    .Select(item =>(item.ModelMember.MemberInfo.Name,item.ModelMember.MemberInfo.GetValue(existingObject)) );    
-            }
-            return listView.CloneExistingObjectMembers(true,existingObject)
-                .Do(t => listView.EditView.ObjectTypeInfo.FindMember(t.name).SetValue(listView.EditView.CurrentObject,t.value)).ToArray();
-        }
+        public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null) 
+            => inLineEdit ? listView.ToListView().Model.MemberViewItems().Where(item => !item.ModelMember.MemberInfo.IsKey)
+                    .Select(item => (item.ModelMember.MemberInfo.Name, item.ModelMember.MemberInfo.GetValue(existingObject)))
+                : listView.CloneExistingObjectMembers(true, existingObject)
+                    .Do(t => listView.EditView.ObjectTypeInfo.FindMember(t.name)
+                        .SetValue(listView.EditView.CurrentObject, t.value)).ToArray();
 
-        
 
         public static bool IsNewObject(this CompositeView compositeView)
             => compositeView.ObjectSpace.IsNewObject(compositeView.CurrentObject);
@@ -124,7 +123,8 @@ namespace XAF.Testing.XAF{
                 if (gridView == null)
                     throw new NotImplementedException(nameof(view.Editor));
                 gridView.ClearSelection();
-                return objects.ToNowObservable().SelectMany(obj => gridView.WhenSelectRow(obj))
+                return objects.ToNowObservable().SwitchIfEmpty(Observable.Defer(() => gridView.GetRow(gridView.GetRowHandle(0)).Observe()))
+                    .SelectMany(obj => gridView.WhenSelectRow(obj))
                     .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
             });
 
@@ -134,7 +134,6 @@ namespace XAF.Testing.XAF{
         public static IObservable<TO> SelectObject<TO>(this ListView listView,params TO[] objects) where TO : class 
             => listView.Editor.WhenControlsCreated().To(listView.Editor).StartWith(listView.Editor).WhenNotDefault(editor => editor.Control).Take(1)
                 .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged").To(editor.Control.GetPropertyValue("DataSource")).StartWith(editor.Control.GetPropertyValue("DataSource")).WhenNotDefault()).To(listView)
-                .Select(view => view)
                 .SelectObject(objects);
 
         public static IObservable<T> WhenControlsCreated<T>(this T view) where T : View 
@@ -181,10 +180,12 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenSelectedObjects(this View view) 
             => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
                 .StartWith(view.SelectedObjects.Cast<object>());
-        public static IObservable<object> WhenObjects(this View view) 
-            => view is ListView listView?listView.CollectionSource.WhenCollectionChanged().SelectMany(_ => listView.Objects())
-                .StartWith(listView.Objects()):view.ToDetailView().WhenCurrentObjectChanged()
-                .Select(detailView => detailView.CurrentObject).StartWith(view.CurrentObject).WhenNotDefault();
+        public static IObservable<object> WhenObjectViewObjects(this View view,int count=0) 
+            => view is ListView listView ? listView.WhenObjects(count)
+                    .SwitchIfEmpty(Observable.Defer(() => listView.CollectionSource.WhenCollectionChanged()
+                        .SelectMany(_ => listView.Objects(count).ToObservable())))
+                : view.ToDetailView().WhenCurrentObjectChanged()
+                    .Select(detailView => detailView.CurrentObject).StartWith(view.CurrentObject).WhenNotDefault();
 
         private static IObservable<TFrameContainer> NestedFrameContainers<TView,TFrameContainer>(this IObservable<TFrameContainer> lazyListPropertyEditors, TView view, Type[] objectTypes) where TView : CompositeView where TFrameContainer:IFrameContainer{
             var listFrameContainers = view.GetItems<ViewItem>().OfType<TFrameContainer>().Where(editor => editor.Frame?.View != null)

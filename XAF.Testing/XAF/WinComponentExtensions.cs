@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using DevExpress.Data.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.Utils.Controls;
 using DevExpress.XtraGrid;
@@ -11,7 +10,6 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.Handler;
 using DevExpress.XtraGrid.Views.Layout;
 using DevExpress.XtraGrid.Views.Layout.Handler;
-using DevExpress.XtraRichEdit;
 using DevExpress.XtraScheduler;
 using DevExpress.XtraScheduler.Xml;
 using XAF.Testing.RX;
@@ -25,7 +23,7 @@ namespace XAF.Testing.XAF{
                 gridView.MakeRowVisible(rowHandle);
                 gridView.FocusedRowHandle = rowHandle;
                 return Observable.While(() => gridView.IsRowVisible(rowHandle) == RowVisibleState.Hidden, Observable.Never<int>())
-                    .ConcatDefer(() => rowHandle.Observe().Do(i => gridView.SelectRow(rowHandle)));
+                    .ConcatDefer(() => rowHandle.Observe().Do(_ => gridView.SelectRow(rowHandle)));
             });
 
         public static IObservable<Control> SelectControlRecursive(this IObservable<Control> source)
@@ -54,11 +52,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenDataSourceChanged(this GridControl gridControl) 
             => gridControl.WhenEvent(nameof(GridControl.DataSourceChanged));
 
-        public static IObservable<object> GridDetailViewObjects(this GridView view) 
+        public static IObservable<object> WhenGridDetailViewObjects(this GridView view) 
             => view.WhenEvent<CustomMasterRowEventArgs>(nameof(GridView.MasterRowExpanded))
                 .Select(e => view.GetDetailView(e.RowHandle,e.RelationIndex)).Cast<ColumnView>()
                 .Delay(100.Milliseconds(),new SynchronizationContextScheduler(SynchronizationContext.Current!))
-                .SelectMany(baseView => ((IEnumerable)baseView.DataSource).Cast<object>().Take(1).ToArray())
+                .SelectMany(baseView => baseView.DataSource.YieldItems(1).ToObservable())
                 .Take(view.GridControl.LevelTree.Nodes.Count).BufferUntilCompleted().SelectMany()
                 .MergeToObject(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements());
 
@@ -79,32 +77,27 @@ namespace XAF.Testing.XAF{
         public static IObservable<ColumnView> ProcessEvent(this GridControl control,EventType eventType) 
             => ((ColumnView)control.MainView).ProcessEvent(eventType);
 
-        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView,EventType eventType) 
+        public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView, EventType eventType) 
             => columnView.WhenEvent<FocusedRowObjectChangedEventArgs>(nameof(columnView.FocusedRowObjectChanged))
                 .WhenNotDefault(e => e.Row).StartWith(columnView.FocusedRowObject).WhenNotDefault()
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
-                    .SelectMany(_ => {
-                        var row = columnView.FindRow(columnView.YieldDataSource().First());
-                        columnView.Focus();
-                        columnView.SelectRow(row);
-                        columnView.SelectRow(2);
-                        columnView.FocusedRowHandle = 2;
-                        return Observable.Empty<ColumnView>();
-
-                    }));
+                    .SelectMany(_ => columnView.DataSource.YieldItems(2).ToObservable()
+                        .SelectMany(o => {
+                            var row = columnView.FindRow(o);
+                            columnView.Focus();
+                            columnView.SelectRow(row);
+                            columnView.SelectRow(2);
+                            columnView.FocusedRowHandle = 2;
+                            return Observable.Empty<ColumnView>();
+                        })));
 
         private static BaseViewHandler ViewHandler(this ColumnView columnView) 
             => columnView is LayoutView layoutView ? new LayoutViewHandler(layoutView) : new GridHandler((GridView)columnView);
 
-        public static IObservable<object> HasObjects(this IObservable<GridControl> source)
-            => source.SelectMany(control => control.MainView.YieldDataSource());
+        public static IObservable<object> WhenObjects(this IObservable<GridControl> source,int count=0)
+            => source.SelectMany(control => control.MainView.DataSource.YieldItems(count).ToObservable());
 
-        private static IEnumerable<object> YieldDataSource(this BaseView control) 
-            => control.DataSource == null ? Enumerable.Empty<object>() : control.DataSource is EntityServerModeSource source
-                ? source.QueryableSource.Cast<object>() : control.DataSource is EntityServerModeFrontEnd frontEndSource
-                    ? 0.Range(frontEndSource.Count).Select(i => frontEndSource[i]).Where(row => row != null)
-                    : ((IEnumerable)control.DataSource).Cast<object>();
     }
 }

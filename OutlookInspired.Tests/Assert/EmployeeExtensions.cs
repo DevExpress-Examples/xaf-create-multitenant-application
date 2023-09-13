@@ -4,18 +4,25 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class EmployeeExtensions{
-        public static IObservable<Frame> AssertEmployeeListView(this XafApplication application,string navigationView,string viewVariant,int filterCount) 
-            => application.AssertDashboardMasterDetail(navigationView, viewVariant,
+        public static IObservable<Frame> AssertEmployeeListView(this XafApplication application,string navigationView,string viewVariant,int filterCount){
+            // return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
+                // .AssertSelectDashboardListViewObject()
+                // .AssertMapItAction(typeof(Employee),
+                    // frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject));
+            return application.AssertDashboardMasterDetail(navigationView, viewVariant,
                     existingObjectDetailview: frame => frame.AssertEmployeeDetailView())
-                .AssertEmployeeDashboardChildView(application,viewVariant)
-                .AssertMapItAction(typeof(Employee),frame => frame.AssertNestedListView(typeof(RoutePoint),assert:AssertAction.HasObject))
+                .AssertEmployeeDashboardChildView(application, viewVariant)
+                .AssertMapItAction(typeof(Employee),
+                    frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject))
                 .AssertFilterAction(filterCount)
                 .FilterListViews(application);
+        }
 
         internal static IObservable<Unit> AssertEmployeeDetailView(this Frame frame)
             => frame.AssertNestedEmployeeTask( ).IgnoreElements()

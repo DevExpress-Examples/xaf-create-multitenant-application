@@ -47,8 +47,10 @@ namespace OutlookInspired.Win.UserControls
             ColumnView.DataError+=(_, e) => throw new AggregateException(e.DataException.Message,e.DataException);
         }
 
-        public override void Refresh() 
-            => ColumnView.GridControl.DataSource = (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
+        public override void Refresh(){
+            ColumnView.GridControl.DataSource =
+                (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
+        }
 
         public virtual Type ObjectType => throw new NotImplementedException();
 

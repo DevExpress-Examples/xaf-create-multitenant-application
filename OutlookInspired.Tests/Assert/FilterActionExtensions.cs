@@ -8,24 +8,22 @@ using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
-    static class FilterAction{
+    static class FilterActionExtensions{
         
         internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .AssertSingleChoiceAction(ViewFilterController.FilterViewActionId, filtersCount)
-                .AssertFilterAction(filtersCount-2).IgnoreElements().Concat(source);
+                .AssertFilterAction().IgnoreElements().Concat(source);
 
-        private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source, int filtersCount) 
-            => source.AssertFilters(filtersCount).IgnoreElements()
+        private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source) 
+            => source.AssertFilters().IgnoreElements()
                 .Concat(source.AssertItemsAdded(source.AssertDialogControllerListView(typeof(ViewFilter), AssertAction.All^AssertAction.Process, true).ToSecond()));
         
-        private static IObservable<Frame> AssertFilters(this IObservable<SingleChoiceAction> source,int filtersCount) 
+        private static IObservable<Frame> AssertFilters(this IObservable<SingleChoiceAction> source) 
             => source.SelectMany(filterAction => filterAction.Items<ViewFilter>().ToNowObservable()
                     .SelectManySequential(item => filterAction.Trigger(filterAction.View()
                             .AssertObjectsCount(Convert.ToInt32(Regex.Match(item.Caption, @"\((\d+)\)").Groups[1].Value)), () => item)
-                        .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame())
-                    .Skip(filtersCount - 1)
-                    .Assert())
-                ;
+                        .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame()))
+                .IgnoreElements().To<Frame>().Concat(source.Select(action => action.Frame())).ReplayFirstTake();
     }
 }

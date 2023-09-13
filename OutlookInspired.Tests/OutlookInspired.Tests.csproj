@@ -15,8 +15,6 @@
         <Error Condition="!Exists('$(SQLiteFilePath)')" Text="$(InstallMessage) The required SQLite file does not exist at $(SQLiteFilePath)" />
     </Target>
     <ItemGroup>
-<!--        <PackageReference Include="LinqKit" Version="1.2.4" />-->
-<!--        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="7.1.4" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
         <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
@@ -33,5 +31,6 @@
         <ProjectReference Include="..\XAF.Testing\XAF.Testing.csproj" />
         <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
         <ProjectReference Include="..\OutlookInspired.Win\OutlookInspired.Win.csproj" />
+        <ProjectReference Include="..\OutlookInspired.MiddleTier\OutlookInspired.MiddleTier.csproj" />
     </ItemGroup>
 </Project>
