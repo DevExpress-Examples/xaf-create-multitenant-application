@@ -3,6 +3,8 @@ using System.Reactive.Linq;
 
 namespace XAF.Testing.RX{
     public static class FilterExtensions{
+        public static IObservable<T> TakeOrOriginal<T>(this IObservable<T> source, int count) => count == 0 ? source : source.Take(count);
+
         public static IObservable<TSource> WhenDefault<TSource>(this IObservable<TSource> source) 
             => source.Where(obj => obj.IsDefaultValue());
 

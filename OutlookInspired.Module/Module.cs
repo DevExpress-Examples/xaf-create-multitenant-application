@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.Base;
@@ -7,9 +6,16 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Model;
-using OutlookInspired.Module.Model.HideViewActions;
+using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Features.Customers;
+using OutlookInspired.Module.Features.Employees;
+using OutlookInspired.Module.Features.Maps;
+using OutlookInspired.Module.Features.MasterDetail;
+using OutlookInspired.Module.Features.Orders;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
+using ReportController = OutlookInspired.Module.Features.Customers.ReportController;
 
 
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
@@ -57,7 +63,17 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		    .AddOrderReports().AddCustomerReports().AddProductReports();
         yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
     }
-    
+
+    protected override IEnumerable<Type> GetDeclaredControllerTypes() 
+	    => new []{
+		    typeof(MailMergeController),typeof(ReportController),
+		    typeof(CommunicationController),typeof(RoutePointController),
+		    typeof(MapsViewController),
+		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
+		    typeof(Features.Products.ReportController),
+		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController)
+	    };
+
     public override void Setup(XafApplication application) {
 	    base.Setup(application);
 	    application.ObjectSpaceCreated += Application_ObjectSpaceCreated;
@@ -67,18 +83,11 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    if (e.ObjectSpace is CompositeObjectSpace{ Owner: not CompositeObjectSpace } compositeObjectSpace) {
 		    compositeObjectSpace.PopulateAdditionalObjectSpaces((XafApplication)sender);
 	    }
-	    if (e.ObjectSpace is NonPersistentObjectSpace objectSpace){
-		    objectSpace.ObjectsGetting+= (o, args) => {
-			    if (args.ObjectType == typeof(QuoteMapItem)){
-				    args.Objects = new BindingList<QuoteMapItem>(((NonPersistentObjectSpace)o)!.Opportunities().ToArray());
-			    }
-		    };
-	    }
     }
     
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    updaters.Add(new ModelViewClonerUpdater(),new MasterDetailUpdater(),new MapsUpdater());
+	    updaters.Add(new CloneViewUpdater(), new MasterDetailUpdater(), new MapsUpdater(), new DataAccessModeUpdater());
     }
 }
 

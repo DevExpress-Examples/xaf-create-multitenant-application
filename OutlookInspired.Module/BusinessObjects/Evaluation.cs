@@ -8,6 +8,7 @@ using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Features.CloneView;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(StartOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontStyle = FontStyle.Bold,Context = "Employee_Evaluations_ListView")]

@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Features.Orders;
 using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing;
 using XAF.Testing.RX;
@@ -29,7 +30,7 @@ namespace OutlookInspired.Tests.ImportData.Assert{
 
         internal static IObservable<Frame> AssertOrderReportsAction(this IObservable<Frame> source){
             return source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
-                .AssertSingleChoiceAction(Module.Controllers.Orders.ReportController.ReportActionId, 2,item => item.Data == null ? 2 : 0)
+                .AssertSingleChoiceAction(ReportController.ReportActionId, 2,item => item.Data == null ? 2 : 0)
                 .AssertReports(item => item.ParentItem is{ Data: null })
                 .AssertOrderInvoice()
                 .IgnoreElements().Concat(source).ReplayFirstTake();

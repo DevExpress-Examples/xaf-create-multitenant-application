@@ -1,4 +1,6 @@
-﻿using OutlookInspired.Module.BusinessObjects;
+﻿using System.Collections;
+using Castle.Components.DictionaryAdapter;
+using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
     internal static class EnumerableExtensions{
@@ -45,6 +47,17 @@ namespace OutlookInspired.Module.Services{
                 action(item);
                 return item;
             });
+        
+        public static System.ComponentModel.BindingList<T> ToBindingList<T>(this IEnumerable<T> source) 
+            => new((IList<T>) (source as IList ?? source.ToList()));
+
+        public static System.ComponentModel.IBindingList ToBindingList(this IEnumerable<object> source,Type objectType) {
+            var bindingList = (System.ComponentModel.IBindingList) typeof(BindingList<>).MakeGenericType(objectType).CreateInstance();
+            foreach (object o in source) {
+                bindingList.Add(o);
+            }
+            return bindingList;
+        }
 
         public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source){
             foreach (var unused in source){

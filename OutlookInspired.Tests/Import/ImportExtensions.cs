@@ -2,7 +2,9 @@
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.BaseImpl.EF;
+using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
 using XAF.Testing.RX;
@@ -57,7 +59,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 .Merge(objectSpace.ImportProbation(sqliteContext));
 
         static IObservable<Unit> ImportEmployee(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Employees.ToNowObservable()
+            => sqliteContext.Employees.Include(employee => employee.Picture)
+                .Include(employee => employee.ProbationReason).ToNowObservable()
                 .Select(sqlLite => {
                     var employee = objectSpace.CreateObject<Employee>();
                     employee.IdInt64 = sqlLite.Id;
@@ -96,7 +99,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
         }
 
         static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Evaluations.ToNowObservable()
+            => sqliteContext.Evaluations.Include(evaluation => evaluation.Employee)
+                .Include(evaluation => evaluation.CreatedBy).ToNowObservable()
                 .Select(sqlLite => {
                     var evaluation = objectSpace.CreateObject<Evaluation>();
                     evaluation.IdInt64 = sqlLite.Id;
@@ -120,7 +124,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 .ToUnit();
 
         static IObservable<Unit> ImportOrder(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Orders.ToNowObservable()
+            => sqliteContext.Orders.Include(order => order.Employee).Include(order => order.Customer)
+                .Include(order => order.Store).ToNowObservable()
                 .Select(sqlLite => {
                     var order = objectSpace.CreateObject<Order>();
                     order.IdInt64 = sqlLite.Id;
@@ -144,7 +149,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportProduct(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Products.ToNowObservable()
+            => sqliteContext.Products.Include(product => product.Engineer).Include(product => product.Support)
+                .Include(product => product.PrimaryImage).ToNowObservable()
                 .Select(sqlLite => {
                     var product = objectSpace.CreateObject<Product>();
                     product.IdInt64 = sqlLite.Id;
@@ -169,7 +175,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportProductImages(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.ProductImages.ToNowObservable()
+            => sqliteContext.ProductImages.Include(productImage => productImage.Product)
+                .Include(productImage => productImage.Picture).ToNowObservable()
                 .Select(sqlLite => {
                     var productImage = objectSpace.CreateObject<ProductImage>();
                     productImage.IdInt64 = sqlLite.Id;
@@ -179,7 +186,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportProductCatalog(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.ProductCatalogs.ToNowObservable()
+            => sqliteContext.ProductCatalogs.Include(productCatalog => productCatalog.Product).ToNowObservable()
                 .Select(sqlLite => {
                     var productCatalog = objectSpace.CreateObject<ProductCatalog>();
                     productCatalog.IdInt64 = sqlLite.Id;
@@ -192,7 +199,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
             var products = objectSpace.GetObjects<Product>()
                 .ToDictionary(product => product.IdInt64, product => product);
             var orders = objectSpace.GetObjects<Order>().ToDictionary(order => order.IdInt64, order => order);
-            return sqliteContext.OrderItems.ToNowObservable()
+            return sqliteContext.OrderItems.Include(orderItem => orderItem.Order)
+                .Include(orderItem => orderItem.Product).ToNowObservable()
                 .Select(sqlLite => {
                     var orderItem = objectSpace.CreateObject<OrderItem>();
                     orderItem.IdInt64 = sqlLite.Id;
@@ -207,7 +215,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
         }
 
         static IObservable<Unit> ImportQuote(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Quotes.ToNowObservable()
+            => sqliteContext.Quotes.Include(quote => quote.CustomerStore).Include(quote => quote.Employee)
+                .Include(quote => quote.Customer).ToNowObservable()
                 .Select(sqlLite => {
                     var quote = objectSpace.CreateObject<Quote>();
                     quote.IdInt64 = sqlLite.Id;
@@ -227,7 +236,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
             var quotes = objectSpace.GetObjects<Quote>().ToDictionary(quote => quote.IdInt64, quote => quote);
             var products = objectSpace.GetObjects<Product>()
                 .ToDictionary(product => product.IdInt64, product => product);
-            return sqliteContext.QuoteItems.ToNowObservable()
+            return sqliteContext.QuoteItems.Include(quoteItem => quoteItem.Quote)
+                .Include(quoteItem => quoteItem.Product).ToNowObservable()
                 .Select(sqlLite => {
                     var quoteItem = objectSpace.CreateObject<QuoteItem>();
                     quoteItem.IdInt64 = sqlLite.Id;
@@ -242,7 +252,9 @@ namespace OutlookInspired.Tests.ImportData.Import{
         }
 
         static IObservable<Unit> ImportCustomerEmployee(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.CustomerEmployees.ToNowObservable()
+            => sqliteContext.CustomerEmployees.Include(customerEmployee => customerEmployee.Picture)
+                .Include(customerEmployee => customerEmployee.Customer)
+                .Include(customerEmployee => customerEmployee.CustomerStore).ToNowObservable()
                 .Select(sqlLite => {
                     var customerEmployee = objectSpace.CreateObject<CustomerEmployee>();
                     customerEmployee.IdInt64 = sqlLite.Id;
@@ -262,7 +274,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportCustomerCommunication(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.CustomerCommunications.ToNowObservable()
+            => sqliteContext.CustomerCommunications.Include(customerCommunication => customerCommunication.Employee)
+                .Include(customerCommunication => customerCommunication.CustomerEmployee).ToNowObservable()
                 .Select(sqlLite => {
                     var customerCommunication = objectSpace.CreateObject<CustomerCommunication>();
                     customerCommunication.IdInt64 = sqlLite.Id;
@@ -294,7 +307,9 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 .ToUnit();
         
         static IObservable<Unit> ImportEmployeeTasks(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.EmployeeTasks.ToNowObservable()
+            => sqliteContext.EmployeeTasks.Include(employeeTask => employeeTask.CustomerEmployee)
+                .Include(employeeTask => employeeTask.Owner).Include(employeeTask => employeeTask.AssignedEmployee)
+                .Include(employeeTask => employeeTask.AssignedEmployees).ToNowObservable()
                 .SelectMany(sqlLite => {
                     var task = objectSpace.CreateObject<EmployeeTask>();
                     task.IdInt64 = sqlLite.Id;
@@ -323,7 +338,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportTaskAttachedFiles(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.TaskAttachedFiles.ToNowObservable()
+            => sqliteContext.TaskAttachedFiles.Include(taskAttachedFile => taskAttachedFile.EmployeeTask).ToNowObservable()
                 .Select(sqlLite => {
                     var taskAttachedFile = objectSpace.CreateObject<TaskAttachedFile>();
                     taskAttachedFile.IdInt64 = sqlLite.Id;
@@ -366,7 +381,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportCustomerStore(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.CustomerStores.ToNowObservable()
+            => sqliteContext.CustomerStores.Include(customerStore => customerStore.Customer)
+                .Include(customerStore => customerStore.Crest).ToNowObservable()
                 .Select(sqlLite => {
                     var store = objectSpace.CreateObject<CustomerStore>();
                     store.IdInt64 = sqlLite.Id;
@@ -410,5 +426,28 @@ namespace OutlookInspired.Tests.ImportData.Import{
                     crest.SmallImage = sqlLite.SmallImage;
                     return crest;
                 }).ToUnit();
+
+        public static void GenerateOrders(this IObjectSpace objectSpace,int factor=10) 
+            => objectSpace.GetObjectsQuery<Order>().ToArray().SelectMany(order => 0.Range(factor)
+                    .SelectMany(index => objectSpace.CreateObject<Order>()
+                        .UpdateMembers(index,order).SelectMany(newOrder => order.OrderItems.ToArray()
+                            .SelectMany(orderItem =>objectSpace.CreateObject<OrderItem>()
+                                .UpdateMembers(newOrder, orderItem))))
+                )
+                .Finally(objectSpace.CommitChanges)
+                .Enumerate();
+
+        private static IEnumerable<IMemberInfo> UpdateMembers(this OrderItem newItem,Order newOrder,  OrderItem orderItem) 
+            => newItem.ObjectSpace.CloneableOwnMembers(typeof(OrderItem))
+                .Do(info => newItem.SetValue(info, orderItem)).Finally(() => newItem.Order=newOrder);
+
+        private static IEnumerable<Order> UpdateMembers(this Order newOrder, int index, Order order) 
+            => newOrder.ObjectSpace.CloneableOwnMembers(typeof(Order)).ToArray()
+                .Do(info => newOrder.SetValue(info, order))
+                .Finally(() => {
+                    newOrder.OrderDate = order.OrderDate.AddDays(-1);
+                    newOrder.InvoiceNumber = $"{index}{order.InvoiceNumber}";
+                })
+                .IgnoreElements().To(newOrder).Concat(newOrder.YieldItem());
     }
 }

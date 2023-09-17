@@ -6,6 +6,9 @@ using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Attributes.Validation;
+using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Features.Maps;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
 
 
@@ -69,10 +72,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual int TotalEmployees { get; set; }
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual CustomerStatus Status { get; set; }
-		
-
-		[InverseProperty(nameof(Quote.Customer))]
-		[Aggregated]
+		[InverseProperty(nameof(Quote.Customer))] [Aggregated]
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
 
 		[InverseProperty(nameof(CustomerStore.Customer))]
@@ -88,10 +88,13 @@ namespace OutlookInspired.Module.BusinessObjects {
 		string IBaseMapsMarker.Title => Name;
 		double IBaseMapsMarker.Latitude => BillingAddressLatitude;
 		double IBaseMapsMarker.Longitude => BillingAddressLongitude;
-		
+
 		[InverseProperty(nameof(Order.Customer))]
 		[Aggregated]
-		public virtual ObservableCollection<Order> Orders{ get; set; }
+		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
+		[VisibleInDetailView(false)][NotMapped]
+		public virtual List<Order> RecentOrders => ObjectSpace.GetObjectsQuery<Order>()
+			.Where(order => order.Customer.ID == ID && order.OrderDate > DateTime.Now.AddMonths(-2)).ToList();
 		
 
 		IEnumerable<Order> ISalesMapsMarker.Orders => Orders;

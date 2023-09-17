@@ -4,6 +4,11 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module;
+using OutlookInspired.Win.Controllers;
+using OutlookInspired.Win.Controllers.Evaluations;
+using OutlookInspired.Win.Controllers.GridListEditor;
+using OutlookInspired.Win.Controllers.Maps;
+using OutlookInspired.Win.Controllers.Quotes;
 
 namespace OutlookInspired.Win;
 
@@ -25,6 +30,16 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) 
         => new[] { new ModuleUpdater(objectSpace, versionFromDB) };
+
+    protected override IEnumerable<Type> GetDeclaredControllerTypes() 
+        => new[]{
+            typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),
+            typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
+            typeof(WinMapsController),typeof(PaletteEntriesController),typeof(ChildViewCriteriaController),
+            typeof(RouteMapsViewController), typeof(SalesMapsViewController),
+            typeof(PropertyEditorController), typeof(MapItemController), 
+            typeof(DisableSkinsController), typeof(SplitterPositionController)
+        };
 
     public override void Setup(XafApplication application) {
         base.Setup(application);

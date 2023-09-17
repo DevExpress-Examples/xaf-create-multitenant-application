@@ -29,6 +29,9 @@ namespace OutlookInspired.Win.Extensions{
             return chartControl;
         }
         
+        public static bool IsNotGroupedRow(this ColumnView columnView) 
+            => columnView is not GridView view|| !view.IsGroupRow(columnView.FocusedRowHandle);
+        
         [DllImport("USER32.dll", CharSet = CharSet.Auto)]  
         static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
 
@@ -38,49 +41,36 @@ namespace OutlookInspired.Win.Extensions{
             action();
             SendMessage(control.Handle, 0x000B, 1, IntPtr.Zero);
         }
-        
 
         public static void To(this IZoomToRegionService zoomService, GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
-            if(pointA == null || pointB == null || zoomService == null) return;
-            var latPadding = CalculatePadding(pointB.Latitude - pointA.Latitude, margin);
-            var longPadding = CalculatePadding(pointB.Longitude - pointA.Longitude, margin);
-            zoomService.ZoomToRegion(
-                new GeoPoint(pointA.Latitude - latPadding, pointA.Longitude - longPadding),
-                new GeoPoint(pointB.Latitude + latPadding, pointB.Longitude + longPadding),
-                new GeoPoint(0.5 * (pointA.Latitude + pointB.Latitude), 0.5 * (pointA.Longitude + pointB.Longitude)));
-
+            if (pointA == null || pointB == null || zoomService == null) return;
+            var (latDiff, longDiff) = (pointB.Latitude - pointA.Latitude, pointB.Longitude - pointA.Longitude);
+            var (latPad, longPad) = (margin.CalculatePadding(latDiff), margin.CalculatePadding(longDiff));
+            zoomService.ZoomToRegion(new GeoPoint(pointA.Latitude - latPad, pointA.Longitude - longPad),
+                new GeoPoint(pointB.Latitude + latPad, pointB.Longitude + longPad),
+                new GeoPoint((pointA.Latitude + pointB.Latitude) / 2, (pointA.Longitude + pointB.Longitude) / 2));
         }
         
-        public static void To(this IZoomToRegionService zoomService, IEnumerable<IMapsMarker> mapsMarkers, double margin = 0.25) {
-            GeoPoint ptA = null;
-            GeoPoint ptB = null;
-            foreach(var address in mapsMarkers) {
-                if(ptA == null) {
-                    ptA = address.ToGeoPoint();
-                    ptB = address.ToGeoPoint();
-                    continue;
-                }
-                GeoPoint pt = address.ToGeoPoint();
-                if(pt == null || Equals(pt, new GeoPoint(0, 0)))
-                    continue;
-                ptA.Latitude = Math.Min(ptA.Latitude, pt.Latitude);
-                ptA.Longitude = Math.Min(ptA.Longitude, pt.Longitude);
-                ptB.Latitude = Math.Max(ptB.Latitude, pt.Latitude);
-                ptB.Longitude = Math.Max(ptB.Longitude, pt.Longitude);
-            }
-            zoomService.To( ptA, ptB, margin);
+        public static void To(this IZoomToRegionService zoomService, IEnumerable<IMapsMarker> mapsMarkers, double margin = 0.25){
+            var points = mapsMarkers.Select(m => m.ToGeoPoint()).Where(p => p != null && !Equals(p, new GeoPoint(0, 0))).ToList();
+            if (!points.Any()) return;
+            zoomService.To(new GeoPoint(points.Min(p => p.Latitude), points.Min(p => p.Longitude)),
+                new GeoPoint(points.Max(p => p.Latitude), points.Max(p => p.Longitude)), margin);
         }
-
         
-        static double CalculatePadding(double delta, double margin) 
+        static double CalculatePadding(this double margin,double delta) 
             => delta > 0 ? Math.Max(0.1, delta * margin) : delta < 0 ? Math.Min(-0.1, delta * margin) : 0;
 
         public static GeoPoint ToGeoPoint(this IMapsMarker mapsMarker) 
             => new(mapsMarker.Latitude, mapsMarker.Longitude);
         
-        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
-            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject
-                : objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
+        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType){
+            if ((columnView.FocusedRowObject == null || !columnView.IsServerMode))
+                return columnView.FocusedRowObject;
+            else if (columnView.IsNotGroupedRow())
+                return objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
+            return null;
+        }
 
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)

@@ -1,6 +1,8 @@
 ﻿using System.Reactive.Linq;
 using DevExpress.ExpressApp;
-using OutlookInspired.Module.Controllers.Maps;
+using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features;
+using OutlookInspired.Module.Features.Maps;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 

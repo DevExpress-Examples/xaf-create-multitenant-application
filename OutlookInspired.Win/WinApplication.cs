@@ -24,9 +24,6 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication {
         }
     }
     private void OutlookInspiredWindowsFormsApplication_DatabaseVersionMismatch(object sender, DatabaseVersionMismatchEventArgs e){
-	    e.Handled = true;
-	    e.Updater.Update();
-	    return;
 		string message = "Application cannot connect to the specified database.";
 
 		if(e.CompatibilityError is CompatibilityDatabaseIsOldError{ Module: not null } isOldError) {

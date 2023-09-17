@@ -3,12 +3,15 @@ using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.DC;
 using XAF.Testing.RX;
 using Observable = System.Reactive.Linq.Observable;
 using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
+        public static IEnumerable<IMemberInfo> CloneableOwnMembers(this IObjectSpace objectSpace,Type type)
+            => objectSpace.TypesInfo.FindTypeInfo(type).OwnMembers.Where(info => !info.IsList && !info.IsKey);
         
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);

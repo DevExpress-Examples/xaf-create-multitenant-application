@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
+using DevExpress.Data.Filtering;
 using DevExpress.Data.Linq;
 using DevExpress.Data.Linq.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
 using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.Xpo;
 using Type = System.Type;
 
 namespace OutlookInspired.Module.Services{
@@ -18,11 +20,14 @@ namespace OutlookInspired.Module.Services{
             return richTextMailMergeData;
         }
         
-        public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
-            => new(){
-                KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
-                QueryableSource = objectSpace.Query(objectType, criteria)
+        public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria){
+            // return new EFCoreServerCollection(objectSpace, objectType, CriteriaOperator.Parse(criteria),
+                // new List<SortProperty>());
+            return new EntityServerModeSource{
+            KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
+            QueryableSource = objectSpace.Query(objectType, criteria)
             };
+        }
 
         public static IQueryable Query(this EFCoreObjectSpace objectSpace,Type objectType, string criteria){
             var queryable = objectSpace.GetQueryable(objectType.FullName);

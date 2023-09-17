@@ -767,7 +767,7 @@
         </ColumnInfo>
         <ColumnInfo Id="OrderDate" Index="3" />
         <ColumnInfo Id="ShipDate" Index="4" />
-        <ColumnInfo Id="Customer" Index="5" Width="114" GroupIndex="0" />
+        <ColumnInfo Id="Customer" Index="5" Width="114" GroupIndex="0" PropertyName="Customer.Name" />
         <ColumnInfo Id="Store" Index="6" Width="121" />
         <ColumnInfo Id="ShippingAmount" Index="7" Width="90" />
         <ColumnInfo Id="TotalAmount" Index="8" Width="74" />
@@ -977,6 +977,27 @@
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
     </ListView>
+    <ListView Id="Product_OrderItems_ListView" IsFooterVisible="True" AllowDelete="False" AllowNew="False">
+      <Columns>
+        <ColumnInfo Id="Order">
+          <Summary>
+            <ColumnSummaryItem Id="Count" SummaryType="Count" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+        <ColumnInfo Id="Total">
+          <Summary>
+            <ColumnSummaryItem Id="Sum" SummaryType="Sum" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+      </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+      </HiddenActions>
+      <Variants Current="Recent">
+        <Variant Id="All" ViewID="Product_OrderItems_ListView" Caption="All" IsNewNode="True" />
+        <Variant Id="Recent" Caption="Recent" ViewID="Recent_OrderItems_ListView" IsNewNode="True" />
+      </Variants>
+    </ListView>
     <ListView Id="Product_QuoteItems_ListView">
       <Columns>
         <ColumnInfo Id="Product" Index="-1" />
@@ -1043,6 +1064,23 @@
       </Layout>
     </DetailView>
     <ListView Id="QuoteMapItem_ListView" DataAccessMode="Client" />
+    <ListView Id="Recent_OrderItems_ListView" Criteria="IsThisMonth([Order.OrderDate]) Or IsLastMonth([Order.OrderDate])" IsFooterVisible="True" AllowDelete="False" AllowNew="False">
+      <Columns>
+        <ColumnInfo Id="Order">
+          <Summary>
+            <ColumnSummaryItem Id="Count" SummaryType="Count" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+        <ColumnInfo Id="Total">
+          <Summary>
+            <ColumnSummaryItem Id="Sum" SummaryType="Sum" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+      </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
+      </HiddenActions>
+    </ListView>
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>
         <LayoutGroup Id="Main">

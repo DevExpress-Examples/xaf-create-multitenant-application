@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.XtraGrid.Views.Base;
-using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Extensions;
 
@@ -41,7 +41,10 @@ namespace OutlookInspired.Win.UserControls
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 CurrentObjectChanged?.Invoke(this, EventArgs.Empty);
             };
-            ColumnView.DoubleClick += (_, _) => ProcessObject?.Invoke(this, EventArgs.Empty);
+            ColumnView.DoubleClick += (_, _) => {
+                if (ColumnView.IsNotGroupedRow())
+                    ProcessObject?.Invoke(this, EventArgs.Empty);
+            };
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataError+=(_, e) => throw new AggregateException(e.DataException.Message,e.DataException);

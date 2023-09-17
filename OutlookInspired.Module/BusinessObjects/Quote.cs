@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Features.ViewFilter;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 

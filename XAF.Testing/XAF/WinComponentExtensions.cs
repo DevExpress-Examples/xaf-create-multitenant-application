@@ -56,7 +56,7 @@ namespace XAF.Testing.XAF{
             => view.WhenEvent<CustomMasterRowEventArgs>(nameof(GridView.MasterRowExpanded))
                 .Select(e => view.GetDetailView(e.RowHandle,e.RelationIndex)).Cast<ColumnView>()
                 .Delay(100.Milliseconds(),new SynchronizationContextScheduler(SynchronizationContext.Current!))
-                .SelectMany(baseView => baseView.DataSource.YieldItems(1).ToObservable())
+                .SelectMany(baseView => baseView.DataSource.YieldItems(1))
                 .Take(view.GridControl.LevelTree.Nodes.Count).BufferUntilCompleted().SelectMany()
                 .MergeToObject(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements());
 
@@ -79,11 +79,12 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<ColumnView> ProcessEvent(this ColumnView columnView, EventType eventType) 
             => columnView.WhenEvent<FocusedRowObjectChangedEventArgs>(nameof(columnView.FocusedRowObjectChanged))
+                .Where(e => columnView.IsNotGroupedRow())
                 .WhenNotDefault(e => e.Row).StartWith(columnView.FocusedRowObject).WhenNotDefault()
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
-                    .SelectMany(_ => columnView.DataSource.YieldItems(2).ToObservable()
+                    .SelectMany(_ => columnView.DataSource.YieldItems(2)
                         .SelectMany(o => {
                             var row = columnView.FindRow(o);
                             columnView.Focus();
@@ -93,11 +94,14 @@ namespace XAF.Testing.XAF{
                             return Observable.Empty<ColumnView>();
                         })));
 
+        public static bool IsNotGroupedRow(this ColumnView columnView) 
+            => columnView is not GridView view|| !view.IsGroupRow(columnView.FocusedRowHandle);
+
         private static BaseViewHandler ViewHandler(this ColumnView columnView) 
             => columnView is LayoutView layoutView ? new LayoutViewHandler(layoutView) : new GridHandler((GridView)columnView);
 
         public static IObservable<object> WhenObjects(this IObservable<GridControl> source,int count=0)
-            => source.SelectMany(control => control.MainView.DataSource.YieldItems(count).ToObservable());
+            => source.SelectMany(control => control.MainView.DataSource.YieldItems(count));
 
     }
 }

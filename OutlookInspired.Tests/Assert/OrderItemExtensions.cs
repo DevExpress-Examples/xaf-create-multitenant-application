@@ -9,7 +9,7 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class OrderItemExtensions{
         internal static IObservable<Unit> AssertNestedOrderItems(this Frame frame, IObservable<TabbedGroup> productTabControl) 
-            => productTabControl.Select(group => group).AssertNestedListView(frame, typeof(OrderItem), 1,assert:AssertAction.AllButDelete);
+            => productTabControl.AssertNestedListView(frame, typeof(OrderItem), 1,assert:AssertAction.HasObject);
         internal static IObservable<Unit> AssertNestedOrderItems(this Frame frame) 
             => frame.AssertNestedListView(typeof(OrderItem), assert:AssertAction.AllButDelete).ToUnit();
         

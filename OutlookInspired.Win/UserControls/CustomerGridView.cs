@@ -1,8 +1,11 @@
 ﻿using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Win.UserControls{
-    public partial class CustomerGridView : ColumnViewUserControl{
-        public CustomerGridView(){
+namespace OutlookInspired.Win.UserControls
+{
+    public partial class CustomerGridView : ColumnViewUserControl
+    {
+        public CustomerGridView()
+        {
             InitializeComponent();
         }
 

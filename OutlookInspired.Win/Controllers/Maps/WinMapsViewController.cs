@@ -4,7 +4,9 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Map.Dashboard;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.Controllers.Maps;
+using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features;
+using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Controllers.Maps{

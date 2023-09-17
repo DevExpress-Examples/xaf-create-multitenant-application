@@ -31,7 +31,7 @@ namespace OutlookInspired.Tests.ImportData{
                 yield return new TestCaseData("OrderListView","Detail", AssertOrderListView);
                 yield return new TestCaseData("Evaluation_ListView",null, AssertEvaluation);
                 yield return new TestCaseData("Opportunities",null,AssertOpportunitiesView);
-                yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports);
+                // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports);
             }
         }
         

@@ -2,11 +2,12 @@ using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     public enum Period{
-        [ImageName("Demo_SalesOverview")]
-        Lifetime,
+        [ImageName("CustomerQuickSales")]
+        ThisMonth,
         [ImageName("SalesAnalysis")]
         ThisYear,
-        [ImageName("CustomerQuickSales")]
-        ThisMonth, FixedDate,
+        [ImageName("Demo_SalesOverview")]
+        Lifetime,
+        FixedDate,
     }
 }

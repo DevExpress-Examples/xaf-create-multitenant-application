@@ -4,6 +4,8 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features;
+using OutlookInspired.Module.Features.ViewFilter;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 

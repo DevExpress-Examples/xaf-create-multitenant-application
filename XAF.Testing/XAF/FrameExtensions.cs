@@ -239,7 +239,8 @@ namespace XAF.Testing.XAF{
         private static IObservable<Frame> ListViewCreateNewObject(this Frame frame) 
             => (frame.View is not DashboardView ? frame.Observe()
                 : frame.DashboardViewItems(ViewType.ListView).Where(item => item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide)
-                    .ToFrame().ToNowObservable()).CreateNewObject();
+                    .ToFrame().ToNowObservable())
+                .CreateNewObject();
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame listViewFrame) 
             => listViewFrame.WhenGridControl()

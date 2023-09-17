@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features.MasterDetail;
 using LambdaExpression = System.Linq.Expressions.LambdaExpression;
 
 namespace OutlookInspired.Module.Services{

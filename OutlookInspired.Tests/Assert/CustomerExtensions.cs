@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers.Customers;
+using OutlookInspired.Module.Features.Customers;
 using OutlookInspired.Tests.ImportData.Extensions;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
@@ -29,10 +29,8 @@ namespace OutlookInspired.Tests.ImportData.Assert{
             => frame.Defer(() => frame.AssertNestedCustomerEmployee()
                     .Concat(source.AssertNestedQuote(frame)).IgnoreElements()
                     .Concat(source.AssertNestedCustomerStore(frame)).IgnoreElements()
-                    .Concat(source.AssertNestedOrder(frame)).IgnoreElements()
-                )
+                    .Concat(source.AssertNestedOrder(frame)).IgnoreElements())
                 .ReplayFirstTake();
-
         
         private static IObservable<Unit> AssertNestedCustomerStore(this IObservable<TabbedGroup> source,Frame frame) 
             => source.AssertNestedListView(frame, typeof(CustomerStore),2,AssertNestedCustomerEmployee,AssertAction.AllButDelete);

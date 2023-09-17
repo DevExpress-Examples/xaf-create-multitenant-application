@@ -1,20 +1,26 @@
 using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using Shouldly;
+using XAF.Testing;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Import{
     public class ImportData:TestBase{
-        [Test][Description("Deletes the sqlsever database if exists and imports from $(SQLiteFilePath)")]
-        // [Ignore("")]
+        [Test]
         public async Task Test(){
             
-            using var application = await SetupWinApplication(application => 
-                application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync(),useServer:false);
+            using var application = await SetupWinApplication(application => {
+                var ensureDeletedAsync = application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database
+                    .EnsureDeletedAsync();
+                return ensureDeletedAsync;
+                return Task.CompletedTask;
+            },useServer:false);
             
-            var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
+            using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
+            // var products = objectSpace.GetObjectsQuery<Product>().Where(product => !product.OrderItems.Any()).ToArray();
             await objectSpace.ImportFromSqlLite();
             objectSpace.Count<Crest>().ShouldBe(20);
             objectSpace.Count<State>().ShouldBe(51);
@@ -35,7 +41,10 @@ namespace OutlookInspired.Tests.ImportData.Import{
             objectSpace.Count<OrderItem>().ShouldBe(14440);
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
+            
+            objectSpace.GenerateOrders();
         }
 
+        
     }
 }

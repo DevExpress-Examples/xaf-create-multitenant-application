@@ -8,13 +8,11 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
 using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public interface IViewFilter{
-        
-    }
 
     [XafDefaultProperty(nameof(Name))]
     public class ViewFilter:BaseObject{

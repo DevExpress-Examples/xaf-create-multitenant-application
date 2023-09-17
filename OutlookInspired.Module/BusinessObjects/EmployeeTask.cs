@@ -6,6 +6,7 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.BusinessObjects{

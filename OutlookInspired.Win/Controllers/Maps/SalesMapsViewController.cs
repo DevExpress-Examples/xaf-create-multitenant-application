@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Chart.Win;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Extensions;
 using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
@@ -54,7 +55,7 @@ namespace OutlookInspired.Win.Controllers.Maps{
             var chartListEditor = (ChartListEditor)View.GetItems<ListPropertyEditor>()
                 .First(editor => editor.ListView?.Editor is ChartListEditor)
                 .HideToolBar().ListView.Editor;
-            chartListEditor.DataSource = _salesMapsMarker.Sales(Period, ((MapItem)_itemsLayer.SelectedItem)?.City);
+            chartListEditor.DataSource = ((MapItem[])_pieChartDataAdapter.DataSource).Where(item => item.City==((MapItem)_itemsLayer.SelectedItem)?.City).ToArray();
             chartListEditor.ChartControl.ApplyColors((KeyColorColorizer)_itemsLayer.Colorizer);
         }
 

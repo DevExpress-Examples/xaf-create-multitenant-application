@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Module.DatabaseUpdate;
@@ -15,8 +16,26 @@ public class Updater : ModuleUpdater {
     public Updater(IObjectSpace objectSpace, Version currentDBVersion) :
         base(objectSpace, currentDBVersion) {
     }
-    
-    
+
+    public override void UpdateDatabaseBeforeUpdateSchema(){
+        base.UpdateDatabaseBeforeUpdateSchema();
+        SynchronizeDatesWithToday();
+    }
+
+    private void SynchronizeDatesWithToday(){
+        new[]{
+                (table: nameof(OutlookInspiredEFCoreDbContext.Orders), column: nameof(Order.OrderDate)),
+                (table: nameof(OutlookInspiredEFCoreDbContext.Quotes), column: nameof(Quote.Date))
+            }
+            .Do(t => CreateCommand($@"
+DECLARE @MostRecentDate DATE = (SELECT MAX({t.column}) FROM {t.table});
+DECLARE @DaysDifference INT = DATEDIFF(DAY, @MostRecentDate, GETDATE());
+
+UPDATE {t.table}
+SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
+").ExecuteNonQuery()).Enumerate();
+    }
+
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
         //string name = "MyName";

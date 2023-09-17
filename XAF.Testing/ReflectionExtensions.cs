@@ -1,5 +1,6 @@
 using System.Collections;
 using System.IO;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
@@ -7,6 +8,7 @@ using DevExpress.Data;
 using DevExpress.Data.Linq;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Utils;
+using XAF.Testing.RX;
 
 namespace XAF.Testing{
     public static class ReflectionExtensions{
@@ -47,15 +49,15 @@ namespace XAF.Testing{
                         &&info.GetParameters().Length==2&& info.GetParameters().Last().ParameterType==typeof(int));
 
         [Obsolete("make it ObserveItems and remove the Take(1) after it")]
-        public static IAsyncEnumerable<object> YieldItems(this object value,int count=0) 
+        public static IObservable<object> YieldItems(this object value,int count=0) 
             => value switch{
-                null => AsyncEnumerable.Empty<object>(),
-                EntityServerModeFrontEnd source => 0.Range(source.Count).Select(i => source[i]).Where(row => row != null).ToAsyncEnumerable().TakeOrOriginal(count),
+                null => Observable.Empty<object>(),
+                EntityServerModeFrontEnd source => 0.Range(source.Count).Select(i => source[i]).Where(row => row != null).ToAsyncEnumerable().TakeOrOriginal(source.Count<count?source.Count:count).ToObservable(),
                 ServerModeSourceAdderRemover source => source.GetType().GetFields(BindingFlags.NonPublic|BindingFlags.Instance)
                     .First(info => typeof(IListServer).IsAssignableFrom(info.FieldType)).GetValue(source).YieldItems(count),
-                EFCoreServerCollection source=>source.QueryableSource.PaginateAsync().TakeOrOriginal(count),
-                IEnumerable source => source.Cast<object>().ToAsyncEnumerable(),
-                _ => value.YieldItem().ToAsyncEnumerable()
+                EFCoreServerCollection source=>source.QueryableSource.PaginateAsync(100>count?count:100).TakeOrOriginal(count).ToObservable(),
+                IEnumerable source => source.Cast<object>().ToNowObservable(),
+                _ => value.YieldItem().ToNowObservable()
             };
 
 

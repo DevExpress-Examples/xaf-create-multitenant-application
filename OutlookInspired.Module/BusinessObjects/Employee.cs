@@ -10,6 +10,9 @@ using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Attributes.Validation;
+using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Features.Maps;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
