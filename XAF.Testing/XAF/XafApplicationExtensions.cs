@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -17,6 +19,23 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{
+        public static bool DbExist(this XafApplication application) {
+            var builder = new SqlConnectionStringBuilder(application.ConnectionString);
+            var initialCatalog = "Initial catalog";
+            var databaseName = builder[initialCatalog].ToString();
+            builder.Remove(initialCatalog);
+            using var sqlConnection = new SqlConnection(builder.ConnectionString);
+            return sqlConnection.DbExists(databaseName);
+        }
+        public static bool DbExists(this IDbConnection dbConnection, string databaseName=null){
+            if (dbConnection.State != ConnectionState.Open) {
+                dbConnection.Open();
+            }
+            using var dbCommand = dbConnection.CreateCommand();
+            dbCommand.CommandText = $"SELECT db_id('{databaseName??dbConnection.Database}')";
+            return dbCommand.ExecuteScalar() != DBNull.Value;
+        }
+
         public static IObservable<(ListView listView, XafApplication application)> WhenListViewCreated(this IObservable<XafApplication> source,Type objectType=null) 
             => source.SelectMany(application => application.WhenListViewCreated(objectType).Pair(application));
 

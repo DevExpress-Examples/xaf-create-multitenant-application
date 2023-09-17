@@ -19,9 +19,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
             options.UseSqlServer(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             return true;
         });
-        if (useMiddleTier){
-            builder.AddSecurity();
-        }
+        builder.AddSecurity(useMiddleTier);
         builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
         return builder.Build();
     }

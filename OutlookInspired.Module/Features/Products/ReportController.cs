@@ -4,9 +4,9 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
+using static OutlookInspired.Module.Services.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Products{
     public class ReportController:ViewController{
@@ -16,10 +16,10 @@ namespace OutlookInspired.Module.Features.Products{
             ReportAction = new SingleChoiceAction(this, ReportActionId, PredefinedCategory.Reports){
                 ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.RequireMultipleObjects,PaintStyle = ActionItemPaintStyle.Image,
                 Items ={
-                    new ChoiceActionItem("Sales","Sales"){ImageName ="CustomerQuickSales"},
-                    new ChoiceActionItem("Shippments","Orders"){ImageName = "ProductQuickShippments"},
-                    new ChoiceActionItem("Comparisons","Profile"){ImageName = "ProductQuickComparisons"},
-                    new ChoiceActionItem("Top Sales Person","Top Sales Person"){ImageName = "ProductQuicTopSalesperson"}
+                    new ChoiceActionItem("Sales",Sales){ImageName ="CustomerQuickSales"},
+                    new ChoiceActionItem("Shippments",OrdersReport){ImageName = "ProductQuickShippments"},
+                    new ChoiceActionItem("Comparisons",ProductProfile){ImageName = "ProductQuickComparisons"},
+                    new ChoiceActionItem("Top Sales Person",TopSalesPerson){ImageName = "ProductQuicTopSalesperson"}
                 },
                 ItemType = SingleChoiceActionItemType.ItemIsOperation
             };
@@ -29,7 +29,7 @@ namespace OutlookInspired.Module.Features.Products{
         public SingleChoiceAction ReportAction{ get; }
 
         private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e) 
-            => ReportAction.ShowReportPreview((string)ReportAction.SelectedItem.Data=="Profile"?CriteriaOperator.FromLambda<Product>(
+            => ReportAction.ShowReportPreview((string)ReportAction.SelectedItem.Data==ProductProfile?CriteriaOperator.FromLambda<Product>(
                 product => product.ID == ((Product)View.CurrentObject).ID):CriteriaOperator.FromLambda<OrderItem>(
                 orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
 

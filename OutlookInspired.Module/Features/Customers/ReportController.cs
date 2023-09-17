@@ -4,9 +4,9 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
+using static OutlookInspired.Module.Services.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Customers{
     public class ReportController:ViewController{
@@ -16,9 +16,9 @@ namespace OutlookInspired.Module.Features.Customers{
             ReportAction = new SingleChoiceAction(this, ReportActionId, PredefinedCategory.Reports){
                 ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.RequireSingleObject,PaintStyle = ActionItemPaintStyle.Image,
                 Items ={
-                    new ChoiceActionItem("Sales","Sales Summary Report"){ImageName ="CustomerQuickSales"},
-                    new ChoiceActionItem("Employees","Contacts"){ImageName = "EmployeeProfile"},
-                    new ChoiceActionItem("Locations","Locations"){ImageName = "CustomerQuickLocations"}
+                    new ChoiceActionItem("Sales",SalesSummaryReport){ImageName ="CustomerQuickSales"},
+                    new ChoiceActionItem("Employees",Contacts){ImageName = "EmployeeProfile"},
+                    new ChoiceActionItem("Locations",LocationsReport){ImageName = "CustomerQuickLocations"}
                 },
                 ItemType = SingleChoiceActionItemType.ItemIsOperation
             };

@@ -4,9 +4,10 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
+using static OutlookInspired.Module.DatabaseUpdate.Updater;
+using static OutlookInspired.Module.Services.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Orders{
     public class ReportController:ViewController{
@@ -17,10 +18,10 @@ namespace OutlookInspired.Module.Features.Orders{
                 ImageName = "BO_Report", SelectionDependencyType = SelectionDependencyType.RequireSingleObject,PaintStyle = ActionItemPaintStyle.Image,
                 Items ={
                     new ChoiceActionItem("Revenue",null){ImageName ="CostAnalysis", Items ={
-                        new ChoiceActionItem("Report", "Revenue Report"){ImageName = "CustomerProfileReport"},
-                        new ChoiceActionItem("Analysis", "Revenue Analysis"){ImageName = "SalesAnalysis"}
+                        new ChoiceActionItem("Report", RevenueReport){ImageName = "CustomerProfileReport"},
+                        new ChoiceActionItem("Analysis", RevenueAnalysis){ImageName = "SalesAnalysis"}
                     }},
-                    new ChoiceActionItem("Report","Order"){ImageName = "CustomerProfileReport"}
+                    new ChoiceActionItem("Report",MailMergeOrder){ImageName = "CustomerProfileReport"}
                 },
                 ItemType = SingleChoiceActionItemType.ItemIsOperation
             };

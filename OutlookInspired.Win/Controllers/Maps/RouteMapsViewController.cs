@@ -4,7 +4,6 @@ using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;

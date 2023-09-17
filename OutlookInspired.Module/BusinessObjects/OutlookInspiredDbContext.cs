@@ -73,6 +73,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Customer>().Property(customer => customer.AnnualRevenue).HasConversion<double>();
+        modelBuilder.Entity<ApplicationUser>().ToTable(nameof(ApplicationUser));
         modelBuilder.OnProductImage()
 	        .OnTaskAttachedFile()
 	        .OnEvaluation()
@@ -162,7 +163,6 @@ static class ModelCreating{
 	    modelBuilder.Entity<Product>().HasMany(p => p.QuoteItems).WithOne(qi => qi.Product).HasForeignKey(qi => qi.ProductId)
 		    .OnDelete(DeleteBehavior.Cascade);
 	    return modelBuilder;
-
     }
 
 	internal static ModelBuilder OnOrder(this ModelBuilder modelBuilder){
@@ -198,6 +198,7 @@ static class ModelCreating{
 
 	internal static ModelBuilder OnEmployee(this ModelBuilder modelBuilder){
 	    var employee = modelBuilder.Entity<Employee>();
+	    employee.ToTable(nameof(Employee));
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
 	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);

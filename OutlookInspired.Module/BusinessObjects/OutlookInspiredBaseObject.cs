@@ -3,17 +3,18 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.ConditionalAppearance;
-using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.BaseImpl.EF;
+using OutlookInspired.Module.Attributes.Appearance;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    public interface IOutlookInspiredBaseObject{
-        long IdInt64{ get; set; }
-    }
-
-    [Appearance("Hide ShowInDocument",AppearanceItemType.Action, "1=1",TargetItems = "ShowInDocument",Visibility = ViewItemVisibility.Hide,Context = "Any;Employee_ListView;"+Employee.LayoutViewDetailView)]
-    public abstract class OutlookInspiredBaseObject:BaseObject, IOutlookInspiredBaseObject{
+    [DeactivateAction("ShowInDocument",Context = "Any;Employee_ListView;" + Employee.LayoutViewDetailView)]
+    [DeactivateAction("Save", "SaveAndClose", "SaveAndNew", "ShowAllContexts", "NextObject", "PreviousObject",
+        Context = Customer.GridViewDetailView + ";" + Customer.LayoutViewDetailView + ";" +
+                  Employee.LayoutViewDetailView + ";" + Product.CardViewDetailView + ";" + Order.GridViewDetailView)]
+    [DeactivateAction("OpenObject",
+        Context = Customer.MapsDetailView + ";" + Employee.MapsDetailView + ";" + Product.MapsDetailView + ";" +
+                                              Order.MapsDetailView + ";" + Quote.MapsDetailView)]
+    public abstract class OutlookInspiredBaseObject:BaseObject{
         [Browsable(false)]
         public virtual long IdInt64{ get; set; }
 

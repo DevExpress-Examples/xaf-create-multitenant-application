@@ -6,7 +6,7 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
+using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Customers;
 using OutlookInspired.Module.Features.Employees;
@@ -87,7 +87,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
     
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    updaters.Add(new CloneViewUpdater(), new MasterDetailUpdater(), new MapsUpdater(), new DataAccessModeUpdater());
+	    updaters.Add(new CloneViewUpdater(),  new DataAccessModeUpdater());
     }
 }
 

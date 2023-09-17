@@ -13,13 +13,7 @@ using OutlookInspired.Win.Controllers.Quotes;
 namespace OutlookInspired.Win;
 
 [ToolboxItemFilter("Xaf.Platform.Win")]
-// For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.ModuleBase.
 public sealed class OutlookInspiredWinModule : ModuleBase {
-    //private void Application_CreateCustomModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
-    //    e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), true, "Win");
-    //    e.Handled = true;
-    //}
-
     private void Application_CreateCustomUserModelDifferenceStore(object sender, CreateCustomModelDifferenceStoreEventArgs e) {
         e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Win");
         e.Handled = true;
@@ -38,7 +32,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(WinMapsController),typeof(PaletteEntriesController),typeof(ChildViewCriteriaController),
             typeof(RouteMapsViewController), typeof(SalesMapsViewController),
             typeof(PropertyEditorController), typeof(MapItemController), 
-            typeof(DisableSkinsController), typeof(SplitterPositionController)
+            typeof(DisableSkinsController), typeof(SplitterPositionController),typeof(ShowInDocumentController1)
         };
 
     public override void Setup(XafApplication application) {

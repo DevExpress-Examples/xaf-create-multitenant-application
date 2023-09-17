@@ -4,6 +4,9 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
     internal static class EnumerableExtensions{
+        public static IEnumerable<T> To<T>(this IEnumerable<object> source) 
+            => source.Select(o =>o is T arg? arg: default);
+        
         public static IEnumerable<T> SwitchIfEmpty<T>(this IEnumerable<T> source, T defaultValue){
             return _();
             IEnumerable<T> _(){

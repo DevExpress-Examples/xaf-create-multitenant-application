@@ -22,10 +22,13 @@ namespace OutlookInspired.Tests.ImportData{
             }
             else{
                 builder.AddObjectSpaceProviders();
-                builder.AddSecurity();
+                builder.AddSecurity(true);
                 builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
             }
             var application = builder.Build();
+            if (application is ILegacyImport legacyImport){
+                legacyImport.Importing = true;
+            }
             application.DeleteModelDiffs(connectionString,nameof(OutlookInspiredEFCoreDbContext.ModelDifferences),nameof(OutlookInspiredEFCoreDbContext.ModelDifferenceAspects));
             application.SplashScreen = null;  
             if (beforeSetup != null){

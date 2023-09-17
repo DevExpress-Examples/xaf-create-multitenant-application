@@ -2,13 +2,12 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Attributes.Appearance;
 using OutlookInspired.Module.Attributes.Validation;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
@@ -24,11 +23,14 @@ namespace OutlookInspired.Module.BusinessObjects{
 	[CloneView(CloneViewType.DetailView, ChildDetailView)]
 	[CloneView(CloneViewType.DetailView, MapsDetailView)]
 	[VisibleInReports(true)]
+	[ForbidDelete()]
 	public class Employee :OutlookInspiredBaseObject,IViewFilter,IObjectSpaceLink,IResource,ITravelModeMapsMarker{
 		public const string MapsDetailView = "Employee_DetailView_Maps";
 		public const string ChildDetailView = "Employee_DetailView_Child";
 		public const string LayoutViewDetailView = "EmployeeLayoutView_DetailView";
-
+		
+		[NotMapped][Browsable(false)]
+		public new IObjectSpace ObjectSpace{ get; set; }
 		[VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
 		public object Id => ID;
 
@@ -114,13 +116,18 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[Browsable(false)]
 		public virtual Guid? ProbationReasonId{ get; set; }
 
-		public override void OnSaving(){
-            if (ObjectSpace.IsObjectToDelete(this)){
-				ObjectSpace.Delete(Products);
-				ObjectSpace.Delete(SupportedProducts);	
-				ObjectSpace.Delete(AssignedTasks);	
-				ObjectSpace.Delete(OwnedTasks);	
-			}
+		public override void OnCreated(){
+			base.OnCreated();
+			// Roles.Add(ObjectSpace.EnsureDefaultRole());
+		}
+
+		public override void OnSaving() => UpdateRole();
+
+		private void UpdateRole(){
+			// if (Roles.Any(role => role.Name == Department.ToString())) return;
+			// Roles.Where(role => role.Name != "Default").ToArray()
+				// .Do(role => Roles.Remove(role)).Enumerate();
+			// Roles.Add(ObjectSpace.FindRole(Department));
 		}
 
 		[NotMapped]
@@ -132,6 +139,9 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[NotMapped][VisibleInListView(false)][VisibleInDetailView(false)][VisibleInLookupListView(false)]
 		[FontSizeDelta(2)]
 		public virtual string RouteResult{ get; set; }
+
+		[Browsable(false)][RuleRequiredField]
+		public virtual ApplicationUser User{ get; set; }
 	}
 
 	public enum EmployeeDepartment {

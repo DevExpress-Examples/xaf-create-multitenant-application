@@ -7,31 +7,56 @@ using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
+using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Extensions{
     public static class ApplicationBuilder{
-        public static void AddSecurity(this IWinApplicationBuilder builder)
+        public static void AddSecurity(this IWinApplicationBuilder builder, bool useMiddleTier){
+            if (!useMiddleTier){
+                builder.AddIntegratedModeSecurity();
+            }
+            else{
+                builder.UseMiddleTierModeSecurity().UsePasswordAuthentication();    
+            }
+        }
+
+        private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder) 
             => builder.Security.UseMiddleTierMode(options => {
-                    options.BaseAddress = new Uri("https://localhost:5001/");
-                    options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    options.Events.OnCustomAuthenticate = (_, _, args) => {
-                        args.Handled = true;
-                        var msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate", (AuthenticationStandardLogonParameters)args.LogonParameters).GetAwaiter().GetResult();
-                        var token = (string)msg.Content.ReadFromJsonAsync(typeof(string)).GetAwaiter().GetResult();
-                        if(msg.StatusCode == HttpStatusCode.Unauthorized) {
-                            throw new UserFriendlyException(token);
-                        }
-                        msg.EnsureSuccessStatusCode();
-                        args.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-                    };
+                options.BaseAddress = new Uri("https://localhost:5001/");
+                options.Events.OnHttpClientCreated = client =>
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                options.Events.OnCustomAuthenticate = (_, _, args) => {
+                    args.Handled = true;
+                    var msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate",
+                        (AuthenticationStandardLogonParameters)args.LogonParameters).GetAwaiter().GetResult();
+                    var token = (string)msg.Content.ReadFromJsonAsync(typeof(string)).GetAwaiter().GetResult();
+                    if (msg.StatusCode == HttpStatusCode.Unauthorized){
+                        throw new UserFriendlyException(token);
+                    }
+
+                    msg.EnsureSuccessStatusCode();
+                    args.HttpClient.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("bearer", token);
+                };
+            });
+
+        private static void AddIntegratedModeSecurity(this IWinApplicationBuilder builder) 
+            => builder.Security
+                .UseIntegratedMode(options => {
+                    options.RoleType = typeof(PermissionPolicyRole);
+                    options.UserType = typeof(ApplicationUser);
+                    options.UserLoginInfoType = typeof(ApplicationUserLoginInfo);
+                    options.Events.OnSecurityStrategyCreated += securityStrategy =>
+                        ((SecurityStrategy)securityStrategy).PermissionsReloadMode = PermissionsReloadMode.NoCache;
                 })
                 .UsePasswordAuthentication();
 
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,Func<DbContextOptionsBuilder,bool> configure=null) 
             => builder.ObjectSpaceProviders
                 .AddEFCore(options => options.PreFetchReferenceProperties())
-                .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((application, options) => {
+                .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     if (!(configure?.Invoke(options) ?? false)){
@@ -67,7 +92,7 @@ namespace OutlookInspired.Win.Extensions{
 
         [Obsolete]
         private static void OptionsRichTextMailMergeDataType(OfficeOptions options){
-            // options.RichTextMailMergeDataType=typeof(RichTextMailMergeData);
+            options.RichTextMailMergeDataType=typeof(RichTextMailMergeData);
         }
     }
 }

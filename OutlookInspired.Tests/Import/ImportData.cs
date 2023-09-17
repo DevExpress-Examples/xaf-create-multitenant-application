@@ -19,9 +19,10 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 return Task.CompletedTask;
             },useServer:false);
             
+            
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
-            // var products = objectSpace.GetObjectsQuery<Product>().Where(product => !product.OrderItems.Any()).ToArray();
             await objectSpace.ImportFromSqlLite();
+            objectSpace.CommitChanges();
             objectSpace.Count<Crest>().ShouldBe(20);
             objectSpace.Count<State>().ShouldBe(51);
             objectSpace.Count<Customer>().ShouldBe(20);
@@ -42,7 +43,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
             
-            objectSpace.GenerateOrders();
+            // objectSpace.GenerateOrders();
         }
 
         

@@ -1,12 +1,11 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.ComponentModel;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Win.Utils;
 
 namespace OutlookInspired.Win;
-
-// For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Win.WinApplication._members
-public class OutlookInspiredWindowsFormsApplication : WinApplication {
+public class OutlookInspiredWindowsFormsApplication : WinApplication{
     public OutlookInspiredWindowsFormsApplication() {
 		SplashScreen = new DXSplashScreen(typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
         ApplicationName = "OutlookInspired";
@@ -15,7 +14,6 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication {
         DatabaseVersionMismatch += OutlookInspiredWindowsFormsApplication_DatabaseVersionMismatch;
         CustomizeLanguagesList += OutlookInspiredWindowsFormsApplication_CustomizeLanguagesList;
     }
-    
     
     private void OutlookInspiredWindowsFormsApplication_CustomizeLanguagesList(object sender, CustomizeLanguagesListEventArgs e) {
         string userLanguageName = Thread.CurrentThread.CurrentUICulture.Name;
@@ -38,4 +36,11 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication {
 		}
 		throw new InvalidOperationException(message);
 	}
+
+    [Browsable(false)]
+    public bool Importing{ get; set; }
+}
+[Obsolete]
+public interface ILegacyImport{
+	bool Importing{ get; set; }
 }

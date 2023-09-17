@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.BaseImpl.EF;
@@ -28,7 +29,8 @@ namespace OutlookInspired.Tests.ImportData.Import{
                     .Merge(objectSpace.ImportEmployee(sqliteContext)
                         .CommitAndConcat(objectSpace, () => objectSpace.EmployeeDependent(sqliteContext, objectSpace.ProductDependent(sqliteContext))))
                     .CommitAndConcat(objectSpace, () => objectSpace.EmployeeStoreDependent(sqliteContext, objectSpace.CustomerEmployeeDependent(sqliteContext))))
-                .Finally(objectSpace.CommitChanges);
+                .Finally(objectSpace.CommitChanges)
+            ;
 
         private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAvDb sqliteContext, IObservable<Unit> customerEmployeeDependent)
             => objectSpace.ImportCustomerEmployee(sqliteContext)
@@ -83,6 +85,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
                     employee.HireDate = sqlLite.HireDate;
                     employee.HomePhone = sqlLite.HomePhone;
                     employee.LastName = sqlLite.LastName;
+                    // employee.UserName = employee.FirstName.ToLower().Concat(employee.LastName.ToLower().Take(1)).StringJoin("");
                     employee.MobilePhone = sqlLite.MobilePhone;
                     employee.PersonalProfile = sqlLite.PersonalProfile;
                     employee.ProbationReason = objectSpace.FindSqlLiteObject<Probation>(sqlLite.ProbationReason?.Id);
@@ -90,7 +93,7 @@ namespace OutlookInspired.Tests.ImportData.Import{
                 }).ToUnit();
 
 
-        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : IOutlookInspiredBaseObject{
+        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : OutlookInspiredBaseObject{
             var baseObject = objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
             if (id.HasValue && baseObject == null){
                 throw new NotImplementedException(typeof(T).Name);

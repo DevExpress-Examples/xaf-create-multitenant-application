@@ -24,12 +24,15 @@ namespace XAF.Testing.XAF{
             );
         
         public static void DeleteModelDiffs(this WinApplication application,string connectionString,string modelDifferenceTableName,string modelDifferenceAspectTableName){
-            using var sqlConnection = new SqlConnection(connectionString);
-            sqlConnection.Open();
-            using var sqlCommand = sqlConnection.CreateCommand();
-            sqlCommand.CommandText=new[]{modelDifferenceTableName,modelDifferenceAspectTableName}
-                .Select(table => $"Delete FROM {table};").StringJoin("");
-            sqlCommand.ExecuteNonQuery();
+            application.ConnectionString=connectionString;
+            if (application.DbExist()){
+                using var sqlConnection = new SqlConnection(connectionString);
+                sqlConnection.Open();
+                using var sqlCommand = sqlConnection.CreateCommand();
+                sqlCommand.CommandText=new[]{modelDifferenceTableName,modelDifferenceAspectTableName}
+                    .Select(table => $"IF OBJECT_ID('{table}', 'U') IS NOT NULL Delete FROM {table};").StringJoin("");
+                sqlCommand.ExecuteNonQuery();    
+            }
         }
 
         public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 

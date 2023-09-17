@@ -3,8 +3,8 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features.Maps;
+using static OutlookInspired.Module.DatabaseUpdate.Updater;
 
 namespace OutlookInspired.Module.Features.Customers{
     public class MailMergeController:ObjectViewController<ObjectView,Employee>{
@@ -25,11 +25,11 @@ namespace OutlookInspired.Module.Features.Customers{
             if (e.ChangedItemsInfo.All(pair => pair.Value == ChoiceActionItemChangesType.ItemsAdd)){
                 ((SingleChoiceAction)sender).Items.ForEach(item => item.ImageName = ((MailMergeDataInfo)item.Data).DisplayName 
                     switch{
-                        "Month Award" => "EmployeeQuickAward",
-                        "Probation Notice" => "EmployeeQuickProbationNotice",
-                        "Service Excellence" => "EmployeeQuickExellece",
-                        "Thank You Note" => "ThankYouNote",
-                        "Welcome to DevAV" => "EmployeeQuickWelcome",
+                        MonthAward => "EmployeeQuickAward",
+                        ProbationNotice => "EmployeeQuickProbationNotice",
+                        ServiceExcellence => "EmployeeQuickExellece",
+                        ThankYouNote => "ThankYouNote",
+                        WelcomeToDevAV => "EmployeeQuickWelcome",
                         _ => item.ImageName
                     });
             }

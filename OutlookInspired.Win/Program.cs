@@ -23,9 +23,7 @@ static class Program {
             Tracing.LocalUserAppDataPath = Application.LocalUserAppDataPath;
         }
         Tracing.Initialize();
-
-        var winApplication = ApplicationBuilder.BuildApplication(false);
-
+        var winApplication = ApplicationBuilder.BuildApplication(true);
         try {
             winApplication.Setup();
             winApplication.Start();

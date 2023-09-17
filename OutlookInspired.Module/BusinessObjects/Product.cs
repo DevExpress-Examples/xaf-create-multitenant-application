@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Attributes.Appearance;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
@@ -70,6 +71,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         double IBaseMapsMarker.Latitude => throw new NotImplementedException();
         double IBaseMapsMarker.Longitude => throw new NotImplementedException();
         [InverseProperty(nameof(OrderItem.Product))][Aggregated]
+        
         public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
 
 

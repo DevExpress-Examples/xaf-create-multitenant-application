@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;

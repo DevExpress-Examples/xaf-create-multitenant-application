@@ -6,26 +6,36 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Resources.Reports;
 
 namespace OutlookInspired.Module.Services;
-static class ReportsExtensions {
+static class ReportsExtensions{
+    public const string RevenueReport = "Revenue Report";
+    public const string RevenueAnalysis = "Revenue Analysis";
+    public const string Contacts = "Contacts";
+    public const string LocationsReport = "Locations";
+    public const string SalesSummaryReport = "Sales Summary Report";
+    public const string CustomerProfile = "Profile";
+    public const string OrdersReport = "Orders";
+    public const string ProductProfile = "Profile";
+    public const string Sales = "Sales";
+    public const string TopSalesPerson = "Top Sales Person";
     public static PredefinedReportsUpdater AddOrderReports(this PredefinedReportsUpdater predefinedReportsUpdater){
         predefinedReportsUpdater.AddPredefinedReport<FedExGroundLabel>(nameof(FedExGroundLabel), typeof(Order));
-        predefinedReportsUpdater.AddPredefinedReport<SalesRevenueReport>("Revenue Report", typeof(Order));
-        predefinedReportsUpdater.AddPredefinedReport<SalesRevenueAnalysisReport>("Revenue Analysis", typeof(Order));
+        predefinedReportsUpdater.AddPredefinedReport<SalesRevenueReport>(RevenueReport, typeof(Order));
+        predefinedReportsUpdater.AddPredefinedReport<SalesRevenueAnalysisReport>(RevenueAnalysis, typeof(Order));
         return predefinedReportsUpdater;
     }
 
     public static PredefinedReportsUpdater AddCustomerReports(this PredefinedReportsUpdater predefinedReportsUpdater){
-        predefinedReportsUpdater.AddPredefinedReport<CustomerContactsDirectory>("Contacts", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerLocationsDirectory>("Locations", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerSalesSummaryReport>("Sales Summary Report", typeof(Customer));
-        predefinedReportsUpdater.AddPredefinedReport<CustomerProfile>("Profile", typeof(Customer));
+        predefinedReportsUpdater.AddPredefinedReport<CustomerContactsDirectory>(Contacts, typeof(Customer));
+        predefinedReportsUpdater.AddPredefinedReport<CustomerLocationsDirectory>(LocationsReport, typeof(Customer));
+        predefinedReportsUpdater.AddPredefinedReport<CustomerSalesSummaryReport>(SalesSummaryReport, typeof(Customer));
+        predefinedReportsUpdater.AddPredefinedReport<CustomerProfile>(CustomerProfile, typeof(Customer));
         return predefinedReportsUpdater;
     }
     public static PredefinedReportsUpdater AddProductReports(this PredefinedReportsUpdater predefinedReportsUpdater){
-        predefinedReportsUpdater.AddPredefinedReport<ProductOrders>("Orders", typeof(Product));
-        predefinedReportsUpdater.AddPredefinedReport<ProductProfile>("Profile", typeof(Product));
-        predefinedReportsUpdater.AddPredefinedReport<ProductSalesSummary>("Sales", typeof(Product));
-        predefinedReportsUpdater.AddPredefinedReport<ProductTopSalesperson>("Top Sales Person", typeof(Product));
+        predefinedReportsUpdater.AddPredefinedReport<ProductOrders>(OrdersReport, typeof(Product));
+        predefinedReportsUpdater.AddPredefinedReport<ProductProfile>(ProductProfile, typeof(Product));
+        predefinedReportsUpdater.AddPredefinedReport<ProductSalesSummary>(Sales, typeof(Product));
+        predefinedReportsUpdater.AddPredefinedReport<ProductTopSalesperson>(TopSalesPerson, typeof(Product));
         return predefinedReportsUpdater;
     }
     

@@ -977,7 +977,7 @@
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
     </ListView>
-    <ListView Id="Product_OrderItems_ListView" IsFooterVisible="True" AllowDelete="False" AllowNew="False">
+    <ListView Id="Product_OrderItems_ListView" IsFooterVisible="True" >
       <Columns>
         <ColumnInfo Id="Order">
           <Summary>
@@ -990,9 +990,6 @@
           </Summary>
         </ColumnInfo>
       </Columns>
-      <HiddenActions>
-        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
-      </HiddenActions>
       <Variants Current="Recent">
         <Variant Id="All" ViewID="Product_OrderItems_ListView" Caption="All" IsNewNode="True" />
         <Variant Id="Recent" Caption="Recent" ViewID="Recent_OrderItems_ListView" IsNewNode="True" />
@@ -1064,7 +1061,7 @@
       </Layout>
     </DetailView>
     <ListView Id="QuoteMapItem_ListView" DataAccessMode="Client" />
-    <ListView Id="Recent_OrderItems_ListView" Criteria="IsThisMonth([Order.OrderDate]) Or IsLastMonth([Order.OrderDate])" IsFooterVisible="True" AllowDelete="False" AllowNew="False">
+    <ListView Id="Recent_OrderItems_ListView" Criteria="IsThisMonth([Order.OrderDate]) Or IsLastMonth([Order.OrderDate])" IsFooterVisible="True" >
       <Columns>
         <ColumnInfo Id="Order">
           <Summary>
@@ -1077,9 +1074,6 @@
           </Summary>
         </ColumnInfo>
       </Columns>
-      <HiddenActions>
-        <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
-      </HiddenActions>
     </ListView>
     <DetailView Id="ReportDataV2_DetailView">
       <Layout>
