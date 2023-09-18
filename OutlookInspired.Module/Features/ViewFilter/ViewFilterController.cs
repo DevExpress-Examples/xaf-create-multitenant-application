@@ -1,11 +1,12 @@
-﻿using DevExpress.Data.Filtering;
+﻿using System.ComponentModel;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.ViewFilter{
     public class ViewFilterController:ObjectViewController<ObjectView,IViewFilter>{
@@ -37,7 +38,6 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             CreateViewFilterListView(e.ShowViewParameters);
             AddDialogController(e.ShowViewParameters);
             return true;
-
         }
 
         private void AddDialogController(ShowViewParameters showViewParameters){
@@ -60,14 +60,44 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             showViewParameters.TargetWindow=TargetWindow.NewModalWindow;
             showViewParameters.CreatedView=listView;
         }
-
+        
+        protected override void OnDeactivated(){
+            base.OnDeactivated();
+            Application.ObjectSpaceCreated-=ApplicationOnObjectSpaceCreated;
+        }
+        
         protected override void OnActivated(){
             base.OnActivated();
-            FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame&&Frame.View.IsRoot;
+            if (!(FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame&&Frame.View.IsRoot))return;
+            AddFilterItems();
+            Application.ObjectSpaceCreated+=ApplicationOnObjectSpaceCreated;
+        }
+
+        private void ApplicationOnObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e){
+            e.ObjectSpace.Committing+=ObjectSpaceOnCommitting;
+            e.ObjectSpace.Disposed+=ObjectSpaceOnDisposed;
+        }
+
+        private void ObjectSpaceOnDisposed(object sender, EventArgs e){
+            ((IObjectSpace)sender).Committing-=ObjectSpaceOnCommitting;
+        }
+
+        private void ObjectSpaceOnCommitting(object sender, CancelEventArgs e){
+            var objectSpace = ((IObjectSpace)sender);
+            if (objectSpace.ModifiedObjects.Cast<object>().OfType<IViewFilter>().Any()){
+                objectSpace.Committed+=OnCommitted;    
+            }
+        }
+
+        private void OnCommitted(object sender, EventArgs e){
+            ((IObjectSpace)sender).Committed-=ObjectSpaceOnCommitted;
             AddFilterItems();
         }
 
-        private void AddFilterItems(){
+
+        private void ObjectSpaceOnCommitted(object sender, EventArgs e) => AddFilterItems();
+
+        public void AddFilterItems(){
             FilterAction.Items.Clear();
             var viewCriteria =View is ListView listView? listView.CollectionSource.GetTotalCriteria():null;
             FilterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),

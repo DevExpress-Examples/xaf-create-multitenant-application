@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
-using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
+using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
 namespace OutlookInspired.Win.Editors {
     [PropertyEditor(typeof(int), EditorAliases.ProgressEditor, false)]

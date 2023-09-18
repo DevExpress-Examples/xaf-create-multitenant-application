@@ -14,12 +14,18 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraMap;
 using DevExpress.XtraPivotGrid;
 using OutlookInspired.Module.Attributes;
-using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 using IColorizer = DevExpress.XtraCharts.IColorizer;
 using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
 
-namespace OutlookInspired.Win.Extensions{
-    public static class Extensions{
+namespace OutlookInspired.Win.Extensions.Internal{
+    internal static class Extensions{
+        public static void ProtectDetailViews(this XafApplication application, GridControl gridControl,Type objectType) 
+            => gridControl.LevelTree.Nodes.ToArray()
+                .Where(node => !application.CanRead(application.TypesInfo.FindTypeInfo(objectType).FindMember(node.RelationName).ListElementType))
+                .Do(node => gridControl.LevelTree.Nodes.Remove(node))
+                .Enumerate();
+
         public static ChartControl ApplyColors(this ChartControl chartControl,KeyColorColorizer colorizer){
             colorizer.Colors.Clear();
             colorizer.Colors.BeginUpdate();
@@ -64,13 +70,9 @@ namespace OutlookInspired.Win.Extensions{
         public static GeoPoint ToGeoPoint(this IMapsMarker mapsMarker) 
             => new(mapsMarker.Latitude, mapsMarker.Longitude);
         
-        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType){
-            if ((columnView.FocusedRowObject == null || !columnView.IsServerMode))
-                return columnView.FocusedRowObject;
-            else if (columnView.IsNotGroupedRow())
-                return objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
-            return null;
-        }
+        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
+            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject :
+            columnView.IsNotGroupedRow() ? objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject) : null;
 
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)

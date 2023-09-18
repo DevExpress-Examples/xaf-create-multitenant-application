@@ -52,13 +52,14 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenDataSourceChanged(this GridControl gridControl) 
             => gridControl.WhenEvent(nameof(GridControl.DataSourceChanged));
 
-        public static IObservable<object> WhenGridDetailViewObjects(this GridView view) 
+        public static IObservable<(ColumnView columnView,object value)> WhenGridDetailViewObjects(this GridView view,Func<ColumnView,int> count=null) 
             => view.WhenEvent<CustomMasterRowEventArgs>(nameof(GridView.MasterRowExpanded))
-                .Select(e => view.GetDetailView(e.RowHandle,e.RelationIndex)).Cast<ColumnView>()
-                .Delay(100.Milliseconds(),new SynchronizationContextScheduler(SynchronizationContext.Current!))
-                .SelectMany(baseView => baseView.DataSource.YieldItems(1))
+                .Select(e => view.GetDetailView(e.RowHandle, e.RelationIndex)).Cast<ColumnView>()
+                .Delay(100.Milliseconds(), new SynchronizationContextScheduler(SynchronizationContext.Current!))
+                .SelectMany(baseView => baseView.DataSource.YieldItems(count?.Invoke(baseView)??0).Select(o => (baseView, o)))
                 .Take(view.GridControl.LevelTree.Nodes.Count).BufferUntilCompleted().SelectMany()
-                .MergeToObject(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements());
+                .Merge(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements()
+                    .To<(ColumnView baseView, object value)>());
 
         public static void RecursiveExpandAndFocus(this GridView masterView, int masterRowHandle){
             var relationCount = masterView.GetRelationCount(masterRowHandle);

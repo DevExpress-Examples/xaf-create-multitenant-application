@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp.SystemModule;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class ControllerExtensions{
         public static void UseObjectDefaultDetailView(this NewObjectViewController controller){
             void Handler(object sender, CreateCustomDetailViewEventArgs e){

@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Pdf;
@@ -8,7 +7,7 @@ using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Resources.Reports;
 
-namespace OutlookInspired.Module.Services;
+namespace OutlookInspired.Module.Services.Internal;
 static class ReportsExtensions{
     public const string RevenueReport = "Revenue Report";
     public const string RevenueAnalysis = "Revenue Analysis";
@@ -21,21 +20,10 @@ static class ReportsExtensions{
     public const string Sales = "Sales";
     public const string TopSalesPerson = "Top Sales Person";
     public const string FedExGroundLabel = nameof(FedExGroundLabel);
-    public static void ApplyReportProtection(this SingleChoiceAction action,Func<ChoiceActionItem,bool> match) 
+    public static void ApplyReportProtection(this SingleChoiceAction action,Func<ChoiceActionItem,bool> match=null) 
         => action.Items.SelectManyRecursive(item => item.Items)
-            .WhereNotDefault(item => item.Data).Where(match)
-            .Do(item => item.Enabled[nameof(ApplyReportProtection)] = action.View().ObjectSpace.GetObjectsQuery<ReportDataV2>()
-                .Any(v2 => v2.DisplayName == (string)item.Data))
-            .Enumerate();
-
-    public static void DisableReportItems(this SingleChoiceAction singleChoiceAction) 
-        => singleChoiceAction.Items.WhereNotDefault(item => item.Data)
-            .Do(item => {
-                item.Active["not exist"] =
-                    singleChoiceAction.View().ObjectSpace.GetObjectsQuery<ReportDataV2>()
-                        .Any(v2 => v2.DisplayName == (string)item.Data);
-                item.Active["not exist"] = item.Active["not exist"];
-            })
+            .WhereNotDefault(item => item.Data).Where(item => match?.Invoke(item)??true)
+            .Do(item => item.Active[nameof(ApplyReportProtection)] = action.CanRead<ReportDataV2>( v2 => v2.DisplayName == (string)item.Data))
             .Enumerate();
 
     public static PredefinedReportsUpdater AddOrderReports(this PredefinedReportsUpdater predefinedReportsUpdater){
@@ -95,13 +83,4 @@ static class ReportsExtensions{
         }
     }
 
-    static byte[] AddWaterMark(this byte[] bytes,string text){
-        using var processor = new PdfDocumentProcessor();
-        using var memoryStream = new MemoryStream(bytes);
-        processor.LoadDocument(memoryStream);
-        processor.AddWatermark(text);
-        using var stream = new MemoryStream();
-        processor.SaveDocument(stream);
-        return stream.ToArray();
-    }
 }

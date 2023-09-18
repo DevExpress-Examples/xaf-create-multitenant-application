@@ -47,22 +47,16 @@ namespace XAF.Testing.XAF{
         public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
             => source.Select(t => t.e.View);
 
-        public static IObservable<ListViewCreatingEventArgs> FilterListViews(this XafApplication application, params LambdaExpression[] expressions)
-            => expressions.ToObservable().Select(expression => application
-                    .WhenListViewCreating(expression.Parameters.First().Type)
-                    .Do(t => t.e.CollectionSource.SetCriteria(expression.Parameters.First().Type,
-                        expression.FuseAny(expressions)))).Merge()
-                .Select(t => t.e);
-        
-        public static IObservable<Unit> FilterListViews(this XafApplication application,Func<DetailView,LambdaExpression,IObservable<object>> userControlSelector,params LambdaExpression[] expressions) 
-            => expressions.ToObservable()
+
+        public static IObservable<Unit> FilterListViews(this XafApplication application, Func<DetailView, LambdaExpression, IObservable<object>> userControlSelector, 
+            params LambdaExpression[] expressions) 
+            => application.FuseAny(expressions)
                 .Select(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
                     .SelectMany(view => view.WhenControlsCreated())
-                    .SelectMany(view => userControlSelector(view, expression.FuseAny(expressions)))
-                )
-                .Merge()
-                .MergeToUnit(application.FilterListViews(expressions));
-
+                    .SelectMany(view => userControlSelector(view, expression))
+                    .MergeToUnit(application.WhenListViewCreating(expression.Parameters.First().Type)
+                        .Select(t => t.e.CollectionSource).Do(collectionSourceBase => collectionSourceBase.SetCriteria(expression))))
+                .Merge();
         
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
             => application.WhenDetailViewCreated().Where(t =>objectType?.IsAssignableFrom(t.e.View.ObjectTypeInfo.Type)??true);

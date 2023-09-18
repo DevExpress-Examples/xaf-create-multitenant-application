@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.MasterDetail{
     public interface IModelDashboardViewMasterDetail{

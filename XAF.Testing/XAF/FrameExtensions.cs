@@ -138,12 +138,12 @@ namespace XAF.Testing.XAF{
             => source.WhenEvent(nameof(Frame.Disposed)).ToUnit();
 
         public static IObservable<object> WhenColumnViewObjects(this Frame frame,int count=0) 
-            => frame.WhenGridControl().ToFirst().WhenObjects(count).Take(1).Select(o => o);
+            => frame.WhenGridControl().ToFirst().WhenObjects(count).Take(1);
 
-        public static IObservable<object> WhenGridViewDetailViewObjects(this Frame frame)
+        public static IObservable<(ColumnView columnView, object value)> WhenGridViewDetailViewObjects(this Frame frame,Func<ColumnView,int> count=null)
             => frame.WhenGridControl().ToFirst().Take(1).Select(control => control.MainView).OfType<GridView>()
-                .SelectMany(view => view.WhenGridDetailViewObjects())
-                .BufferUntilCompleted();
+                .SelectMany(view => view.WhenGridDetailViewObjects(count))
+                .BufferUntilCompleted().SelectMany();
 
         public static IObservable<(GridControl gridControl, Frame frame)> WhenGridControl(this Frame frame) 
             => (frame.View is DashboardView ? frame.DashboardViewItems(ViewType.DetailView)
@@ -174,12 +174,12 @@ namespace XAF.Testing.XAF{
             => source.SelectMany(frame => frame.WhenObjects(count)).Select(t => t);
 
         public static IObservable<(Frame frame, object o)> WhenObjects(this Frame frame,int count=0) 
-            => frame.WhenColumnViewObjects(count).Select(o => o)
+            => frame.WhenColumnViewObjects(count)
                 .SwitchIfEmpty(Observable.Defer(() => frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))))
             .Select(obj => (frame,o: obj));
 
-        public static IObservable<object> WhenGridControlDetailViewObjects(this IObservable<Frame> source) 
-            => source.SelectMany(frame => frame.WhenGridViewDetailViewObjects());
+        public static IObservable<(ColumnView columnView, object value)> WhenGridControlDetailViewObjects(this IObservable<Frame> source,Func<ColumnView,int> count=null) 
+            => source.SelectMany(frame => frame.WhenGridViewDetailViewObjects(count));
 
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> ProcessSelectedObject(this IObservable<Window> source)
             => source.SelectMany(window => window.ProcessSelectedObject());
@@ -264,5 +264,9 @@ namespace XAF.Testing.XAF{
         public static IObservable<(GridControl gridControl, Frame frame)> WhenGridControl(this IObservable<Frame> source) 
             => source.OfView<DetailView>().SelectMany(frame =>
                 frame.View.ToDetailView().WhenControlViewItemGridControl().Select(gridControl => (gridControl, frame)));
+        public static object ParentObject(this Frame frame) => frame.ParentObject<object>() ;
+
+        public static T ParentObject<T>(this Frame frame) where T : class
+            => frame.ToNestedFrame().ViewItem.CurrentObject as T;
     }
 }

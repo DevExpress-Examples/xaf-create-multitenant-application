@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Win.Controllers.Quotes{
     public class ChildViewCriteriaController:ViewController<DashboardView>{

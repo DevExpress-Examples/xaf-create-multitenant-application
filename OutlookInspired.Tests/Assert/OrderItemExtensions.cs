@@ -1,5 +1,4 @@
 ﻿using System.Reactive;
-using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
@@ -8,10 +7,10 @@ using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.ImportData.Assert{
     static class OrderItemExtensions{
-        internal static IObservable<Unit> AssertNestedOrderItems(this Frame frame, IObservable<TabbedGroup> productTabControl) 
-            => productTabControl.AssertNestedListView(frame, typeof(OrderItem), 1,assert:AssertAction.HasObject);
-        internal static IObservable<Unit> AssertNestedOrderItems(this Frame frame) 
-            => frame.AssertNestedListView(typeof(OrderItem), assert:AssertAction.AllButDelete).ToUnit();
+        internal static IObservable<Unit> AssertNestedOrderItems(this Frame nestedFrame, IObservable<TabbedGroup> productTabControl) 
+            => productTabControl.AssertNestedListView(nestedFrame, typeof(OrderItem), 1,assert:frame => frame.AssertAction(nestedFrame));
+        internal static IObservable<Unit> AssertNestedOrderItems(this Frame nestedFrame) 
+            => nestedFrame.AssertNestedListView(typeof(OrderItem), assert:frame => frame.AssertAction(nestedFrame)).ToUnit();
         
     }
 }

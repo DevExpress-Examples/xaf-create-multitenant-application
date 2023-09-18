@@ -31,8 +31,8 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),typeof(ChildViewCriteriaController),
             typeof(RouteMapsViewController), typeof(SalesMapsViewController),
-            typeof(PropertyEditorController), typeof(MapItemController), 
-            typeof(DisableSkinsController), typeof(SplitterPositionController),typeof(ShowInDocumentController1)
+            typeof(PropertyEditorController), 
+            typeof(DisableSkinsController), typeof(SplitterPositionController)
         };
 
     public override void Setup(XafApplication application) {

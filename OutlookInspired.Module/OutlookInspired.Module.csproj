@@ -101,6 +101,8 @@
     <EmbeddedResource Include="Resources\MailMerge\Thank You Note.docx" />
     <None Remove="Resources\MailMerge\Welcome to DevAV.docx" />
     <EmbeddedResource Include="Resources\MailMerge\Welcome to DevAV.docx" />
+    <None Remove="Resources\Welcome.docx" />
+    <EmbeddedResource Include="Resources\Welcome.docx" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" Version="23.1.5" />

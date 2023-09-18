@@ -4,8 +4,8 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services;
-using OutlookInspired.Win.Extensions;
+using OutlookInspired.Module.Services.Internal;
+using OutlookInspired.Win.Extensions.Internal;
 using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
 using MapItem = OutlookInspired.Module.BusinessObjects.MapItem;
 

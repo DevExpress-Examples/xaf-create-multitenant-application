@@ -4,9 +4,9 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Map.Dashboard;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Win.Controllers.Maps{
     public abstract class WinMapsViewController<T>:ObjectViewController<DetailView,T>{

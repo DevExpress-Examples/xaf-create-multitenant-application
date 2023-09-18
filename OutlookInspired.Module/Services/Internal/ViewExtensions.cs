@@ -7,10 +7,9 @@ using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.Features.MasterDetail;
-using LambdaExpression = System.Linq.Expressions.LambdaExpression;
 
-namespace OutlookInspired.Module.Services{
-    public static class ViewExtensions{
+namespace OutlookInspired.Module.Services.Internal{
+    internal static class ViewExtensions{
         public static void SetNonTrackedMemberValue<T,T2>(this CompositeView view, Expression<Func<T, T2>> expression,Func<T,T2> valueSelector){
             if (view.CurrentObject==null)return;
             var propertyEditor = view.GetItems<PropertyEditor>()
@@ -33,11 +32,6 @@ namespace OutlookInspired.Module.Services{
         public static NestedFrame MasterFrame(this DashboardView view)
             => view.Items.OfType<DashboardViewItem>().Where(item => item.Model.ActionsToolbarVisibility!=ActionsToolbarVisibility.Hide)
                 .ToFrame().First();
-
-        public static IEnumerable<IUserControl> FilterUserControl(this DetailView view, LambdaExpression expression) 
-            => view.UserControl().YieldItem().WhereNotDefault()
-                .Where(control => control.ObjectType == expression.Parameters.First().Type)
-                .Do(control => control.SetCriteria(expression)).ToArray();
 
         internal static IEnumerable<T> Objects<T>(this CollectionSourceBase collectionSourceBase) {
             if (collectionSourceBase.Collection is IEnumerable collection)

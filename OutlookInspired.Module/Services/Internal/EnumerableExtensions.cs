@@ -2,7 +2,7 @@
 using Castle.Components.DictionaryAdapter;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class EnumerableExtensions{
         public static IEnumerable<T> To<T>(this IEnumerable<object> source) 
             => source.Select(o =>o is T arg? arg: default);

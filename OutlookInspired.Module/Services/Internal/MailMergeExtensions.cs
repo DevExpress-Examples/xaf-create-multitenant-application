@@ -8,7 +8,7 @@ using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     static class MailMergeExtensions{
         public const string MailMergeOrder="Order";
         public const string MailMergeOrderItem="OrderItem";
@@ -19,7 +19,7 @@ namespace OutlookInspired.Module.Services{
         public const string WelcomeToDevAV="Welcome to DevAV";
         public const string MonthAward="Month Award";
         public static byte[] MailMergeInvoice(this Order order) 
-            => order.ObjectSpace.MailMergeData("Order").CreateDocumentServer(order).MailMergeInvoice(order);
+            => order.ObjectSpace.MailMergeData("Order").Template.CreateDocumentServer(order).MailMergeInvoice(order);
 
         static byte[] MailMergeInvoice(this IRichEditDocumentServer richEditDocumentServer,Order order){
             richEditDocumentServer.CalculateDocumentVariable += (_, e) => e.CalculateDocumentVariable(order, richEditDocumentServer);
@@ -64,7 +64,7 @@ namespace OutlookInspired.Module.Services{
         }
     
         public static void MailMerge<T>(this IRichEditDocumentServer documentServer,IRichTextMailMergeData mailMergeData, MergeMode mergeMode,params T[] dataSource){
-            using var mergedServer = mailMergeData.CreateDocumentServer(dataSource);
+            using var mergedServer = mailMergeData.Template.CreateDocumentServer(dataSource);
             using var memoryStream = new MemoryStream(mailMergeData.Template);
             mergedServer.LoadDocumentTemplate(memoryStream, DocumentFormat.OpenXml);
             mergedServer.Options.MailMerge.DataSource = dataSource;
@@ -80,23 +80,6 @@ namespace OutlookInspired.Module.Services{
             documentServer.MailMerge(documentServer.CreateMailMergeOptions(), stream, DocumentFormat.OpenXml);
             return stream.ToArray();
         }
-
-        public static RichEditDocumentServer CreateDocumentServer(this IRichTextMailMergeData richTextMailMergeData, params object[] dataSource) 
-            => new(){
-                OpenXmlBytes = richTextMailMergeData.Template,
-                Options ={
-                    MailMerge ={
-                        DataSource = dataSource
-                    }
-                }
-            };
-
-        public static byte[] ToPdf(this byte[] bytes){
-            using var richEditDocumentServer = new RichEditDocumentServer();
-            richEditDocumentServer.LoadDocument(bytes);
-            using var memoryStream = new MemoryStream();
-            richEditDocumentServer.ExportToPdf(memoryStream);
-            return memoryStream.ToArray();
-        }
+        
     }
 }

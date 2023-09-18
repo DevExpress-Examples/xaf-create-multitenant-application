@@ -5,7 +5,9 @@ using DevExpress.ExpressApp.EFCore;
 using DevExpress.XtraGrid.Views.Base;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Extensions.Internal;
 
 namespace OutlookInspired.Win.UserControls
 {
@@ -48,6 +50,7 @@ namespace OutlookInspired.Win.UserControls
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataError+=(_, e) => throw new AggregateException(e.DataException.Message,e.DataException);
+            application.ProtectDetailViews(ColumnView.GridControl,ObjectType);
         }
 
         public override void Refresh(){

@@ -1,9 +1,8 @@
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
-using OutlookInspired.Module.Attributes;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class ModelExtensions{
         public static void CreateView(this IModelView source,  string viewId,string detailViewId=null) {
             var cloneNodeFrom = ((ModelNode)source).Clone(viewId);

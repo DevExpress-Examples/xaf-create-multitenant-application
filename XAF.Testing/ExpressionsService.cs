@@ -2,6 +2,28 @@
 
 namespace XAF.Testing;
 public static class ExpressionExtensions{
+    public static LambdaExpression Filter(this LambdaExpression  expr,Func<Type,bool> match){
+        var body = expr.Body.FilterExpression(match);
+        return body == null ? null : Expression.Lambda(body, expr.Parameters);
+    }
+
+    private static Expression FilterExpression(this Expression expr,Func<Type,bool> match){
+        switch (expr.NodeType){
+            case ExpressionType.AndAlso:
+                var binaryExpr = (BinaryExpression)expr;
+                var left = binaryExpr.Left.FilterExpression(match);
+                var right = binaryExpr.Right.FilterExpression(match);
+                return left == null ? right : right == null ? left : Expression.AndAlso(left, right);
+            case ExpressionType.Call:
+                var methodCallExpr = (MethodCallExpression)expr;
+                return methodCallExpr.Method.Name == "Any" ? methodCallExpr.Arguments[0] is MemberExpression instance
+                    ? instance.Type.IsGenericType ? !match(instance.Type.GetGenericArguments()[0]) ? null : expr : expr : expr : expr;
+            default:
+                return expr;
+        }
+    }
+
+
     public static MethodCallExpression Call(this Type type,string methodName,Type[] typeArguments, params Expression[] arguments)
         => Expression.Call(type, methodName, typeArguments,arguments);
     

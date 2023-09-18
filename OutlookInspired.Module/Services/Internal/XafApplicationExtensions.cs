@@ -1,11 +1,8 @@
-﻿using DevExpress.Data.Filtering;
-using DevExpress.Data.Linq;
-using DevExpress.Data.ODataLinq.Helpers;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class XafApplicationExtensions{
         public static DetailView NewDetailView(this XafApplication application, Type objectType){
             var objectSpace = application.CreateObjectSpace(objectType);

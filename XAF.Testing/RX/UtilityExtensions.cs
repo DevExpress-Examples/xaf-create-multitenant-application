@@ -102,11 +102,11 @@ namespace XAF.Testing.RX{
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
             => source.Assert(_ => message,timeout,caller);
 
-        public static TimeSpan? AssertDelayOnContextInterval=400.Milliseconds();
+        public static TimeSpan? DelayOnContextInterval=250.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
             return source.TakeAndReplay(1).RefCount()
-                .DelayOnContext(AssertDelayOnContextInterval)
+                .DelayOnContext(DelayOnContextInterval)
                 .Log(messageFactory, caller)
                 .ThrowIfEmpty(timeoutMessage)
                 .Timeout(timeout ?? TimeoutInterval, timeoutMessage);

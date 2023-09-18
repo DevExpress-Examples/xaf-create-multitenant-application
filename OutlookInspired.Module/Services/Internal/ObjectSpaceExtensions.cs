@@ -4,12 +4,16 @@ using DevExpress.Data.Linq.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
+using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
+using Microsoft.Extensions.DependencyInjection;
 using Type = System.Type;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class ObjectSpaceExtensions{
-
+        public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
+            => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
+        
         public static T EnsureObject<T>(this IObjectSpace objectSpace,
             Expression<Func<T, bool>> criteriaExpression = null, Action<T> initialize = null, Action<T> update = null,
             bool inTransaction = false) where T : class{
@@ -32,14 +36,11 @@ namespace OutlookInspired.Module.Services{
             return richTextMailMergeData;
         }
         
-        public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria){
-            // return new EFCoreServerCollection(objectSpace, objectType, CriteriaOperator.Parse(criteria),
-                // new List<SortProperty>());
-            return new EntityServerModeSource{
-            KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
-            QueryableSource = objectSpace.Query(objectType, criteria)
+        public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
+            => new EntityServerModeSource{
+                KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
+                QueryableSource = objectSpace.Query(objectType, criteria)
             };
-        }
 
         public static IQueryable Query(this EFCoreObjectSpace objectSpace,Type objectType, string criteria){
             var queryable = objectSpace.GetQueryable(objectType.FullName);

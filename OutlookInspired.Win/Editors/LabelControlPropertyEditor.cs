@@ -5,7 +5,7 @@ using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using OutlookInspired.Module.Attributes;
-using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
+using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
 namespace OutlookInspired.Win.Editors{
     [PropertyEditor(typeof(object),EditorAliases.LabelPropertyEditor,false)]

@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using static OutlookInspired.Module.Services.MailMergeExtensions;
+using static OutlookInspired.Module.Services.Internal.MailMergeExtensions;
 
 namespace OutlookInspired.Module.Features.Customers{
     public class MailMergeController:ObjectViewController<ObjectView,Employee>{
@@ -15,10 +15,8 @@ namespace OutlookInspired.Module.Features.Customers{
 
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
-            Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
-            if (Active){
-                Frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction.ItemsChanged+=ShowInDocumentActionOnItemsChanged;
-            }
+            if (!(Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active))return;
+            Frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction.ItemsChanged+=ShowInDocumentActionOnItemsChanged;
         }
 
         private void ShowInDocumentActionOnItemsChanged(object sender, ItemsChangedEventArgs e){

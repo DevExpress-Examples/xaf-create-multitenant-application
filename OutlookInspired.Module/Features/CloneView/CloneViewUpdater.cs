@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.ExpressApp.Model.NodeGenerators;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.CloneView;
 public class CloneViewUpdater : ModelNodesGeneratorUpdater<ModelViewsNodesGenerator> {

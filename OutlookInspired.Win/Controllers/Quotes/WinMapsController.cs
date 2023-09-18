@@ -3,8 +3,10 @@ using DevExpress.XtraCharts;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 using OutlookInspired.Win.Controllers.Maps;
 using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Extensions.Internal;
 using ElementSelectionMode = DevExpress.XtraMap.ElementSelectionMode;
 using KeyColorColorize = DevExpress.XtraMap.KeyColorColorizer;
 

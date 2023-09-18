@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Templates;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Employees{
     public class RoutePointListViewController:ObjectViewController<ListView,RoutePoint>{

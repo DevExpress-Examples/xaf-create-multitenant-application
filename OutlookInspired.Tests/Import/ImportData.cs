@@ -13,11 +13,9 @@ namespace OutlookInspired.Tests.ImportData.Import{
         public async Task Test(){
             
             using var application = await SetupWinApplication(application => {
-                var ensureDeletedAsync = application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database
-                    .EnsureDeletedAsync();
-                return ensureDeletedAsync;
-                return Task.CompletedTask;
-            },useServer:false);
+                application.Security = null;
+                return application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
+            },useServer:false,useSecuredProvider:false);
             
             
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();

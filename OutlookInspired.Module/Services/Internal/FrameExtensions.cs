@@ -2,7 +2,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class FrameExtensions{
         public static List<T> GetControllers<T>(this Frame frame) where T:class{
             var controllers = new List<T>();
@@ -44,8 +44,9 @@ namespace OutlookInspired.Module.Services{
         public static object ParentObject(this Frame frame) => frame.ParentObject<object>() ;
 
         public static T ParentObject<T>(this Frame frame) where T : class
-            => frame is NestedFrame nestedFrame ? nestedFrame.View.CurrentObject as T : frame.View.CurrentObject as T;
+            => frame.ToNestedFrame().ViewItem.CurrentObject as T;
 
+        public static NestedFrame ToNestedFrame(this Frame frame) => (NestedFrame)frame;
         public static bool ParentIsNull(this Frame frame)  => frame.ParentObject<object>()==null;
         
         public static T As<T>(this object obj) 

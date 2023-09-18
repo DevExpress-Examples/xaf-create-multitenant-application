@@ -4,10 +4,9 @@ using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraMap;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Extensions.Internal;
 using BingManeuverType = OutlookInspired.Module.BusinessObjects.BingManeuverType;
 
 namespace OutlookInspired.Win.Controllers.Maps{

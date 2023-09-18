@@ -7,13 +7,14 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class TestExtensions{
-        public static TestObserver<T> StartWinTest<T>(this WinApplication application, IObservable<T> test) 
-            => application.Start( test, new WindowsFormsSynchronizationContext());
+        public static TestObserver<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user=null) 
+            => application.Start( test, new WindowsFormsSynchronizationContext(),user);
 
-        private static TestObserver<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context) 
-            => application.Start(application.WhenFrameCreated().Take(1)
-                .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
-                .IgnoreElements().To<T>()
+        private static TestObserver<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context,string user =null) 
+            => application.Start(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
+                .Merge(application.WhenFrameCreated().Take(1)
+                    .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
+                    .IgnoreElements().To<T>())
                 .Merge(test.BufferUntilCompleted().Do(_ => application.Exit()).SelectMany())
                 .Merge(application.ThrowWhenHandledExceptions().To<T>())
                 .Catch<T, Exception>(exception => {

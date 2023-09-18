@@ -12,11 +12,11 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
-  <NavigationItems StartupNavigationItem="Welcome_Dashboard">
+  <NavigationItems StartupNavigationItem="Welcome">
     <Items>
       <Item Id="Default">
         <Items>
-          <Item Id="Welcome_Dashboard" ViewId="Welcome_Dashboard" Index="0" IsNewNode="True" />
+          <Item Id="Welcome" Index="0" ImageName="About" ViewId="Welcome_DetailView" IsNewNode="True" />
           <Item Id="CustomerListView" ViewId="CustomerListView" IsNewNode="True" />
           <Item Id="EmployeeListView" ViewId="EmployeeListView" IsNewNode="True" />
           <Item Id="ModelDifference_ListView" ViewId="ModelDifference_ListView" IsNewNode="True" />
@@ -247,6 +247,38 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
+    <DetailView Id="CustomerEmployee_DetailView">
+      <Items>
+        <PropertyEditor Id="Picture" PropertyName="Picture.Data" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="SimpleEditors" Direction="Horizontal" RelativeSize="23.103448275862068">
+            <LayoutItem Id="Picture" ViewItem="Picture" Index="0" RelativeSize="18.316831683168317" CaptionLocation="Top" ShowCaption="False" IsNewNode="True" />
+            <LayoutGroup Id="CustomerEmployee" Index="1" RelativeSize="81.68316831683168">
+              <LayoutGroup Id="CustomerEmployee_col1" RelativeSize="50">
+                <LayoutItem Id="FirstName" RelativeSize="20" />
+                <LayoutItem Id="LastName" RelativeSize="15" />
+                <LayoutItem Id="FullName" RelativeSize="15" />
+                <LayoutItem Id="Prefix" RelativeSize="15" />
+                <LayoutItem Id="MobilePhone" RelativeSize="15" />
+                <LayoutItem Id="Email" RelativeSize="20" />
+              </LayoutGroup>
+              <LayoutGroup Id="CustomerEmployee_col2" RelativeSize="50">
+                <LayoutItem Id="Customer" Index="0" RelativeSize="20" />
+                <LayoutItem Id="CustomerStore" Index="1" RelativeSize="15" />
+                <LayoutItem Id="Position" Index="2" RelativeSize="15" />
+                <LayoutItem Id="IsPurchaseAuthority" Index="3" RelativeSize="50" />
+                <LayoutItem Id="Picture" Removed="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
+          <LayoutGroup Id="CustomerCommunications_Group" Direction="Vertical" RelativeSize="76.89655172413794">
+            <LayoutItem Id="CustomerCommunications" RelativeSize="100" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <DetailView Id="CustomerGridView_DetailView" FreezeLayout="True">
       <Items>
         <ControlDetailItem Id="CustomerGridView" ControlTypeName="CustomerGridView" IsNewNode="True" />
@@ -286,6 +318,65 @@
         <Variant Id="CustomerListView" ViewID="CustomerListView" Caption="List" IsNewNode="True" />
       </Variants>
     </DashboardView>
+    <DetailView Id="CustomerStore_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="SimpleEditors" RelativeSize="20.344827586206897">
+            <LayoutGroup Id="CustomerStore" RelativeSize="100">
+              <LayoutGroup Id="CustomerStore_col1" RelativeSize="50">
+                <LayoutItem Id="Customer" Index="0" RelativeSize="23.529411764705884" />
+                <LayoutItem Id="City" Index="1" RelativeSize="17.647058823529413" />
+                <LayoutItem Id="Line" Index="2" RelativeSize="17.647058823529413" />
+                <LayoutGroup Id="Auto0383aa75-f669-4174-b3e4-2681d10267fb" ShowCaption="False" Caption="" Direction="Horizontal" Index="3" RelativeSize="41.1764705882353" IsNewNode="True">
+                  <LayoutGroup Id="Auto6203385e-04da-442b-bc6a-32b96d5caf06" ShowCaption="False" Caption="" Index="0" RelativeSize="50" IsNewNode="True">
+                    <LayoutItem Id="ZipCode" ViewItem="ZipCode" Index="0" RelativeSize="42.857142857142854" IsNewNode="True" />
+                    <LayoutItem Id="Longitude" ViewItem="Longitude" Index="1" RelativeSize="57.142857142857146" IsNewNode="True" />
+                  </LayoutGroup>
+                  <LayoutGroup Id="Auto5f32cd37-a938-46ed-bfd0-ffdda998a01b" ShowCaption="False" Caption="" Index="1" RelativeSize="50" IsNewNode="True">
+                    <LayoutItem Id="State" ViewItem="State" Index="0" RelativeSize="42.857142857142854" IsNewNode="True" />
+                    <LayoutItem Id="Latitude" ViewItem="Latitude" Index="1" RelativeSize="57.142857142857146" IsNewNode="True" />
+                  </LayoutGroup>
+                </LayoutGroup>
+                <LayoutItem Id="State" Index="3" RelativeSize="13.043478260869565" Removed="True" />
+                <LayoutItem Id="Latitude" Index="4" RelativeSize="13.043478260869565" Removed="True" />
+                <LayoutItem Id="ZipCode" Index="4" RelativeSize="13.043478260869565" Removed="True" />
+                <LayoutItem Id="Longitude" Index="5" RelativeSize="30.434782608695652" Removed="True" />
+              </LayoutGroup>
+              <LayoutGroup Id="CustomerStore_col2" RelativeSize="50">
+                <LayoutItem Id="Fax" ViewItem="Fax" Index="0" RelativeSize="17.391304347826086" Removed="True" />
+                <LayoutItem Id="TotalEmployees" RelativeSize="23.529411764705884" Index="0" />
+                <LayoutItem Id="SquereFootage" RelativeSize="17.647058823529413" Index="1" />
+                <LayoutItem Id="AnnualSales" RelativeSize="17.647058823529413" Index="2" />
+                <LayoutGroup Id="Autof9f83bd4-7c50-4cf4-803e-1add287e22d0" ShowCaption="False" Caption="" Direction="Horizontal" Index="3" RelativeSize="41.1764705882353" IsNewNode="True">
+                  <LayoutGroup Id="Autocfccb91a-8c45-4611-b1fa-7ed64dd48434" ShowCaption="False" Caption="" Index="0" RelativeSize="50" IsNewNode="True">
+                    <LayoutItem Id="Crest" ViewItem="Crest" Index="0" RelativeSize="42.857142857142854" IsNewNode="True" />
+                    <LayoutItem Id="Phone" ViewItem="Phone" Index="1" RelativeSize="57.142857142857146" IsNewNode="True" />
+                  </LayoutGroup>
+                  <LayoutGroup Id="Autof7fb42d3-b444-4a0f-84f4-8b8fe72524ca" ShowCaption="False" Caption="" Index="1" RelativeSize="50" IsNewNode="True">
+                    <LayoutItem Id="Location" ViewItem="Location" Index="0" RelativeSize="42.857142857142854" IsNewNode="True" />
+                    <LayoutItem Id="Fax" ViewItem="Fax" Index="1" RelativeSize="57.142857142857146" IsNewNode="True" />
+                  </LayoutGroup>
+                </LayoutGroup>
+                <LayoutItem Id="Crest" RelativeSize="15" Index="3" Removed="True" />
+                <LayoutItem Id="Location" RelativeSize="15" Index="4" Removed="True" />
+                <LayoutItem Id="Phone" ViewItem="Phone" Index="6" RelativeSize="17.391304347826086" Removed="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
+          <TabbedGroup Id="Tabs" RelativeSize="79.65517241379311">
+            <LayoutGroup Id="CustomerEmployees" RelativeSize="100">
+              <LayoutItem Id="CustomerEmployees" RelativeSize="100" />
+            </LayoutGroup>
+            <LayoutGroup Id="Orders" RelativeSize="100">
+              <LayoutItem Id="Orders" RelativeSize="100" />
+            </LayoutGroup>
+            <LayoutGroup Id="Quotes" RelativeSize="100">
+              <LayoutItem Id="Quotes" RelativeSize="100" />
+            </LayoutGroup>
+          </TabbedGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <ListView Id="Employee_AssignedTasks_ListView">
       <Columns>
         <ColumnInfo Id="AssignedEmployee" Index="-1" />
@@ -357,42 +448,43 @@
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
             <LayoutGroup Id="Autoee47f688-bd80-492b-8b31-15db5dabc04f" ShowCaption="False" Caption="Autoee47f688-bd80-492b-8b31-15db5dabc04f(3)" Index="0" RelativeSize="100" IsNewNode="True">
-              <LayoutGroup Id="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086" ShowCaption="False" Caption="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086(4)" Direction="Horizontal" Index="0" RelativeSize="42.18390804597701" IsNewNode="True">
-                <LayoutGroup Id="Autoa11d7465-7eeb-461b-8176-fa484f63a552" ShowCaption="False" Caption="Autoa11d7465-7eeb-461b-8176-fa484f63a552(4)" Index="0" RelativeSize="51.86147186147186" IsNewNode="True">
+              <LayoutGroup Id="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086" ShowCaption="False" Caption="Autoa91a30ea-9112-4ca5-8883-9f10a89e2086(4)" Direction="Horizontal" Index="0" RelativeSize="44.94252873563219" IsNewNode="True">
+                <LayoutGroup Id="Autoa11d7465-7eeb-461b-8176-fa484f63a552" ShowCaption="False" Caption="Autoa11d7465-7eeb-461b-8176-fa484f63a552(4)" Index="0" RelativeSize="51.68650793650794" IsNewNode="True">
                   <LayoutGroup Id="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d" ShowCaption="False" Caption="Auto5ad08971-6ae8-4a12-9f43-169aedaada6d(5)" Index="0" RelativeSize="100" IsNewNode="True">
                     <LayoutGroup Id="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888" ShowCaption="False" Caption="Autoefb088aa-5692-4bc8-b914-ebcfd9cb7888(6)" Index="0" RelativeSize="100" IsNewNode="True">
                       <LayoutGroup Id="Item1" ShowCaption="False" CaptionLocation="Top" Index="0" RelativeSize="100" IsNewNode="True">
                         <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12" ShowCaption="False" Caption="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12(9)" Index="0" RelativeSize="100" IsNewNode="True">
-                          <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Horizontal" Index="0" RelativeSize="38.14713896457766" IsNewNode="True">
-                            <LayoutGroup Id="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf" ShowCaption="False" Caption="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf(10)" Index="0" RelativeSize="67.9465776293823" IsNewNode="True">
-                              <LayoutItem Id="FirstName" ViewItem="FirstName" Index="0" RelativeSize="22.857142857142858" IsNewNode="True" />
-                              <LayoutItem Id="LastName" ViewItem="LastName" Index="1" RelativeSize="17.142857142857142" IsNewNode="True" />
-                              <LayoutItem Id="FullName" ViewItem="FullName" Index="2" RelativeSize="17.142857142857142" IsNewNode="True" />
-                              <LayoutItem Id="BirthDate" ViewItem="BirthDate" Index="3" RelativeSize="17.142857142857142" IsNewNode="True" />
-                              <LayoutGroup Id="Auto6c6e0081-db07-4422-a00e-01156263fb2d" ShowCaption="False" Caption="Auto6c6e0081-db07-4422-a00e-01156263fb2d(16)" Direction="Horizontal" Index="4" RelativeSize="25.714285714285715" IsNewNode="True">
-                                <LayoutItem Id="Title" ViewItem="Title" Index="0" RelativeSize="52.57985257985258" IsNewNode="True" />
-                                <LayoutItem Id="Prefix" ViewItem="Prefix" Index="1" RelativeSize="47.42014742014742" IsNewNode="True" />
+                          <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" ShowCaption="False" Caption="Auto808932a7-d806-4c01-ae49-9d6c50324de3(10)" Direction="Horizontal" Index="0" RelativeSize="41.94373401534527" IsNewNode="True">
+                            <LayoutGroup Id="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf" ShowCaption="False" Caption="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf(10)" Index="0" RelativeSize="67.75431861804222" IsNewNode="True">
+                              <LayoutItem Id="User" ViewItem="User" Index="0" RelativeSize="19.51219512195122" IsNewNode="True" />
+                              <LayoutItem Id="FirstName" ViewItem="FirstName" Index="1" RelativeSize="14.634146341463415" IsNewNode="True" />
+                              <LayoutItem Id="LastName" ViewItem="LastName" Index="2" RelativeSize="14.634146341463415" IsNewNode="True" />
+                              <LayoutItem Id="FullName" ViewItem="FullName" Index="3" RelativeSize="14.634146341463415" IsNewNode="True" />
+                              <LayoutItem Id="BirthDate" ViewItem="BirthDate" Index="4" RelativeSize="14.634146341463415" IsNewNode="True" />
+                              <LayoutGroup Id="Auto6c6e0081-db07-4422-a00e-01156263fb2d" ShowCaption="False" Caption="Auto6c6e0081-db07-4422-a00e-01156263fb2d(16)" Direction="Horizontal" Index="5" RelativeSize="21.951219512195124" IsNewNode="True">
+                                <LayoutItem Id="Title" ViewItem="Title" Index="0" RelativeSize="52.40793201133145" IsNewNode="True" />
+                                <LayoutItem Id="Prefix" ViewItem="Prefix" Index="1" RelativeSize="47.59206798866855" IsNewNode="True" />
                               </LayoutGroup>
                             </LayoutGroup>
-                            <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="1" RelativeSize="32.053422370617696" IsNewNode="True" />
+                            <LayoutItem Id="Picture" ShowCaption="False" ViewItem="Picture" Index="1" RelativeSize="32.24568138195777" IsNewNode="True" />
                           </LayoutGroup>
-                          <LayoutGroup Id="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82" ShowCaption="False" Caption="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82(19)" Index="1" RelativeSize="23.705722070844686" IsNewNode="True">
+                          <LayoutGroup Id="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82" ShowCaption="False" Caption="Auto0a58a0dd-f472-40ff-bfca-bf7a8ef7cc82(19)" Index="1" RelativeSize="22.25063938618926" IsNewNode="True">
                             <LayoutItem Id="Address" ViewItem="Address" Index="0" RelativeSize="31.03448275862069" IsNewNode="True" />
                             <LayoutItem Id="City" ViewItem="City" Index="1" RelativeSize="27.586206896551722" IsNewNode="True" />
                             <LayoutGroup Id="Auto1f5af4be-c654-4b39-9081-2237c0fc31d3" ShowCaption="False" Caption="Auto1f5af4be-c654-4b39-9081-2237c0fc31d3(23)" Direction="Horizontal" Index="2" RelativeSize="41.37931034482759" IsNewNode="True">
-                              <LayoutItem Id="State" ViewItem="State" Index="0" RelativeSize="53.75626043405676" IsNewNode="True" />
-                              <LayoutItem Id="ZipCode" ViewItem="ZipCode" Index="1" RelativeSize="46.24373956594324" IsNewNode="True" />
+                              <LayoutItem Id="State" ViewItem="State" Index="0" RelativeSize="53.550863723608444" IsNewNode="True" />
+                              <LayoutItem Id="ZipCode" ViewItem="ZipCode" Index="1" RelativeSize="46.449136276391556" IsNewNode="True" />
                             </LayoutGroup>
                           </LayoutGroup>
-                          <LayoutItem Id="Item5" SizeConstraintsType="Custom" MinSize="182, 24" MaxSize="0, 0" Index="2" RelativeSize="6.539509536784741" IsNewNode="True" />
-                          <LayoutGroup Id="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054" ShowCaption="False" Caption="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054(27)" Direction="Horizontal" Index="3" RelativeSize="31.607629427792915" IsNewNode="True">
-                            <LayoutGroup Id="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90" ShowCaption="False" Caption="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90(28)" Index="0" RelativeSize="79.63272120200334" IsNewNode="True">
+                          <LayoutItem Id="Item5" SizeConstraintsType="Custom" MinSize="182, 24" MaxSize="0, 0" Index="2" RelativeSize="6.138107416879795" IsNewNode="True" />
+                          <LayoutGroup Id="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054" ShowCaption="False" Caption="Auto87a0dc3f-6598-4e92-b2d3-3b9ebd41d054(27)" Direction="Horizontal" Index="3" RelativeSize="29.66751918158568" IsNewNode="True">
+                            <LayoutGroup Id="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90" ShowCaption="False" Caption="Autof54f0bc7-829e-480c-8e2e-5c7c7d607c90(28)" Index="0" RelativeSize="76.58349328214972" IsNewNode="True">
                               <LayoutItem Id="HomePhone" ViewItem="HomePhone" Index="0" RelativeSize="25.862068965517242" IsNewNode="True" />
                               <LayoutItem Id="MobilePhone" ViewItem="MobilePhone" Index="1" RelativeSize="20.689655172413794" IsNewNode="True" />
                               <LayoutItem Id="Email" ViewItem="Email" Index="2" RelativeSize="20.689655172413794" IsNewNode="True" />
                               <LayoutItem Id="Skype" ViewItem="Skype" Index="3" RelativeSize="32.758620689655174" IsNewNode="True" />
                             </LayoutGroup>
-                            <LayoutGroup Id="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323" ShowCaption="False" Caption="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323(31)" Index="1" RelativeSize="20.36727879799666" IsNewNode="True">
+                            <LayoutGroup Id="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323" ShowCaption="False" Caption="Auto2918cc12-c2b3-4cd9-b8cc-fbafc588d323(31)" Index="1" RelativeSize="23.41650671785029" IsNewNode="True">
                               <LayoutItem Id="HomePhoneCategory" ViewItem="HomePhoneCategory" Index="0" RelativeSize="27.586206896551722" IsNewNode="True" />
                               <LayoutItem Id="MobilePhoneCategory" ViewItem="MobilePhoneCategory" Index="1" RelativeSize="22.413793103448278" IsNewNode="True" />
                               <LayoutItem Id="EmailCategory" ViewItem="EmailCategory" Index="2" RelativeSize="22.413793103448278" IsNewNode="True" />
@@ -404,15 +496,15 @@
                     </LayoutGroup>
                   </LayoutGroup>
                 </LayoutGroup>
-                <LayoutGroup Id="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f" ShowCaption="False" Caption="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f(26)" Index="1" RelativeSize="48.13852813852814" IsNewNode="True">
-                  <LayoutItem Id="Department" ViewItem="Department" Index="0" RelativeSize="8.719346049046322" IsNewNode="True" />
-                  <LayoutItem Id="Status" ViewItem="Status" Index="1" RelativeSize="6.539509536784741" IsNewNode="True" />
-                  <LayoutItem Id="HireDate" ViewItem="HireDate" Index="2" RelativeSize="6.539509536784741" IsNewNode="True" />
-                  <LayoutItem Id="Item2" SizeConstraintsType="Custom" MinSize="10, 23" MaxSize="0, 23" Index="3" RelativeSize="6.267029972752043" IsNewNode="True" />
-                  <LayoutItem Id="Evaluations" ShowCaption="True" ViewItem="Evaluations" CaptionLocation="Top" Index="4" RelativeSize="71.93460490463215" IsNewNode="True" />
+                <LayoutGroup Id="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f" ShowCaption="False" Caption="Autobca3f3a0-00aa-4347-ab34-97dd5b0b735f(26)" Index="1" RelativeSize="48.31349206349206" IsNewNode="True">
+                  <LayoutItem Id="Department" ViewItem="Department" Index="0" RelativeSize="8.184143222506394" IsNewNode="True" />
+                  <LayoutItem Id="Status" ViewItem="Status" Index="1" RelativeSize="6.138107416879795" IsNewNode="True" />
+                  <LayoutItem Id="HireDate" ViewItem="HireDate" Index="2" RelativeSize="6.138107416879795" IsNewNode="True" />
+                  <LayoutItem Id="Item2" SizeConstraintsType="Custom" MinSize="10, 23" MaxSize="0, 23" Index="3" RelativeSize="5.882352941176471" IsNewNode="True" />
+                  <LayoutItem Id="Evaluations" ShowCaption="True" ViewItem="Evaluations" CaptionLocation="Top" Index="4" RelativeSize="73.65728900255755" IsNewNode="True" />
                 </LayoutGroup>
               </LayoutGroup>
-              <LayoutItem Id="AssignedTasks" ViewItem="AssignedTasks" Index="1" RelativeSize="57.81609195402299" ShowCaption="True" IsNewNode="True" />
+              <LayoutItem Id="AssignedTasks" ViewItem="AssignedTasks" Index="1" RelativeSize="55.05747126436781" ShowCaption="True" IsNewNode="True" />
             </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>
@@ -678,6 +770,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <ListView Id="Evaluation_ListView" DataAccessMode="Client" />
     <DashboardView Id="Opportunities" Caption="Opportunities" ImageName="BO_Opportunity" IsNewNode="True">
       <Items IsNewNode="True">
         <DashboardViewItem Id="Quote_ListView" ViewId="Quote_ListView" ActionsToolbarVisibility="Default" IsNewNode="True" />
@@ -977,7 +1070,7 @@
         <ActionLink ActionId="SaveAndClose" IsNewNode="True" />
       </HiddenActions>
     </ListView>
-    <ListView Id="Product_OrderItems_ListView" IsFooterVisible="True" >
+    <ListView Id="Product_OrderItems_ListView" IsFooterVisible="True">
       <Columns>
         <ColumnInfo Id="Order">
           <Summary>
@@ -1061,7 +1154,7 @@
       </Layout>
     </DetailView>
     <ListView Id="QuoteMapItem_ListView" DataAccessMode="Client" />
-    <ListView Id="Recent_OrderItems_ListView" Criteria="IsThisMonth([Order.OrderDate]) Or IsLastMonth([Order.OrderDate])" IsFooterVisible="True" >
+    <ListView Id="Recent_OrderItems_ListView" Criteria="IsThisMonth([Order.OrderDate]) Or IsLastMonth([Order.OrderDate])" IsFooterVisible="True">
       <Columns>
         <ColumnInfo Id="Order">
           <Summary>
@@ -1119,15 +1212,5 @@
       </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
-    <DashboardView Id="Welcome_Dashboard" Caption="Welcome" ImageName="Action_AboutInfo" IsNewNode="True">
-      <Items IsNewNode="True">
-        <StaticText Id="Text" Text="For articles related to the this demo please see readme.txt in XVideoRental.Win project&#xD;&#xA;&#xD;&#xA;XVideoRental is a real world application (RWA). It is designed as a &lt;b&gt;clone&lt;/b&gt; of our WinForms VideoRental application and demos only a small part of XAF capabilities. XAF provides the tools/architecture to do extraordinary things, &#xD;&#xA;so we have followed a &lt;b&gt; (no code)/ (design at runtime) approach!&lt;/b&gt;. We recommend you to open the legacy Winforms demo and XVideoRental side by side and compare how much faster and richer is XAF development versus the traditional one&#xD;&#xA;&#xD;&#xA;The solution has three projects:&#xD;&#xA;&#xD;&#xA;&lt;u&gt;&lt;b&gt;Common.Win&lt;/b&gt;&lt;/u&gt;&#xD;&#xA;&#xD;&#xA;This is a library (not XAF module) and contains 95% of the code needed to model the VideoRental business! Furthermore as an abstract library it is applicable to all domains and not only to VideoRental business. By extending the model it is possible to create an abstract mechanism and control any class/component from there. Since all business operations can be modeled, the library contains controllers like NetIncomeController, TopObjectController that map to the real world meanings and can be applied to any domain. The XAF model serves as an abstraction from technology and business specifics. This module is assembled by collecting the classes/implementations from our support center and from  our community project &lt;u&gt;&lt;color =blue&gt;www.expandframework.com&lt;/color&gt;&lt;/u&gt;.&#xD;&#xA;&#xD;&#xA;&lt;u&gt;&lt;b&gt;XVideoRental.Module.Win&lt;/b&gt;&lt;/u&gt;&#xD;&#xA;&#xD;&#xA;References Common.Win library and initializes the required classes/controllers. Even if it is possible to “model” any behavior sometimes technical depth must be considered. Therefore in the project you will find a small number of VideoRental specific classes. In this project you can also find the model differences for this domain.&#xD;&#xA;&#xD;&#xA;&lt;u&gt;&lt;b&gt;XVideoRental.Win&lt;/b&gt;&lt;/u&gt;&#xD;&#xA;&#xD;&#xA;This is the application project and contains no code. Only a few configurations like module and security registrations.&#xD;&#xA;&#xD;&#xA;A similar version can found in our community project &lt;u&gt;&lt;color =blue&gt;www.expandframework.com&lt;/color&gt;&lt;/u&gt;. The version there has exactly the same functionality as this demo. However it references directly the eXpand framework so the Common.Win project does not exist nor the initialization of the controllers in the XVideoRental.Module.Win.&#xD;&#xA;" IsNewNode="True" />
-      </Items>
-      <Layout IsNewNode="True">
-        <LayoutGroup Id="Main" ShowCaption="False" TextAlignMode="AlignLocal" Direction="Vertical" Index="0" RelativeSize="100" IsNewNode="True">
-          <LayoutItem Id="Text" ViewItem="Text" SizeConstraintsType="Default" Index="0" RelativeSize="100" IsNewNode="True" />
-        </LayoutGroup>
-      </Layout>
-    </DashboardView>
   </Views>
 </Application>

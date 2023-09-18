@@ -1,6 +1,4 @@
-﻿using DevExpress.ExpressApp;
-using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Services;
+﻿using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.UserControls
 {
@@ -18,13 +16,6 @@ namespace OutlookInspired.Win.UserControls
             labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
         }
 
-        public override void Setup(IObjectSpace objectSpace, XafApplication application){
-            base.Setup(objectSpace, application);
-            if (!application.CanRead(typeof(Product)))
-            {
-                ColumnView.GridControl.LevelTree.Nodes.RemoveAt(0);
-            }
-        }
 
         public override Type ObjectType => typeof(Order);
     }

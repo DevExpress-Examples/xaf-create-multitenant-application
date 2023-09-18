@@ -5,8 +5,8 @@ using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services;
-using static OutlookInspired.Module.Services.ReportsExtensions;
+using OutlookInspired.Module.Services.Internal;
+using static OutlookInspired.Module.Services.Internal.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Orders{
     public class ReportController:ViewController{
@@ -31,6 +31,7 @@ namespace OutlookInspired.Module.Features.Orders{
 
         private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e){
             var selectedItemData = (string)ReportAction.SelectedItem.Data;
+            if (selectedItemData==null)return;
             if (selectedItemData.Contains("Revenue")){
                 var id = ((Order)View.CurrentObject).Customer.ID;
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,selectedItemData == RevenueAnalysis
@@ -44,8 +45,7 @@ namespace OutlookInspired.Module.Features.Orders{
 
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
-            Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
-            if (!Active) return;
+            if (!(Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active))return;
             ReportAction.ApplyReportProtection(item =>item.ParentItem is{ Data: null });
             ReportAction.ApplyMailMergeProtection(item => item.ParentItem==null);
         }

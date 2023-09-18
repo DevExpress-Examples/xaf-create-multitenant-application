@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Updating;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.DatabaseUpdate;
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater

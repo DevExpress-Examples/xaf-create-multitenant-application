@@ -33,7 +33,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<T> WhenClosing<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);
-        internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
+        internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = DevExpress.ExpressApp.Nesting.Any, Type objectType = null) 
             => view.FitsCore( viewType) && view.FitsCore( nesting) &&
                (viewType==ViewType.DashboardView&&view is DashboardView||(objectType ?? typeof(object)).IsAssignableFrom(view.ObjectTypeInfo?.Type));
 
@@ -42,10 +42,10 @@ namespace XAF.Testing.XAF{
                 ? view is DetailView : viewType != ViewType.DashboardView || view is DashboardView);
 
         private static bool FitsCore(this View view, Nesting nesting) 
-            => nesting == Nesting.Nested ? !view.IsRoot : nesting != Nesting.Root || view.IsRoot;
+            => nesting == DevExpress.ExpressApp.Nesting.Nested ? !view.IsRoot : nesting != DevExpress.ExpressApp.Nesting.Root || view.IsRoot;
 
         public static bool Is(this View view, params Type[] objectTypes ) 
-            => objectTypes.All(objectType => view.Is(ViewType.Any,Nesting.Any,objectType));
+            => objectTypes.All(objectType => view.Is(ViewType.Any,DevExpress.ExpressApp.Nesting.Any,objectType));
         
         public static IObservable<object> Objects(this CollectionSourceBase collectionSourceBase,int count=0) => collectionSourceBase.Objects<object>(count);
 
@@ -99,8 +99,10 @@ namespace XAF.Testing.XAF{
 
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
-            return compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
+            var memberInfos = compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
                 .Do(memberInfo => compositeView.ObjectSpace.SetValue(compositeView.CurrentObject,memberInfo,  existingObject))
+                .ToArray();
+            return memberInfos
                 .IgnoreElements().ToUnit();
         }
 
@@ -179,6 +181,10 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenSelectedObjects(this View view) 
             => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
                 .StartWith(view.SelectedObjects.Cast<object>());
+
+        public static Nesting Nesting(this View view)
+            => view.IsRoot ? DevExpress.ExpressApp.Nesting.Root : DevExpress.ExpressApp.Nesting.Nested;
+        
         public static IObservable<object> WhenObjectViewObjects(this View view,int count=0) 
             => view is ListView listView ? listView.WhenObjects(count)
                     .SwitchIfEmpty(Observable.Defer(() => listView.CollectionSource.WhenCollectionChanged()

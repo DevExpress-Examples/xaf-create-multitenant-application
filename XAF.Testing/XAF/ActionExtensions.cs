@@ -9,6 +9,14 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class ActionExtensions{
+        public static bool Available(this ChoiceActionItem item)
+            => item.Active && item.Enabled;
+        public static IEnumerable<ChoiceActionItem> Available(this IEnumerable<ChoiceActionItem> source) 
+                => source.Where(item => item.Available());
+        
+        public static IEnumerable<ChoiceActionItem> Active(this IEnumerable<ChoiceActionItem> source) 
+                => source.Where(item => item.Active);
+        
         public static T View<T>(this ActionBase actionBase) where T : View => actionBase.Controller.Frame?.View as T;
         public static View View(this ActionBase actionBase) => actionBase.View<View>();
         public static IObservable<ItemsChangedEventArgs> WhenItemsChanged(this SingleChoiceAction action) 

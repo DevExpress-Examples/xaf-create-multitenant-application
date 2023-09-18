@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.EFCore;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class MapExtensions{
         public static void SetRoutePoints(this Employee employee,params RoutePoint[] routePoints){
             employee.RoutePoints.Clear();

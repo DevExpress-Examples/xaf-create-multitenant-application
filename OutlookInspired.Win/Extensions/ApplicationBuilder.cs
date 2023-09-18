@@ -53,17 +53,26 @@ namespace OutlookInspired.Win.Extensions{
                 })
                 .UsePasswordAuthentication();
 
-        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,Func<DbContextOptionsBuilder,bool> configure=null) 
-            => builder.ObjectSpaceProviders
-                .AddEFCore(options => options.PreFetchReferenceProperties())
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,string connectionString,bool useSecuredProvider=true) 
+            => builder.AddObjectSpaceProviders( useSecuredProvider,connectionString)
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
-                    if (!(configure?.Invoke(options) ?? false)){
+                    if (connectionString == null){
                         options.UseMiddleTier(application.Security);
+                    }
+                    else{
+                        options.UseSqlServer(connectionString);
+                        options.UseLazyLoadingProxies();
                     }
                 })
                 .AddNonPersistent();
+
+        private static DbContextBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(
+            this IWinApplicationBuilder builder, bool useSecuredProvider, string connectionString) 
+            => !useSecuredProvider||connectionString == null? builder.ObjectSpaceProviders
+                .AddEFCore(options => options.PreFetchReferenceProperties()): builder.ObjectSpaceProviders
+                .AddSecuredEFCore(options => options.PreFetchReferenceProperties());
 
         public static IModuleBuilder<IWinApplicationBuilder> AddModules(this IWinApplicationBuilder builder) 
             => builder.Modules

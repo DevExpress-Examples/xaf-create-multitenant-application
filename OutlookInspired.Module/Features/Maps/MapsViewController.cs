@@ -7,7 +7,7 @@ using DevExpress.ExpressApp.Templates;
 using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Maps{
     public class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
@@ -93,6 +93,9 @@ namespace OutlookInspired.Module.Features.Maps{
             ChangeMapItAction(typeof(Order),"Shipping Map");
             ChangeMapItAction(typeof(Quote),"Opportunities Map");
             MapItAction.Active[nameof(MapsViewController)] = Frame is NestedFrame&&Frame.View.IsRoot;
+            if (typeof(ISalesMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type)){
+                MapItAction.Active[nameof(ISalesMapsMarker)] = Application.CanRead(typeof(OrderItem));    
+            }
             TravelModeAction.Active[nameof(MapsViewController)] = typeof(ITravelModeMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
             TravelModeAction.Active[nameof(MapItAction)] =!MapItAction.Active&& Frame.Context == TemplateContext.View&&!Frame.View.IsRoot;
             if (View.Id==Employee.MapsDetailView){

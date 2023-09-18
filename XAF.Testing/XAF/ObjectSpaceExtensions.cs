@@ -4,12 +4,17 @@ using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Security;
+using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using Observable = System.Reactive.Linq.Observable;
 using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
+        public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
+            => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
+
         public static IEnumerable<IMemberInfo> CloneableOwnMembers(this IObjectSpace objectSpace,Type type)
             => objectSpace.TypesInfo.FindTypeInfo(type).OwnMembers.Where(info => !info.IsList && !info.IsKey);
         

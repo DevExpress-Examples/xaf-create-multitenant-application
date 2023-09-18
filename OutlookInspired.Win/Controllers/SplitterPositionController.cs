@@ -9,12 +9,11 @@ namespace OutlookInspired.Win.Controllers{
 
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
-            if(View.Model.MasterDetailMode == MasterDetailMode.ListViewAndDetailView) {
-                _container = (Control)View.LayoutManager.Container;
-                _container.Layout += Container_Layout;
-                if(_container is SplitContainerControl control) {
-                    control.FixedPanel = SplitFixedPanel.None;
-                }
+            if (View.Model.MasterDetailMode != MasterDetailMode.ListViewAndDetailView) return;
+            _container = (Control)View.LayoutManager.Container;
+            _container.Layout += Container_Layout;
+            if(_container is SplitContainerControl control) {
+                control.FixedPanel = SplitFixedPanel.None;
             }
         }
 
@@ -32,9 +31,8 @@ namespace OutlookInspired.Win.Controllers{
 
         protected override void OnDeactivated() {
             base.OnDeactivated();
-            if(_container != null) {
-                _container.Layout -= Container_Layout ;
-            }
+            if (_container == null) return;
+            _container.Layout -= Container_Layout ;
         }
 
     }

@@ -1,5 +1,15 @@
+using XAF.Testing.XAF;
+
 namespace XAF.Testing{
     public static class EnumerableExtensions{
+        public static IEnumerable<TSource> WhereNotDefault<TSource>(this IEnumerable<TSource> source) {
+            var type = typeof(TSource);
+            if (type.IsClass || type.IsInterface){
+                return source.Where(source1 => source1!=null);   
+            }
+            var instance = type.CreateInstance();
+            return source.Where(source1 => !source1.Equals(instance));
+        }
         public static async IAsyncEnumerable<T> TakeOrOriginal<T>(this IAsyncEnumerable<T> source, int count){
             var i = 0;
             await foreach (var item in source)

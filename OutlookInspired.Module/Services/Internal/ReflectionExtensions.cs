@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class ReflectionExtensions{
         public new static bool ReferenceEquals(this object objA, object objB)
             => Object.ReferenceEquals(objA, objB);

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Win.Utils;
@@ -37,10 +36,5 @@ public class OutlookInspiredWindowsFormsApplication : WinApplication{
 		throw new InvalidOperationException(message);
 	}
 
-    [Browsable(false)]
-    public bool Importing{ get; set; }
-}
-[Obsolete]
-public interface ILegacyImport{
-	bool Importing{ get; set; }
+    
 }

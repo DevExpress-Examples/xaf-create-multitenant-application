@@ -14,25 +14,20 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Features.Orders;
 using OutlookInspired.Module.Features.ViewFilter;
-using OutlookInspired.Module.Services;
+using OutlookInspired.Module.Services.Internal;
 using ReportController = OutlookInspired.Module.Features.Customers.ReportController;
 
 
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
 namespace OutlookInspired.Module;
 
-// For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.ModuleBase.
 public sealed class OutlookInspiredModule : ModuleBase{
 	public const string ModelCategory = "OutlookInspired";
     public OutlookInspiredModule() {
-		// 
-		// OutlookInspiredModule
-		// 
 		AdditionalExportedTypes.Add(typeof(ApplicationUser));
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole));
 		AdditionalExportedTypes.Add(typeof(ModelDifference));
 		AdditionalExportedTypes.Add(typeof(ModelDifferenceAspect));
-		
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Security.SecurityModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule));
@@ -68,7 +63,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    => new []{
 		    typeof(MailMergeController),typeof(ReportController),
 		    typeof(CommunicationController),typeof(RoutePointController),
-		    typeof(MapsViewController),
+		    typeof(MapsViewController),typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),
 		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController)

@@ -7,7 +7,8 @@ using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
-using static OutlookInspired.Module.Services.ReportsExtensions;
+using OutlookInspired.Module.Services.Internal;
+using static OutlookInspired.Module.Services.Internal.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Customers{
     public class ReportController:ViewController{
@@ -46,9 +47,8 @@ namespace OutlookInspired.Module.Features.Customers{
 
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
-            Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
-            if (!Active) return;
-            ReportAction.DisableReportItems();
+            if (!(Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active))return;
+            ReportAction.ApplyReportProtection();
         }
 
     }

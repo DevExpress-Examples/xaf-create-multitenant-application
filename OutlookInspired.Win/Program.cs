@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Configuration;
+using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraEditors;
 
@@ -23,7 +24,8 @@ static class Program {
             Tracing.LocalUserAppDataPath = Application.LocalUserAppDataPath;
         }
         Tracing.Initialize();
-        var winApplication = ApplicationBuilder.BuildApplication(true);
+        // var winApplication = ApplicationBuilder.BuildApplication(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+        var winApplication = ApplicationBuilder.BuildApplication();
         try {
             winApplication.Setup();
             winApplication.Start();

@@ -5,7 +5,7 @@ using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
 
-namespace OutlookInspired.Module.Services{
+namespace OutlookInspired.Module.Services.Internal{
     internal static class ActionExtensions{
         public static void ShowReportPreview(this SingleChoiceAction action,Type reportDataType, CriteriaOperator criteria=null) 
             => action.Controller.Frame.GetController<ReportServiceController>()
