@@ -34,15 +34,10 @@ namespace OutlookInspired.Win.UserControls
             var gridLevelNode2 = new DevExpress.XtraGrid.GridLevelNode();
             layoutViewEmployees = new LayoutView();
             colPhoto = new DevExpress.XtraGrid.Columns.LayoutViewColumn();
-            layoutViewField_colPhoto = new LayoutViewField();
             colFullName1 = new DevExpress.XtraGrid.Columns.LayoutViewColumn();
-            layoutViewField_colFullName1 = new LayoutViewField();
             colAddress1 = new DevExpress.XtraGrid.Columns.LayoutViewColumn();
-            layoutViewField_colAddress1 = new LayoutViewField();
             colEmail1 = new DevExpress.XtraGrid.Columns.LayoutViewColumn();
-            layoutViewField_colEmail1 = new LayoutViewField();
             colMobilePhone = new DevExpress.XtraGrid.Columns.LayoutViewColumn();
-            layoutViewField_colMobilePhone = new LayoutViewField();
             gridControl1 = new DevExpress.XtraGrid.GridControl();
             gridViewOrders = new DevExpress.XtraGrid.Views.Grid.GridView();
             colEmployee = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -61,18 +56,23 @@ namespace OutlookInspired.Win.UserControls
             colPhone = new DevExpress.XtraGrid.Columns.GridColumn();
             colLogo = new DevExpress.XtraGrid.Columns.GridColumn();
             layoutViewCard1 = new LayoutViewCard();
+            layoutViewField_colEmail1 = new LayoutViewField();
+            layoutViewField_colPhoto = new LayoutViewField();
+            layoutViewField_colMobilePhone = new LayoutViewField();
             Item1 = new DevExpress.XtraLayout.EmptySpaceItem();
+            layoutViewField_colFullName1 = new LayoutViewField();
+            layoutViewField_colAddress1 = new LayoutViewField();
             ((System.ComponentModel.ISupportInitialize)layoutViewEmployees).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colPhoto).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colFullName1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colAddress1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colEmail1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colMobilePhone).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewOrders).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewCustomers).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutViewCard1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colEmail1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colPhoto).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colMobilePhone).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Item1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colFullName1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colAddress1).BeginInit();
             SuspendLayout();
             // 
             // layoutViewEmployees
@@ -80,13 +80,13 @@ namespace OutlookInspired.Win.UserControls
             layoutViewEmployees.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             layoutViewEmployees.CardCaptionFormat = "{3}";
             layoutViewEmployees.CardHorzInterval = 20;
-            layoutViewEmployees.CardMinSize = new Size(360, 235);
+            layoutViewEmployees.CardMinSize = new Size(360, 293);
             layoutViewEmployees.CardVertInterval = 20;
             layoutViewEmployees.Columns.AddRange(new DevExpress.XtraGrid.Columns.LayoutViewColumn[] { colPhoto, colFullName1, colAddress1, colEmail1, colMobilePhone });
             layoutViewEmployees.DetailHeight = 614;
             layoutViewEmployees.FieldCaptionFormat = "{0}";
             layoutViewEmployees.GridControl = gridControl1;
-            layoutViewEmployees.HiddenItems.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutViewField_colFullName1 });
+            layoutViewEmployees.HiddenItems.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutViewField_colFullName1, layoutViewField_colAddress1 });
             layoutViewEmployees.Name = "layoutViewEmployees";
             layoutViewEmployees.OptionsBehavior.AllowRuntimeCustomization = false;
             layoutViewEmployees.OptionsBehavior.Editable = false;
@@ -116,19 +116,6 @@ namespace OutlookInspired.Win.UserControls
             colPhoto.OptionsFilter.AllowFilter = false;
             colPhoto.Width = 134;
             // 
-            // layoutViewField_colPhoto
-            // 
-            layoutViewField_colPhoto.EditorPreferredWidth = 127;
-            layoutViewField_colPhoto.Location = new Point(0, 0);
-            layoutViewField_colPhoto.MaxSize = new Size(144, 163);
-            layoutViewField_colPhoto.MinSize = new Size(144, 163);
-            layoutViewField_colPhoto.Name = "layoutViewField_colPhoto";
-            layoutViewField_colPhoto.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 14, 2, 2);
-            layoutViewField_colPhoto.Size = new Size(120, 186);
-            layoutViewField_colPhoto.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
-            layoutViewField_colPhoto.TextSize = new Size(0, 0);
-            layoutViewField_colPhoto.TextVisible = false;
-            // 
             // colFullName1
             // 
             colFullName1.CustomizationCaption = "Full Name";
@@ -138,14 +125,6 @@ namespace OutlookInspired.Win.UserControls
             colFullName1.Name = "colFullName1";
             colFullName1.OptionsColumn.AllowFocus = false;
             colFullName1.Width = 134;
-            // 
-            // layoutViewField_colFullName1
-            // 
-            layoutViewField_colFullName1.EditorPreferredWidth = 24;
-            layoutViewField_colFullName1.Location = new Point(0, 0);
-            layoutViewField_colFullName1.Name = "layoutViewField_colFullName1";
-            layoutViewField_colFullName1.Size = new Size(416, 233);
-            layoutViewField_colFullName1.TextSize = new Size(80, 16);
             // 
             // colAddress1
             // 
@@ -160,18 +139,6 @@ namespace OutlookInspired.Win.UserControls
             colAddress1.OptionsFilter.AllowFilter = false;
             colAddress1.Width = 134;
             // 
-            // layoutViewField_colAddress1
-            // 
-            layoutViewField_colAddress1.EditorPreferredWidth = 188;
-            layoutViewField_colAddress1.Location = new Point(120, 0);
-            layoutViewField_colAddress1.MaxSize = new Size(182, 74);
-            layoutViewField_colAddress1.MinSize = new Size(182, 74);
-            layoutViewField_colAddress1.Name = "layoutViewField_colAddress1";
-            layoutViewField_colAddress1.Size = new Size(161, 62);
-            layoutViewField_colAddress1.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
-            layoutViewField_colAddress1.TextLocation = DevExpress.Utils.Locations.Top;
-            layoutViewField_colAddress1.TextSize = new Size(82, 23);
-            // 
             // colEmail1
             // 
             colEmail1.Caption = "EMAIL";
@@ -183,16 +150,6 @@ namespace OutlookInspired.Win.UserControls
             colEmail1.OptionsColumn.AllowFocus = false;
             colEmail1.OptionsFilter.AllowFilter = false;
             colEmail1.Width = 134;
-            // 
-            // layoutViewField_colEmail1
-            // 
-            layoutViewField_colEmail1.EditorPreferredWidth = 188;
-            layoutViewField_colEmail1.Location = new Point(120, 62);
-            layoutViewField_colEmail1.Name = "layoutViewField_colEmail1";
-            layoutViewField_colEmail1.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 10, 2);
-            layoutViewField_colEmail1.Size = new Size(161, 57);
-            layoutViewField_colEmail1.TextLocation = DevExpress.Utils.Locations.Top;
-            layoutViewField_colEmail1.TextSize = new Size(82, 23);
             // 
             // colMobilePhone
             // 
@@ -206,20 +163,10 @@ namespace OutlookInspired.Win.UserControls
             colMobilePhone.OptionsFilter.AllowFilter = false;
             colMobilePhone.Width = 134;
             // 
-            // layoutViewField_colMobilePhone
-            // 
-            layoutViewField_colMobilePhone.EditorPreferredWidth = 188;
-            layoutViewField_colMobilePhone.Location = new Point(120, 119);
-            layoutViewField_colMobilePhone.Name = "layoutViewField_colMobilePhone";
-            layoutViewField_colMobilePhone.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 10, 2);
-            layoutViewField_colMobilePhone.Size = new Size(161, 57);
-            layoutViewField_colMobilePhone.TextLocation = DevExpress.Utils.Locations.Top;
-            layoutViewField_colMobilePhone.TextSize = new Size(82, 23);
-            // 
             // gridControl1
             // 
             gridControl1.Dock = DockStyle.Fill;
-            gridControl1.EmbeddedNavigator.Margin = new Padding(4, 4, 4, 4);
+            gridControl1.EmbeddedNavigator.Margin = new Padding(4);
             gridLevelNode1.LevelTemplate = layoutViewEmployees;
             gridLevelNode1.RelationName = "Employees";
             gridLevelNode2.LevelTemplate = gridViewOrders;
@@ -227,7 +174,7 @@ namespace OutlookInspired.Win.UserControls
             gridControl1.LevelTree.Nodes.AddRange(new DevExpress.XtraGrid.GridLevelNode[] { gridLevelNode1, gridLevelNode2 });
             gridControl1.Location = new Point(0, 0);
             gridControl1.MainView = gridViewCustomers;
-            gridControl1.Margin = new Padding(4, 4, 4, 4);
+            gridControl1.Margin = new Padding(4);
             gridControl1.Name = "gridControl1";
             gridControl1.ShowOnlyPredefinedDetails = true;
             gridControl1.Size = new Size(1708, 1222);
@@ -453,40 +400,93 @@ namespace OutlookInspired.Win.UserControls
             // 
             layoutViewCard1.CustomizationFormText = "TemplateCard";
             layoutViewCard1.HeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
-            layoutViewCard1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutViewField_colAddress1, layoutViewField_colEmail1, layoutViewField_colPhoto, layoutViewField_colMobilePhone, Item1 });
+            layoutViewCard1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutViewField_colEmail1, layoutViewField_colPhoto, layoutViewField_colMobilePhone, Item1 });
             layoutViewCard1.Name = "layoutViewCard1";
             layoutViewCard1.OptionsItemText.TextToControlDistance = 2;
             layoutViewCard1.Text = "TemplateCard";
+            // 
+            // layoutViewField_colEmail1
+            // 
+            layoutViewField_colEmail1.EditorPreferredWidth = 190;
+            layoutViewField_colEmail1.Location = new Point(144, 0);
+            layoutViewField_colEmail1.Name = "layoutViewField_colEmail1";
+            layoutViewField_colEmail1.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 10, 2);
+            layoutViewField_colEmail1.Size = new Size(198, 75);
+            layoutViewField_colEmail1.TextLocation = DevExpress.Utils.Locations.Top;
+            layoutViewField_colEmail1.TextSize = new Size(60, 23);
+            // 
+            // layoutViewField_colPhoto
+            // 
+            layoutViewField_colPhoto.EditorPreferredWidth = 128;
+            layoutViewField_colPhoto.Location = new Point(0, 0);
+            layoutViewField_colPhoto.MaxSize = new Size(144, 163);
+            layoutViewField_colPhoto.MinSize = new Size(144, 163);
+            layoutViewField_colPhoto.Name = "layoutViewField_colPhoto";
+            layoutViewField_colPhoto.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 14, 2, 2);
+            layoutViewField_colPhoto.Size = new Size(144, 234);
+            layoutViewField_colPhoto.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            layoutViewField_colPhoto.TextSize = new Size(0, 0);
+            layoutViewField_colPhoto.TextVisible = false;
+            // 
+            // layoutViewField_colMobilePhone
+            // 
+            layoutViewField_colMobilePhone.EditorPreferredWidth = 190;
+            layoutViewField_colMobilePhone.Location = new Point(144, 75);
+            layoutViewField_colMobilePhone.Name = "layoutViewField_colMobilePhone";
+            layoutViewField_colMobilePhone.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 10, 2);
+            layoutViewField_colMobilePhone.Size = new Size(198, 75);
+            layoutViewField_colMobilePhone.TextLocation = DevExpress.Utils.Locations.Top;
+            layoutViewField_colMobilePhone.TextSize = new Size(60, 23);
             // 
             // Item1
             // 
             Item1.AllowHotTrack = false;
             Item1.CustomizationFormText = "Item1";
-            Item1.Location = new Point(120, 176);
+            Item1.Location = new Point(144, 150);
             Item1.Name = "Item1";
             Item1.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
-            Item1.Size = new Size(161, 10);
+            Item1.Size = new Size(198, 84);
             Item1.TextSize = new Size(0, 0);
+            // 
+            // layoutViewField_colFullName1
+            // 
+            layoutViewField_colFullName1.EditorPreferredWidth = 20;
+            layoutViewField_colFullName1.Location = new Point(0, 0);
+            layoutViewField_colFullName1.Name = "layoutViewField_colFullName1";
+            layoutViewField_colFullName1.Size = new Size(336, 234);
+            layoutViewField_colFullName1.TextSize = new Size(80, 16);
+            // 
+            // layoutViewField_colAddress1
+            // 
+            layoutViewField_colAddress1.EditorPreferredWidth = 20;
+            layoutViewField_colAddress1.Location = new Point(0, 0);
+            layoutViewField_colAddress1.MaxSize = new Size(182, 74);
+            layoutViewField_colAddress1.MinSize = new Size(182, 74);
+            layoutViewField_colAddress1.Name = "layoutViewField_colAddress1";
+            layoutViewField_colAddress1.Size = new Size(336, 234);
+            layoutViewField_colAddress1.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            layoutViewField_colAddress1.TextLocation = DevExpress.Utils.Locations.Top;
+            layoutViewField_colAddress1.TextSize = new Size(82, 23);
             // 
             // CustomerGridView
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(gridControl1);
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "CustomerGridView";
             Size = new Size(1708, 1222);
             ((System.ComponentModel.ISupportInitialize)layoutViewEmployees).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colPhoto).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colFullName1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colAddress1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colEmail1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutViewField_colMobilePhone).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewOrders).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewCustomers).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutViewCard1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colEmail1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colPhoto).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colMobilePhone).EndInit();
             ((System.ComponentModel.ISupportInitialize)Item1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colFullName1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutViewField_colAddress1).EndInit();
             ResumeLayout(false);
         }
 
@@ -511,14 +511,14 @@ namespace OutlookInspired.Win.UserControls
         private DevExpress.XtraGrid.Columns.GridColumn colPhone;
         private DevExpress.XtraGrid.Columns.GridColumn colLogo;
         private DevExpress.XtraGrid.Columns.LayoutViewColumn colPhoto;
-        private LayoutViewField layoutViewField_colPhoto;
         private DevExpress.XtraGrid.Columns.LayoutViewColumn colFullName1;
-        private LayoutViewField layoutViewField_colFullName1;
         private DevExpress.XtraGrid.Columns.LayoutViewColumn colAddress1;
-        private LayoutViewField layoutViewField_colAddress1;
         private DevExpress.XtraGrid.Columns.LayoutViewColumn colEmail1;
-        private LayoutViewField layoutViewField_colEmail1;
         private DevExpress.XtraGrid.Columns.LayoutViewColumn colMobilePhone;
+        private LayoutViewField layoutViewField_colPhoto;
+        private LayoutViewField layoutViewField_colFullName1;
+        private LayoutViewField layoutViewField_colAddress1;
+        private LayoutViewField layoutViewField_colEmail1;
         private LayoutViewField layoutViewField_colMobilePhone;
         private LayoutViewCard layoutViewCard1;
         private DevExpress.XtraLayout.EmptySpaceItem Item1;

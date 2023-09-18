@@ -34,7 +34,7 @@ namespace OutlookInspired.Win.UserControls
         
         public virtual void Refresh(object currentObject) => Refresh();
 
-        public void Setup(IObjectSpace objectSpace, XafApplication application){
+        public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
             _objectSpace = (EFCoreObjectSpace)objectSpace;
             ColumnView = this.ColumnView();
             ColumnView.SelectionChanged += (_, _) => {

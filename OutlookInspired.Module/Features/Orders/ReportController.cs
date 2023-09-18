@@ -6,7 +6,6 @@ using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
-using static OutlookInspired.Module.DatabaseUpdate.Updater;
 using static OutlookInspired.Module.Services.ReportsExtensions;
 
 namespace OutlookInspired.Module.Features.Orders{
@@ -21,7 +20,7 @@ namespace OutlookInspired.Module.Features.Orders{
                         new ChoiceActionItem("Report", RevenueReport){ImageName = "CustomerProfileReport"},
                         new ChoiceActionItem("Analysis", RevenueAnalysis){ImageName = "SalesAnalysis"}
                     }},
-                    new ChoiceActionItem("Report",MailMergeOrder){ImageName = "CustomerProfileReport"}
+                    new ChoiceActionItem("Report",MailMergeExtensions.MailMergeOrder){ImageName = "CustomerProfileReport"}
                 },
                 ItemType = SingleChoiceActionItemType.ItemIsOperation
             };
@@ -34,7 +33,7 @@ namespace OutlookInspired.Module.Features.Orders{
             var selectedItemData = (string)ReportAction.SelectedItem.Data;
             if (selectedItemData.Contains("Revenue")){
                 var id = ((Order)View.CurrentObject).Customer.ID;
-                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,selectedItemData == "Revenue Analysis"
+                ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,selectedItemData == RevenueAnalysis
                     ? CriteriaOperator.FromLambda<OrderItem>(item => item.Order.Customer.ID == id)
                     : CriteriaOperator.Parse($"IsThisMonth([{nameof(OrderItem.Order)}.{nameof(Order.OrderDate)}])"));
             }
@@ -46,6 +45,9 @@ namespace OutlookInspired.Module.Features.Orders{
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
+            if (!Active) return;
+            ReportAction.ApplyReportProtection(item =>item.ParentItem is{ Data: null });
+            ReportAction.ApplyMailMergeProtection(item => item.ParentItem==null);
         }
     }
 }

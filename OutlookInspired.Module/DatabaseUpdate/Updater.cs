@@ -41,7 +41,7 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
         if (ObjectSpace.ModifiedObjects.Any()){
             CreateDepartmentRoles();
             CreateViewFilters();
-            CreateMailMergeTemplates();
+            ObjectSpace.CreateMailMergeTemplates();
             ObjectSpace.GetObjectsQuery<Employee>().ToArray()
                 .Do(employee => {
                     employee.User = ObjectSpace.EnsureUser(employee.FirstName.ToLower()
@@ -73,23 +73,7 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
     private void CreateAdminObjects() 
         => ObjectSpace.EnsureUser("Admin")
             .Roles.Add(ObjectSpace.EnsureRole("Administrators",isAdmin:true));
-
-    public const string MailMergeOrder="Order";
-    public const string MailMergeOrderItem="OrderItem";
-    public const string FollowUp="FollowUp";
-    public const string ProbationNotice="Probation Notice";
-    public const string ServiceExcellence="Service Excellence";
-    public const string ThankYouNote="Thank You Note";
-    public const string WelcomeToDevAV="Welcome to DevAV";
-    public const string MonthAward="Month Award";
-    private void CreateMailMergeTemplates() 
-        => new[]{
-                (type: typeof(Order), name: FollowUp), (type: typeof(Order), name: MailMergeOrder), (type: typeof(OrderItem), name: MailMergeOrderItem),
-                (type: typeof(Employee), name: ProbationNotice),(type: typeof(Employee), name: ServiceExcellence),(type: typeof(Employee), name: ThankYouNote)
-                ,(type: typeof(Employee), name: WelcomeToDevAV),(type: typeof(Employee), name: MonthAward),
-            }
-            .ForEach(t => ObjectSpace.NewMailMergeData(t.name,t.type,GetType().Assembly
-                .GetManifestResourceStream(s => s.Contains("MailMerge")  && s.EndsWith($"{t.name}.docx")).Bytes()));
+    
 
     private void CreateViewFilters(){
         EmployeeFilters();

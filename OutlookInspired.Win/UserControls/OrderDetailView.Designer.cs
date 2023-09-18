@@ -1,6 +1,6 @@
 ﻿namespace OutlookInspired.Win.UserControls
 {
-    partial class OrderCardView
+    partial class OrderDetailView
     {
         /// <summary> 
         /// Required designer variable.
@@ -53,6 +53,7 @@
             // 
             // layoutView1
             // 
+            layoutView1.DetailHeight = 420;
             layoutView1.GridControl = gridControl1;
             layoutView1.Name = "layoutView1";
             layoutView1.TemplateCard = null;
@@ -60,20 +61,22 @@
             // gridControl1
             // 
             gridControl1.Dock = DockStyle.Fill;
+            gridControl1.EmbeddedNavigator.Margin = new Padding(4, 4, 4, 4);
             gridLevelNode1.LevelTemplate = layoutView1;
             gridLevelNode1.RelationName = "OrderItems";
             gridControl1.LevelTree.Nodes.AddRange(new DevExpress.XtraGrid.GridLevelNode[] { gridLevelNode1 });
             gridControl1.Location = new Point(0, 0);
             gridControl1.MainView = gridView1;
+            gridControl1.Margin = new Padding(4, 4, 4, 4);
             gridControl1.Name = "gridControl1";
-            gridControl1.Size = new Size(819, 655);
+            gridControl1.Size = new Size(983, 786);
             gridControl1.TabIndex = 2;
             gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView1, layoutView1 });
             // 
             // gridView1
             // 
             gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { colPaymentStatus, colShipmentStatus, colInvoiceNumber, colOrderDate, colTotalAmount, colStore, colCustomer, colShipDate1, colShippingAmount, colPaymentTotal, colRefundTotal, colShipmentCourier, colId1 });
-            gridView1.DetailHeight = 512;
+            gridView1.DetailHeight = 614;
             gridView1.FixedLineWidth = 1;
             gridView1.GridControl = gridControl1;
             gridView1.Name = "gridView1";
@@ -86,7 +89,7 @@
             gridView1.OptionsDetail.ShowDetailTabs = false;
             gridView1.OptionsDetail.SmartDetailExpandButtonMode = DevExpress.XtraGrid.Views.Grid.DetailExpandButtonMode.AlwaysEnabled;
             gridView1.OptionsDetail.SmartDetailHeight = true;
-            gridView1.OptionsEditForm.PopupEditFormWidth = 1200;
+            gridView1.OptionsEditForm.PopupEditFormWidth = 1440;
             gridView1.OptionsFind.AlwaysVisible = true;
             gridView1.OptionsFind.FindNullPrompt = "Search Orders (Ctrl + F)";
             gridView1.OptionsFind.ShowClearButton = false;
@@ -100,6 +103,7 @@
             // colPaymentStatus
             // 
             colPaymentStatus.FieldName = "PaymentStatusImage";
+            colPaymentStatus.MinWidth = 24;
             colPaymentStatus.Name = "colPaymentStatus";
             colPaymentStatus.OptionsColumn.AllowFocus = false;
             colPaymentStatus.OptionsColumn.AllowMove = false;
@@ -107,11 +111,12 @@
             colPaymentStatus.OptionsColumn.ShowCaption = false;
             colPaymentStatus.Visible = true;
             colPaymentStatus.VisibleIndex = 0;
-            colPaymentStatus.Width = 40;
+            colPaymentStatus.Width = 48;
             // 
             // colShipmentStatus
             // 
             colShipmentStatus.FieldName = "ShipmentStatusImage";
+            colShipmentStatus.MinWidth = 24;
             colShipmentStatus.Name = "colShipmentStatus";
             colShipmentStatus.OptionsColumn.AllowFocus = false;
             colShipmentStatus.OptionsColumn.AllowMove = false;
@@ -119,28 +124,30 @@
             colShipmentStatus.OptionsColumn.ShowCaption = false;
             colShipmentStatus.Visible = true;
             colShipmentStatus.VisibleIndex = 1;
-            colShipmentStatus.Width = 40;
+            colShipmentStatus.Width = 48;
             // 
             // colInvoiceNumber
             // 
             colInvoiceNumber.Caption = "INVOICE #";
             colInvoiceNumber.FieldName = "InvoiceNumber";
+            colInvoiceNumber.MinWidth = 24;
             colInvoiceNumber.Name = "colInvoiceNumber";
             colInvoiceNumber.OptionsColumn.AllowFocus = false;
             colInvoiceNumber.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] { new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "InvoiceNumber", "{0}") });
             colInvoiceNumber.Visible = true;
             colInvoiceNumber.VisibleIndex = 2;
-            colInvoiceNumber.Width = 70;
+            colInvoiceNumber.Width = 84;
             // 
             // colOrderDate
             // 
             colOrderDate.Caption = "ORDER DATE";
             colOrderDate.FieldName = "OrderDate";
+            colOrderDate.MinWidth = 24;
             colOrderDate.Name = "colOrderDate";
             colOrderDate.OptionsColumn.AllowFocus = false;
             colOrderDate.Visible = true;
             colOrderDate.VisibleIndex = 3;
-            colOrderDate.Width = 78;
+            colOrderDate.Width = 94;
             // 
             // colTotalAmount
             // 
@@ -148,41 +155,45 @@
             colTotalAmount.DisplayFormat.FormatString = "c";
             colTotalAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             colTotalAmount.FieldName = "TotalAmount";
+            colTotalAmount.MinWidth = 24;
             colTotalAmount.Name = "colTotalAmount";
             colTotalAmount.OptionsColumn.AllowFocus = false;
             colTotalAmount.Visible = true;
             colTotalAmount.VisibleIndex = 8;
-            colTotalAmount.Width = 90;
+            colTotalAmount.Width = 108;
             // 
             // colStore
             // 
             colStore.Caption = "STORE";
             colStore.FieldName = "Store.Crest.CityName";
+            colStore.MinWidth = 24;
             colStore.Name = "colStore";
             colStore.OptionsColumn.AllowFocus = false;
             colStore.Visible = true;
             colStore.VisibleIndex = 6;
-            colStore.Width = 80;
+            colStore.Width = 96;
             // 
             // colCustomer
             // 
             colCustomer.Caption = "COMPANY";
             colCustomer.FieldName = "Customer.Name";
+            colCustomer.MinWidth = 24;
             colCustomer.Name = "colCustomer";
             colCustomer.OptionsColumn.AllowFocus = false;
             colCustomer.Visible = true;
             colCustomer.VisibleIndex = 5;
-            colCustomer.Width = 88;
+            colCustomer.Width = 106;
             // 
             // colShipDate1
             // 
             colShipDate1.Caption = "SHIP DATE";
             colShipDate1.FieldName = "ShipDate";
+            colShipDate1.MinWidth = 24;
             colShipDate1.Name = "colShipDate1";
             colShipDate1.OptionsColumn.AllowFocus = false;
             colShipDate1.Visible = true;
             colShipDate1.VisibleIndex = 4;
-            colShipDate1.Width = 78;
+            colShipDate1.Width = 94;
             // 
             // colShippingAmount
             // 
@@ -190,11 +201,12 @@
             colShippingAmount.DisplayFormat.FormatString = "c";
             colShippingAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             colShippingAmount.FieldName = "ShippingAmount";
+            colShippingAmount.MinWidth = 24;
             colShippingAmount.Name = "colShippingAmount";
             colShippingAmount.OptionsColumn.AllowFocus = false;
             colShippingAmount.Visible = true;
             colShippingAmount.VisibleIndex = 7;
-            colShippingAmount.Width = 110;
+            colShippingAmount.Width = 132;
             // 
             // colPaymentTotal
             // 
@@ -202,11 +214,12 @@
             colPaymentTotal.DisplayFormat.FormatString = "c";
             colPaymentTotal.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             colPaymentTotal.FieldName = "PaymentTotal";
+            colPaymentTotal.MinWidth = 24;
             colPaymentTotal.Name = "colPaymentTotal";
             colPaymentTotal.OptionsColumn.AllowFocus = false;
             colPaymentTotal.Visible = true;
             colPaymentTotal.VisibleIndex = 9;
-            colPaymentTotal.Width = 90;
+            colPaymentTotal.Width = 108;
             // 
             // colRefundTotal
             // 
@@ -214,20 +227,26 @@
             colRefundTotal.DisplayFormat.FormatString = "c";
             colRefundTotal.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             colRefundTotal.FieldName = "RefundTotal";
+            colRefundTotal.MinWidth = 24;
             colRefundTotal.Name = "colRefundTotal";
             colRefundTotal.OptionsColumn.AllowFocus = false;
+            colRefundTotal.Width = 90;
             // 
             // colShipmentCourier
             // 
             colShipmentCourier.Caption = "SHIPMENT COURIER";
             colShipmentCourier.FieldName = "ShipmentCourier";
+            colShipmentCourier.MinWidth = 24;
             colShipmentCourier.Name = "colShipmentCourier";
             colShipmentCourier.OptionsColumn.AllowFocus = false;
+            colShipmentCourier.Width = 90;
             // 
             // colId1
             // 
             colId1.FieldName = "Id";
+            colId1.MinWidth = 24;
             colId1.Name = "colId1";
+            colId1.Width = 90;
             // 
             // labelControl1
             // 
@@ -235,20 +254,22 @@
             labelControl1.Dock = DockStyle.Bottom;
             labelControl1.LineLocation = DevExpress.XtraEditors.LineLocation.Top;
             labelControl1.LineVisible = true;
-            labelControl1.Location = new Point(0, 655);
+            labelControl1.Location = new Point(0, 786);
+            labelControl1.Margin = new Padding(4, 4, 4, 4);
             labelControl1.Name = "labelControl1";
-            labelControl1.Size = new Size(94, 23);
+            labelControl1.Size = new Size(108, 28);
             labelControl1.TabIndex = 3;
             labelControl1.Text = "labelControl1";
             // 
-            // OrderCardView
+            // OrderDetailView
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(gridControl1);
             Controls.Add(labelControl1);
-            Name = "OrderCardView";
-            Size = new Size(819, 678);
+            Margin = new Padding(4, 4, 4, 4);
+            Name = "OrderDetailView";
+            Size = new Size(983, 814);
             ((System.ComponentModel.ISupportInitialize)layoutView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();

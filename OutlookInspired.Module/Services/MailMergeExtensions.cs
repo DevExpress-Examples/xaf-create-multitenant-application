@@ -1,13 +1,23 @@
 ﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 using DevExpress.Office.Services;
 using DevExpress.Persistent.Base;
+using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services{
     static class MailMergeExtensions{
+        public const string MailMergeOrder="Order";
+        public const string MailMergeOrderItem="OrderItem";
+        public const string FollowUp="FollowUp";
+        public const string ProbationNotice="Probation Notice";
+        public const string ServiceExcellence="Service Excellence";
+        public const string ThankYouNote="Thank You Note";
+        public const string WelcomeToDevAV="Welcome to DevAV";
+        public const string MonthAward="Month Award";
         public static byte[] MailMergeInvoice(this Order order) 
             => order.ObjectSpace.MailMergeData("Order").CreateDocumentServer(order).MailMergeInvoice(order);
 
@@ -15,6 +25,22 @@ namespace OutlookInspired.Module.Services{
             richEditDocumentServer.CalculateDocumentVariable += (_, e) => e.CalculateDocumentVariable(order, richEditDocumentServer);
             return richEditDocumentServer.MailMerge(order);
         }
+        public static void ApplyMailMergeProtection(this SingleChoiceAction action, Func<ChoiceActionItem,bool> match) 
+            => action.Items.SelectManyRecursive(item => item.Items)
+                .WhereNotDefault(item => item.Data).Where(match)
+                .Do(item => item.Enabled[nameof(ApplyMailMergeProtection)] = action.View().ObjectSpace.GetObjectsQuery<RichTextMailMergeData>()
+                    .Any(data => data.Name == (string)item.Data))
+                .Enumerate();
+
+        public static void CreateMailMergeTemplates(this IObjectSpace objectSpace) 
+            => new[]{
+                    (type: typeof(Order), name: FollowUp), (type: typeof(Order), name: MailMergeOrder), (type: typeof(OrderItem), name: MailMergeOrderItem),
+                    (type: typeof(Employee), name: ProbationNotice),(type: typeof(Employee), name: ServiceExcellence),(type: typeof(Employee), name: ThankYouNote)
+                    ,(type: typeof(Employee), name: WelcomeToDevAV),(type: typeof(Employee), name: MonthAward),
+                }
+                .Do(t => objectSpace.NewMailMergeData(t.name,t.type,typeof(MailMergeExtensions).Assembly
+                    .GetManifestResourceStream(s => s.Contains("MailMerge")  && s.EndsWith($"{t.name}.docx")).Bytes()))
+                .Enumerate();
 
         private static void CalculateDocumentVariable(this CalculateDocumentVariableEventArgs e,Order order, IRichEditDocumentServer richEditDocumentServer){
             switch (e.VariableName){

@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Pdf;
+using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Resources.Reports;
@@ -17,8 +20,26 @@ static class ReportsExtensions{
     public const string ProductProfile = "Profile";
     public const string Sales = "Sales";
     public const string TopSalesPerson = "Top Sales Person";
+    public const string FedExGroundLabel = nameof(FedExGroundLabel);
+    public static void ApplyReportProtection(this SingleChoiceAction action,Func<ChoiceActionItem,bool> match) 
+        => action.Items.SelectManyRecursive(item => item.Items)
+            .WhereNotDefault(item => item.Data).Where(match)
+            .Do(item => item.Enabled[nameof(ApplyReportProtection)] = action.View().ObjectSpace.GetObjectsQuery<ReportDataV2>()
+                .Any(v2 => v2.DisplayName == (string)item.Data))
+            .Enumerate();
+
+    public static void DisableReportItems(this SingleChoiceAction singleChoiceAction) 
+        => singleChoiceAction.Items.WhereNotDefault(item => item.Data)
+            .Do(item => {
+                item.Active["not exist"] =
+                    singleChoiceAction.View().ObjectSpace.GetObjectsQuery<ReportDataV2>()
+                        .Any(v2 => v2.DisplayName == (string)item.Data);
+                item.Active["not exist"] = item.Active["not exist"];
+            })
+            .Enumerate();
+
     public static PredefinedReportsUpdater AddOrderReports(this PredefinedReportsUpdater predefinedReportsUpdater){
-        predefinedReportsUpdater.AddPredefinedReport<FedExGroundLabel>(nameof(FedExGroundLabel), typeof(Order));
+        predefinedReportsUpdater.AddPredefinedReport<FedExGroundLabel>(FedExGroundLabel, typeof(Order));
         predefinedReportsUpdater.AddPredefinedReport<SalesRevenueReport>(RevenueReport, typeof(Order));
         predefinedReportsUpdater.AddPredefinedReport<SalesRevenueAnalysisReport>(RevenueAnalysis, typeof(Order));
         return predefinedReportsUpdater;

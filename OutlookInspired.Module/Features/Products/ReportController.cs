@@ -36,6 +36,8 @@ namespace OutlookInspired.Module.Features.Products{
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
+            if (!Active)return;
+            ReportAction.DisableReportItems();
         }
     }
 }

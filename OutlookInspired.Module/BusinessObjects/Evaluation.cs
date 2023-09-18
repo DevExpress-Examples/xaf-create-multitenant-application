@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
@@ -19,9 +18,6 @@ namespace OutlookInspired.Module.BusinessObjects{
     [DefaultClassOptions][ImageName("EvaluationYes")][VisibleInReports(false)]
     public class Evaluation :OutlookInspiredBaseObject,IEvent{
         public const string EmployeeEvaluationsChildListView="Employee_Evaluations_ListView_Child";
-	    private const int NoneReminder = -1;
-		
-		private int _remindInSeconds = NoneReminder;
 
 		public override void OnCreated() {
 			base.OnCreated();
@@ -49,10 +45,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[Browsable(false)]
 		public Object AppointmentId => ID;
-
-		[Browsable(false)]
-		[RuleFromBoolProperty("EvaluationIntervalValid", DefaultContexts.Save, "The start date must be less than the end date", SkipNullOrEmptyValues = false, UsedProperties = "StartOn, EndOn")]
-		public Boolean IsIntervalValid => StartOn <= EndOn;
 		
 		DateTime IEvent.StartOn {
 			get => StartOn ?? DateTime.MinValue;
@@ -62,28 +54,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 			get => EndOn ?? DateTime.MinValue;
 			set => EndOn = value;
 		}
-
-		[NonCloneable]
-		[Browsable(false)]
-		[StringLength(200)]
-		public virtual string ReminderInfoXml{ get; set; }
-
-		[Browsable(false)]
-		[NotMapped]
-		public TimeSpan? RemindIn {
-			get => _remindInSeconds < 0 ? null : TimeSpan.FromSeconds(_remindInSeconds);
-			set => _remindInSeconds = value.HasValue ? (int)value.Value.TotalSeconds : NoneReminder;
-		}
-		[Browsable(false)]
-		public virtual int RemindInSeconds { get; set; }
-		[VisibleInDetailView(false), VisibleInListView(false), VisibleInLookupListView(false)]
-		public string NotificationMessage => Subject;
-
-		[Browsable(false)]
-		public object UniqueId => ID;
-
-		[VisibleInDetailView(false), VisibleInListView(false), VisibleInLookupListView(false)]
-		public virtual bool IsPostponed { get; set; }
 		
 		[RuleRequiredField]
         public virtual Employee Manager{ get; set; }
@@ -91,7 +61,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Guid? ManagerId{ get; set; }
         [RuleRequiredField]
         public virtual DateTime? StartOn{ get; set; }
-        // [RuleRequiredField(DefaultContexts.Save)]
+        [RuleRequiredField(DefaultContexts.Save)]
         public virtual Employee Employee{ get; set; }
         [FontSizeDelta(8)]
         public virtual string Subject{ get; set; }
@@ -106,12 +76,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         
         [Browsable(false)]
         public virtual Int32 ColorInt { get; protected set; }
-        
-        [VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
-        public Object Id => ID;
-
-        [VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
-        public Int32 OleColor => ColorTranslator.ToOle(Color.FromArgb(ColorInt));
 
         [NotMapped][Browsable(false)]
         public Color Color {

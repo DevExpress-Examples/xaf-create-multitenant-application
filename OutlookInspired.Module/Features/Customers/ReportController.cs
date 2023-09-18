@@ -3,6 +3,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
+using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services;
@@ -29,15 +30,15 @@ namespace OutlookInspired.Module.Features.Customers{
 
         private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e){
             var selectedItemData = (string)ReportAction.SelectedItem.Data;
-            if (selectedItemData == "Sales Summary Report"){
+            if (selectedItemData == SalesSummaryReport){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type, CriteriaOperator.FromLambda<OrderItem>(item 
                     => item.Order.Customer.ID == ((Customer)View.CurrentObject).ID));
             }
-            else if (selectedItemData == "Locations"){
+            else if (selectedItemData == LocationsReport){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<Customer>(customer
                     => customer.ID == ((Customer)View.CurrentObject).ID));
             }
-            else if (selectedItemData == "Contacts"){
+            else if (selectedItemData == Contacts){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<CustomerEmployee>(customerEmployee
                     => customerEmployee.Customer.ID == ((Customer)View.CurrentObject).ID));
             }
@@ -46,6 +47,9 @@ namespace OutlookInspired.Module.Features.Customers{
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
             Active[nameof(MapsViewController)] = Frame.GetController<MapsViewController>().MapItAction.Active;
+            if (!Active) return;
+            ReportAction.DisableReportItems();
         }
+
     }
 }

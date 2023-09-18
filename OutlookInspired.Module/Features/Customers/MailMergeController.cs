@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using static OutlookInspired.Module.DatabaseUpdate.Updater;
+using static OutlookInspired.Module.Services.MailMergeExtensions;
 
 namespace OutlookInspired.Module.Features.Customers{
     public class MailMergeController:ObjectViewController<ObjectView,Employee>{
