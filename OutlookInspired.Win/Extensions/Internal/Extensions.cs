@@ -37,6 +37,8 @@ namespace OutlookInspired.Win.Extensions.Internal{
         
         public static bool IsNotGroupedRow(this ColumnView columnView) 
             => columnView is not GridView view|| !view.IsGroupRow(columnView.FocusedRowHandle);
+        public static bool IsNotInvalidRow(this ColumnView columnView) 
+            => columnView.FocusedRowHandle!=GridControl.InvalidRowHandle;
         
         [DllImport("USER32.dll", CharSet = CharSet.Auto)]  
         static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
@@ -70,9 +72,14 @@ namespace OutlookInspired.Win.Extensions.Internal{
         public static GeoPoint ToGeoPoint(this IMapsMarker mapsMarker) 
             => new(mapsMarker.Latitude, mapsMarker.Longitude);
         
-        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
-            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject :
-            columnView.IsNotGroupedRow() ? objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject) : null;
+        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType){
+            if (columnView.FocusedRowObject == null || !columnView.IsServerMode)
+                return columnView.FocusedRowObject;
+            else if (columnView.IsNotGroupedRow()&&columnView.IsNotInvalidRow())
+                return objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
+            else
+                return null;
+        }
 
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)

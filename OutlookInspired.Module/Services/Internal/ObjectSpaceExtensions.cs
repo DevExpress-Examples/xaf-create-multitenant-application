@@ -37,7 +37,7 @@ namespace OutlookInspired.Module.Services.Internal{
         }
         
         public static EntityServerModeSource NewEntityServerModeSource(this EFCoreObjectSpace objectSpace,Type objectType,string criteria) 
-            => new EntityServerModeSource{
+            => new(){
                 KeyExpression = objectSpace.TypesInfo.FindTypeInfo(objectType).KeyMember.Name,
                 QueryableSource = objectSpace.Query(objectType, criteria)
             };

@@ -5,6 +5,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -76,6 +77,7 @@ namespace OutlookInspired.MiddleTier.Extensions{
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();
+                    options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
                 })
                 .AddNonPersistent();
 

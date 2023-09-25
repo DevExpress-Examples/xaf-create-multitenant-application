@@ -1,0 +1,39 @@
+trigger:
+- main
+pool:
+  vmImage: 'windows-2022'
+steps:
+- powershell: |
+    $localDbInstance = & sqllocaldb i "mssqllocaldb" 2>&1
+    if ($localDbInstance -like "*not recognized*" -or $localDbInstance -like "*doesn't exist*") {
+        Write-Host "SQL Server LocalDB is not installed or the instance doesn't exist."
+        Write-Host "Installing SQL Server LocalDB..."
+        Invoke-WebRequest -Uri "https://download.microsoft.com/download/7/C/1/7C1BA242-A057-4E4B-AEA2-DEE3A7B347F0/SqlLocalDB.msi" -OutFile "SqlLocalDB.msi"
+        Start-Process -FilePath "msiexec.exe" -ArgumentList "/i SqlLocalDB.msi /q /norestart" -Wait
+        Remove-Item -Path "SqlLocalDB.msi"
+        Write-Host "SQL Server LocalDB has been installed."
+    }
+    else {
+        Write-Host "SQL Server LocalDB is already installed."
+    }
+  displayName: 'Install SQL Server LocalDB if not exists'
+- task: PowerShell@2
+  displayName: Test
+  inputs:
+    targetType: 'inline'
+    script: |
+      & sqllocaldb start mssqllocaldb
+      dotnet nuget add source '$(DXFeed)' --name DX
+      cd $env:BUILD_SOURCESDIRECTORY
+      dotnet test --configuration Test
+    pwsh: true
+# - script: ls D:\a\1\s\Tests\OutlookInspired.Tests\bin\Test\net6.0-windows
+  # displayName: 'List bin directory'
+
+# - task: DotNetCoreCLI@2
+#   displayName: Test
+#   inputs:
+#     command: 'test'
+#     arguments: '--configuration Test'
+    # arguments: '--settings Tests\Tests.runsettings'
+  

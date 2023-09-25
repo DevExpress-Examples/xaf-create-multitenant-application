@@ -5,9 +5,10 @@
     <Deterministic>false</Deterministic>
     <AssemblyVersion>1.0.*</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Configurations>Debug;Release;EasyTest</Configurations>
+    <Configurations>Debug;Release;EasyTest;Test</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
     <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <NoWarn>1701;1702;CA1416</NoWarn>
@@ -182,8 +183,5 @@
     <None Update="UnusableNodes9.xml">
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
   </ItemGroup>
 </Project>
