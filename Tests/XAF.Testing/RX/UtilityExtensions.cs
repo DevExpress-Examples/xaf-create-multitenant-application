@@ -18,7 +18,8 @@ namespace XAF.Testing.RX{
 
         public static IObservable<T> ReplayConnect<T>(this IObservable<T> source, int bufferSize = 0) 
             => source.SubscribeReplay(bufferSize);
-        
+        public static Task Delay(this TimeSpan timeSpan,CancellationToken token=default) 
+            => Task.Delay(timeSpan, token);
         public static IObservable<TResult> Use<T, TResult>(this T source, Func<T, IObservable<TResult>> selector) where T : IDisposable
             => Observable.Using(() => source, selector);
         

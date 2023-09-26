@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Security;
+using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
+using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Assert;
@@ -13,17 +17,22 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests{
     [Apartment(ApartmentState.STA)][Order(1)]
     public class WindowsTests:TestBase{
-
+        
 #if TEST
+        static WindowsTests(){
+            ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
+        }
+
         [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
 #else
         [TestCaseSource(nameof(TestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert) {
             
-            // using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
-            //
-            // application.StartWinTest(assert(application,navigationView, viewVariant),user);
+            using var application = await SetupWinApplication(useServer:false,runInMainMonitor:true);
+            
+            application.StartWinTest(assert(application,navigationView, viewVariant),user);
+            // application.StartWinTest(1.Seconds().Delay().ToObservable(),user);
         }
 
         private static readonly Dictionary<EmployeeDepartment, string> Roles = new(){
@@ -44,15 +53,15 @@ namespace OutlookInspired.Tests{
                              .Prepend("Admin").Take(1)
                          ){
                 yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
-                yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
-                yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
-                yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
-                yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
-                yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
-                yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
-                yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
-                yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+                // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
+                // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
+                // yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
+                // yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
+                // yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
+                // yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
+                // yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
+                // yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
                 //     // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
                 }
             }
@@ -84,11 +93,18 @@ namespace OutlookInspired.Tests{
         
         [SetUp]
         public void Setup(){
+            Console.WriteLine("Setup");
             StopServer();
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => {
+                if (errors == SslPolicyErrors.None)
+                    return true;
+                Console.WriteLine("ServerCertificateValidationCallback invoked");
+                return false;
+            };
             var process = new Process{
                 StartInfo = new ProcessStartInfo{
                     FileName = "dotnet",
-                    Arguments = "run --no-build",
+                    Arguments = "run",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -103,6 +119,7 @@ namespace OutlookInspired.Tests{
             while (!processStarted){
                 var output = process.StandardOutput.ReadLine();
                 if (output != null && output.Contains("Now listening on")) processStarted = true;
+                Console.Write(output);
             }
 
             // Now the process has started

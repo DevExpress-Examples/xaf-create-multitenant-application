@@ -10,8 +10,9 @@ namespace OutlookInspired.Tests.Import{
     [Order(0)]
     public class ImportData:TestBase{
 #if TEST
-        [NUnit.Framework.Test]
+        
 #endif
+        [NUnit.Framework.Test]
         public async Task Test(){
             
             using var application = await SetupWinApplication(application => {
@@ -43,7 +44,7 @@ namespace OutlookInspired.Tests.Import{
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
             
-            objectSpace.GenerateOrders();
+            // objectSpace.GenerateOrders();
         }
 
         

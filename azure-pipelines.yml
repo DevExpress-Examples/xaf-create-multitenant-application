@@ -1,7 +1,7 @@
 trigger:
 - main
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 steps:
 - task: PowerShell@2
   displayName: Test
@@ -11,7 +11,8 @@ steps:
       & sqllocaldb start mssqllocaldb
       dotnet nuget add source '$(DXFeed)' --name DX
       cd $env:BUILD_SOURCESDIRECTORY
-      dotnet test --configuration Test
+      
+      dotnet test --configuration DEBUG
     pwsh: true
 # - script: ls D:\a\1\s\Tests\OutlookInspired.Tests\bin\Test\net6.0-windows
   # displayName: 'List bin directory'

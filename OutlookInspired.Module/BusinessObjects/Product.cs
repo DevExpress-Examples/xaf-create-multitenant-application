@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+using DevExpress.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
@@ -18,7 +18,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, BrochureDetailView)]
     [CloneView(CloneViewType.DetailView, CardViewDetailView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
-    [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = FontStyle.Strikeout)]
+    [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = DXFontStyle.Strikeout)]
     public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
         
         public const string CardViewDetailView = "ProductCardView_DetailView";
