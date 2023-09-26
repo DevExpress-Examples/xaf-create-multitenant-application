@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <Deterministic>false</Deterministic>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Configurations>Debug;Release;EasyTest</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Model.xafml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model.xafml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="23.1.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
+  </ItemGroup>
+</Project>

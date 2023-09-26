@@ -15,9 +15,9 @@ namespace OutlookInspired.Tests{
     public class WindowsTests:TestBase{
 
 #if TEST
-        // [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+        [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
 #else
-        // [TestCaseSource(nameof(TestCases))]
+        [TestCaseSource(nameof(TestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert) {
             
@@ -41,7 +41,7 @@ namespace OutlookInspired.Tests{
                              // .Where(pair => pair.Key==EmployeeDepartment.IT)
                              .Select(data => data.Value)
                              // .IgnoreElements()
-                             .Prepend("Admin")
+                             .Prepend("Admin").Take(1)
                          ){
                 yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
                 yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);

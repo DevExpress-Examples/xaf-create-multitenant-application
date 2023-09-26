@@ -44,6 +44,7 @@ namespace OutlookInspired.Module.Features.MasterDetail{
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
+            
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
             _masterFrame = View.MasterFrame();
             _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
