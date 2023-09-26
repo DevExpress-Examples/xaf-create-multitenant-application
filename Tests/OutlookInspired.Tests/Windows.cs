@@ -16,7 +16,7 @@ using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests{
     [Apartment(ApartmentState.STA)][Order(1)]
-    public class WindowsTests:TestBase{
+    public class Windows:TestBase{
         
 #if TEST
         [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
