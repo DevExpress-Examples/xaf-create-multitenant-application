@@ -19,10 +19,6 @@ namespace OutlookInspired.Tests{
     public class WindowsTests:TestBase{
         
 #if TEST
-        static WindowsTests(){
-            ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
-        }
-
         [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
 #else
         [TestCaseSource(nameof(TestCases))]
@@ -53,7 +49,7 @@ namespace OutlookInspired.Tests{
                              .Prepend("Admin").Take(1)
                          ){
                 yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
-                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
                 // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
                 // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
                 // yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);

@@ -12,15 +12,5 @@ steps:
       dotnet nuget add source '$(DXFeed)' --name DX
       cd $env:BUILD_SOURCESDIRECTORY
       
-      dotnet test --configuration DEBUG
-    pwsh: true
-# - script: ls D:\a\1\s\Tests\OutlookInspired.Tests\bin\Test\net6.0-windows
-  # displayName: 'List bin directory'
-
-# - task: DotNetCoreCLI@2
-#   displayName: Test
-#   inputs:
-#     command: 'test'
-#     arguments: '--configuration Test'
-    # arguments: '--settings Tests\Tests.runsettings'
-  
+      dotnet test --configuration TEST
+    pwsh: true  

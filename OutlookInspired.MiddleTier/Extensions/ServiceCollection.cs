@@ -28,15 +28,22 @@ namespace OutlookInspired.MiddleTier.Extensions{
                 //    e.Handled = true;
                 //};
 #if DEBUG
-                // if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
-                application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                application.DatabaseVersionMismatch += (_, e) => {
-                    e.Updater.Update();
-                    e.Handled = true;
-                };
-                // }
+                if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema){
+                    application.UpdateDB();
+                }
+#endif
+#if TEST
+            application.UpdateDB();
 #endif
             });
+
+        private static void UpdateDB(this XafApplication application){
+            application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
+            application.DatabaseVersionMismatch += (_, e) => {
+                e.Updater.Update();
+                e.Handled = true;
+            };
+        }
 
         private static void AddSecurity(this IMiddleTierEFCoreApplicationBuilder builder) 
             => builder.Security

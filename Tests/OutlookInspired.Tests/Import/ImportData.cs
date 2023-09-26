@@ -10,9 +10,8 @@ namespace OutlookInspired.Tests.Import{
     [Order(0)]
     public class ImportData:TestBase{
 #if TEST
-        
+        [Test]
 #endif
-        [NUnit.Framework.Test]
         public async Task Test(){
             
             using var application = await SetupWinApplication(application => {
