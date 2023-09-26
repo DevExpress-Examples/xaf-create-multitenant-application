@@ -100,7 +100,7 @@ namespace OutlookInspired.Tests{
             var process = new Process{
                 StartInfo = new ProcessStartInfo{
                     FileName = "dotnet",
-                    Arguments = "run",
+                    Arguments = "run --configuration TEST",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -116,6 +116,7 @@ namespace OutlookInspired.Tests{
                 var output = process.StandardOutput.ReadLine();
                 if (output != null && output.Contains("Now listening on")) processStarted = true;
                 Console.Write(output);
+                
             }
 
             // Now the process has started
