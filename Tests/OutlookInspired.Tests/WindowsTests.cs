@@ -83,34 +83,26 @@ namespace OutlookInspired.Tests{
             => application.AssertCustomerListView(navigationView, viewVariant);
         
         [SetUp]
-        public void Setup()
-        {
+        public void Setup(){
             StopServer();
-
-            Process process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
+            var process = new Process{
+                StartInfo = new ProcessStartInfo{
                     FileName = "dotnet",
                     Arguments = "run --no-build",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    WorkingDirectory = "C:\\Work\\DX\\OutlookInspired\\OutlookInspired.MiddleTier\\"
+                    WorkingDirectory = Path.GetFullPath($"{AppDomain.CurrentDomain.BaseDirectory}/../../../../../OutlookInspired.MiddleTier")
                 }
             };
 
             process.Start();
 
             // Wait for the process to start by checking its output
-            bool processStarted = false;
-            while (!processStarted)
-            {
-                string output = process.StandardOutput.ReadLine();
-                if (output != null && output.Contains("Now listening on"))
-                {
-                    processStarted = true;
-                }
+            var processStarted = false;
+            while (!processStarted){
+                var output = process.StandardOutput.ReadLine();
+                if (output != null && output.Contains("Now listening on")) processStarted = true;
             }
 
             // Now the process has started

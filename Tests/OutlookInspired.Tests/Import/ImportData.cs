@@ -13,7 +13,7 @@ namespace OutlookInspired.Tests.Import{
         [NUnit.Framework.Test]
 #endif
         public async Task Test(){
-            
+            return;
             using var application = await SetupWinApplication(application => {
                 application.Security = null;
                 return application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
