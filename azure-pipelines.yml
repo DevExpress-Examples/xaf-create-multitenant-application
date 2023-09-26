@@ -1,40 +1,54 @@
+variables:
+  runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
+  testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
+  dxFeedVar: '$(DXFeed)'
+
 trigger:
-  - main
+- main
+
 pool:
   vmImage: 'windows-latest'
-steps:
-- task: PowerShell@2
-  displayName: Test
-  inputs:
-    targetType: 'inline'
-    script: |
-      & sqllocaldb start mssqllocaldb
-      dotnet nuget add source '$(DXFeed)' --name DX
-      cd $env:BUILD_SOURCESDIRECTORY
-      dotnet build --configuration TEST
-    pwsh: true  
-- task: VSTest@2
-  displayName: 'Import'
-  inputs:
-    searchFolder: '$(System.DefaultWorkingDirectory)\Tests'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*.Tests.dll
-      !**\obj\**
-    testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Import.Test
-    diagnosticsEnabled: true
-    codeCoverageEnabled: true
-    runInParallel: false
-- task: VSTest@2
-  displayName: 'Windows'
-  inputs:
-    searchFolder: '$(System.DefaultWorkingDirectory)\Tests'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*.Tests.dll
-      !**\obj\**
-    testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Windows.Test
-    diagnosticsEnabled: true
-    codeCoverageEnabled: true
-    runInParallel: false
-    
+
+jobs:
+- job: Test
+  timeoutInMinutes: 90  # Set the timeout here
+  steps:
+  - task: PowerShell@2
+    displayName: Build
+    continueOnError: false
+    inputs:
+      targetType: 'inline'
+      script: |
+        & sqllocaldb start mssqllocaldb
+        dotnet nuget add source $(dxFeedVar) --name DX
+        cd $env:BUILD_SOURCESDIRECTORY
+        dotnet build --configuration TEST
+      pwsh: true  
+  - task: VSTest@2
+    displayName: 'ImportData.Test'
+    continueOnError: false
+    inputs:
+      searchFolder: $(testsFolderPath)
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: |
+        **\*.Tests.dll
+        !**\obj\**
+      testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Import.ImportData.Test
+      diagnosticsEnabled: true
+      codeCoverageEnabled: true
+      runInParallel: false
+      runSettingsFile: $(runSettingsPath)
+  - task: VSTest@2
+    displayName: 'Windows.Test'
+    continueOnError: false
+    inputs:
+      searchFolder: $(testsFolderPath)
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: |
+        **\*.Tests.dll
+        !**\obj\**
+      testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Windows.Test
+      diagnosticsEnabled: true
+      codeCoverageEnabled: true
+      runInParallel: false
+      runSettingsFile: $(runSettingsPath)

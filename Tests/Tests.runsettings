@@ -8,10 +8,12 @@
           <CodeCoverage>
             <ModulePaths>
               <Include>
-                <ModulePath>.*OutlookInspired.*\.dll$</ModulePath>
+                <ModulePath>.*outlookinspired.middletier.dll</ModulePath>
+                <ModulePath>.*outlookinspired.module.dll</ModulePath>
+                <ModulePath>.*outlookinspired.win.dll</ModulePath>
               </Include>
               <Exclude>
-                <ModulePath>.*Tests.*\.dll</ModulePath>
+                
               </Exclude>
             </ModulePaths>
             <Functions>

@@ -8,12 +8,12 @@ using OutlookInspired.Win.Extensions;
 
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
-    public static WinApplication BuildApplication(string connectionString=null,bool useSecuredProvider=true){
+    public static WinApplication BuildApplication(string connectionString=null,bool useSecuredProvider=true,string address=null){
         var builder = WinApplication.CreateBuilder();
         builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
         builder.AddModules();
         builder.AddObjectSpaceProviders(connectionString,useSecuredProvider);
-        builder.AddSecurity(connectionString==null);
+        builder.AddSecurity(connectionString==null,address);
         builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
         return builder.Build();
     }

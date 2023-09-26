@@ -24,7 +24,7 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertFilterAction(filtersCount:5)
                 .CloseWindow()
                 .ConcatDefer(() => action.Application.AssertDashboardListView(navigationView, viewVariant,
-                    listViewFrameSelector: item => !item.MasterViewItem(), assert: frame => frame.AssertAction()));
+                    listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject));
         }
         
         public static IObservable<Unit> AssertNestedQuote(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex) 

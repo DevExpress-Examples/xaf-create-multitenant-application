@@ -14,18 +14,18 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Extensions{
     public static class ApplicationBuilder{
-        public static void AddSecurity(this IWinApplicationBuilder builder, bool useMiddleTier){
+        public static void AddSecurity(this IWinApplicationBuilder builder, bool useMiddleTier,string address=null){
             if (!useMiddleTier){
                 builder.AddIntegratedModeSecurity();
             }
             else{
-                builder.UseMiddleTierModeSecurity().UsePasswordAuthentication();    
+                builder.UseMiddleTierModeSecurity(address).UsePasswordAuthentication();    
             }
         }
 
-        private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder) 
+        private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder,string address=null) 
             => builder.Security.UseMiddleTierMode(options => {
-                options.BaseAddress = new Uri("https://localhost:5001/");
+                options.BaseAddress = new Uri(address??"https://localhost:5001/");
                 options.Events.OnHttpClientCreated = client =>
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                 options.Events.OnCustomAuthenticate = (_, _, args) => {
