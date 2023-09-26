@@ -10,7 +10,7 @@ using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    [Appearance(nameof(DueDate),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(DueDate),FontStyle = FontStyle.Bold)]
+    [Appearance(nameof(DueDate),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(DueDate),FontStyle = DevExpress.Drawing.DXFontStyle.Bold)]
     [CloneView(CloneViewType.ListView, AssignedTasksChildListView)]
     public class EmployeeTask:OutlookInspiredBaseObject{
         public const string AssignedTasksChildListView="Employee_AssignedTasks_ListView_Child";

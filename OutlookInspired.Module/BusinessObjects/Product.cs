@@ -18,7 +18,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, BrochureDetailView)]
     [CloneView(CloneViewType.DetailView, CardViewDetailView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
-    [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = FontStyle.Strikeout)]
+    [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = DevExpress.Drawing.DXFontStyle.Strikeout)]
     public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
         
         public const string CardViewDetailView = "ProductCardView_DetailView";

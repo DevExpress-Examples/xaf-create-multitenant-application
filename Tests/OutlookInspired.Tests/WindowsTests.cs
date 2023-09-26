@@ -21,9 +21,9 @@ namespace OutlookInspired.Tests{
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert) {
             
-            // using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
-            //
-            // application.StartWinTest(assert(application,navigationView, viewVariant),user);
+            using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
+            
+            application.StartWinTest(assert(application,navigationView, viewVariant),user);
         }
 
         private static readonly Dictionary<EmployeeDepartment, string> Roles = new(){

@@ -22,12 +22,12 @@
         <ProjectReference Include="..\..\OutlookInspired.MiddleTier\OutlookInspired.MiddleTier.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="DevExpress.DevAV.v23.1.Data">
-        <HintPath>..\DevExpress.DevAV.v23.1.Data.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-    <ItemGroup>
       <None Remove="Import\devav.sqlite3" />
       <EmbeddedResource Include="Import\devav.sqlite3" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="DevExpress.DevAV.v23.2.Data">
+        <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

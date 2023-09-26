@@ -9,14 +9,14 @@
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.1.5" />
-    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.1.5" />
-    <PackageReference Include="DevExpress.Win.Map" Version="23.1.5" />
-    <PackageReference Include="DevExpress.Win.PdfViewer" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.Win.Map" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.Win.PdfViewer" Version="23.2.1-alpha-23255" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>

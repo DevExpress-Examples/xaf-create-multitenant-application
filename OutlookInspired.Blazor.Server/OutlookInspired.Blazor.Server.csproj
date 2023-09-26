@@ -17,14 +17,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Office.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="23.1.5" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="23.1.5" />
+    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="23.2.1-alpha-23255" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
