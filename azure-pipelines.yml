@@ -11,6 +11,19 @@ steps:
       & sqllocaldb start mssqllocaldb
       dotnet nuget add source '$(DXFeed)' --name DX
       cd $env:BUILD_SOURCESDIRECTORY
-      
-      dotnet test --configuration TEST
+      dotnet build --configuration TEST
     pwsh: true  
+- task: VSTest@2
+  displayName: 'WindowsTests'
+  inputs:
+    searchFolder: '$(System.DefaultWorkingDirectory)\Tests'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*.Tests.dll
+      !**\obj\**    
+    diagnosticsEnabled: true
+    codeCoverageEnabled: true
+    distributionBatchType: basedOnExecutionTime
+    runInParallel: false
+    runSettingsFile: $(System.DefaultWorkingDirectory)\Tests\Tests.runsettings
+    

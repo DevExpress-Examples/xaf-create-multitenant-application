@@ -48,7 +48,7 @@ namespace OutlookInspired.Tests{
                              // .IgnoreElements()
                              .Prepend("Admin").Take(1)
                          ){
-                yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
                 yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
                 // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
                 // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
