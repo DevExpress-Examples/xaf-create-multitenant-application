@@ -36,6 +36,8 @@ jobs:
       inputs:
         minimumExpectedTests: "1"
         failOnMinTestsNotRun: true
+        rerunFailedTests: true
+        rerunFailedTestCasesMaxLimit: "2"
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
@@ -53,6 +55,8 @@ jobs:
       inputs:
         minimumExpectedTests: "1"
         failOnMinTestsNotRun: true
+        rerunFailedTests: true
+        rerunFailedTestCasesMaxLimit: "2"
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |

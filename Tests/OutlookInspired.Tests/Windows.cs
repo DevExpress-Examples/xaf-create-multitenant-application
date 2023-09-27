@@ -9,6 +9,7 @@ using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Common;
+using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
@@ -37,50 +38,30 @@ namespace OutlookInspired.Tests{
             { EmployeeDepartment.Sales, "clarkm"},{EmployeeDepartment.HumanResources,"gretas"},
             {EmployeeDepartment.Support,"jamesa"},{EmployeeDepartment.Shipping,"dallasl"},
             {EmployeeDepartment.Engineering,"barta"},{EmployeeDepartment.Management,"johnh"},{EmployeeDepartment.IT,"bradleyj"},
+            {(EmployeeDepartment)(-1),"Admin"}
         };
-
-#if TEST
-        public static IEnumerable TestCases{
-            get{
-                var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
-                if (Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user))
-                    yield return new TestCaseData("EmployeeListView", "EmployeeListView", user, AssertEmployeeListView);
-                else if (roleStr == "Admin")
-                    yield return new TestCaseData("EmployeeListView", "EmployeeListView", "Admin", AssertEmployeeListView);
-                else{
-                    throw new NotImplementedException("No user");
-                }
-                // yield return new TestCaseData("EmployeeListView", "EmployeeListView", "Admin", AssertEmployeeListView);
-            }
-        }
-#else
-        private static IEnumerable TestCases{
-            get{
-                // yield return new TestCaseData("CustomerListView","CustomerCardListView","Admin",AssertCustomerListView);
-                foreach (var user in Roles
-                             // .IgnoreElements()
-                             // .Where(pair => pair.Key==EmployeeDepartment.IT)
-                             .Select(data => data.Value)
-                             // .IgnoreElements()
-                             .Prepend("Admin")
-                             // .Take(1)
-                         ){
-                yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
-                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
-                // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
-                // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
-                // yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
-                // yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
-                // yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
-                // yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
-                // yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
-                // yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
-                //     // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
-                }
-            }
+        
+        public static IEnumerable TestCases => Users().SelectMany(TestCaseData);
+        
+        private static IEnumerable<TestCaseData> TestCaseData(string user){
+            yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
+            yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
+            yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
+            yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
+            yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
+            yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
+            yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
+            yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
+            // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
         }
 
-#endif
+        private static IEnumerable<string> Users(){
+            var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
+            return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
+                roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
+        }
 
 
         public static IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){

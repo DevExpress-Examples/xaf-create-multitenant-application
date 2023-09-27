@@ -4,6 +4,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
 using DevExpress.Persistent.BaseImpl.EF;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
 namespace OutlookInspired.Module.BusinessObjects;
@@ -72,9 +73,10 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Customer>().Property(customer => customer.AnnualRevenue).HasConversion<double>();
+        
         modelBuilder.Entity<ApplicationUser>().ToTable(nameof(ApplicationUser));
         modelBuilder.OnProductImage()
+	        .OnCustomer()
 	        .OnTaskAttachedFile()
 	        .OnEvaluation()
 	        .OnEmployee()
@@ -98,6 +100,14 @@ static class ModelCreating{
 		    .HasForeignKey(file => file.EmployeeTaskId).OnDelete(DeleteBehavior.Cascade);
 	    return modelBuilder;
 	}
+	internal static ModelBuilder OnCustomer(this ModelBuilder modelBuilder){
+	    var customer = modelBuilder.Entity<Customer>();
+	    customer.Property(c => c.AnnualRevenue).HasConversion<double>().HasColumnType();
+	    return modelBuilder;
+	}
+
+	public static PropertyBuilder<decimal> HasColumnType(this PropertyBuilder<decimal> builder) 
+		=> builder.HasColumnType("decimal(18, 2)");
 
 	internal static ModelBuilder OnEvaluation(this ModelBuilder modelBuilder){
 	    var evaluation = modelBuilder.Entity<Evaluation>();
