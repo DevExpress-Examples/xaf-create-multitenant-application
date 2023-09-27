@@ -19,10 +19,12 @@ namespace OutlookInspired.Tests{
     public class Windows:TestBase{
         
 #if TEST
-        [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+        
 #else
         [TestCaseSource(nameof(TestCases))]
 #endif
+        [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+        [Category("WindowsTest")]
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
             UtilityExtensions.TimeoutInterval = 120.Seconds();
             using var application = await SetupWinApplication(useServer:true,runInMainMonitor:true);
@@ -38,12 +40,17 @@ namespace OutlookInspired.Tests{
         };
 
 #if TEST
-        private static IEnumerable TestCases{
+        public static IEnumerable TestCases{
             get{
-                var departmentStr = Environment.GetEnvironmentVariable("TEST_DEPARTMENT");
-                if (Enum.TryParse(departmentStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user)){
+                var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
+                if (Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user))
                     yield return new TestCaseData("EmployeeListView", "EmployeeListView", user, AssertEmployeeListView);
+                else if (roleStr == "Admin")
+                    yield return new TestCaseData("EmployeeListView", "EmployeeListView", "Admin", AssertEmployeeListView);
+                else{
+                    throw new NotImplementedException("No user");
                 }
+                // yield return new TestCaseData("EmployeeListView", "EmployeeListView", "Admin", AssertEmployeeListView);
             }
         }
 #else

@@ -12,6 +12,7 @@ namespace OutlookInspired.Tests.Import{
 #if TEST
         [Test]
 #endif
+        [Category(nameof(ImportData))]
         public async Task Test(){
             
             using var application = await SetupWinApplication(application => {

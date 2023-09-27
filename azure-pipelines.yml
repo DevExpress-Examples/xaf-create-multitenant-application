@@ -1,45 +1,65 @@
-variables:
-  runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
-  testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
-  dxFeedVar: '$(DXFeed)'
-
-trigger:
-- main
-
 jobs:
-- job: RunTests
-  strategy:
-    matrix:
-      Sales: {}
-      HumanResources: {}
-      Support: {}
-      Shipping: {}
-      Engineering: {}
-      Management: {}
-      IT: {}
-  timeoutInMinutes: 90
-  pool:
-    vmImage: 'windows-latest'
-  steps:
-  - task: PowerShell@2
-    displayName: Build
-    continueOnError: false
-    inputs:
-      targetType: 'inline'
-      script: |
-        & sqllocaldb start mssqllocaldb
-        dotnet nuget add source $(dxFeedVar) --name DX
-        cd $env:BUILD_SOURCESDIRECTORY
-        dotnet build --configuration TEST
-      pwsh: true  
-  - task: VSTest@2
-    displayName: 'Run Tests'
-    continueOnError: false
-    env:
-      TEST_DEPARTMENT: $(Agent.JobName)
-    inputs:
-      searchFolder: $(testsFolderPath)
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: '**\*.Tests.dll,!**\obj\**'
-      runInParallel: false
-      runSettingsFile: $(runSettingsPath)
+  - job: RunTests
+    variables:
+      runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
+      testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
+      dxFeedVar: '$(DXFeed)'
+    strategy:
+      matrix:
+        Sales: {}
+        HumanResources: {}
+        Support: {}
+        Shipping: {}
+        Engineering: {}
+        Management: {}
+        IT: {}
+        Admin: {}
+    timeoutInMinutes: 90
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: PowerShell@2
+      displayName: Build
+      continueOnError: false
+      inputs:
+        targetType: 'inline'
+        script: |
+          & sqllocaldb start mssqllocaldb
+          dotnet nuget add source $(dxFeedVar) --name DX
+          cd $env:BUILD_SOURCESDIRECTORY
+          dotnet build --configuration TEST
+        pwsh: true  
+    - task: VSTest@2
+      displayName: 'ImportData.Test'
+      continueOnError: false
+      enabled: true
+      inputs:
+        minimumExpectedTests: "1"
+        failOnMinTestsNotRun: true
+        searchFolder: $(testsFolderPath)
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          **\*.Tests.dll
+          !**\obj\**
+        testFiltercriteria: TestCategory=ImportData
+        diagnosticsEnabled: true
+        codeCoverageEnabled: true
+        runSettingsFile: $(runSettingsPath)
+    - task: VSTest@2
+      displayName: 'Windows.Test'
+      continueOnError: false
+      env:
+        TEST_ROLE: $(Agent.JobName)
+      inputs:
+        minimumExpectedTests: "1"
+        failOnMinTestsNotRun: true
+        searchFolder: $(testsFolderPath)
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          **\*.Tests.dll
+          !**\obj\**
+        testFiltercriteria: TestCategory=WindowsTest
+        diagnosticsEnabled: true
+        codeCoverageEnabled: true
+        runSettingsFile: $(runSettingsPath)
+    
