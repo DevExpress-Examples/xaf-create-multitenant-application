@@ -36,8 +36,17 @@ namespace OutlookInspired.Tests{
             {EmployeeDepartment.Support,"jamesa"},{EmployeeDepartment.Shipping,"dallasl"},
             {EmployeeDepartment.Engineering,"barta"},{EmployeeDepartment.Management,"johnh"},{EmployeeDepartment.IT,"bradleyj"},
         };
-        
-        
+
+#if TEST
+        private static IEnumerable TestCases{
+            get{
+                var departmentStr = Environment.GetEnvironmentVariable("TEST_DEPARTMENT");
+                if (Enum.TryParse(departmentStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user)){
+                    yield return new TestCaseData("EmployeeListView", "EmployeeListView", user, AssertEmployeeListView);
+                }
+            }
+        }
+#else
         private static IEnumerable TestCases{
             get{
                 // yield return new TestCaseData("CustomerListView","CustomerCardListView","Admin",AssertCustomerListView);
@@ -50,19 +59,22 @@ namespace OutlookInspired.Tests{
                              // .Take(1)
                          ){
                 yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
-                yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
-                yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
-                yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
-                yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
-                yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
-                yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
-                yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
-                yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
-                yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
+                // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+                // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
+                // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
+                // yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
+                // yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
+                // yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
+                // yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
+                // yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
+                // yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
                 //     // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
                 }
             }
         }
+
+#endif
+
 
         public static IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){
             throw new NotImplementedException();

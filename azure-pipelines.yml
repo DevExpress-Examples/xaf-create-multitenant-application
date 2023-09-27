@@ -6,12 +6,20 @@ variables:
 trigger:
 - main
 
-pool:
-  vmImage: 'windows-latest'
-
 jobs:
-- job: Test
-  timeoutInMinutes: 90  # Set the timeout here
+- job: RunTests
+  strategy:
+    matrix:
+      Sales: {}
+      HumanResources: {}
+      Support: {}
+      Shipping: {}
+      Engineering: {}
+      Management: {}
+      IT: {}
+  timeoutInMinutes: 90
+  pool:
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     displayName: Build
@@ -25,30 +33,13 @@ jobs:
         dotnet build --configuration TEST
       pwsh: true  
   - task: VSTest@2
-    displayName: 'ImportData.Test'
+    displayName: 'Run Tests'
     continueOnError: false
+    env:
+      TEST_DEPARTMENT: $(Agent.JobName)
     inputs:
       searchFolder: $(testsFolderPath)
       testSelector: 'testAssemblies'
-      testAssemblyVer2: |
-        **\*.Tests.dll
-        !**\obj\**
-      testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Import.ImportData.Test
-      diagnosticsEnabled: true
-      codeCoverageEnabled: true
-      runInParallel: false
-      runSettingsFile: $(runSettingsPath)
-  - task: VSTest@2
-    displayName: 'Windows.Test'
-    continueOnError: false
-    inputs:
-      searchFolder: $(testsFolderPath)
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: |
-        **\*.Tests.dll
-        !**\obj\**
-      testFiltercriteria: FullyQualifiedName=OutlookInspired.Tests.Windows.Test
-      diagnosticsEnabled: true
-      codeCoverageEnabled: true
+      testAssemblyVer2: '**\*.Tests.dll,!**\obj\**'
       runInParallel: false
       runSettingsFile: $(runSettingsPath)
