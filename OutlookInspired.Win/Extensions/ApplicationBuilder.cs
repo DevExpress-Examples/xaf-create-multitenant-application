@@ -57,7 +57,7 @@ namespace OutlookInspired.Win.Extensions{
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,string connectionString,bool useSecuredProvider=true) 
             => builder.AddObjectSpaceProviders( useSecuredProvider,connectionString)
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
-                    options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
+                    // options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     if (connectionString == null){
