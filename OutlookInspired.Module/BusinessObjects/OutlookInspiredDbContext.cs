@@ -4,7 +4,6 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
 using DevExpress.Persistent.BaseImpl.EF;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
 namespace OutlookInspired.Module.BusinessObjects;
@@ -76,7 +75,6 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         
         modelBuilder.Entity<ApplicationUser>().ToTable(nameof(ApplicationUser));
         modelBuilder.OnProductImage()
-	        .OnCustomer()
 	        .OnTaskAttachedFile()
 	        .OnEvaluation()
 	        .OnEmployee()
@@ -100,14 +98,6 @@ static class ModelCreating{
 		    .HasForeignKey(file => file.EmployeeTaskId).OnDelete(DeleteBehavior.Cascade);
 	    return modelBuilder;
 	}
-	internal static ModelBuilder OnCustomer(this ModelBuilder modelBuilder){
-	    var customer = modelBuilder.Entity<Customer>();
-	    customer.Property(c => c.AnnualRevenue).HasConversion<double>().HasColumnType();
-	    return modelBuilder;
-	}
-
-	public static PropertyBuilder<decimal> HasColumnType(this PropertyBuilder<decimal> builder) 
-		=> builder.HasColumnType("decimal(18, 2)");
 
 	internal static ModelBuilder OnEvaluation(this ModelBuilder modelBuilder){
 	    var evaluation = modelBuilder.Entity<Evaluation>();
@@ -120,10 +110,7 @@ static class ModelCreating{
 
 	internal static ModelBuilder OnOrderItem(this ModelBuilder modelBuilder){
 	    var orderItem = modelBuilder.Entity<OrderItem>();
-	    modelBuilder.Entity<OrderItem>().HasOne(o => o.Product).WithMany(product => product.OrderItems).HasForeignKey(o => o.ProductID).OnDelete(DeleteBehavior.Cascade);
-	    orderItem.Property(item => item.Discount).HasConversion<double>();
-	    orderItem.Property(item => item.ProductPrice).HasConversion<double>();
-	    orderItem.Property(item => item.Total).HasConversion<double>();
+	    orderItem.HasOne(o => o.Product).WithMany(product => product.OrderItems).HasForeignKey(o => o.ProductID).OnDelete(DeleteBehavior.Cascade);
 	    return modelBuilder;
     }
 
@@ -137,9 +124,6 @@ static class ModelCreating{
 	internal static ModelBuilder OnQuoteItem(this ModelBuilder modelBuilder){
 	    var quoteItem = modelBuilder.Entity<QuoteItem>();
 	    quoteItem.HasOne(item => item.Product).WithMany(product => product.QuoteItems);
-	    quoteItem.Property(item => item.Discount).HasConversion<double>();
-	    quoteItem.Property(item => item.ProductPrice).HasConversion<double>();
-	    quoteItem.Property(item => item.Total).HasConversion<double>();
 	    return modelBuilder;
     }
 
@@ -156,9 +140,6 @@ static class ModelCreating{
 	    var quote = modelBuilder.Entity<Quote>();
 	    quote.HasOne(q => q.CustomerStore).WithMany(store => store.Quotes);
 	    quote.HasOne(q => q.Employee).WithMany(employee => employee.Quotes);
-	    quote.Property(q => q.SubTotal).HasConversion<double>();
-	    quote.Property(q => q.ShippingAmount).HasConversion<double>();
-	    quote.Property(q => q.Total).HasConversion<double>();
 	    return modelBuilder;
     }
 
@@ -167,9 +148,6 @@ static class ModelCreating{
 	    product.HasOne(p => p.Engineer).WithMany(employee => employee.Products);
 	    product.HasOne(p => p.PrimaryImage).WithMany(picture => picture.Products);
 	    product.HasOne(p => p.Support).WithMany(employee => employee.SupportedProducts).OnDelete(DeleteBehavior.Cascade);
-	    product.Property(p => p.SalePrice).HasConversion<double>();
-	    product.Property(p => p.RetailPrice).HasConversion<double>();
-	    product.Property(p => p.Cost).HasConversion<double>();
 	    modelBuilder.Entity<Product>().HasMany(p => p.QuoteItems).WithOne(qi => qi.Product).HasForeignKey(qi => qi.ProductId)
 		    .OnDelete(DeleteBehavior.Cascade);
 	    return modelBuilder;
@@ -179,17 +157,12 @@ static class ModelCreating{
 	    var order = modelBuilder.Entity<Order>();
 	    order.HasOne(o => o.Employee).WithMany(employee => employee.Orders);
 	    order.HasOne(o => o.Store).WithMany(store => store.Orders);
-	    order.Property(o => o.ShippingAmount).HasConversion<double>();
-	    order.Property(o => o.TotalAmount).HasConversion<double>();
-	    order.Property(o => o.PaymentTotal).HasConversion<double>();
-	    order.Property(o => o.RefundTotal).HasConversion<double>();
 	    return modelBuilder;
     }
 
 	internal static ModelBuilder OnCustomerStore(this ModelBuilder modelBuilder){
 	    var customerStore = modelBuilder.Entity<CustomerStore>();
 	    customerStore.HasOne(store => store.Crest).WithMany(crest => crest.CustomerStores);
-	    customerStore.Property(store => store.AnnualSales).HasConversion<double>();
 	    return modelBuilder;
     }
 
