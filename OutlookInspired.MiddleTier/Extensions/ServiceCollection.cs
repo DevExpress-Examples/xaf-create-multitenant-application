@@ -84,7 +84,7 @@ namespace OutlookInspired.MiddleTier.Extensions{
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();
-                    // options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
+                    options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
                 })
                 .AddNonPersistent();
 
