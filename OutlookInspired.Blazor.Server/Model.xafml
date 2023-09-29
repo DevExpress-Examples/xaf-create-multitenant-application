@@ -11,5 +11,10 @@
         <ControlDetailItem Id="CustomerGridView" ControlTypeName="OutlookInspired.Blazor.Server.Components.Customers.GridView.Model" />
       </Items>
     </DetailView>
+    <DetailView Id="CustomerLayoutView_DetailView">
+      <Items>
+        <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Blazor.Server.Components.Customers.CardView.Model" />
+      </Items>
+    </DetailView>
   </Views>
 </Application>
