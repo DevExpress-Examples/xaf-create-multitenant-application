@@ -30,36 +30,47 @@ namespace OutlookInspired.Module.Features.MasterDetail{
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
             if (_userControl != null){
                 _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
                 _userControl.CurrentObjectChanged-=UserControlOnCurrentObjectChanged;
                 _userControl.ProcessObject-=UserControlOnProcessObject;
-                _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
             }
-            else{
-                _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;
-            }
+            _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
+            _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;
+            View.ChildItem().ControlCreated-=OnChildItemControlCreated;
+            View.MasterItem().ControlCreated-=OnChildItemControlCreated;
         }
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
-            View.MasterItem().ControlCreated+= (sender, _) => {
-                _masterFrame = (NestedFrame)(((DashboardViewItem)sender)!).Frame;
-                _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
-                _controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
-                if (_controlViewItem != null){
-                    _controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
-                }
-                else{
-                    _masterFrame.View.SelectionChanged += ViewOnSelectionChanged;
-                }
-            };
-            View.ChildItem().ControlCreated+=(sender, _) => _childFrame= (NestedFrame)((DashboardViewItem)sender)!.Frame;
+            var dashboardViewItem = View.MasterItem();
+            if (dashboardViewItem.Frame != null){
+                OnMasterItemControlCreated(dashboardViewItem, EventArgs.Empty);
+                OnChildItemControlCreated(View.ChildItem(),EventArgs.Empty);
+            }
+            else{
+                dashboardViewItem.ControlCreated+= OnMasterItemControlCreated;
+                View.ChildItem().ControlCreated+=OnChildItemControlCreated;    
+            }
         }
 
+        private void OnChildItemControlCreated(object sender, EventArgs e) 
+            => _childFrame = (NestedFrame)((DashboardViewItem)sender)!.Frame;
+
+        private void OnMasterItemControlCreated(object sender, EventArgs e){
+            _masterFrame = (NestedFrame)(((DashboardViewItem)sender)!).Frame;
+            _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
+            _controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
+            if (_controlViewItem != null){
+                _controlViewItem.ControlCreated += ControlViewItemOnControlCreated;
+            }
+            else{
+                _masterFrame.View.SelectionChanged += ViewOnSelectionChanged;
+            }
+        }
+        
         private void ViewOnSelectionChanged(object sender, EventArgs e) 
             => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
 

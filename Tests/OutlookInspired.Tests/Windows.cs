@@ -20,15 +20,14 @@ namespace OutlookInspired.Tests{
     public class Windows:TestBase{
         
 #if TEST
-        
+        [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+        [Category("WindowsTest")]
 #else
         [TestCaseSource(nameof(TestCases))]
 #endif
-        [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
-        [Category("WindowsTest")]
+        
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
             UtilityExtensions.TimeoutInterval = 120.Seconds();
-            using var application = await SetupWinApplication(useServer:true,runInMainMonitor:true);
             
             using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
             
