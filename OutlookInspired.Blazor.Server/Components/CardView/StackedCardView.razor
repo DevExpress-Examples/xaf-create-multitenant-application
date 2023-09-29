@@ -1,4 +1,3 @@
-@using OutlookInspired.Module.Services.Internal
 @inject IJSRuntime JsRuntime
 <style>
     .store-card-container {
@@ -32,11 +31,8 @@
 </style>
 
 <div class="store-card-container">
-    @foreach (var store in ComponentModel.Stores){
-        <StackedInfoCard Body="@store.City" Image="@store.Crest.LargeImage.ToBase64Image()"/>
-    }
+    @Content
 </div>
-RECORDS: @ComponentModel.Stores.Count
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender){
@@ -55,9 +51,5 @@ RECORDS: @ComponentModel.Stores.Count
     }
     
     [Parameter]
-    public Model ComponentModel { get; set; }
-    public static RenderFragment Create(Model model)
-         => @<StackedCardView ComponentModel=@model />;
-    
-
+    public RenderFragment Content { get; set; }
 }

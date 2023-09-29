@@ -1,6 +1,8 @@
 ﻿@using OutlookInspired.Module.BusinessObjects
 @using OutlookInspired.Module.Services.Internal
-<CardView>
+@using OutlookInspired.Blazor.Server.Components.CardView
+
+<SideBySideCardView>
     <Content>
         @if (Employees.Any()){
             @foreach (var employee in Employees){
@@ -13,7 +15,7 @@
         }
         RECORDS: @Employees.Count
     </Content>
-</CardView>
+</SideBySideCardView>
 
 @code {
     [Parameter]
