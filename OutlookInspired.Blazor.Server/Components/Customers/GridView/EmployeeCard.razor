@@ -1,0 +1,54 @@
+﻿@using OutlookInspired.Module.BusinessObjects
+@using OutlookInspired.Module.Services.Internal
+<style>
+  .card {
+      flex: 0 0 auto;  
+      margin-right: 16px;  
+      max-width: calc(50% - 16px);  
+  }
+  .col-md-8 p {
+      word-wrap: break-word; 
+      overflow: hidden;  
+      text-overflow: ellipsis;  
+      max-width: 100%;  
+  }
+</style>
+<div class="card">
+  <div class="card-header">
+    <strong>@HeaderText</strong>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="@Image" class="img-fluid" alt="Photo">
+      </div>
+      <div class="col-md-8">
+        @* <div class="mb-2"> *@
+        @*   <small class="text-muted">EMAIL:</small> *@
+        @*   <p><a href="mailto:@Employee.Email">@Employee.Email</a></p> *@
+        @* </div> *@
+        @* <div> *@
+        @*   <small class="text-muted">PHONE:</small> *@
+        @*   <p>@Employee.MobilePhone</p> *@
+        @* </div> *@
+         <div class="col-md-8">
+            @foreach (var item in InfoItems){
+              <div class="mb-2">
+                <small class="text-muted">@item.Key:</small>
+                <p>@item.Value</p>
+              </div>
+            }
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+@code {
+    [Parameter]
+    public Dictionary<string, string> InfoItems { get; set; }
+    [Parameter]
+    public string HeaderText { get; set; }
+    [Parameter]
+    public string Image { get; set; }
+
+}

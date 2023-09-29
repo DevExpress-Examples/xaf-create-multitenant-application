@@ -17,8 +17,15 @@ namespace OutlookInspired.Module.Services.Internal{
             return !criteriaOperator.ReferenceEquals(null) ? new GroupOperator(type, @operator, criteriaOperator) : @operator;
         }
 
+        public static string ToBase64String(this byte[] bytes) 
+            => Convert.ToBase64String(bytes);
+
+        public static string ToBase64Image(this byte[] bytes) 
+            => $"data:image/gif;base64,{bytes?.ToBase64String()}";
+
         public static string GetString(this byte[] bytes, Encoding encoding = null) 
             => bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);
+        
         public static byte[] Bytes(this Stream stream){
             if (stream is MemoryStream memoryStream){
                 return memoryStream.ToArray();

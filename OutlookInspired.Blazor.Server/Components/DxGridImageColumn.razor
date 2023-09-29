@@ -1,0 +1,27 @@
+﻿@using DevExpress.Blazor
+@using OutlookInspired.Module.Services.Internal
+
+<DxGridDataColumn FieldName="@FieldName" VisibleIndex="@VisibleIndex" Width="@Width.ToString()">
+    <CellDisplayTemplate> 
+        <img src="@(((byte[])context.Value).ToBase64Image())" width="@Width" height="@Height" alt="@AltText"/>
+    </CellDisplayTemplate>
+</DxGridDataColumn>
+
+@code {
+    [Parameter]
+    public string FieldName { get; set; }
+    [Parameter]
+    public int VisibleIndex { get; set; }
+    [Parameter]
+    public int Width { get; set; } = 30;
+    [Parameter]
+    public int Height { get; set; } = 30;
+    [Parameter]
+    public string AltText { get; set; }
+    protected override void OnParametersSet(){
+        if (string.IsNullOrEmpty(AltText)){
+            AltText = FieldName;
+        }
+    }
+
+}

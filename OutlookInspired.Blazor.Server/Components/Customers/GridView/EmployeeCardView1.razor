@@ -1,0 +1,21 @@
+﻿@using OutlookInspired.Module.BusinessObjects
+@using OutlookInspired.Module.Services.Internal
+<CardView>
+    <Content>
+        @if (Employees.Any()){
+            @foreach (var employee in Employees){
+                <EmployeeCard HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
+                              InfoItems="@(new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, 
+                                             { "PHONE", employee.MobilePhone } })"/>
+            }
+        } else {
+            <p>No Employees Found</p>
+        }
+        RECORDS: @Employees.Count
+    </Content>
+</CardView>
+
+@code {
+    [Parameter]
+    public List<CustomerEmployee> Employees { get; set; }
+}

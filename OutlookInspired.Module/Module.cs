@@ -19,6 +19,7 @@ using ReportController = OutlookInspired.Module.Features.Customers.ReportControl
 
 
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
+[assembly:InternalsVisibleTo("OutlookInspired.Blazor.Server")]
 namespace OutlookInspired.Module;
 
 public sealed class OutlookInspiredModule : ModuleBase{

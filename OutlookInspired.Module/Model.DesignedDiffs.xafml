@@ -113,7 +113,7 @@
     </DetailView>
     <DetailView Id="Customer_DetailView_Child" FreezeLayout="True">
       <Items>
-        <ControlDetailItem Id="CustomerStore" ControlTypeName="CustomerStore" IsNewNode="True" />
+        <ControlDetailItem Id="CustomerStore" ControlTypeName="OutlookInspired.Blazor.Server.Components.Customers.Stores.Model" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">

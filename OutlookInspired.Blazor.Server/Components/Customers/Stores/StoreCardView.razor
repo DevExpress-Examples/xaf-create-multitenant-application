@@ -1,0 +1,68 @@
+@inject IJSRuntime JsRuntime
+<style>
+    .store-card-container {
+        display: flex;
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        overflow-x: hidden;  
+        overflow-y: auto; 
+        height: 100vh; 
+        align-items: flex-start;  /* Add this line */
+            align-content: flex-start;  /* Add this line */
+    }
+
+    .store-card-container > div {
+        margin-bottom: 8px;
+    }
+    
+    .store-card-container::-webkit-scrollbar {
+        width: 12px;
+    }
+    
+    .store-card-container::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        outline: 1px solid slategrey;
+    }
+    
+    .store-card-container {
+        scrollbar-width: thin;
+        scrollbar-color: darkgrey slategrey;
+    }
+</style>
+
+<div class="store-card-container">
+    @foreach (var store in ComponentModel.Stores){
+        <StoreCard Store="@store" />
+    }
+</div>
+RECORDS: @ComponentModel.Stores.Count
+
+@code {
+
+    
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender){
+            await JsRuntime.InvokeVoidAsync("eval", @"
+                setTimeout(function() {
+                    const targetDiv = document.querySelector('div[data-item-name=""Customer_DetailView_Child""]');
+if (targetDiv) {
+  const parentDiv = targetDiv.closest('div.dxbl-fl-ctrl.dxbl-fl-ctrl-nc');
+  if (parentDiv) {
+    parentDiv.className = null;
+  }
+}
+
+                }, 1000);"
+                );
+        }
+    }
+    
+    [Parameter]
+    public Model ComponentModel { get; set; }
+    public static RenderFragment Create(Model model)
+         => @<StoreCardView ComponentModel=@model />;
+    
+
+}
