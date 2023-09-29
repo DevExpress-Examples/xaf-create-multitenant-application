@@ -4,7 +4,7 @@
     <Content>
         @if (Employees.Any()){
             @foreach (var employee in Employees){
-                <Card HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
+                <SideBySideInfoCard HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
                               InfoItems="@(new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, 
                                              { "PHONE", employee.MobilePhone } })"/>
             }

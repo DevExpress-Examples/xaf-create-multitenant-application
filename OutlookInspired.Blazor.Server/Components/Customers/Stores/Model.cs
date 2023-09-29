@@ -6,7 +6,7 @@ namespace OutlookInspired.Blazor.Server.Components.Customers.Stores{
     public class Model:UserControlComponentModel{
         public Model() => Stores = new();
 
-        public override RenderFragment ComponentContent => this.Create(StoreCardView.Create);
+        public override RenderFragment ComponentContent => this.Create(StoresCardView.Create);
         public List<CustomerStore> Stores{
             get => GetPropertyValue<List<CustomerStore>>();
             set => SetPropertyValue(value);
