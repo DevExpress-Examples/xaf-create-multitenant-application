@@ -111,7 +111,6 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Chart" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Dashboards" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.2.1-alpha-23255" />

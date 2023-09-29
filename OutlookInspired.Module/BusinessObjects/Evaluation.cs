@@ -11,8 +11,8 @@ using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
 
 namespace OutlookInspired.Module.BusinessObjects{
-    [Appearance(nameof(StartOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontStyle = DXFontStyle.Bold,Context = "Employee_Evaluations_ListView")]
-    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = DXFontStyle.Bold,Context = EmployeeEvaluationsChildListView)]
+    [Appearance(nameof(StartOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontStyle = DevExpress.Drawing.DXFontStyle.Bold,Context = "Employee_Evaluations_ListView")]
+    [Appearance(nameof(Manager),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(Manager),FontStyle = DevExpress.Drawing.DXFontStyle.Bold,Context = EmployeeEvaluationsChildListView)]
     [Appearance(nameof(StartOn)+"_"+EmployeeEvaluationsChildListView,AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontColor = "Blue",Context = EmployeeEvaluationsChildListView)]
     [Appearance(nameof(Rating),AppearanceItemType.ViewItem, nameof(Rating)+"='"+nameof(EvaluationRating.Good)+"'",TargetItems = "*",FontColor = "Green",Context = "Employee_Evaluations_ListView")]
     [CloneView(CloneViewType.ListView, EmployeeEvaluationsChildListView)]

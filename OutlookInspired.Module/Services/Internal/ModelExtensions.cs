@@ -1,6 +1,8 @@
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
+using DevExpress.ExpressApp.Utils;
+using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ModelExtensions{
@@ -10,6 +12,9 @@ namespace OutlookInspired.Module.Services.Internal{
             ((IModelListView)cloneNodeFrom).DetailView = source.Application.Views.OfType<IModelDetailView>()
                 .FirstOrDefault(view => view.Id == detailViewId)??throw new NullReferenceException(detailViewId);
         }
+
+        public static byte[] ImageBytes(this IModelApplication modelApplication,Type objectType) 
+            => ImageLoader.Instance.GetImageInfo(modelApplication.BOModel.GetClass(objectType).ImageName).ImageBytes;
 
         public static IEnumerable<T> Attributes<T>(this IModelClass modelClass) where T:Attribute 
             => modelClass.TypeInfo.FindAttributes<T>();

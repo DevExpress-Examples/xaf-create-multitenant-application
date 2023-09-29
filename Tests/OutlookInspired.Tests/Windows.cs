@@ -30,8 +30,9 @@ namespace OutlookInspired.Tests{
             UtilityExtensions.TimeoutInterval = 120.Seconds();
             using var application = await SetupWinApplication(useServer:true,runInMainMonitor:true);
             
+            using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
+            
             application.StartWinTest(assert(application,navigationView, viewVariant),user);
-            // application.StartWinTest(1.Seconds().Delay().ToObservable(),user);
         }
 
         private static readonly Dictionary<EmployeeDepartment, string> Roles = new(){

@@ -2,11 +2,11 @@ using System.ComponentModel;
 using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.MasterDetail{
@@ -30,6 +30,7 @@ namespace OutlookInspired.Module.Features.MasterDetail{
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
+            
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
             if (_userControl != null){
                 _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
@@ -44,18 +45,19 @@ namespace OutlookInspired.Module.Features.MasterDetail{
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
-            _masterFrame = View.MasterFrame();
-            _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
-            _childFrame = View.ChildFrame();
-            _controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
-            if (_controlViewItem != null){
-                _controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
-            }
-            else{
-                _masterFrame.View.SelectionChanged += ViewOnSelectionChanged;
-            }
+            View.MasterItem().ControlCreated+= (sender, _) => {
+                _masterFrame = (NestedFrame)(((DashboardViewItem)sender)!).Frame;
+                _masterFrame.GetController<NewObjectViewController>().UseObjectDefaultDetailView();
+                _controlViewItem = _masterFrame.View.ToCompositeView().GetItems<ControlViewItem>().FirstOrDefault();
+                if (_controlViewItem != null){
+                    _controlViewItem.ControlCreated+=ControlViewItemOnControlCreated;
+                }
+                else{
+                    _masterFrame.View.SelectionChanged += ViewOnSelectionChanged;
+                }
+            };
+            View.ChildItem().ControlCreated+=(sender, _) => _childFrame= (NestedFrame)((DashboardViewItem)sender)!.Frame;
         }
 
         private void ViewOnSelectionChanged(object sender, EventArgs e) 

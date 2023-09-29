@@ -45,7 +45,7 @@ namespace OutlookInspired.Tests.Import{
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
             
-            objectSpace.GenerateOrders();
+            // objectSpace.GenerateOrders();
         }
 
         

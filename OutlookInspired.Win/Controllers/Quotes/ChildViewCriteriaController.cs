@@ -1,7 +1,6 @@
 ﻿using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Win.Controllers.Quotes{
@@ -9,12 +8,12 @@ namespace OutlookInspired.Win.Controllers.Quotes{
         public ChildViewCriteriaController() => TargetViewId = "Opportunities";
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            View.MasterFrame().View.ToListView().CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
+            View.MasterItem().Frame.View.ToListView().CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
         }
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            View.MasterFrame().View.ToListView().CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
+            View.MasterItem().Frame.View.ToListView().CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
         }
 
         protected override void OnFrameAssigned(){
@@ -33,10 +32,10 @@ namespace OutlookInspired.Win.Controllers.Quotes{
         }
 
         private void CollectionSourceOnCriteriaApplied(object sender, EventArgs e){
-            var childViewCollectionSource = ((CollectionSource)View.ChildFrame().View.ToListView().CollectionSource);
+            var childViewCollectionSource = ((CollectionSource)View.ChildItem().Frame.View.ToListView().CollectionSource);
             ((ProxyCollection)childViewCollectionSource.Collection)
                 .SetCollection(childViewCollectionSource.ObjectSpace
-                .Opportunities(View.MasterFrame().View.ToListView().CollectionSource.Criteria[nameof(ViewFilterController)]?.ToString())
+                .Opportunities(View.MasterItem().Frame.View.ToListView().CollectionSource.Criteria[nameof(ViewFilterController)]?.ToString())
                 .ToBindingList());
             
         }

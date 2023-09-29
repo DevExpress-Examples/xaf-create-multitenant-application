@@ -11,7 +11,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp.Api.EFCore.All" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.ReportsV2" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Security.AspNetCore.EFCore" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.2.1-alpha-23255" />

@@ -34,5 +34,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[Aggregated]
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
 		string IBaseMapsMarker.Title => Location;
+		
 	}
 }

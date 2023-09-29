@@ -1,0 +1,43 @@
+﻿@using OutlookInspired.Module.BusinessObjects
+@using DevExpress.ExpressApp.Blazor.Editors.Models.Renderers
+@using DevExpress.ExpressApp.Blazor.Editors.Models
+
+<DxGrid Data="ComponentModel.Customers" AutoCollapseDetailRow="true" PageSizeSelectorVisible="true" PageSize="20" AllowSelectRowByClick="true" 
+        SelectedDataItemsChanged="list => ComponentModel.SelectedObjects = list.Cast<Customer>().ToList()" RowDoubleClick="_ => ComponentModel.ProcessSelectedObject()">
+    <Columns>
+        @(new DxGridSelectionColumnModel{VisibleIndex = 0,Width = "40px" }.GetComponentContent())
+        <DxGridImageColumn FieldName="@nameof(Customer.Logo)" VisibleIndex="2"/>
+        <DxGridDataColumn FieldName="@nameof(Customer.Name)" SortIndex="0"/>
+        <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeCity)"/>
+        <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeLine)"/>
+        <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeState)"/>
+        <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeZipCode)"/>
+    </Columns>
+    <TotalSummary>
+        <DxGridSummaryItem SummaryType="GridSummaryItemType.Count" FieldName="@nameof(Customer.Name)" />
+    </TotalSummary>
+    <DetailRowTemplate>
+        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+            <DxTab><TextTemplate><BOImage ObjectType="@typeof(Customer)" /> Employees</TextTemplate></DxTab>
+            <DxTab><TextTemplate><BOImage ObjectType="@typeof(Order)" /> Recent Orders</TextTemplate></DxTab>
+        </DxTabs>
+        @switch (ActiveTabIndex){
+            case 0:{
+                <Employees CustomerEmployees="@(((Customer)context.DataItem).Employees.ToList())"></Employees>
+                break;
+            }
+            case 1:
+                <RecentOrders Orders="@(((Customer)context.DataItem).RecentOrders.ToList())"/>
+                break;
+        }
+    </DetailRowTemplate>
+</DxGrid>
+
+@code {   
+    int ActiveTabIndex { get; set; } 
+    [Parameter]
+    public Model ComponentModel { get; set; }
+    public static RenderFragment Create(Model model) 
+        => @<GridView ComponentModel=@model />;
+}
+

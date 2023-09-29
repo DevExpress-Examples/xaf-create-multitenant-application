@@ -1,7 +1,10 @@
 using System.Reflection;
+using Aqua.EnumerableExtensions;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ReflectionExtensions{
+        public static string StringFormat(this object s, params object[] args) 
+            => string.IsNullOrEmpty($"{s}")?args.StringJoin(""):string.Format($"{s}",args);
         public new static bool ReferenceEquals(this object objA, object objB)
             => Object.ReferenceEquals(objA, objB);
         

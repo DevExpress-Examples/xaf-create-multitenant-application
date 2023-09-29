@@ -35,7 +35,6 @@
     
     <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Chart.Win" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.2.1-alpha-23255" />
