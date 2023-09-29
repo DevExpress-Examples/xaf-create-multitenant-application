@@ -6,6 +6,12 @@
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+    <DetailView Id="Customer_DetailView_Child">
+      <Items>
+        <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+      </Items>
+    </DetailView>
     <DetailView Id="CustomerGridView_DetailView">
       <Items>
         <ControlDetailItem Id="CustomerGridView" ControlTypeName="OutlookInspired.Blazor.Server.Components.Customers.GridView.Model" />

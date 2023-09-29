@@ -5,9 +5,13 @@ using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
+using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
+        public static IMemberInfo FindDisplayableMember(this IMemberInfo memberInfo) 
+            => ReflectionHelper.FindDisplayableMemberDescriptor(memberInfo);
+        
         public static Type GetExpressionType(this LambdaExpression expression) 
             => expression.Parameters[0].Type;
         public static CriteriaOperator ToCriteria<T>(this Expression<Func<T, bool>> expression) 

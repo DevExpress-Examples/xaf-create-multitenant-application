@@ -1,11 +1,9 @@
 ﻿@using OutlookInspired.Module.BusinessObjects
 @using DevExpress.ExpressApp.Blazor.Editors.Models.Renderers
 @using DevExpress.ExpressApp.Blazor.Editors.Models
-@using DevExpress.ExpressApp.Utils
-@using OutlookInspired.Module.Services.Internal
 
 <DxGrid Data="ComponentModel.Customers" AutoCollapseDetailRow="true" PageSizeSelectorVisible="true" PageSize="20" AllowSelectRowByClick="true" 
-        SelectedDataItemsChanged="list => ComponentModel.SelectedCustomers = list.Cast<Customer>().ToList()" RowDoubleClick="_ => ComponentModel.ShowDetailView()">
+        SelectedDataItemsChanged="list => ComponentModel.SelectedObjects = list.Cast<Customer>().ToList()" RowDoubleClick="_ => ComponentModel.ProcessSelectedObject()">
     <Columns>
         @(new DxGridSelectionColumnModel{VisibleIndex = 0,Width = "40px" }.GetComponentContent())
         <DxGridImageColumn FieldName="@nameof(Customer.Logo)" VisibleIndex="2"/>

@@ -1,8 +1,17 @@
-﻿<style>
-  .card {
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using OutlookInspired.Module.Services.Internal
+@implements ISelectedCard
+<style>
+.card {
       flex: 0 0 auto;  
       margin-right: 16px;  
       max-width: calc(50% - 16px);  
+  }
+  .ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
   }
   .col-md-8 p {
       word-wrap: break-word; 
@@ -11,7 +20,7 @@
       max-width: 100%;  
   }
 </style>
-<div class="card">
+<div class="card" @onclick="HandleClickAsync" @ondblclick="HandleDoubleClickAsync" style="@(IsSelected ? "background-color: grey;" : "")" >
   <div class="card-header">
     <strong>@HeaderText</strong>
   </div>
@@ -25,7 +34,7 @@
             @foreach (var item in InfoItems){
               <div class="mb-2">
                 <small class="text-muted">@item.Key:</small>
-                <p>@((MarkupString)item.Value)</p>
+                <p class="ellipsis">@((MarkupString)item.Value)</p>
               </div>
             }
           </div>
@@ -33,12 +42,46 @@
     </div>
   </div>
 </div>
+
 @code {
-    [Parameter]
-    public Dictionary<string, string> InfoItems { get; set; }
-    [Parameter]
-    public string HeaderText { get; set; }
-    [Parameter]
-    public string Image { get; set; }
+
+  [Parameter]
+  public Dictionary<string, string> InfoItems { get; set; }
+
+  [Parameter]
+  public string HeaderText { get; set; }
+
+  [Parameter]
+  public string Image { get; set; }
+
+  [Parameter]
+  public bool IsSelected { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> IsSelectedChanged { get; set; }
+  [Parameter]
+  public UserControlComponentModel Model { get; set; }
+  [Parameter]
+  public object CurrentObject { get; set; }
+
+  [CascadingParameter]
+  public StackedCardView StackedCardView { get; set; }
+
+  private void HandleDoubleClickAsync(MouseEventArgs e) 
+    => Model.ProcessSelectedObject();
+
+  private async Task HandleClickAsync(MouseEventArgs e){
+    IsSelected = !IsSelected;
+    if (IsSelected){
+      Model.SelectedObjects = CurrentObject.YieldItem().ToList();
+      StackedCardView.SelectedCards.Add(this);
+    }
+    else{
+      Model.SelectedObjects.Remove(this);
+    }
+    await IsSelectedChanged.InvokeAsync(IsSelected);
+  }
+
+
 
 }

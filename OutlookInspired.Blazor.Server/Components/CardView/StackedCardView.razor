@@ -1,3 +1,5 @@
+@using System.ComponentModel
+@using OutlookInspired.Module.Services.Internal
 @inject IJSRuntime JsRuntime
 <style>
     .store-card-container {
@@ -30,11 +32,26 @@
     }
 </style>
 
-<div class="store-card-container">
-    @Content
+<div class="store-card-container" >
+    <CascadingValue Value="this">
+        @Content
+    </CascadingValue>
 </div>
 
 @code {
+    protected override void OnInitialized(){
+        base.OnInitialized();
+        SelectedCards.ListChanged += (_, e) =>{
+            if (e.ListChangedType != ListChangedType.ItemAdded) return;
+            var selectedCard = SelectedCards[e.NewIndex];
+            SelectedCards.Where(card => card != selectedCard).ToArray()
+                .Do(card =>{
+                    card.IsSelected = false;
+                    SelectedCards.Remove(card);
+                }).Finally(StateHasChanged).Enumerate();
+        };
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender){
         if (!firstRender)return;
         await JsRuntime.InvokeVoidAsync("eval", @"
@@ -52,4 +69,7 @@
     
     [Parameter]
     public RenderFragment Content { get; set; }
+
+    public BindingList<ISelectedCard> SelectedCards { get; } = new(){RaiseListChangedEvents = true};
+
 }
