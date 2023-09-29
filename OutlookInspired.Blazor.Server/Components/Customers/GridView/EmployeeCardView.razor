@@ -1,51 +1,21 @@
-@using OutlookInspired.Module.BusinessObjects
+﻿@using OutlookInspired.Module.BusinessObjects
 @using OutlookInspired.Module.Services.Internal
-<style>
-    .card-container {
-        display: flex;
-        flex-wrap: nowrap; 
-        overflow-x: auto;  
-        overflow-y: hidden;
-        white-space: nowrap;
-        max-height: 100vh; 
-    }
-
-    .card-container > div {
-        margin-right: 16px; 
-        flex: 0 0 calc(33.3333% - 16px); 
-    }
-    
-    .card-container::-webkit-scrollbar {
-        width: 12px;
-    }
-    
-    .card-container::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
-        outline: 1px solid slategrey;
-    }
-    
-    .card-container {
-        scrollbar-width: thin;
-        scrollbar-color: darkgrey slategrey;
-    }
-</style>
-
-<div class="card-container">
-    @if (Employees != null && Employees.Any()){
-        @foreach (var employee in Employees){
-            var infoItems = new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, { "PHONE", employee.MobilePhone } };
-            <EmployeeCard HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
-                           InfoItems="@infoItems"/>
+<CardView>
+    <Content>
+        @if (Employees.Any()){
+            @foreach (var employee in Employees){
+                <Card HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
+                              InfoItems="@(new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, 
+                                             { "PHONE", employee.MobilePhone } })"/>
+            }
+        } else {
+            <p>No Employees Found</p>
         }
-    } else {
-        <p>No Employees Found</p>
-    }
-    RECORDS: @Employees.Count
-</div>
+        RECORDS: @Employees.Count
+    </Content>
+</CardView>
 
 @code {
     [Parameter]
     public List<CustomerEmployee> Employees { get; set; }
-    
-
 }

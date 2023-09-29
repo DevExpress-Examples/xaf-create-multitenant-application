@@ -23,19 +23,11 @@
         <img src="@Image" class="img-fluid" alt="Photo">
       </div>
       <div class="col-md-8">
-        @* <div class="mb-2"> *@
-        @*   <small class="text-muted">EMAIL:</small> *@
-        @*   <p><a href="mailto:@Employee.Email">@Employee.Email</a></p> *@
-        @* </div> *@
-        @* <div> *@
-        @*   <small class="text-muted">PHONE:</small> *@
-        @*   <p>@Employee.MobilePhone</p> *@
-        @* </div> *@
          <div class="col-md-8">
             @foreach (var item in InfoItems){
               <div class="mb-2">
                 <small class="text-muted">@item.Key:</small>
-                <p>@item.Value</p>
+                <p>@((MarkupString)item.Value)</p>
               </div>
             }
           </div>
