@@ -4,8 +4,8 @@
 
 <SideBySideCardView>
     <Content>
-        @if (Employees.Any()){
-            @foreach (var employee in Employees){
+        @if (CustomerEmployees.Any()){
+            @foreach (var employee in CustomerEmployees){
                 <SideBySideInfoCard HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
                               InfoItems="@(new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, 
                                              { "PHONE", employee.MobilePhone } })"/>
@@ -13,11 +13,11 @@
         } else {
             <p>No Employees Found</p>
         }
-        RECORDS: @Employees.Count
+        RECORDS: @CustomerEmployees.Count
     </Content>
 </SideBySideCardView>
 
 @code {
     [Parameter]
-    public List<CustomerEmployee> Employees { get; set; }
+    public List<CustomerEmployee> CustomerEmployees { get; set; }
 }

@@ -25,7 +25,7 @@
         </DxTabs>
         @switch (ActiveTabIndex){
             case 0:{
-                <EmployeeCardView Employees="@(((Customer)context.DataItem).Employees.ToList())"></EmployeeCardView>
+                <Employees CustomerEmployees="@(((Customer)context.DataItem).Employees.ToList())"></Employees>
                 break;
             }
             case 1:
