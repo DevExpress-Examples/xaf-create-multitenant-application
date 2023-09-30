@@ -71,8 +71,10 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             }
         }
         
-        private void ViewOnSelectionChanged(object sender, EventArgs e) 
-            => _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
+        private void ViewOnSelectionChanged(object sender, EventArgs e){
+            _childFrame.View.SetCurrentObject(_masterFrame.View.CurrentObject);
+            RefreshChildUserControls();
+        }
 
         private void ControlViewItemOnControlCreated(object sender, EventArgs e){
             _userControl = (IUserControl)((ControlViewItem)sender).Control;
@@ -94,10 +96,13 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             var userControl = (IUserControl)sender;
             _masterFrame.View.SetCurrentObject(userControl.CurrentObject);
             _childFrame.View.SetCurrentObject(userControl.CurrentObject);
-            _childFrame.View.ToCompositeView().GetItems<ControlViewItem>()
+            RefreshChildUserControls();
+        }
+
+        private void RefreshChildUserControls() 
+            => _childFrame.View.ToCompositeView().GetItems<ControlViewItem>()
                 .Select(item => item.Control).OfType<IUserControl>()
                 .ForEach(control => control.Refresh(_childFrame.View.CurrentObject));
-        }
 
         public void ExtendModelInterfaces(ModelInterfaceExtenders extenders) 
             => extenders.Add<IModelDashboardView, IModelDashboardViewMasterDetail>();

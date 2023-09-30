@@ -87,18 +87,18 @@ namespace OutlookInspired.Module.BusinessObjects{
 
     public enum Raise{
         [XafDisplayName("RAISE")]
-        [ImageName("EvaluationNo")]
+        [ImageName("Action_Deny")]
         No,
         [XafDisplayName("RAISE")]
-        [ImageName("EvaluationYes")]
+        [ImageName("BO_Validation")]
         Yes
     }
     public enum Bonus{
         [XafDisplayName("BONUS")]
-        [ImageName("EvaluationNo")]
+        [ImageName("Action_Deny")]
         No,
         [XafDisplayName("BONUS")]
-        [ImageName("EvaluationYes")]
+        [ImageName("BO_Validation")]
         Yes
     }
 

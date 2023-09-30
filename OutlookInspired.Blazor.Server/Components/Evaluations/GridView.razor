@@ -1,0 +1,27 @@
+﻿@using OutlookInspired.Module.BusinessObjects
+<DxGrid Data="ComponentModel.Evaluations" PageSizeSelectorVisible="true" PageSize="20" AllowSelectRowByClick="true" sele
+        SelectedDataItemsChanged="list => ComponentModel.SelectedObjects = list.Cast<Evaluation>().ToList()" RowDoubleClick="_ => ComponentModel.ProcessSelectedObject()" >
+    <Columns>
+        @* @(new DxGridSelectionColumnModel{ VisibleIndex = 0, Width = "40px" }.GetComponentContent()) *@
+        <DxGridDataColumn FieldName="@nameof(Evaluation.Subject)" VisibleIndex="2">
+            <HeaderCaptionTemplate></HeaderCaptionTemplate>
+            <CellDisplayTemplate>
+                <EvalTemplate Context="context"></EvalTemplate>
+            </CellDisplayTemplate>
+        </DxGridDataColumn>
+        
+    </Columns>
+</DxGrid>
+
+@code {   
+     
+    [Parameter]
+    public Model ComponentModel { get; set; }
+    public static RenderFragment Create(Model model) 
+        => @<GridView ComponentModel=@model />;
+}
+@code {
+    
+
+}
+

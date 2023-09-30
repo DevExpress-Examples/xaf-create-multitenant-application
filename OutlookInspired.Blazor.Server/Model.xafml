@@ -22,5 +22,22 @@
         <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Blazor.Server.Components.Customers.CardView.Model" />
       </Items>
     </DetailView>
+    <DetailView Id="Employee_DetailView_Child">
+      <Items>
+        <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+        <PropertyEditor Id="Title" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+      </Items>
+    </DetailView>
+    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor" />
+    <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+      <Columns>
+        <ColumnInfo Id="Bonus" Index="-1" />
+        <ColumnInfo Id="EndOn" Index="-1" />
+        <ColumnInfo Id="Manager" Index="-1" />
+        <ColumnInfo Id="Raise" Index="-1" />
+        <ColumnInfo Id="StartOn" Index="-1" />
+        <ColumnInfo Id="Subject" Index="0" />
+      </Columns>
+    </ListView>
   </Views>
 </Application>

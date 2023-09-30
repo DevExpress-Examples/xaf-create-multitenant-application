@@ -1,0 +1,77 @@
+﻿@inject IJSRuntime JsRuntime
+@using OutlookInspired.Module.BusinessObjects
+@using OutlookInspired.Module.Services.Internal
+<style>
+    .evaluations-td {
+        visibility: hidden;
+    }
+</style>
+<table>
+    <tr>
+        <td class="evaluations-td">@(((Evaluation)Context.DataItem).Subject)</td>
+        <td class="evaluations-td">
+            <strong>@(((Evaluation)Context.DataItem).Manager)</strong>
+        </td>
+        <td class="evaluations-td">
+            <table>
+                <tr>
+                    <td>
+                        <XafImage ImageName="@(((Evaluation)Context.DataItem).Bonus.ImageInfo().ImageName)" Size="16"/>
+                    </td><td>RAISE</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="evaluations-td" colspan="2">@(((Evaluation)Context.DataItem).Description)</td>
+        <td class="evaluations-td">
+            <table>
+                <tr>
+                    <td>
+                        <XafImage ImageName="@(((Evaluation)Context.DataItem).Raise.ImageInfo().ImageName)" Size="16"/>
+                    </td><td>RAISE</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+@code {
+    [Parameter]
+    public GridDataColumnCellDisplayTemplateContext Context { get; set; }
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender){
+        if (firstRender){
+            var script = @"
+                    let attempts = 0;
+
+                    function findCells() {
+                        attempts++;
+                        let cells = document.querySelectorAll('.evaluations-td');
+                        console.log('Number of cells found:', cells.length);
+                        
+                        if (cells.length > 0 || attempts >= 10) {
+                            clearInterval(intervalId);
+                        }
+
+                        cells.forEach((cell, index) => {
+        let parentTd = cell.closest('td');  
+        let parentTdWidth = parentTd ? parentTd.offsetWidth : '100%';  
+        cell.style.maxWidth = parentTdWidth + 'px';  
+        cell.style.whiteSpace = 'nowrap';
+        cell.style.overflow = 'hidden';
+        cell.style.textOverflow = 'ellipsis';
+        cell.style.visibility = 'visible';
+    });
+                    }
+                    let intervalId = setInterval(findCells, 100);";
+
+            await JsRuntime.InvokeVoidAsync("eval", script);
+        }
+    }
+
+    public static RenderFragment Create(GridDataColumnCellDisplayTemplateContext context) 
+        => @<EvalTemplate Context="@context"/>;
+}
+

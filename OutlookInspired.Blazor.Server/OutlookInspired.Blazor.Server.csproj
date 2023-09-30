@@ -37,4 +37,7 @@
     <_ContentIncludedByDefault Remove="Components\Customers\GridView\Stores\StoreCard.razor" />
     <_ContentIncludedByDefault Remove="Components\Customers\GridView\Stores\StoreCardView.razor" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Components\" />
+  </ItemGroup>
 </Project>
