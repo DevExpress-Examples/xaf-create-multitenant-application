@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
-using DevExpress.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
@@ -9,6 +8,7 @@ using DevExpress.Persistent.Base.General;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [Appearance(nameof(StartOn),AppearanceItemType.ViewItem, "1=1",TargetItems = nameof(StartOn),FontStyle = DevExpress.Drawing.DXFontStyle.Bold,Context = "Employee_Evaluations_ListView")]
@@ -26,6 +26,14 @@ namespace OutlookInspired.Module.BusinessObjects{
 			EndOn = StartOn.Value.AddHours(1);
 			Color = Color.White;
 		}
+		
+		[NotMapped]
+		[Browsable(false)]
+		public object ResourceIdBlazor{
+			get => Employee?.ID;
+			set => Employee = ObjectSpace.GetObjectByKey<Employee>(value);
+		}
+
 
 		[FieldSize(FieldSizeAttribute.Unlimited)]
 		public virtual string Description{ get; set; }
@@ -66,7 +74,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Employee Employee{ get; set; }
         [FontSizeDelta(8)]
         public virtual string Subject{ get; set; }
-        
+
+        [NotMapped]
+        public IList<Employee> Resources => Employee.YieldItem().ToList();
         public virtual EvaluationRating Rating{ get; set; }
 
         [VisibleInListView(false)]

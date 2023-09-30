@@ -14,6 +14,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Controllers\Order\ShipmentDetailController.cs" />
+    <Compile Update="Features\Customers\CustomerGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Customers\CustomerLayoutView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Customers\CustomerStoreView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Employees\EmployeesLayoutView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Orders\OrderDetailView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Orders\OrderGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Features\Products\ProductCardView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Editors\ColumnViewUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
 	<Using Include="DevExpress.ExpressApp.ListView" Alias="ListView" />

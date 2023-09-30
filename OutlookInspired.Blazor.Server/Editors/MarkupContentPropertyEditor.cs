@@ -10,10 +10,10 @@ namespace OutlookInspired.Blazor.Server.Editors {
         public MarkupContentPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model) { }
 
         protected override RenderFragment CreateViewComponentCore(object dataContext) 
-            => builder => builder.Render(MemberInfo.Name,MemberInfo.GetValue(dataContext));
+            => builder => builder.RenderMarkup(MemberInfo.Name,MemberInfo.GetValue(dataContext));
 
         protected override void RenderComponent(RenderTreeBuilder builder) 
-            => builder.Render(MemberInfo.Name, PropertyValue);
+            => builder.RenderMarkup(MemberInfo.Name, PropertyValue);
 
     }
 

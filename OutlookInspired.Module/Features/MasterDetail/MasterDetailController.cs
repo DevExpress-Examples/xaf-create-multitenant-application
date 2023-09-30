@@ -32,9 +32,12 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             base.OnDeactivated();
             if (!((IModelDashboardViewMasterDetail)View.Model).MasterDetail)return;
             if (_userControl != null){
-                _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
                 _userControl.CurrentObjectChanged-=UserControlOnCurrentObjectChanged;
                 _userControl.ProcessObject-=UserControlOnProcessObject;
+            }
+
+            if (_controlViewItem != null){
+                _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
             }
             _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
             _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;

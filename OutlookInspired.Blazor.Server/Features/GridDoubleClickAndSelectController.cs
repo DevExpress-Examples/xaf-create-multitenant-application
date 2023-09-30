@@ -1,14 +1,15 @@
 ﻿using DevExpress.Blazor;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.Editors;
-using Microsoft.JSInterop;
+using DevExpress.ExpressApp.Scheduler.Blazor.Editors;
+using OutlookInspired.Blazor.Server.Services;
 
-namespace OutlookInspired.Blazor.Server.Controllers{
+namespace OutlookInspired.Blazor.Server.Features{
     public class GridDoubleClickAndSelectController : ViewController<ListView> {
-        protected override void OnFrameAssigned(){
+        protected override async void OnFrameAssigned(){
             base.OnFrameAssigned();
             if (Frame.Context == TemplateContext.ApplicationWindow){
-                Application.ServiceProvider.GetService<JSRuntime>().InvokeVoidAsync("eval", @"
+                await Application.EvalJSAsync(@"
             function addChildEventListener(base, eventName, selector, handler) {
                 base.addEventListener(eventName, function (event) {
                     var closest = event.target.closest(selector);
@@ -25,6 +26,7 @@ namespace OutlookInspired.Blazor.Server.Controllers{
 ");
             }
         }
+
 
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();

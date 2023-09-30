@@ -36,8 +36,19 @@
     <_ContentIncludedByDefault Remove="Components\Customers\Stores\StoreCardView.razor" />
     <_ContentIncludedByDefault Remove="Components\Customers\GridView\Stores\StoreCard.razor" />
     <_ContentIncludedByDefault Remove="Components\Customers\GridView\Stores\StoreCardView.razor" />
+    <_ContentIncludedByDefault Remove="Components\Customers\GridView\Employees.razor" />
+    <_ContentIncludedByDefault Remove="Components\Customers\GridView\GridView.razor" />
+    <_ContentIncludedByDefault Remove="Components\Customers\GridView\RecentOrders.razor" />
+    <_ContentIncludedByDefault Remove="Components\Customers\Stores\StoresCardView.razor" />
+    <_ContentIncludedByDefault Remove="Components\Evaluations\EvalTemplate.razor" />
+    <_ContentIncludedByDefault Remove="Components\Evaluations\GridView.razor" />
+    <_ContentIncludedByDefault Remove="Features\Employees\Evaluations\EvalTemplate.razor" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Features\Components\" />
+    <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />
+    <AdditionalFiles Include="Features\Customers\GridView\Employees.razor" />
+    <AdditionalFiles Include="Features\Customers\GridView\GridView.razor" />
+    <AdditionalFiles Include="Features\Customers\GridView\RecentOrders.razor" />
+    <AdditionalFiles Include="Features\Customers\Stores\StoresCardView.razor" />
   </ItemGroup>
 </Project>

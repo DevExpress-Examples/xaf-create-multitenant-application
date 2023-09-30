@@ -33,7 +33,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[NotMapped][Browsable(false)]
 		public new IObjectSpace ObjectSpace{ get; set; }
 		[VisibleInListView(false), VisibleInDetailView(false), VisibleInLookupListView(false)]
-		public object Id => ID;
+		object IResource.Id => ID;
+		
 
 		[Browsable(false)]
 		public Int32 OleColor => 0;

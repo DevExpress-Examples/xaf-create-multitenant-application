@@ -4,11 +4,12 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module;
-using OutlookInspired.Win.Controllers;
-using OutlookInspired.Win.Controllers.Evaluations;
-using OutlookInspired.Win.Controllers.GridListEditor;
-using OutlookInspired.Win.Controllers.Maps;
-using OutlookInspired.Win.Controllers.Quotes;
+using OutlookInspired.Win.Features;
+using OutlookInspired.Win.Features.Evaluations;
+using OutlookInspired.Win.Features.GridListEditor;
+using OutlookInspired.Win.Features.Maps;
+using OutlookInspired.Win.Features.Quotes;
+using SplitterPositionController = OutlookInspired.Win.Features.SplitterPositionController;
 
 namespace OutlookInspired.Win;
 
@@ -31,8 +32,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),typeof(ChildViewCriteriaController),
             typeof(RouteMapsViewController), typeof(SalesMapsViewController),
-            typeof(PropertyEditorController), 
-            typeof(DisableSkinsController), typeof(SplitterPositionController)
+            typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
         };
 
     public override void Setup(XafApplication application) {

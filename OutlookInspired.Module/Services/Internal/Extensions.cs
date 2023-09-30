@@ -35,7 +35,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 return memoryStream.ToArray();
             }
 
-            using MemoryStream ms = new MemoryStream();
+            using var ms = new MemoryStream();
             stream.CopyTo(ms);
             return ms.ToArray();
         }
