@@ -1,7 +1,9 @@
 ﻿using DevExpress.Blazor;
+using DevExpress.Blazor.Internal;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.Components;
 using DevExpress.ExpressApp.Blazor.Components.Models;
+using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.DC;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -12,6 +14,9 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
+        public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image")
+            => DxImage.IconCssOrImage(null, service.GetImageUrl(imageName), className);
+        
         public static RenderFragment BootFragment(this Evaluation evaluation,Func<Evaluation,Enum> boost ) 
             => builder =>{
                 builder.OpenComponent(2, typeof(XafImage));

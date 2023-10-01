@@ -241,7 +241,7 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
-    <ListView Id="Evaluation_ListView" SchedulerViewType="Year" SelectedIntervalStart="2020-01-01" SelectedIntervalEnd="2020-12-31" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
+    <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalStart="2019-12-01" SelectedIntervalEnd="2019-12-31" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
     <ListView Id="Event_ListView" ResourceClass="" />
     <DetailView Id="Order_DetailView_Child">
       <Items>

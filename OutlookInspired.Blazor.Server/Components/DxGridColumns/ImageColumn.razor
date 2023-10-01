@@ -1,9 +1,10 @@
-﻿@using DevExpress.Blazor
-@using OutlookInspired.Module.Services.Internal
+﻿@using DevExpress.ExpressApp.Blazor.Services
+@using OutlookInspired.Blazor.Server.Components
+@inject IImageUrlService ImageUrlService;
 
 <DxGridDataColumn FieldName="@FieldName" VisibleIndex="@VisibleIndex" Width="@Width.ToString()">
-    <CellDisplayTemplate> 
-        <img src="@(((byte[])context.Value).ToBase64Image())" width="@Width" height="@Height" alt="@AltText"/>
+    <CellDisplayTemplate>
+        <XafImg Height="@Height" Width="@Width" Value="@context.Value" AltText="@AltText"/>
     </CellDisplayTemplate>
 </DxGridDataColumn>
 
@@ -23,5 +24,5 @@
             AltText = FieldName;
         }
     }
-
+    
 }

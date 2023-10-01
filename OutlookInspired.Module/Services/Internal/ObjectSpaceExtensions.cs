@@ -7,10 +7,15 @@ using DevExpress.ExpressApp.EFCore.Internal;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.Extensions.DependencyInjection;
+using OutlookInspired.Module.BusinessObjects;
 using Type = System.Type;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ObjectSpaceExtensions{
+        public static List<Employee> Employees(this IObjectSpace objectSpace,DateTime start,DateTime end) 
+            => objectSpace.GetObjectsQuery<Employee>()
+                .Where(employee => employee.Evaluations.Any(evaluation => evaluation.StartOn>=start&&evaluation.StartOn<end)).ToList();
+
         public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
             => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
         

@@ -72,6 +72,7 @@
     => Model.ProcessSelectedObject();
 
   private async Task HandleClickAsync(MouseEventArgs e){
+    if (Model==null)return;
     IsSelected = !IsSelected;
     if (IsSelected){
       Model.SelectedObjects = CurrentObject.YieldItem().ToList();

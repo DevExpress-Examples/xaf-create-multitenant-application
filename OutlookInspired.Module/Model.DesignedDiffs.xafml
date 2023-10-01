@@ -866,11 +866,12 @@
         </ColumnInfo>
         <ColumnInfo Id="OrderDate" Index="3" />
         <ColumnInfo Id="ShipDate" Index="4" />
-        <ColumnInfo Id="Customer" Index="5" Width="114" GroupIndex="0" PropertyName="Customer.Name" />
+        <ColumnInfo Id="Customer" Index="5" Width="114" GroupIndex="0" PropertyName="Customer.Name" SortOrder="Ascending" />
         <ColumnInfo Id="Store" Index="6" Width="121" />
         <ColumnInfo Id="ShippingAmount" Index="7" Width="90" />
         <ColumnInfo Id="TotalAmount" Index="8" Width="74" />
         <ColumnInfo Id="PaymentTotal" Index="9" Width="79" />
+        <ColumnInfo Id="Shipment_Status" Index="10" PropertyName="ShipmentStatus" IsNewNode="True" />
       </Columns>
       <HiddenActions>
         <ActionLink ActionId="Save" IsNewNode="True" />

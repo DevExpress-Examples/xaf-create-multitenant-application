@@ -5,7 +5,7 @@
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
   </SchemaModules>
-  <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+  <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
@@ -208,6 +208,6 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
-    <ListView Id="Evaluation_ListView" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" SchedulerViewType="Timeline" SelectedIntervalEnd="2020-12-31" SelectedIntervalStart="2020-01-01" />
+    <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
   </Views>
 </Application>

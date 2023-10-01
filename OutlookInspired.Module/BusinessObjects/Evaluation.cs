@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.General;
+using DevExpress.Persistent.Base.General.Compatibility;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
@@ -81,7 +83,18 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInListView(false)]
         public virtual Raise Raise{ get; set; }
+        [NotMapped]
+        [Browsable(false)]
+        public string RecurrenceInfoXmlBlazor{
+	        get => RecurrenceInfoXml?.ToNewRecurrenceInfoXml();
+	        set => RecurrenceInfoXml = value?.ToOldRecurrenceInfoXml();
+        }
 
+        [StringLength(300)]
+        [NonCloneable]
+        [DisplayName("Recurrence")]
+        [FieldSize(-1)]
+        public virtual string RecurrenceInfoXml { get; set; }
         [VisibleInListView(false)]
         public virtual Bonus Bonus{ get; set; }
         

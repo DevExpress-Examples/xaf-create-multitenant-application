@@ -1,13 +1,13 @@
 ﻿@using OutlookInspired.Module.BusinessObjects
 @using DevExpress.ExpressApp.Blazor.Editors.Models.Renderers
 @using DevExpress.ExpressApp.Blazor.Editors.Models
-@using OutlookInspired.Blazor.Server.Components
+@using OutlookInspired.Blazor.Server.Components.DxGridColumns
 
 <DxGrid Data="ComponentModel.Objects" AutoCollapseDetailRow="true" PageSizeSelectorVisible="true" PageSize="20" AllowSelectRowByClick="true" 
         SelectedDataItemsChanged="list => ComponentModel.SelectedObjects = list.Cast<Customer>().ToList()" RowDoubleClick="_ => ComponentModel.ProcessSelectedObject()">
     <Columns>
         @(new DxGridSelectionColumnModel{VisibleIndex = 0,Width = "40px" }.GetComponentContent())
-        <DxGridImageColumn FieldName="@nameof(Customer.Logo)" VisibleIndex="2"/>
+        <ImageColumn FieldName="@nameof(Customer.Logo)" VisibleIndex="2"/>
         <DxGridDataColumn FieldName="@nameof(Customer.Name)" SortIndex="0"/>
         <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeCity)"/>
         <DxGridDataColumn FieldName="@nameof(Customer.HomeOfficeLine)"/>

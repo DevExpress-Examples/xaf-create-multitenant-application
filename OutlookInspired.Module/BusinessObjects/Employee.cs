@@ -118,19 +118,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[Browsable(false)]
 		public virtual Guid? ProbationReasonId{ get; set; }
 
-		public override void OnCreated(){
-			base.OnCreated();
-			// Roles.Add(ObjectSpace.EnsureDefaultRole());
-		}
-
-		public override void OnSaving() => UpdateRole();
-
-		private void UpdateRole(){
-			// if (Roles.Any(role => role.Name == Department.ToString())) return;
-			// Roles.Where(role => role.Name != "Default").ToArray()
-				// .Do(role => Roles.Remove(role)).Enumerate();
-			// Roles.Add(ObjectSpace.FindRole(Department));
-		}
 
 		[NotMapped]
 		public virtual string Caption{

@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
+using Newtonsoft.Json;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
@@ -90,12 +91,15 @@ namespace OutlookInspired.Module.BusinessObjects{
         double IBaseMapsMarker.Longitude => Store?.Longitude??0;
     }
     
+    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum OrderShipMethod {
         Ground, Air
     }
+    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ShipmentCourier {
         None, FedEx, UPS, DHL
     }
+    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ShipmentStatus {
         [ImageName("ShipmentAwaiting")]
         Awaiting,
@@ -104,6 +108,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [ImageName("ShipmentReceived")]
         Received
     }
+    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum PaymentStatus {
         [ImageName("PaymentUnPaid")]
         Unpaid, 
@@ -111,7 +116,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         PaidInFull, 
         [ImageName("PaymentRefund")]
         RefundInFull,
-        
         Other
     }
 }
