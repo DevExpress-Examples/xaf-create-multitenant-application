@@ -5,6 +5,8 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.Security;
+using DevExpress.ExpressApp.Updating;
+using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
@@ -14,6 +16,38 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Extensions{
     public static class ApplicationBuilder{
+        public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString){
+            builder.AddBuildStep(application => {
+            application.DatabaseUpdateMode = DatabaseUpdateMode.Never;
+            ((WinApplication)application).SplashScreen = new DevExpress.ExpressApp.Win.Utils.DXSplashScreen(
+                typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
+            application.ApplicationName = "MainDemo";
+            DevExpress.ExpressApp.Scheduler.Win.SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
+            DevExpress.ExpressApp.ReportsV2.Win.WinReportServiceController.UseNewWizard = true;
+            application.DatabaseVersionMismatch += (s, e) => {
+                string message = "Application cannot connect to the specified database.";
+                if(e.CompatibilityError is CompatibilityDatabaseIsOldError isOldError && isOldError.Module != null) {
+                    message = "The client application cannot connect to the Middle Tier Application Server and its database. " +
+                              "To avoid this error, ensure that both the client and the server have the same modules set. Problematic module: " + isOldError.Module.Name +
+                              ". For more information, see https://docs.devexpress.com/eXpressAppFramework/113439/concepts/security-system/middle-tier-security-wcf-service#troubleshooting";
+                }
+                if(e.CompatibilityError == null) {
+                    message = "You probably tried to update the database in Middle Tier Security mode from the client side. " +
+                              "In this mode, the server application updates the database automatically. " +
+                              "To disable the automatic database update, set the XafApplication.DatabaseUpdateMode property to the DatabaseUpdateMode.Never value in the client application.";
+                }
+                throw new InvalidOperationException(message);
+            };
+            application.LastLogonParametersReading+= (_, e) => {
+                if(string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) {
+                    e.SettingsStorage.SaveOption("", "UserName", "Admin");
+                }
+            };
+            application.ConnectionString = connectionString;
+
+        });
+        }
+
         public static void AddSecurity(this IWinApplicationBuilder builder, bool useMiddleTier,string address=null){
             if (!useMiddleTier){
                 builder.AddIntegratedModeSecurity();

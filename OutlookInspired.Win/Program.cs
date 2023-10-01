@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraEditors;
 

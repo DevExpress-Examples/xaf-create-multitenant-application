@@ -4,6 +4,8 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Security.ClientServer;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
+using DevExpress.ExpressApp.Security;
+using DevExpress.ExpressApp.Updating;
 using OutlookInspired.Win.Extensions;
 
 namespace OutlookInspired.Win;
@@ -14,7 +16,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         builder.AddModules();
         builder.AddObjectSpaceProviders(connectionString,useSecuredProvider);
         builder.AddSecurity(connectionString==null,address);
-        builder.AddBuildStep(application => application.DatabaseUpdateMode = DatabaseUpdateMode.Never);
+        builder.AddBuildSteps(connectionString);
         return builder.Build();
     }
     
