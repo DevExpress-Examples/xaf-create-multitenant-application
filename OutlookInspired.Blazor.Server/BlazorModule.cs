@@ -3,8 +3,10 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Blazor.Server.Features;
+using OutlookInspired.Blazor.Server.Features.Customers;
 using OutlookInspired.Blazor.Server.Features.Employees.Evaluations;
 using OutlookInspired.Blazor.Server.Features.Evaluations;
+using CellDisplayTemplateController = OutlookInspired.Blazor.Server.Features.Employees.Evaluations.CellDisplayTemplateController;
 
 namespace OutlookInspired.Blazor.Server;
 
@@ -19,8 +21,9 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
         => new[]{
-            typeof(LayoutController), typeof(SchedulerGroupTypeController), typeof(EnableDashboardMasterItemNewAction),
-            typeof(DxGridListEditorController)
+            typeof(CellDisplayTemplateController), typeof(SchedulerGroupTypeController), typeof(EnableDashboardMasterItemNewAction),
+            typeof(DxGridListEditorController),typeof(DetailRowController),typeof(RichTextPropertyEditorController),
+            typeof(Features.Employees.Tasks.CellDisplayTemplateController),typeof(Features.Orders.DetailRowController)
         };
 
     public override void Setup(XafApplication application) {

@@ -8,14 +8,15 @@ using DevExpress.ExpressApp.DC;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
+using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
-        public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image")
-            => DxImage.IconCssOrImage(null, service.GetImageUrl(imageName), className);
+        public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image",bool useSvgIcon=false)
+            => DxImage.IconCssOrImage(null, service.GetImageUrl(imageName), className,useSvgIcon);
         
         public static RenderFragment BootFragment(this Evaluation evaluation,Func<Evaluation,Enum> boost ) 
             => builder =>{
@@ -74,7 +75,14 @@ namespace OutlookInspired.Blazor.Server.Services{
 </div>
 ");
 
+        public static RenderFragment Create(this IComponentModel model,Type componentType) 
+            => builder => {
+                builder.OpenComponent(0, componentType);
+                builder.AddAttribute(1, "ComponentModel", model);
+                builder.CloseComponent();
+            };
         public static RenderFragment Create<T>(this T componentModel,Func<T,RenderFragment> fragmentSelector) where T:IComponentModel 
             => ComponentModelObserver.Create(componentModel, fragmentSelector(componentModel));
+        
     }
 }

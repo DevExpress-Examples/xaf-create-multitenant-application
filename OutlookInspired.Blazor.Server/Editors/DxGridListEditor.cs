@@ -2,7 +2,6 @@ using DevExpress.ExpressApp.Blazor.Editors.ActionControls;
 using DevExpress.ExpressApp.Blazor.Editors.Models;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
-using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Editors{
     [ListEditor(typeof(object),true)]

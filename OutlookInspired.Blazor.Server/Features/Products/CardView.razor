@@ -1,0 +1,20 @@
+﻿@using OutlookInspired.Module.Services.Internal
+@using OutlookInspired.Blazor.Server.Components.CardView
+<StackedCardView>
+    <Content>
+        @foreach (var product in ComponentModel.Objects) {
+             <SideBySideInfoCard CurrentObject="product" Model="@ComponentModel" Image="@product.PrimaryImage.Data.ToBase64Image()" HeaderText="@product.Name" 
+                                 InfoItems="@(new Dictionary<string, string>{{ "COST", product.Cost.ToString("C") },
+                                                { "SALE PRICE", product.SalePrice.ToString("C") } })"
+                                 FooterText="@product.Description"/>
+         }
+
+    </Content>
+</StackedCardView>
+
+@code {
+    [Parameter]
+    public Model ComponentModel { get; set; }
+    public static RenderFragment Create(Model model)
+        => @<CardView ComponentModel=@model />;
+}

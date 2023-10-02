@@ -1,6 +1,7 @@
 ﻿using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
+using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,10 +66,10 @@ namespace OutlookInspired.Blazor.Server.Services{
             builder.Modules
                 .AddConditionalAppearance()
                 .AddFileAttachments()
-                .AddOffice()
+                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
                 .AddReports(options => {
                     options.EnableInplaceReports = false;
-                    options.ReportDataType = typeof(DevExpress.Persistent.BaseImpl.EF.ReportDataV2);
+                    options.ReportDataType = typeof(ReportDataV2);
                     options.ReportStoreMode = DevExpress.ExpressApp.ReportsV2.ReportStoreModes.XML;
                 })
                 .AddScheduler()

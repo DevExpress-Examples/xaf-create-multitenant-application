@@ -21,12 +21,14 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, GridViewDetailView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
     [CloneView(CloneViewType.DetailView, InvoiceDetailView)]
+    [CloneView(CloneViewType.ListView, ListViewDetail)]
     [ImageName("BO_Order")][VisibleInReports(true)]
     public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
         public const string MapsDetailView = "Order_DetailView_Maps";
         public const string InvoiceDetailView = "Order_Invoice_DetailView";
         public const string ChildDetailView = "Order_DetailView_Child";
         public const string GridViewDetailView = "OrderGridView_DetailView";
+        public const string ListViewDetail = "Order_ListView_Detail";
         
         [XafDisplayName("Invoice #")]
         [FontSizeDelta(4)]
@@ -53,6 +55,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
+        [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
         public virtual byte[] ShipmentStatusImage => ShipmentStatus.ImageInfo().ImageBytes;
 
         [EditorAlias(EditorAliases.PdfViewerEditor)]
@@ -78,6 +82,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInDetailView(false)]
         [XafDisplayName(nameof(ShipmentStatus))]
+        [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
         public byte[] PaymentStatusImage => PaymentStatus.ImageInfo().ImageBytes;
         
         public double ActualWeight 

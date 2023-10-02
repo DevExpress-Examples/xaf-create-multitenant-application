@@ -1,9 +1,12 @@
-﻿using DevExpress.ExpressApp.DC;
+﻿using DevExpress.ExpressApp.Data;
+using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
     public class QuoteMapItem:IMapsMarker{
+        [Key]
+        public int Key{ get; set; }
         public Stage Stage { get; init; }
         public DateTime Date { get; set; }
         public string City{ get; set; }

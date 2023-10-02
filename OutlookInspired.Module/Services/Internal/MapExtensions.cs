@@ -47,7 +47,8 @@ namespace OutlookInspired.Module.Services.Internal{
             => objectSpace.Quotes(stage).Select(quote => quote.CustomerStore).Distinct().ToArray();
 
         public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage)
-            => objectSpace.Quotes(stage).Select(quote => new QuoteMapItem{
+            => objectSpace.Quotes(stage).Select((quote, i) => new QuoteMapItem{
+                Key = i,
                 Stage = stage,
                 Value = quote.Total,
                 Date = quote.Date,

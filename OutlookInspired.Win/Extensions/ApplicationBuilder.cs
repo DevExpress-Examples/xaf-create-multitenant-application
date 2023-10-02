@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
-using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Win;
@@ -11,7 +10,6 @@ using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Extensions{
@@ -24,9 +22,9 @@ namespace OutlookInspired.Win.Extensions{
             application.ApplicationName = "MainDemo";
             DevExpress.ExpressApp.Scheduler.Win.SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
             DevExpress.ExpressApp.ReportsV2.Win.WinReportServiceController.UseNewWizard = true;
-            application.DatabaseVersionMismatch += (s, e) => {
+            application.DatabaseVersionMismatch += (_, e) => {
                 string message = "Application cannot connect to the specified database.";
-                if(e.CompatibilityError is CompatibilityDatabaseIsOldError isOldError && isOldError.Module != null) {
+                if(e.CompatibilityError is CompatibilityDatabaseIsOldError{ Module: not null } isOldError) {
                     message = "The client application cannot connect to the Middle Tier Application Server and its database. " +
                               "To avoid this error, ensure that both the client and the server have the same modules set. Problematic module: " + isOldError.Module.Name +
                               ". For more information, see https://docs.devexpress.com/eXpressAppFramework/113439/concepts/security-system/middle-tier-security-wcf-service#troubleshooting";
@@ -120,7 +118,7 @@ namespace OutlookInspired.Win.Extensions{
                 })
                 .AddFileAttachments()
                 .AddNotifications()
-                .AddOffice(options => OptionsRichTextMailMergeDataType(options))
+                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
                 .AddPivotChart(options => options.ShowAdditionalNavigation = true)
                 .AddPivotGrid()
                 .AddReports(options => {
@@ -135,9 +133,6 @@ namespace OutlookInspired.Win.Extensions{
                 .AddViewVariants()
                 .Add<OutlookInspiredWinModule>();
 
-        [Obsolete]
-        private static void OptionsRichTextMailMergeDataType(OfficeOptions options){
-            options.RichTextMailMergeDataType=typeof(RichTextMailMergeData);
-        }
+        
     }
 }

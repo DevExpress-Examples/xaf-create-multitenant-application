@@ -852,10 +852,13 @@
         <ColumnInfo Id="Comments" Index="-1" />
         <ColumnInfo Id="Employee" Index="-1" />
         <ColumnInfo Id="OrderTerms" Index="-1" />
+        <ColumnInfo Id="PaymentStatusImage" Index="-1" />
         <ColumnInfo Id="PONumber" Index="-1" />
         <ColumnInfo Id="RefundTotal" Index="-1" />
         <ColumnInfo Id="SaleAmount" Index="-1" />
+        <ColumnInfo Id="Shipment_Status" Index="-1" PropertyName="ShipmentStatus" IsNewNode="True" />
         <ColumnInfo Id="ShipmentCourier" Index="-1" />
+        <ColumnInfo Id="ShipmentStatusImage" Index="-1" />
         <ColumnInfo Id="ShipMethod" Index="-1" ToolTip="Ship Method" Caption=" " Width="42" />
         <ColumnInfo Id="PaymentStatus" Index="0" Caption=" " ToolTip="Payment Status" Width="47" PropertyName="PaymentStatusImage" />
         <ColumnInfo Id="ShipmentStatus" Index="1" Caption=" " ToolTip="Shipment Status" Width="47" PropertyName="ShipmentStatusImage" />
@@ -871,7 +874,6 @@
         <ColumnInfo Id="ShippingAmount" Index="7" Width="90" />
         <ColumnInfo Id="TotalAmount" Index="8" Width="74" />
         <ColumnInfo Id="PaymentTotal" Index="9" Width="79" />
-        <ColumnInfo Id="Shipment_Status" Index="10" PropertyName="ShipmentStatus" IsNewNode="True" />
       </Columns>
       <HiddenActions>
         <ActionLink ActionId="Save" IsNewNode="True" />

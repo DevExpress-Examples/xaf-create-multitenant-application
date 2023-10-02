@@ -2,10 +2,19 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.ExpressApp.Utils;
-using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ModelExtensions{
+        public static IEnumerable<IModelMemberViewItem> MemberViewItems(this IModelView modelObjectView, Type propertyEditorType=null)
+            => !(modelObjectView is IModelObjectView) ? Enumerable.Empty<IModelMemberViewItem>()
+                : (modelObjectView is IModelListView modelListView ? modelListView.Columns : ((IModelDetailView) modelObjectView).Items.OfType<IModelMemberViewItem>())
+                .Where(item => propertyEditorType == null || propertyEditorType.IsAssignableFrom(item.PropertyEditorType));
+
+        public static IModelMemberViewItem[] VisibleMemberViewItems(this IModelObjectView modelObjectView) 
+            => modelObjectView.MemberViewItems().VisibleMemberViewItems().ToArray();
+
+        public static IModelMemberViewItem[] VisibleMemberViewItems(this IEnumerable<IModelMemberViewItem> modelMemberViewItems) 
+            => modelMemberViewItems.Where(item => item.Index is null or > -1).ToArray();
         public static void CreateView(this IModelView source,  string viewId,string detailViewId=null) {
             var cloneNodeFrom = ((ModelNode)source).Clone(viewId);
             if (source is not IModelListView || string.IsNullOrEmpty(detailViewId)) return;

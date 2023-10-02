@@ -14,7 +14,11 @@
     <title>OutlookInspired</title>
     <base href="~/" />
     <component type="typeof(BootstrapThemeLink)" render-mode="Static" />
-    
+    <script>
+    window.updatePdfSource = function(base64String) {
+                        document.getElementById('pdfEmbed').src = `data:application/pdf;base64,${base64String}#toolbar=0`;
+                    };
+    </script>    
 </head>
 <body>
     @{

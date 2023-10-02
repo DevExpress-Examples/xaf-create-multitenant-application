@@ -265,7 +265,7 @@
     <ListView Id="Order_ListView" ShowFindPanel="True" />
     <DetailView Id="OrderGridView_DetailView">
       <Items>
-        <ControlDetailItem Id="OrderGridView" ControlTypeName="OutlookInspired.Win.UserControls.OrderGridView" />
+        <ControlDetailItem Id="OrderGridView" ControlTypeName="OutlookInspired.Win.Features.Orders.OrderGridView" />
       </Items>
     </DetailView>
     <DetailView Id="Product_Brochure_DetailView">

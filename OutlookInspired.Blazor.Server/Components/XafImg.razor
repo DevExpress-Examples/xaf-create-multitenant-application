@@ -37,14 +37,14 @@ else{
     public string Color { get; set; }
     [Parameter]
     public int Size { get; set; }
-
+    [Parameter]
+    public string CssClass { get; set; }
+    
     public static RenderFragment Create(object value,int width,int height,string altText)
         => @<XafImg Value=@value Width=@width Height=@height AltText="@altText" />;
 
 }
-@code {
-    public string CssClass { get; set; }
-}
+
 
 
 

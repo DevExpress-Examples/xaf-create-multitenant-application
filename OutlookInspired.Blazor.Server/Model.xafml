@@ -8,10 +8,25 @@
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">
       <Items>
-        <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
-        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+        <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
     </DetailView>
+    <ListView Id="Customer_ListView">
+      <Columns>
+        <ColumnInfo Id="Logo" Index="0" ImageEditorFixedWidth="0" ImageEditorFixedHeight="0" ImageEditorCustomHeight="30" MinWidth="30" Width="30" Caption=" " ToolTip="Logo" />
+        <ColumnInfo Id="Name" Index="1">
+          <Summary>
+            <ColumnSummaryItem Id="Count" SummaryType="Count" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+        <ColumnInfo Id="HomeOfficeLine" Index="2" />
+        <ColumnInfo Id="HomeOfficeCity" Index="3" />
+        <ColumnInfo Id="HomeOfficeZipCode" Index="4" />
+        <ColumnInfo Id="HomeOfficeState" Index="5" />
+        <ColumnInfo Id="Phone" Index="6" />
+      </Columns>
+    </ListView>
     <DetailView Id="CustomerGridView_DetailView">
       <Items>
         <ControlDetailItem Id="CustomerGridView" ControlTypeName="OutlookInspired.Blazor.Server.Features.Customers.GridView.Model" />
@@ -22,6 +37,41 @@
         <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Blazor.Server.Features.Customers.CardView.Model" />
       </Items>
     </DetailView>
+    <DashboardView Id="CustomerListView">
+      <Items>
+        <DashboardViewItem Id="CustomerGridView_DetailView" ViewId="Customer_ListView" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main" Caption="Main">
+          <LayoutGroup Id="Auto324129c6-4220-4dbe-a243-af9dbe3b028c" ShowCaption="False" Caption="" Index="0" RelativeSize="64.69310157523086" IsNewNode="True">
+            <LayoutItem Id="CustomerGridView_DetailView" ViewItem="CustomerGridView_DetailView" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item1" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="Autoe56bf669-fac5-414f-98e9-190a466b4f15" ShowCaption="False" Caption="" Index="1" RelativeSize="35.306898424769145" IsNewNode="True">
+            <LayoutItem Id="Customer_DetailView_Child" ViewItem="Customer_DetailView_Child" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item2" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutItem Id="Customer_DetailView_Child" RelativeSize="35.306898424769145" Removed="True" />
+          <LayoutItem Id="CustomerGridView_DetailView" Removed="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+    <ListView Id="Employee_AssignedEmployeeTasks_ListView">
+      <Columns>
+        <ColumnInfo Id="Subject" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="StartDate" SortIndex="0" SortOrder="Ascending" />
+        <ColumnInfo Id="DueDate" SortIndex="-1" SortOrder="None" />
+      </Columns>
+    </ListView>
+    <ListView Id="Employee_AssignedTasks_ListView_Child">
+      <Columns>
+        <ColumnInfo Id="Completion" Index="-1" />
+        <ColumnInfo Id="Description" Index="-1" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="StartDate" Index="-1" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="Subject" SortIndex="-1" SortOrder="None" Index="0" />
+        <ColumnInfo Id="DueDate" Index="1" SortIndex="0" SortOrder="Ascending" />
+      </Columns>
+    </ListView>
     <DetailView Id="Employee_DetailView">
       <Layout>
         <LayoutGroup Id="Main">
@@ -114,8 +164,8 @@
     </DetailView>
     <DetailView Id="Employee_DetailView_Child">
       <Items>
-        <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
-        <PropertyEditor Id="Title" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.DisplayTextPropertyEditor" />
+        <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="Title" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
@@ -167,8 +217,8 @@
         <ColumnInfo Id="EndOn" Index="-1" />
         <ColumnInfo Id="Manager" Index="-1" />
         <ColumnInfo Id="Raise" Index="-1" />
-        <ColumnInfo Id="StartOn" Index="-1" />
         <ColumnInfo Id="Subject" Index="0" SortIndex="-1" SortOrder="None" />
+        <ColumnInfo Id="StartOn" Index="1" SortIndex="0" SortOrder="Descending" />
       </Columns>
     </ListView>
     <DashboardView Id="EmployeeCardListView">
@@ -209,5 +259,119 @@
       </Layout>
     </DashboardView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
+    <DetailView Id="Order_DetailView_Child">
+      <Items>
+        <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+      </Items>
+    </DetailView>
+    <ListView Id="Order_ListView">
+      <Columns>
+        <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" />
+        <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" />
+      </Columns>
+    </ListView>
+    <ListView Id="Order_ListView_Detail" AutoExpandAllGroups="True">
+      <Columns>
+        <ColumnInfo Id="ActualWeight" Index="-1" />
+        <ColumnInfo Id="Comments" Index="-1" />
+        <ColumnInfo Id="Customer" Index="-1" />
+        <ColumnInfo Id="Employee" Index="-1" />
+        <ColumnInfo Id="OrderDate" Index="-1" />
+        <ColumnInfo Id="OrderTerms" Index="-1" />
+        <ColumnInfo Id="PaymentStatusImage" Index="-1" />
+        <ColumnInfo Id="PONumber" Index="-1" />
+        <ColumnInfo Id="RefundTotal" Index="-1" />
+        <ColumnInfo Id="SaleAmount" Index="-1" />
+        <ColumnInfo Id="ShipmentCourier" Index="-1" />
+        <ColumnInfo Id="ShipmentStatusImage" Index="-1" />
+        <ColumnInfo Id="ShipMethod" Index="-1" />
+        <ColumnInfo Id="PaymentStatus" Index="0" Caption=" " PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" />
+        <ColumnInfo Id="ShipmentStatus" Index="1" Caption=" " PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" />
+        <ColumnInfo Id="Customer.Name" PropertyName="Customer.Name" Index="2" SortOrder="Ascending" GroupIndex="0" IsNewNode="True" />
+        <ColumnInfo Id="InvoiceNumber" Index="3" Width="182" />
+        <ColumnInfo Id="ShipDate" Index="4" />
+        <ColumnInfo Id="Store" Index="5" />
+        <ColumnInfo Id="ShippingAmount" Index="6" />
+        <ColumnInfo Id="TotalAmount" Index="7" />
+        <ColumnInfo Id="PaymentTotal" Index="8" />
+      </Columns>
+    </ListView>
+    <DashboardView Id="OrderGridView">
+      <Items>
+        <DashboardViewItem Id="OrderGridView_DetailView" ViewId="Order_ListView_Detail" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="Autof85045b8-4c46-409e-9c44-818a171d91c8" ShowCaption="False" Caption="" Index="0" RelativeSize="64.80446927374301" IsNewNode="True">
+            <LayoutItem Id="OrderGridView_DetailView" ViewItem="OrderGridView_DetailView" CaptionLocation="Top" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item1" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="Auto66440994-93a7-468d-bea3-6cc0c57ad054" ShowCaption="False" Caption="" Index="1" RelativeSize="35.19553072625698" IsNewNode="True">
+            <LayoutItem Id="Order_DetailView_Child" ViewItem="Order_DetailView_Child" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item2" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutItem Id="Order_DetailView_Child" RelativeSize="35.198261814231394" Removed="True" />
+          <LayoutItem Id="OrderGridView_DetailView" Removed="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+    <DetailView Id="Product_Brochure_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors" RelativeSize="100" />
+          <LayoutGroup Id="SizeableEditors" Caption="Description" RelativeSize="95.76399394856278" Removed="True">
+            <LayoutItem Id="Description" Removed="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <ListView Id="Product_ListView">
+      <Columns>
+        <ColumnInfo Id="Image" Index="-1" />
+        <ColumnInfo Id="SalePrice" Index="3" />
+        <ColumnInfo Id="RetailPrice" Index="4" />
+        <ColumnInfo Id="CurrentInventory" Index="5" />
+        <ColumnInfo Id="Backorder" Index="6" />
+        <ColumnInfo Id="Available" Index="7" />
+      </Columns>
+    </ListView>
+    <DashboardView Id="ProductCardView">
+      <Layout>
+        <LayoutGroup Id="Main" Caption="Main">
+          <LayoutGroup Id="Auto12e21a35-b720-41db-b90d-9ca812c59f68" ShowCaption="False" Caption="" Index="0" RelativeSize="61.607697082557415" IsNewNode="True">
+            <LayoutItem Id="ProductCardView_DetailView" ViewItem="ProductCardView_DetailView" CaptionLocation="Top" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item1" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="Auto9390f4f6-5edf-471e-89c5-9e73d03e15a6" ShowCaption="False" Caption="" Index="1" RelativeSize="38.392302917442585" IsNewNode="True">
+            <LayoutItem Id="Product_Brochure_DetailView" ViewItem="Product_Brochure_DetailView" CaptionLocation="Top" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item2" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutItem Id="Product_Brochure_DetailView" RelativeSize="38.40304182509506" Removed="True" />
+          <LayoutItem Id="ProductCardView_DetailView" Removed="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+    <DetailView Id="ProductCardView_DetailView">
+      <Items>
+        <ControlDetailItem Id="ProductCardView" ControlTypeName="OutlookInspired.Blazor.Server.Features.Products.Model" />
+      </Items>
+    </DetailView>
+    <DashboardView Id="ProductListView">
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="Auto2bcdef52-e61a-463e-afcc-67e06c505773" ShowCaption="False" Caption="Auto2bcdef52-e61a-463e-afcc-67e06c505773(2)" Index="0" RelativeSize="62.693978895096215" IsNewNode="True">
+            <LayoutItem Id="Product_ListView" ViewItem="Product_ListView" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item2" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="Auto9c9af28b-84cf-49ad-971e-f702c7639ddf" ShowCaption="False" Caption="Auto9c9af28b-84cf-49ad-971e-f702c7639ddf(5)" Index="1" RelativeSize="37.306021104903785" IsNewNode="True">
+            <LayoutItem Id="Product_Brochure_DetailView" ViewItem="Product_Brochure_DetailView" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item1" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutItem Id="Product_Brochure_DetailView" RelativeSize="37.20803910917979" Removed="True" />
+          <LayoutItem Id="Product_ListView" Removed="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
   </Views>
 </Application>

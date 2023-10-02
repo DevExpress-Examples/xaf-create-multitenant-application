@@ -23,6 +23,8 @@ namespace OutlookInspired.Module.Services.Internal{
 
         public static string ToBase64String(this byte[] bytes) 
             => Convert.ToBase64String(bytes);
+        public static byte[] ToBase64String(this string base64String) 
+            => Convert.FromBase64String(base64String);
 
         public static string ToBase64Image(this byte[] bytes) 
             => $"data:{bytes.FileType()};base64,{bytes?.ToBase64String()}";

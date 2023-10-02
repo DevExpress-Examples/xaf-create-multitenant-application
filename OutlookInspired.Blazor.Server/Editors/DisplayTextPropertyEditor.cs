@@ -1,25 +1,24 @@
 ﻿using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
+using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Services;
-using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Editors {
     [PropertyEditor(typeof(object), Module.Services.Internal.EditorAliases.LabelPropertyEditor,false)]
-    public class DisplayTextPropertyEditor : ComponentPropertyEditor {
+    public class LabelPropertyEditor:ComponentPropertyEditor<LabelModel,LabelModelAdapter>{
+        public LabelPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
+        }
 
-        protected override RenderFragment CreateViewComponentCore(object dataContext) 
-            => builder => builder.AddMarkupContent(0, Markup($"{this.DisplayableMemberValue(dataContext,dataContext)}"));
-
-        private string Markup(string content) 
-            => $"<div style=\"white-space: nowrap;overflow: hidden;text-overflow: ellipsis;{Model.ModelMember.MemberInfo.FontSize()};\">{content}</div>";
-        
-        protected override void RenderComponent(RenderTreeBuilder builder) 
-            => builder.AddMarkupContent(0, Markup($"{this.DisplayableMemberValue()}"));
-
-        public DisplayTextPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
+        protected override LabelModelAdapter CreateComponentAdapter(){
+            var adapter = base.CreateComponentAdapter();
+            adapter.Model.Style=Model.ModelMember.MemberInfo.FontSize();
+            return adapter;
         }
     }
     
+    public class LabelModelAdapter:ComponentModelAdapter<Label,LabelModel>{
+        public override void SetPropertyValue(object value) => Model.Text=$"{value}";
+        
+    }
+
 }
