@@ -23,8 +23,7 @@ export function updateRouteMode(dxMapInstance, newMode) {
 }
 export async function MapInit(element,model) {
     let closestParent = element.closest(".dxbl-modal-body");
-    console.log(model.routes)
-    let dxMap = new DevExpress.ui.dxMap(element, {
+    return new DevExpress.ui.dxMap(element, {
         center: JSON.stringify(model.center),
         markers: model.markers.map(marker => ({
             location: `${marker.location.lat}, ${marker.location.lng}`
@@ -39,7 +38,5 @@ export async function MapInit(element,model) {
         },
         type: mapTypes[0].key
     });
-    debugger;
-    return  dxMap;
     
 }

@@ -221,7 +221,7 @@
         <PropertyEditor Id="Address" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="BAddress" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Employees.Maps.Model" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.Model" />
         <PropertyEditor Id="RouteResult" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
       <Layout>
@@ -300,6 +300,13 @@
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+      </Items>
+    </DetailView>
+    <DetailView Id="Order_DetailView_Maps">
+      <Items>
+        <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.Model" />
       </Items>
     </DetailView>
     <ListView Id="Order_ListView">

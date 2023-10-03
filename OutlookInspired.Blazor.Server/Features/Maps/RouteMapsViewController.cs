@@ -6,9 +6,10 @@ using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
+using Model = OutlookInspired.Blazor.Server.Features.Maps.Model;
 
-namespace OutlookInspired.Blazor.Server.Features.Employees.Maps{
-    public class BlazorMapsViewController:ObjectViewController<DetailView,IMapsMarker>,IMapsRouteController{
+namespace OutlookInspired.Blazor.Server.Features.Maps{
+    public class RouteMapsViewController:ObjectViewController<DetailView,IMapsMarker>,IMapsRouteController{
         protected override void OnDeactivated(){
             base.OnDeactivated();
             var mapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
@@ -19,10 +20,9 @@ namespace OutlookInspired.Blazor.Server.Features.Employees.Maps{
         protected override void OnActivated(){
             base.OnActivated();
             View.CustomizeViewItemControl<ControlViewItem>(this, item => {
-                if (item.Control is Model model){
-                    model.MapSettings=MapSettings();
-                    CalculateRoute(model);
-                }
+                if (item.Control is not Model model) return;
+                model.MapSettings=MapSettings();
+                CalculateRoute(model);
             });
             var mapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
             mapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
@@ -40,8 +40,8 @@ namespace OutlookInspired.Blazor.Server.Features.Employees.Maps{
         private void TravelModeActionOnExecuted(object sender, ActionBaseEventArgs e){
             var control = (Model)View.GetItems<ControlViewItem>().First().Control;
             control.ChangeRouteMode = true;
-            CalculateRoute(control);
             control.MapSettings = MapSettings();
+            CalculateRoute(control);
         }
 
         private string TravelMode => (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data;
