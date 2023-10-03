@@ -10,10 +10,11 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Maps{
-    public class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
+    public abstract class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
         public const string Key = "AgPa0XVf4_HaN5BOPbTUw5KNvYEGOx-EftnjNRnCILfNgobxJC_deESiKqcfEgLd";
         public const string MapItActionId = "MapIt";
-        public MapsViewController(){
+
+        protected MapsViewController(){
             MapItAction = MapIt();
             TravelModeAction = TravelMode();
             ExportMapAction = Export();
@@ -31,17 +32,19 @@ namespace OutlookInspired.Module.Features.Maps{
                     .Select(stage => new ChoiceActionItem(stage.ToString(), stage){ImageName = stage.ImageName()}).ToArray());
 
         private SimpleAction Print() 
-            => new(this,"MapPrint",PredefinedCategory.View){ImageName = "Print"};
+            => new(this,"MapPrint",PopupActionsCategory()){ImageName = "Print"};
 
         private SimpleAction PrintPreview() 
-            => new(this,"MapPrintPreview",PredefinedCategory.View){ImageName = "PrintPreview"};
+            => new(this,"MapPrintPreview",PopupActionsCategory()){ImageName = "PrintPreview"};
 
         private SimpleAction Export() 
-            => new(this,"MapExport",PredefinedCategory.View){ImageName = "Export"};
+            => new(this,"MapExport",PopupActionsCategory()){ImageName = "Export"};
 
         private SingleChoiceAction TravelMode() 
             => NewSingleChoiceAction("TravelMode", new ChoiceActionItem("Driving", "Driving"){ ImageName = "Driving" },
                 new ChoiceActionItem("Walking", "Walking"){ ImageName = "Walking" });
+
+        protected abstract PredefinedCategory PopupActionsCategory();
 
         private SimpleAction MapIt(){
             var action = new SimpleAction(this, MapItActionId, PredefinedCategory.View){
@@ -53,7 +56,7 @@ namespace OutlookInspired.Module.Features.Maps{
         }
 
         private SingleChoiceAction NewSingleChoiceAction(string actionId,string caption, params ChoiceActionItem[] items){
-            var action = new SingleChoiceAction(this, actionId, PredefinedCategory.View){
+            var action = new SingleChoiceAction(this, actionId, PopupActionsCategory().ToString()){
                 ItemType = SingleChoiceActionItemType.ItemIsOperation, PaintStyle = ActionItemPaintStyle.Image,
                 ImageMode = ImageMode.UseItemImage,
                 DefaultItemMode = DefaultItemMode.LastExecutedItem, TargetViewType = ViewType.DetailView,
@@ -67,7 +70,8 @@ namespace OutlookInspired.Module.Features.Maps{
             return action;
         }
 
-        private SingleChoiceAction NewSingleChoiceAction(string actionId,params ChoiceActionItem[] items) => NewSingleChoiceAction(actionId, null, items);
+        private SingleChoiceAction NewSingleChoiceAction(string actionId,params ChoiceActionItem[] items) 
+            => NewSingleChoiceAction(actionId, null, items);
 
         private string GetViewId() 
             => View.ObjectTypeInfo.Type switch{
@@ -97,7 +101,7 @@ namespace OutlookInspired.Module.Features.Maps{
                 MapItAction.Active[nameof(ISalesMapsMarker)] = Application.CanRead(typeof(OrderItem));    
             }
             TravelModeAction.Active[nameof(MapsViewController)] = typeof(ITravelModeMapsMarker).IsAssignableFrom(View.ObjectTypeInfo.Type);
-            TravelModeAction.Active[nameof(MapItAction)] =!MapItAction.Active&& Frame.Context == TemplateContext.View&&!Frame.View.IsRoot;
+            TravelModeAction.Active[nameof(MapItAction)] =!MapItAction.Active&& Frame.Context==FrameContext()&&!Frame.View.IsRoot;
             if (View.Id==Employee.MapsDetailView){
                 Frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction
                     .Active[nameof(TravelModeAction)] = false;    
@@ -114,6 +118,8 @@ namespace OutlookInspired.Module.Features.Maps{
             PrintPreviewMapAction.Active[nameof(MapsViewController)] =ExportMapAction.Active;
             
         }
+
+        protected abstract string FrameContext();
 
         private void ChangeMapItAction(Type objectType,string caption){
             if (objectType.IsAssignableFrom(View.ObjectTypeInfo.Type)){

@@ -3,6 +3,17 @@
 @using OutlookInspired.Module.Services.Internal
 @implements ISelectedCard
 <style>
+.ellipsis3Lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2em;
+    max-height: 4.4em; 
+}
+
 .card {
       flex: 0 0 auto;  
       margin-right: 16px;  
@@ -20,6 +31,9 @@
       text-overflow: ellipsis;  
       max-width: 100%;  
   }
+  .card-footer {
+    padding: 10px;
+  }
 </style>
 <div class="card" @onclick="HandleClickAsync" @ondblclick="HandleDoubleClickAsync" style="@(IsSelected ? "background-color: grey;" : "")" >
   <div class="card-header">
@@ -31,16 +45,19 @@
         <img src="@Image" class="img-fluid" alt="Photo">
       </div>
       <div class="col-md-8">
-         <div class="col-md-8">
-            @foreach (var item in InfoItems){
-              <div class="mb-2">
-                <small class="text-muted">@item.Key:</small>
-                <p class="ellipsis">@((MarkupString)item.Value)</p>
-              </div>
-            }
-          </div>
+        <div class="col-md-8">
+          @foreach (var item in InfoItems){
+            <div class="mb-2">
+              <small class="text-muted">@item.Key:</small>
+              <p class="ellipsis">@((MarkupString)item.Value)</p>
+            </div>
+          }
+        </div>
       </div>
     </div>
+  </div>
+  <div class="card-footer ellipsis3Lines">
+    @FooterText
   </div>
 </div>
 
@@ -51,6 +68,8 @@
 
   [Parameter]
   public string HeaderText { get; set; }
+  [Parameter]
+  public string FooterText { get; set; }
 
   [Parameter]
   public string Image { get; set; }

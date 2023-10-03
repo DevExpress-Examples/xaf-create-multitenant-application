@@ -6,7 +6,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
     public class QuoteMapItem:IMapsMarker{
         [Key]
-        public int Key{ get; set; }
+        public int ID{ get; set; }
         public Stage Stage { get; init; }
         public DateTime Date { get; set; }
         public string City{ get; set; }

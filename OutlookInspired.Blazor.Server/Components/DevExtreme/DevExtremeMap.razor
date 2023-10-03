@@ -1,0 +1,46 @@
+﻿@inject IJSRuntime JS
+@using Newtonsoft.Json
+@implements IAsyncDisposable
+
+<DevExtremeResources ResourcesLoaded="@(() => ResourcesLoaded = true)" />
+
+@if(ResourcesLoaded) {
+    <div @ref=@Map></div>
+}
+
+@code {
+    bool ResourcesLoaded { get; set; }
+    bool ClientInitializationInProgress { get; set; }
+
+    ElementReference Map { get; set; }
+
+    IJSObjectReference ClientModule { get; set; }
+    
+    IJSObjectReference ClientMap { get; set; }
+    [Parameter]
+    public Model Model { get; set; }
+    
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
+        if(ResourcesLoaded && ClientMap == null && !ClientInitializationInProgress){
+            ClientInitializationInProgress = true;
+            ClientModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeMap.razor.js");
+            ClientMap = await ClientModule.InvokeAsync<IJSObjectReference>("MapInit", Map,Model.MapSettings);
+            ClientInitializationInProgress = false;
+        }
+        else if (Model.ChangeRouteMode){
+            Model.ChangeRouteMode = false;
+            await ClientModule.InvokeVoidAsync("updateRouteMode", ClientMap, Model.MapSettings.Routes.First().Mode.ToLower());
+        }
+        else if (Model.PrintMap){
+            Model.PrintMap = false;
+            await ClientModule.InvokeVoidAsync("printMap", ClientMap);
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync() {
+        if(ClientMap != null)
+            await ClientMap.DisposeAsync();
+        if(ClientModule != null)
+            await ClientModule.DisposeAsync();
+    }
+}

@@ -1,20 +1,64 @@
-﻿using DevExpress.Blazor;
+﻿using System.Text.RegularExpressions;
+using DevExpress.Blazor;
 using DevExpress.Blazor.Internal;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.Components;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.DC;
+using DevExpress.Map.Native;
+using DevExpress.Persistent.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
-using OutlookInspired.Blazor.Server.Editors;
+using Newtonsoft.Json.Linq;
+using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
+        private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
+
+        public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
+            var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(url);
+            var data = await response.Content.ReadAsStringAsync();
+            var jsonData = JObject.Parse(data);
+            var result = jsonData["resourceSets"]![0]!["resources"]![0];
+            return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
+                    .Select(item => {
+                        var point = objectSpace.CreateObject<RoutePoint>();
+                        point.ManeuverInstruction =
+                            RemoveTagRegex.Replace(item["instruction"]["text"]!.ToString(), string.Empty);
+                        var distance = (double)item["travelDistance"];
+                        point.Distance = (distance > 0.9)
+                            ? $"{Math.Ceiling(distance):0} mi"
+                            : $"{Math.Ceiling(distance * 52.8) * 100:0} ft";
+                        point.Maneuver = Enum.Parse<BingManeuverType>(item["details"][0]!["maneuverType"]!.ToString());
+                        return point;
+                    }).ToArray(), (double)result["travelDistance"],
+                TimeSpan.FromMinutes((double)result["travelDuration"]),
+                Enum.Parse<TravelMode>(travelMode));
+        }
+
+        
+        public static MapSettings MapSettings(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
+            var mapSettings = new MapSettings();
+            mapSettings.Markers.Add(new MapMarker()
+                { Location = new Location(){ Lat = homeOffice.Latitude, Lng = homeOffice.Longitude } });
+            mapSettings.Markers.Add(new MapMarker()
+                { Location = new Location(){ Lat = mapsMarker.Latitude, Lng = mapsMarker.Longitude } });
+            var mode = travelMode.ToLower();
+            mapSettings.Routes = new List<MapRoute>()
+                { new(){Mode =mode,Color = mode=="driving"?"orange":"blue", Locations = mapSettings.Markers.Select(marker => marker.Location).ToList() } };
+            mapSettings.Center = mapSettings.Markers.First().Location;
+            return mapSettings;
+        }
+
         public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image",bool useSvgIcon=false)
             => DxImage.IconCssOrImage(null, service.GetImageUrl(imageName), className,useSvgIcon);
         
@@ -75,9 +119,9 @@ namespace OutlookInspired.Blazor.Server.Services{
 </div>
 ");
 
-        public static RenderFragment Create(this IComponentModel model,Type componentType) 
+        public static RenderFragment Create<T>(this IComponentModel model) where T:ComponentBase 
             => builder => {
-                builder.OpenComponent(0, componentType);
+                builder.OpenComponent(0, typeof(T));
                 builder.AddAttribute(1, "ComponentModel", model);
                 builder.CloseComponent();
             };

@@ -43,6 +43,7 @@
     <_ContentIncludedByDefault Remove="Components\Evaluations\EvalTemplate.razor" />
     <_ContentIncludedByDefault Remove="Components\Evaluations\GridView.razor" />
     <_ContentIncludedByDefault Remove="Features\Employees\Evaluations\EvalTemplate.razor" />
+    <_ContentIncludedByDefault Remove="Features\Customers\Maps\Maps.razor" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />
@@ -50,6 +51,7 @@
     <AdditionalFiles Include="Features\Customers\GridView\GridView.razor" />
     <AdditionalFiles Include="Features\Customers\GridView\RecentOrders.razor" />
     <AdditionalFiles Include="Features\Customers\Stores\StoresCardView.razor" />
+    <AdditionalFiles Include="Features\Employees\Maps\Maps.razor" />
     <AdditionalFiles Include="Features\Employees\Tasks\ColumnTemplate.razor" />
   </ItemGroup>
   <ItemGroup>

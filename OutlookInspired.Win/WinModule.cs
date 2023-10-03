@@ -28,7 +28,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
         => new[]{
-            typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),
+            typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),typeof(MapsViewController),
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),typeof(ChildViewCriteriaController),
             typeof(RouteMapsViewController), typeof(SalesMapsViewController),

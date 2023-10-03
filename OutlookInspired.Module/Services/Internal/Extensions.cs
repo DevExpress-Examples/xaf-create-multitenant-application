@@ -9,6 +9,19 @@ using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
+        public static void MyVoidMethod(Func<Task> myAsyncMethod)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Task.Run(async () =>
+            {
+                await myAsyncMethod();
+                tcs.SetResult(true);
+                
+            });
+
+            // Do something with tcs.Task if needed
+        }
         public static IMemberInfo FindDisplayableMember(this IMemberInfo memberInfo) 
             => ReflectionHelper.FindDisplayableMemberDescriptor(memberInfo);
         

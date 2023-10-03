@@ -1,9 +1,12 @@
-﻿using DevExpress.ExpressApp.DC;
+﻿using DevExpress.ExpressApp.Data;
+using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
     public class RoutePoint {
+        [Key]
+        public int ID{ get; set; }
         [VisibleInListView(false)]
         public BingManeuverType Maneuver{ get; set; }
 

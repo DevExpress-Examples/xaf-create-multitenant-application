@@ -20,7 +20,7 @@ namespace OutlookInspired.Module.Features.Employees{
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            _mapsRouteController.RouteCalculated-=OnRouteCalculated;
+            if (_mapsRouteController != null) _mapsRouteController.RouteCalculated -= OnRouteCalculated;
         }
 
         protected override void OnActivated(){
@@ -29,8 +29,13 @@ namespace OutlookInspired.Module.Features.Employees{
             var homeOffice = ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice;
             employee.AAddress = $"{homeOffice.Line}, {homeOffice.City}, {homeOffice.State} {homeOffice.City} {homeOffice.ZipCode}";
             employee.BAddress = $"{employee.Address}, {employee.City}, {employee.State} {employee.City} {employee.ZipCode}";
-            _mapsRouteController = Frame.GetControllers<IMapsRouteController>().First();
-            _mapsRouteController.RouteCalculated+=OnRouteCalculated;
+            _mapsRouteController = Frame.GetControllers<IMapsRouteController>().FirstOrDefault();
+            NewMethod();
+        }
+
+        [Obsolete("impl blazor")]
+        private void NewMethod(){
+            if (_mapsRouteController != null) _mapsRouteController.RouteCalculated += OnRouteCalculated;
         }
 
         private void OnRouteCalculated(object sender, RouteCalculatedArgs e){

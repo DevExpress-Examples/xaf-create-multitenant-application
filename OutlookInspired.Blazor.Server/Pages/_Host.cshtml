@@ -15,9 +15,13 @@
     <base href="~/" />
     <component type="typeof(BootstrapThemeLink)" render-mode="Static" />
     <script>
-    window.updatePdfSource = function(base64String) {
-                        document.getElementById('pdfEmbed').src = `data:application/pdf;base64,${base64String}#toolbar=0`;
-                    };
+    const originalConsoleWarn = console.warn;
+    console.warn = function(...args) {
+      if (args.some(arg => arg.toString().includes("W1006"))) {
+          alert(args)
+      }
+      originalConsoleWarn.apply(console, args);
+    };
     </script>    
 </head>
 <body>

@@ -1,0 +1,22 @@
+﻿@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@code {
+    IJSObjectReference moduleRef;
+
+    [Parameter]
+    public EventCallback ResourcesLoaded { get; set; }
+
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            moduleRef = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeResources.razor.js");
+            await moduleRef.InvokeVoidAsync("ensureDevExtremeAsync");
+            await ResourcesLoaded.InvokeAsync();
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync() {
+        if(moduleRef is not null)
+            await moduleRef.DisposeAsync();
+    }
+}

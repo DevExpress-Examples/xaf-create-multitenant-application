@@ -23,7 +23,7 @@ namespace OutlookInspired.Blazor.Server.Editors {
     public abstract class ComponentModelAdapter<TComponent,TModel, TMemberType> : ComponentModelEditorAdapter<TModel,TMemberType>
         where TModel : ComponentModelBase, new() where TComponent:ComponentBase{
         
-        protected override RenderFragment RenderFragment(TModel model) => model.Create(typeof(TComponent));
+        protected override RenderFragment RenderFragment(TModel model) => model.Create<TComponent>();
     }
     public abstract class ComponentModelAdapter<TComponent,TModel> : ComponentModelAdapter<TComponent,TModel, object>
         where TModel : ComponentModelBase, new() where TComponent:ComponentBase{

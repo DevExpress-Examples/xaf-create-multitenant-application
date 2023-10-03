@@ -12,6 +12,11 @@
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
     </DetailView>
+    <DetailView Id="Customer_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Customers.Maps.Model" />
+      </Items>
+    </DetailView>
     <ListView Id="Customer_ListView">
       <Columns>
         <ColumnInfo Id="Logo" Index="0" ImageEditorFixedWidth="0" ImageEditorFixedHeight="0" ImageEditorCustomHeight="30" MinWidth="30" Width="30" Caption=" " ToolTip="Logo" />
@@ -210,6 +215,38 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="Employee_DetailView_Maps">
+      <Items>
+        <PropertyEditor Id="AAddress" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="Address" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="BAddress" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Employees.Maps.Model" />
+        <PropertyEditor Id="RouteResult" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutItem Id="MapsControl" RelativeSize="67.0701427684668" />
+            <LayoutGroup Id="Auto55738e8a-ad25-43c5-8135-f7030b1fbeb6" RelativeSize="32.92985723153321">
+              <LayoutGroup Id="Auto545e433b-2786-4e52-bd8b-09fc12509e50" RelativeSize="9.083044982698961">
+                <LayoutItem Id="Picture" RelativeSize="21.77191328934967" />
+                <LayoutGroup Id="Auto5ce01d17-5e7e-4055-b926-eeb5c8eef21e" RelativeSize="78.22808671065033">
+                  <LayoutItem Id="FullName" RelativeSize="44.285714285714285" />
+                  <LayoutItem Id="Address" RelativeSize="55.714285714285715" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="AAddress" SizeConstraintsType="Custom" MinSize="124, 42" RelativeSize="3.633217993079585" Index="1" CaptionLocation="Right" />
+              <LayoutItem Id="BAddress" RelativeSize="1.9031141868512111" Index="2" CaptionLocation="Right" />
+              <LayoutItem Id="Item1" RelativeSize="2.9844290657439445" Index="3" />
+              <LayoutItem Id="RouteResult" RelativeSize="1.9031141868512111" Index="4" />
+              <LayoutItem Id="RoutePoints" RelativeSize="80.49307958477509" Index="5" />
+              <LayoutItem Id="Item2" RelativeSize="2.118003025718608" Removed="True" />
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor" />
     <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
       <Columns>
@@ -373,5 +410,6 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
+    <ListView Id="Quote_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Features.Quotes.PivotGridListEditor" DataAccessMode="Queryable" />
   </Views>
 </Application>

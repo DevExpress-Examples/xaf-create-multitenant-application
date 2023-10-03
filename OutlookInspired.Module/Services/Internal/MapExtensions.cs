@@ -20,7 +20,7 @@ namespace OutlookInspired.Module.Services.Internal{
                     Latitude = item.Order.Store.Latitude,
                     Longitude = item.Order.Store.Longitude,
                     City = item.Order.Store.City
-                }).ToArray();
+                }).ToArray().Do((item, i) => item.ID=i).ToArray();
 
         public static IQueryable<CustomerStore> Stores(this ISalesMapsMarker salesMapsMarker,Period period,DateTime dateTime=default) 
             => salesMapsMarker.ObjectSpace.GetObjectsQuery<Order>()
@@ -47,15 +47,14 @@ namespace OutlookInspired.Module.Services.Internal{
             => objectSpace.Quotes(stage).Select(quote => quote.CustomerStore).Distinct().ToArray();
 
         public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage)
-            => objectSpace.Quotes(stage).Select((quote, i) => new QuoteMapItem{
-                Key = i,
+            => objectSpace.Quotes(stage).Select(quote => new QuoteMapItem{
                 Stage = stage,
                 Value = quote.Total,
                 Date = quote.Date,
                 City = quote.CustomerStore.City,
                 Latitude = quote.CustomerStore.Latitude,
                 Longitude = quote.CustomerStore.Longitude
-            }).ToArray();
+            }).ToArray().Do((item, i) => item.ID=i).ToArray();
          
         public static IEnumerable<QuoteMapItem> Opportunities(this IObjectSpace objectSpace,string criteria=null)
             => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)

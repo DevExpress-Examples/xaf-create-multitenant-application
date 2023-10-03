@@ -18,7 +18,7 @@ namespace OutlookInspired.Blazor.Server.Editors {
     
     public class LabelModelAdapter:ComponentModelAdapter<Label,LabelModel>{
         public override void SetPropertyValue(object value) => Model.Text=$"{value}";
-        
+        public override object GetPropertyValue() => Model.Text;
     }
 
 }

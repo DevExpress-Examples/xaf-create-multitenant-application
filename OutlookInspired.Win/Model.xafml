@@ -28,7 +28,7 @@
     </ListView>
     <DetailView Id="Customer_DetailView_Child">
       <Items>
-        <ControlDetailItem Id="CustomerStore" ControlTypeName="OutlookInspired.Win.UserControls.CustomerStoreView" />
+        <ControlDetailItem Id="CustomerStore" ControlTypeName="OutlookInspired.Win.Features.Customers.CustomerStoreView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>

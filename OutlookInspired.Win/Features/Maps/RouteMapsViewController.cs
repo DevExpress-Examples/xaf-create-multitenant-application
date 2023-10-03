@@ -21,9 +21,7 @@ namespace OutlookInspired.Win.Features.Maps{
             if (!Active)return;
             _currentObjectPoint = ((IMapsMarker)View.CurrentObject).ToGeoPoint();
             MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
-            _geocodeDataProvider.LocationInformationReceived+=OnLocationInformationReceived;
             _routeDataProvider.RouteCalculated+=OnRouteCalculated;
-            _routeDataProvider.LayerItemsGenerating+=OnLayerItemsGenerating;
         }
 
         protected override void CustomizeMapControl(){
@@ -64,11 +62,6 @@ namespace OutlookInspired.Win.Features.Maps{
             });
         }
         
-        private void OnLayerItemsGenerating(object sender, LayerItemsGeneratingEventArgs e){
-            // e.Items.OfType<MapPushpin>().ForEach(pushpin => pushpin.Visible=false);
-            // AddRoutePoints(_routeLayer);
-        }
-
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
         private void OnRouteCalculated(object sender, BingRouteCalculatedEventArgs e){
             if(e.Error != null || e.Cancelled || e.CalculationResult is not{ ResultCode: RequestResultCode.Success })
@@ -86,28 +79,10 @@ namespace OutlookInspired.Win.Features.Maps{
             Zoom.To((GeoPoint)MapControl.CenterPoint, _currentObjectPoint);
         }
 
-        private void OnLocationInformationReceived(object sender, LocationInformationReceivedEventArgs e){
-            if(e.Error != null || e.Cancelled || e.Result == null || e.Result.ResultCode != RequestResultCode.Success)
-                return;
-            var locations = e.Result.Locations;
-            if(locations.Length > 0) {
-                // LocationInformation loc = locations[0];
-                throw new NotImplementedException();
-                // ViewModel.PointB = new Address()
-                // {
-                //     Line = loc.Address.FormattedAddress,
-                //     Latitude = loc.Location.Latitude,
-                //     Longitude = loc.Location.Longitude,
-                // };
-            }
-
-        }
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;
-            _geocodeDataProvider.LocationInformationReceived-=OnLocationInformationReceived;
             _routeDataProvider.RouteCalculated-=OnRouteCalculated;
-            _routeDataProvider.LayerItemsGenerating-=OnLayerItemsGenerating;
             MapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
         }
 

@@ -4,6 +4,12 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class EnumerableExtensions{
+        public static IEnumerable<T> Do<T>(this IEnumerable<T> source,Action<T,int> action) 
+            => source.Select((arg1, i) => {
+                action(arg1, i);
+                return arg1;
+            });
+
         public static IEnumerable<T> To<T>(this IEnumerable<object> source) 
             => source.Select(o =>o is T arg? arg: default);
         
