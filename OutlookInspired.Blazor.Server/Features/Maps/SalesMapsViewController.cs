@@ -25,8 +25,9 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             if (salesListPropertyEditor != null) salesListPropertyEditor.ControlCreated += OnListPropertyEditorControlCreated;
         }
 
+        [Obsolete]
         private void OnListPropertyEditorControlCreated(object sender, EventArgs e){
-            ((ListPropertyEditor)sender).ControlCreated-=OnListPropertyEditorControlCreated;
+            ((ListPropertyEditor)sender).HideToolBar().ControlCreated-=OnListPropertyEditorControlCreated;
             _chartListEditor = ((ChartListEditor)(((ListPropertyEditor)sender)!).ListView.Editor);
             _chartListEditor.ControlsCreated += ChartListEditorOnControlsCreated;
         }

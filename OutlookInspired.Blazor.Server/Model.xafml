@@ -6,16 +6,40 @@
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
+    <ListView Id="Customer_CitySales_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.ChartListEditor" />
     <DetailView Id="Customer_DetailView_Child">
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
     </DetailView>
-    <DetailView Id="Customer_DetailView_Maps">
+    <DetailView Id="Customer_DetailView_Maps" AllowEdit="False">
       <Items>
+        <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" />
         <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.Model" />
+        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutItem Id="MapsControl" RelativeSize="70.48062015503876" />
+            <LayoutGroup Id="Autoccabc5ad-888d-46de-81d2-3a0d3424e090" RelativeSize="29.51937984496124">
+              <LayoutGroup Id="Auto9632c72e-5893-4578-9d35-b6fb74fe1c9a" Caption="Auto9632c72e-5893-4578-9d35-b6fb74fe1c9a(5)" RelativeSize="10.285220397579948">
+                <LayoutItem Id="Logo" RelativeSize="25" MinSize="136, 136" MaxSize="136, 136" />
+                <LayoutGroup Id="Auto343e42f6-3e00-47a0-b213-aa06147e97a9" Caption="Auto343e42f6-3e00-47a0-b213-aa06147e97a9(7)" RelativeSize="75">
+                  <LayoutItem Id="Name" RelativeSize="24.369747899159663" />
+                  <LayoutItem Id="Item1" RelativeSize="8.823529411764707" />
+                  <LayoutItem Id="HomeOfficeLine" RelativeSize="21.008403361344538" />
+                  <LayoutItem Id="Item2" RelativeSize="45.79831932773109" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="Item3" Index="1" RelativeSize="8.383751080380295" SizeConstraintsType="Custom" MinSize="10, 111" MaxSize="0, 111" IsNewNode="True" />
+              <LayoutItem Id="CitySales" Index="2" RelativeSize="81.33102852203976" />
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
     </DetailView>
     <ListView Id="Customer_ListView">
       <Columns>
@@ -424,16 +448,17 @@
       <Layout>
         <LayoutGroup Id="Main">
           <LayoutGroup Id="SimpleEditors">
-            <LayoutItem Id="MapsControl" RelativeSize="62.149532710280376" />
-            <LayoutGroup Id="Autod57882cd-856e-4ea1-b705-4f3947c6cd3a" RelativeSize="37.850467289719624">
-              <LayoutGroup Id="Auto7232bb75-2212-4025-846c-d1f63f07de17" Caption="Auto7232bb75-2212-4025-846c-d1f63f07de17(5)" RelativeSize="11.315280464216634">
-                <LayoutItem Id="Image" MinSize="97, 56" MaxSize="0, 0" RelativeSize="22.839506172839506" />
-                <LayoutGroup Id="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c" Caption="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c(7)" RelativeSize="77.1604938271605">
-                  <LayoutItem Id="Name" RelativeSize="42.73504273504273" SizeConstraintsType="Custom" MinSize="102, 50" />
-                  <LayoutItem Id="Description" RelativeSize="57.26495726495727" />
+            <LayoutItem Id="MapsControl" RelativeSize="62.13953488372093" />
+            <LayoutGroup Id="Autod57882cd-856e-4ea1-b705-4f3947c6cd3a" RelativeSize="37.86046511627907">
+              <LayoutGroup Id="Auto7232bb75-2212-4025-846c-d1f63f07de17" Caption="Auto7232bb75-2212-4025-846c-d1f63f07de17(5)" RelativeSize="11.192739844425237">
+                <LayoutItem Id="Image" MinSize="97, 56" MaxSize="0, 0" RelativeSize="22.52252252252252" />
+                <LayoutGroup Id="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c" Caption="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c(7)" RelativeSize="77.47747747747748">
+                  <LayoutItem Id="Name" RelativeSize="42.47104247104247" SizeConstraintsType="Custom" MinSize="102, 50" />
+                  <LayoutItem Id="Description" RelativeSize="57.52895752895753" />
                 </LayoutGroup>
               </LayoutGroup>
-              <LayoutItem Id="CitySales" ViewItem="CitySales" SizeConstraintsType="Custom" MinSize="115, 87" Index="1" RelativeSize="88.68471953578337" IsNewNode="True" Removed="True" />
+              <LayoutItem Id="Item1" Index="1" RelativeSize="8.686257562662057" SizeConstraintsType="Custom" MinSize="10, 115" MaxSize="0, 115" IsNewNode="True" />
+              <LayoutItem Id="CitySales" ViewItem="CitySales" SizeConstraintsType="Custom" MinSize="115, 87" Index="2" RelativeSize="80.1210025929127" IsNewNode="True" Removed="True" />
             </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>

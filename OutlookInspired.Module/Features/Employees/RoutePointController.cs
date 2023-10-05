@@ -1,19 +1,10 @@
 ﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Templates;
+using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Employees{
-    public class RoutePointListViewController:ObjectViewController<ListView,RoutePoint>{
-        public RoutePointListViewController() => TargetViewNesting=Nesting.Nested;
-        
-        protected override void OnViewControlsCreated(){
-            base.OnViewControlsCreated();
-            ((ISupportActionsToolbarVisibility)Frame.Template).SetVisible(false);
-        }
-    }
     public class RoutePointController:ObjectViewController<DetailView,Employee>{
         private IMapsRouteController _mapsRouteController;
         public RoutePointController() => TargetViewId = Employee.MapsDetailView;
@@ -31,6 +22,11 @@ namespace OutlookInspired.Module.Features.Employees{
             employee.BAddress = $"{employee.Address}, {employee.City}, {employee.State} {employee.City} {employee.ZipCode}";
             _mapsRouteController = Frame.GetControllers<IMapsRouteController>().FirstOrDefault();
             NewMethod();
+        }
+
+        protected override void OnViewControlsCreated(){
+            base.OnViewControlsCreated();
+            View.GetItems<ListPropertyEditor>().Do(editor => editor.HideToolBar()).Enumerate();
         }
 
         [Obsolete("impl blazor")]
