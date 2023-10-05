@@ -14,7 +14,10 @@
     <title>OutlookInspired</title>
     <base href="~/" />
     <component type="typeof(BootstrapThemeLink)" render-mode="Static" />
+    
+
     <script>
+    
     const originalConsoleWarn = console.warn;
     console.warn = function(...args) {
       if (args.some(arg => arg.toString().includes("W1006"))) {

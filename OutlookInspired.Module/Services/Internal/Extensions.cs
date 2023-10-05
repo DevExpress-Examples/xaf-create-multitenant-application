@@ -6,22 +6,13 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
+using Newtonsoft.Json;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
-        public static void MyVoidMethod(Func<Task> myAsyncMethod)
-        {
-            var tcs = new TaskCompletionSource<bool>();
+        public static string Serialize(this object value) 
+            => JsonConvert.SerializeObject(value);
 
-            Task.Run(async () =>
-            {
-                await myAsyncMethod();
-                tcs.SetResult(true);
-                
-            });
-
-            // Do something with tcs.Task if needed
-        }
         public static IMemberInfo FindDisplayableMember(this IMemberInfo memberInfo) 
             => ReflectionHelper.FindDisplayableMemberDescriptor(memberInfo);
         

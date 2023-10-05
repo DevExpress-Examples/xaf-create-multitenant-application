@@ -10,9 +10,9 @@ using BingManeuverType = OutlookInspired.Module.BusinessObjects.BingManeuverType
 
 namespace OutlookInspired.Win.Features.Maps{
     public class RouteMapsViewController:WinMapsViewController<IRouteMapsMarker>,IMapsRouteController{
-        private readonly BingGeocodeDataProvider _geocodeDataProvider=new(){BingKey = MapsViewController.Key};
-        private readonly BingRouteDataProvider _routeDataProvider=new(){BingKey = MapsViewController.Key,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile}};
-        private readonly BingSearchDataProvider _searchDataProvider=new(){BingKey = MapsViewController.Key};
+        private readonly BingGeocodeDataProvider _geocodeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key};
+        private readonly BingRouteDataProvider _routeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile}};
+        private readonly BingSearchDataProvider _searchDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key};
         
         private GeoPoint _currentObjectPoint;
 

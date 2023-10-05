@@ -1,52 +1,37 @@
-﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Layout;
+﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
-using Model = OutlookInspired.Blazor.Server.Features.Maps.Model;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public class RouteMapsViewController:ObjectViewController<DetailView,IMapsMarker>,IMapsRouteController{
+    public class RouteMapsViewController:BlazorMapsViewController<IRouteMapsMarker>,IMapsRouteController{
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            var mapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
-            mapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
-            mapsViewController.PrintAction.Executed-=PrintActionOnExecuted;
+            if (!Active)return;
+            MapsViewController.TravelModeAction.Executed-=TravelModeActionOnExecuted;
         }
 
         protected override void OnActivated(){
             base.OnActivated();
-            View.CustomizeViewItemControl<ControlViewItem>(this, item => {
-                if (item.Control is not Model model) return;
-                model.MapSettings=MapSettings();
-                CalculateRoute(model);
-            });
-            var mapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
-            mapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
-            mapsViewController.PrintAction.Executed+=PrintActionOnExecuted;
+            if(!Active)return;
+            MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
         }
 
-        private void CalculateRoute(Model model) 
+        protected override Model CustomizeModel(Model model){
+            CalculateRoute(model.MapSettings = model.MapSettings = ((IMapsMarker)View.CurrentObject).MapSettings(
+                    ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice, (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data));
+            return model;
+        }
+
+        private void CalculateRoute(MapSettings settings) 
             => this.Await(async () => OnRouteCalculated(await ObjectSpace.ManeuverInstructions(
-                model.MapSettings.Markers.First().Location, model.MapSettings.Markers.Last().Location, TravelMode,
-                model.MapSettings.ApiKey)));
-
-        private void PrintActionOnExecuted(object sender, ActionBaseEventArgs e) 
-            => ((Model)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
-
-        private void TravelModeActionOnExecuted(object sender, ActionBaseEventArgs e){
-            var control = (Model)View.GetItems<ControlViewItem>().First().Control;
-            control.ChangeRouteMode = true;
-            control.MapSettings = MapSettings();
-            CalculateRoute(control);
-        }
-
-        private string TravelMode => (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data;
-        private MapSettings MapSettings() 
-            => ((IMapsMarker)View.CurrentObject).MapSettings(((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice, TravelMode);
+                settings.Markers.First().Location, settings.Markers.Last().Location, settings.Routes.First().Mode,
+                settings.ApiKey)));
+        
+        private void TravelModeActionOnExecuted(object sender, ActionBaseEventArgs e) 
+            => CustomizeModel().ChangeRouteMode = true;
 
         public event EventHandler<RouteCalculatedArgs> RouteCalculated;
 

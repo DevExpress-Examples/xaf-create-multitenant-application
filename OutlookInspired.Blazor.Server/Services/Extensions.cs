@@ -22,6 +22,28 @@ namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
 
+        public static object ToFeatureCollection(this MapItem[] mapItems){
+            return new FeatureCollection{
+                Type = "FeatureCollection",
+                Features = mapItems.GroupBy(item => item.City)
+                    .Select(cityItems => {
+                        var mapItem = mapItems.First(mapItem => mapItem.City == cityItems.Key);
+                        return new Feature{
+                            Type = "Feature",
+                            Geometry = new Geometry{
+                                Type = "Point",
+                                Coordinates = new List<double>{ mapItem.Longitude,mapItem.Latitude }
+                            },
+                            Properties = new Properties{
+                                Values = cityItems.Select(item => item.Total).ToList(),
+                                Tooltip = $"<span class='{mapItem.City}'>{mapItem.City} Total: {mapItem.Total}</span>",
+                                City=mapItem.City
+                            }
+                        };
+                    }).ToList()
+            };
+        }
+
         public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
             var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
             using var httpClient = new HttpClient();
@@ -42,7 +64,7 @@ namespace OutlookInspired.Blazor.Server.Services{
                         return point;
                     }).ToArray(), (double)result["travelDistance"],
                 TimeSpan.FromMinutes((double)result["travelDuration"]),
-                Enum.Parse<TravelMode>(travelMode));
+                Enum.Parse<TravelMode>(travelMode,true));
         }
 
         
@@ -119,7 +141,7 @@ namespace OutlookInspired.Blazor.Server.Services{
 </div>
 ");
 
-        public static RenderFragment Create<T>(this IComponentModel model) where T:ComponentBase 
+        public static RenderFragment Create<T>(this IComponentModel model)  
             => builder => {
                 builder.OpenComponent(0, typeof(T));
                 builder.AddAttribute(1, "ComponentModel", model);

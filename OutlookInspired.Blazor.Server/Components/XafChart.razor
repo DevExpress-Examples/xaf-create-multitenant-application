@@ -1,0 +1,23 @@
+﻿@typeparam T
+
+<DxChart Data="@ComponentModel.Data" Width="100%" Rotated="true" Height="100%">
+    <DxChartCommonSeries T="T" TValue="decimal" TGroup="string" TArgument="string" 
+                         ArgumentField="@ComponentModel.ArgumentField" ValueField="@ComponentModel.ValueField" SeriesType="ChartSeriesType.Bar" SummaryMethod="Enumerable.Sum"
+                         NameField="@ComponentModel.NameField"
+                         />
+    
+            <DxChartLegend Visible="false"/>
+            <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                <div style="background-color: #505050;color: white">
+                    @context.Point.Argument: @($"{(decimal)context.Point.Value:$0,.#K}")
+                </div>
+            </DxChartTooltip>
+        </DxChart>
+@code {
+    
+    [Parameter]
+    public XafChartModel<T> ComponentModel { get; set; }
+
+    
+
+}
