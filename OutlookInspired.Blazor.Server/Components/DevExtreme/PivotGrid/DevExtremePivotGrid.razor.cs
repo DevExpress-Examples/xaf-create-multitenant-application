@@ -1,33 +1,36 @@
-﻿using DevExpress.ExpressApp.Blazor;
+﻿using DevExpress.Blazor;
+using DevExpress.ClipboardSource.SpreadsheetML;
+using DevExpress.Data.PivotGrid;
+using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
-using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services.Internal;
-using FeatureCollection = OutlookInspired.Blazor.Server.Services.FeatureCollection;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
     public class Model:ComponentModelBase,IComponentContentHolder{
-        
-        
-        public RenderFragment ComponentContent => this.Create(model => model.Create<DevExtremePivotGrid>());
+        public PivotGridOptions Options{ get; } = new();
+        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DevExtremePivotGrid>());
     }
     
     public class PivotGridField {
         public string Caption { get; set; }
         public int? Width { get; set; }
+        public bool IsProgressBar { get; set; }
         public string DataField { get; set; }
         public string Area { get; set; }
         public string DataType { get; set; }
         public string SummaryType { get; set; }
-        public string Format { get; set; }
+        public bool Expanded{ get; set; } = true;
+        public object Format { get; set; }
+
+        public string SortOrder{ get; set; }
         // Add a delegate or an event for the 'selector' if needed
     }
 
-    public class PivotGridDataSource {
-        public List<PivotGridField> Fields { get; set; }
+
+    public class PivotGridDataSource{
+        public List<PivotGridField> Fields{ get; } = new();
+        public List<PivotGridField> DataFields=>Fields.Where(field => field.Area=="data").ToList();
         public object Store { get; set; }  // Replace 'object' with the appropriate type for 'sales'
     }
 
@@ -36,10 +39,15 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
         public bool AllowSorting { get; set; }
         public bool AllowFiltering { get; set; }
         public bool AllowExpandAll { get; set; }
-        public int Height { get; set; }
+        public string Height{ get; set; } = "90vh";
         public bool ShowBorders { get; set; }
-        public FieldChooserOptions FieldChooser { get; set; }
-        public PivotGridDataSource DataSource { get; set; }
+        public FieldChooserOptions FieldChooser { get;  } = new();
+        public PivotGridDataSource DataSource { get;  } = new();
+        public PivotGridScrolling Scrolling{ get; set; } = new();
+    }
+
+    public class PivotGridScrolling{
+        public string Mode{ get; set; } = "standard";
     }
 
     public class FieldChooserOptions {

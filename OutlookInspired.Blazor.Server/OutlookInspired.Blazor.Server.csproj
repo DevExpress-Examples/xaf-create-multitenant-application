@@ -65,6 +65,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
+    <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
     
     
   </ItemGroup>

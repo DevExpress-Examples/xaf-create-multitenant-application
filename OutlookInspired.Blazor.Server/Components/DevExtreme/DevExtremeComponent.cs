@@ -12,11 +12,11 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
             CreateResource<DevExtremeComponent>(memoryStream);
         }
 
-        protected static void ExtractResources(string resourceName) 
+        protected static void ExtractResource(string resourceName) 
             => typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
                 .SaveToFile($"wwwroot/js/DevExtreme/{resourceName}");
         
-        protected static void ExtractResources<T>() 
+        protected static void ExtractResource<T>() 
             => CreateResource<T>(typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
 
         private static void CreateResource<T>(Stream manifestResourceStream) 

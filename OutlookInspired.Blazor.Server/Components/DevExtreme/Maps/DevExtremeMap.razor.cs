@@ -8,7 +8,34 @@ using OutlookInspired.Module.Services.Internal;
 using FeatureCollection = OutlookInspired.Blazor.Server.Services.FeatureCollection;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
-    public class Location{
+    
+    public class Model:ComponentModelBase,IComponentContentHolder{
+        public event EventHandler<MapItemSelectedArgs> MapItemSelected;
+        public MapSettings MapSettings{
+            get => GetPropertyValue<MapSettings>();
+            set => SetPropertyValue(value);
+        }
+
+        public bool ChangeRouteMode{ get; set; }
+        public bool ChangePeriod{ get; set; }
+        public bool PrintMap{
+            get => GetPropertyValue<bool>();
+            set => SetPropertyValue(value);
+        }
+
+        public void SelectMapItem(MapItem item) 
+            => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
+        public RenderFragment ComponentContent => this.Create(model => model.Create<DevExtremeMap>());
+    }
+
+    public class MapItemSelectedArgs:EventArgs{
+        public MapItem Item{ get; }
+
+        public MapItemSelectedArgs(MapItem item) => Item = item;
+    }
+
+    
+public class Location{
         public double Lat{ get; init; }
         public double Lng{ get; init; }
         
@@ -62,32 +89,5 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
         public MapItem[] MapItems => _mapItems;
         public string[] Palette => _palette;
     }
-    public class Model:ComponentModelBase,IComponentContentHolder{
-        public event EventHandler<MapItemSelectedArgs> MapItemSelected;
-        public MapSettings MapSettings{
-            get => GetPropertyValue<MapSettings>();
-            set => SetPropertyValue(value);
-        }
-
-        public bool ChangeRouteMode{ get; set; }
-        public bool ChangePeriod{ get; set; }
-        public bool PrintMap{
-            get => GetPropertyValue<bool>();
-            set => SetPropertyValue(value);
-        }
-
-        public void SelectMapItem(MapItem item) 
-            => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
-        public RenderFragment ComponentContent => this.Create(model => model.Create<DevExtremeMap>());
-    }
-
-    public class MapItemSelectedArgs:EventArgs{
-        public MapItem Item{ get; }
-
-        public MapItemSelectedArgs(MapItem item) => Item = item;
-    }
-
-    
-
 
 }

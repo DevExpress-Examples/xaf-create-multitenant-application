@@ -3,6 +3,9 @@
 
     <div @ref=@PivotGrid ></div>
 @code {
+    static DevExtremePivotGrid(){
+        ExtractResource<DevExtremePivotGrid>();
+    }
 
     ElementReference PivotGrid { get; set; }
     IJSObjectReference ClientModule { get; set; }
