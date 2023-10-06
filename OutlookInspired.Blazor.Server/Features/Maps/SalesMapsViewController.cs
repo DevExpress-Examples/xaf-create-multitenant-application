@@ -34,11 +34,9 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
 
         private void ChartListEditorOnControlsCreated(object sender, EventArgs e){
             _chartListEditor.ControlsCreated-=ChartListEditorOnControlsCreated;
-            // _chartListEditor.Control.Model.ArgumentField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
-            // _chartListEditor.Control.Model.NameField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
-            _chartListEditor.Control.Model.ArgumentField = item => item.CustomerName;
-            _chartListEditor.Control.Model.NameField = item => item.CustomerName;
-            _chartListEditor.Control.Model.ValueField = item => item.Total;
+            _chartListEditor.Control.ArgumentField = item => item.CustomerName;
+            _chartListEditor.Control.NameField = item => item.CustomerName;
+            _chartListEditor.Control.ValueField = item => item.Total;
             _chartListEditor.DataSource = Model.MapSettings.MapItems;
         }
 

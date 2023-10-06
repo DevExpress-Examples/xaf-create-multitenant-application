@@ -15,7 +15,7 @@
 </DxChart>
 @code {
     [Parameter]
-    public XafChartModel<T> ComponentModel { get; set; }
+    public ChartModel<T,XafChart<T>> ComponentModel { get; set; }
 
     private void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj) 
         => obj.PointAppearance.Color = obj.Point.DataItems.Cast<MapItem>().First().Color.ColorFromHex();
