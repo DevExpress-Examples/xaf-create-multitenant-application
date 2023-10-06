@@ -1,23 +1,23 @@
-﻿@typeparam T
+﻿@using OutlookInspired.Module.BusinessObjects
+@using OutlookInspired.Module.Services.Internal
+@typeparam T
 
-<DxChart Data="@ComponentModel.Data" Width="100%" Rotated="true" Height="100%">
+<DxChart Data="@ComponentModel.Data" Width="100%" Rotated="true" Height="100%" CustomizeSeriesPoint="CustomizeSeriesPoint">
     <DxChartCommonSeries T="T" TValue="decimal" TGroup="string" TArgument="string" 
-                         ArgumentField="@ComponentModel.ArgumentField" ValueField="@ComponentModel.ValueField" SeriesType="ChartSeriesType.Bar" SummaryMethod="Enumerable.Sum"
-                         NameField="@ComponentModel.NameField"
-                         />
-    
-            <DxChartLegend Visible="false"/>
-            <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
-                <div style="background-color: #505050;color: white">
-                    @context.Point.Argument: @($"{(decimal)context.Point.Value:$0,.#K}")
-                </div>
-            </DxChartTooltip>
-        </DxChart>
+        ArgumentField="@ComponentModel.ArgumentField" ValueField="@ComponentModel.ValueField" 
+        SeriesType="ChartSeriesType.Bar" SummaryMethod="Enumerable.Sum" NameField="@ComponentModel.NameField"/>
+    <DxChartLegend Visible="false"/>
+    <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+        <div style="background-color: #505050;color: white">
+            @context.Point.SeriesName: @($"{(decimal)context.Point.Value:$0,.#K}")
+        </div>
+    </DxChartTooltip>
+</DxChart>
 @code {
-    
     [Parameter]
     public XafChartModel<T> ComponentModel { get; set; }
 
-    
+    private void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj) 
+        => obj.PointAppearance.Color = obj.Point.DataItems.Cast<MapItem>().First().Color.ColorFromHex();
 
 }

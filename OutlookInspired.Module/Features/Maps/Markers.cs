@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Linq.Expressions;
+using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 
@@ -13,5 +14,7 @@ namespace OutlookInspired.Module.Features.Maps{
     public interface ISalesMapsMarker:IMapsMarker,IObjectSpaceLink{
         IEnumerable<Order> Orders{ get; }
         
+        Expression<Func<OrderItem,bool>> SalesExpression{ get; }
+            
     }
-}
+}   

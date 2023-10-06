@@ -1,7 +1,7 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 
-namespace OutlookInspired.Win.Features{
+namespace OutlookInspired.Win.Features.Maps{
     public class MapsViewController:Module.Features.Maps.MapsViewController{
         protected override PredefinedCategory PopupActionsCategory() => PredefinedCategory.View;
 

@@ -7,14 +7,14 @@
 @using OutlookInspired.Module.Services.Internal
 @implements IAsyncDisposable
 
-<DevExtremeResources ResourcesLoaded="@(() => ResourcesLoaded = true)" />
+<DevExtremeResources ResourcesLoaded="ScriptsLoaded" />
 
 @if(ResourcesLoaded) {
     <div @ref=@Map ></div>
 }
 
 @code {
-    private InvokeDispatcher _invokeDispatcher;
+    private InvokeDispatcher _dispatchItemSelection;
     bool ResourcesLoaded { get; set; }
     bool ClientInitializationInProgress { get; set; }
     
@@ -27,31 +27,36 @@
     [Parameter]
     public Model Model { get; set; }
 
+    
     protected override void OnInitialized(){
         base.OnInitialized();
-        _invokeDispatcher = new InvokeDispatcher(Update);
-    }
-
-    private void Update(object element){
-        if (element is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.String){
+        _dispatchItemSelection = new InvokeDispatcher(element =>{
+            if (element is not JsonElement{ValueKind:JsonValueKind.String } jsonElement) return;
             Model.SelectMapItem(Model.MapSettings.MapItems.First(item => item.City==jsonElement.GetString()));
-        }
+        });
+        
     }
 
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
+    
+
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender){
+        var mapSettings = Model.MapSettings;
         if(ResourcesLoaded && ClientMap == null && !ClientInitializationInProgress){
             ClientInitializationInProgress = true;
-            ClientModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeMap.razor.js");
-            ClientMap = await ClientModule.InvokeAsync<IJSObjectReference>(Model.MapSettings.Routes.Any()? "RouteMapInit":"SalesMapInit", Map,Model.MapSettings,DotNetObjectReference.Create(_invokeDispatcher));
+            // ClientModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeMap.razor.js");
+            // var invokeAsync = await ClientModule.InvokeAsync<object>("GenerateColors",10);
+            
+            var mapInit = mapSettings.Routes.Any() ? "RouteMapInit" : "SalesMapInit";
+            ClientMap = await ClientModule.InvokeAsync<IJSObjectReference>(mapInit, Map, mapSettings, _dispatchItemSelection.DotNetReference());
             ClientInitializationInProgress = false;
         }
         else if (Model.ChangeRouteMode){
             Model.ChangeRouteMode = false;
-            await ClientModule.InvokeVoidAsync("updateMapRouteMode", ClientMap, Model.MapSettings.Routes.First().Mode.ToLower());
+            await ClientModule.InvokeVoidAsync("updateMapRouteMode", ClientMap, mapSettings.Routes.First().Mode.ToLower());
         }
         else if (Model.ChangePeriod){
             Model.ChangePeriod = false;
-            await ClientModule.InvokeVoidAsync("updateSalesPeriod", ClientMap, Model.MapSettings);
+            await ClientModule.InvokeVoidAsync("updateDatasource", ClientMap, mapSettings);
         }
         else if (Model.PrintMap){
             Model.PrintMap = false;
@@ -65,4 +70,15 @@
         if(ClientModule != null)
             await ClientModule.DisposeAsync();
     }
+
+    private async Task ScriptsLoaded(){
+        ResourcesLoaded = true;
+        if(!ClientInitializationInProgress){
+            ClientInitializationInProgress = true;
+            ClientModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeMap.razor.js");
+            // Model.MapSettings.Palette = ((JsonElement)await ClientModule.InvokeAsync<object>("GenerateColors",Model.MapSettings.Features.Features.Count)).DeSerialize<string[]>();
+            ClientInitializationInProgress = false;
+        }
+    }
+
 }

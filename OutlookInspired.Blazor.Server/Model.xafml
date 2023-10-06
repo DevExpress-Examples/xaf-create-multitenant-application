@@ -6,7 +6,7 @@
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
-    <ListView Id="Customer_CitySales_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.ChartListEditor" />
+    <ListView Id="Customer_CitySales_ListView"  />
     <DetailView Id="Customer_DetailView_Child">
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
@@ -320,6 +320,22 @@
       </Layout>
     </DashboardView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
+    <DashboardView Id="Opportunities">
+      <Layout>
+        <LayoutGroup Id="Main" Caption="Main">
+          <LayoutGroup Id="Auto67f2f388-f812-49a1-afec-7535c1484e94" ShowCaption="False" Caption="" Index="0" RelativeSize="49.97287032013022" IsNewNode="True">
+            <LayoutItem Id="Quote_ListView" ViewItem="Quote_ListView" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item1" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutGroup Id="Auto29c30a3b-4f0a-47ae-982d-0952afc3a504" ShowCaption="False" Caption="" Index="1" RelativeSize="50.02712967986978" IsNewNode="True">
+            <LayoutItem Id="QuoteMapItem_ListView" ViewItem="QuoteMapItem_ListView" Index="0" RelativeSize="50" IsNewNode="True" />
+            <LayoutItem Id="Item2" Index="1" RelativeSize="50" IsNewNode="True" />
+          </LayoutGroup>
+          <LayoutItem Id="Quote_ListView" Removed="True" />
+          <LayoutItem Id="QuoteMapItem_ListView" RelativeSize="50.02712967986978" Removed="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
     <DetailView Id="Order_DetailView_Child">
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
@@ -436,7 +452,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Product_CitySales_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.ChartListEditor" />
+    <ListView Id="Product_CitySales_ListView"  />
     <DetailView Id="Product_DetailView_Maps" AllowEdit="False">
       <Items>
         <PropertyEditor Id="Description" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />

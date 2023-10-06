@@ -1,15 +1,31 @@
+using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
+        public static Color ColorFromHex(this string hex)
+        {
+            hex = hex.Replace("#", "");
+            return Color.FromArgb(hex.Substring(0, 2).ToByte( 16), hex.Substring(2, 2).ToByte( 16), hex.Substring(4, 2).ToByte(16));
+        }
+        public static byte ToByte(this string value,int fromBase) 
+            => Convert.ToByte(value, fromBase);
+
+        public static T DeSerialize<T>(this string value)
+            => JsonSerializer.Deserialize<T>(value);
+        public static T DeSerialize<T>(this JsonElement jsonElement)
+            => jsonElement.GetRawText().DeSerialize<T>();
+        
         public static string Serialize(this object value) 
             => JsonConvert.SerializeObject(value);
 

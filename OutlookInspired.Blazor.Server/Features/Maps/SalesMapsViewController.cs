@@ -1,14 +1,14 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Blazor.Server.Components.DevExtreme;
-using OutlookInspired.Blazor.Server.Editors;
+using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
     public class SalesMapsViewController : BlazorMapsViewController<ISalesMapsMarker>{
-        private ChartListEditor _chartListEditor;
+        private MapItemChartListEditor _chartListEditor;
 
         protected override void OnDeactivated(){
             base.OnDeactivated();
@@ -25,21 +25,25 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             if (salesListPropertyEditor != null) salesListPropertyEditor.ControlCreated += OnListPropertyEditorControlCreated;
         }
 
-        [Obsolete]
+        
         private void OnListPropertyEditorControlCreated(object sender, EventArgs e){
             ((ListPropertyEditor)sender).HideToolBar().ControlCreated-=OnListPropertyEditorControlCreated;
-            _chartListEditor = ((ChartListEditor)(((ListPropertyEditor)sender)!).ListView.Editor);
+            _chartListEditor = ((MapItemChartListEditor)(((ListPropertyEditor)sender)!).ListView.Editor);
             _chartListEditor.ControlsCreated += ChartListEditorOnControlsCreated;
         }
 
         private void ChartListEditorOnControlsCreated(object sender, EventArgs e){
             _chartListEditor.ControlsCreated-=ChartListEditorOnControlsCreated;
+            // _chartListEditor.Control.Model.ArgumentField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
+            // _chartListEditor.Control.Model.NameField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
+            _chartListEditor.Control.Model.ArgumentField = item => item.CustomerName;
+            _chartListEditor.Control.Model.NameField = item => item.CustomerName;
+            _chartListEditor.Control.Model.ValueField = item => item.Total;
             _chartListEditor.DataSource = Model.MapSettings.MapItems;
         }
 
         protected override Model CustomizeModel(Model model){
-            model.MapSettings = new MapSettings(){ MapItems = ((ISalesMapsMarker)View.CurrentObject)
-                .Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data).ToArray() };
+            model.MapSettings = ((ISalesMapsMarker)View.CurrentObject).MapSettings((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data);
             model.MapItemSelected-=ModelOnMapItemSelected;
             model.MapItemSelected+=ModelOnMapItemSelected;
             return model;
@@ -47,7 +51,8 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
 
         private void ModelOnMapItemSelected(object sender, MapItemSelectedArgs e) 
             => _chartListEditor.DataSource = ((ISalesMapsMarker)View.CurrentObject)
-                .Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data, e.Item.City).ToArray();
+                .Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data, e.Item.City)
+                .Colorize(Model.MapSettings.Palette).ToArray();
 
         private void SalesPeriodActionOnExecuted(object sender, ActionBaseEventArgs e){
             var model = CustomizeModel();

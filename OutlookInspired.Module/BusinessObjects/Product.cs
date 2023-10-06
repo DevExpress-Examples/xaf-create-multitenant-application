@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DevExpress.Drawing;
+using System.Linq.Expressions;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
@@ -24,6 +24,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public const string CardViewDetailView = "ProductCardView_DetailView";
         public const string BrochureDetailView = "Product_Brochure_DetailView";
         public const string MapsDetailView = "Product_DetailView_Maps";
+        
         [FontSizeDelta(8)]
         public  virtual string Name { get; set; }
         [FieldSize(-1)]
@@ -56,8 +57,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [InverseProperty(nameof(ProductCatalog.Product))][Aggregated]
         public virtual ObservableCollection<ProductCatalog> Catalogs{ get; set; } = new();
-
-        
+        Expression<Func<OrderItem, bool>> ISalesMapsMarker.SalesExpression => item => item.Product.ID == ID;
 
         [Aggregated]
         public virtual ObservableCollection<ProductImage> Images{ get; set; } = new();

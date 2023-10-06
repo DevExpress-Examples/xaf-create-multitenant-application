@@ -56,6 +56,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Customers\CardView\" />
-    <Folder Include="Features\Quotes\" />
   </ItemGroup>
 </Project>

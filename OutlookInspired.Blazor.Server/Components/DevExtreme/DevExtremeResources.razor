@@ -7,11 +7,16 @@
     [Parameter]
     public EventCallback ResourcesLoaded { get; set; }
 
+    protected override async Task OnInitializedAsync(){
+        _moduleRef = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeResources.razor.js");
+        await _moduleRef.InvokeVoidAsync("ensureDevExtremeAsync");
+        await ResourcesLoaded.InvokeAsync();        
+        
+    }
+
     protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
-            _moduleRef = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/DevExtreme/DevExtremeResources.razor.js");
-            await _moduleRef.InvokeVoidAsync("ensureDevExtremeAsync");
-            await ResourcesLoaded.InvokeAsync();
+            
         }
     }
 

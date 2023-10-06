@@ -22,27 +22,33 @@ namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
 
-        public static object ToFeatureCollection(this MapItem[] mapItems){
-            return new FeatureCollection{
-                Type = "FeatureCollection",
-                Features = mapItems.GroupBy(item => item.City)
-                    .Select(cityItems => {
-                        var mapItem = mapItems.First(mapItem => mapItem.City == cityItems.Key);
-                        return new Feature{
-                            Type = "Feature",
-                            Geometry = new Geometry{
-                                Type = "Point",
-                                Coordinates = new List<double>{ mapItem.Longitude,mapItem.Latitude }
-                            },
-                            Properties = new Properties{
-                                Values = cityItems.Select(item => item.Total).ToList(),
-                                Tooltip = $"<span class='{mapItem.City}'>{mapItem.City} Total: {mapItem.Total}</span>",
-                                City=mapItem.City
-                            }
-                        };
-                    }).ToList()
+
+        public static MapSettings MapSettings(this ISalesMapsMarker marker, Period period)
+            => Components.DevExtreme.MapSettings.New(marker, period);
+
+        public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette) 
+            => mapItems.GroupBy(item => item.CustomerName)
+                .SelectMany((items, i) => items.Do(item => item.Color = palette[i])).ToArray();
+
+
+        public static object Features(this MapItem[] mapItems,Func<MapItem,string> keySelector) 
+            => new FeatureCollection{ Type = "FeatureCollection",
+                Features = mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList()
             };
-        }
+
+        private static Feature NewFeature(this MapItem mapItem, IGrouping<string, MapItem> group) 
+            => new(){
+                Type = "Feature",
+                Geometry = new Geometry{
+                    Type = "Point",
+                    Coordinates = new List<double>{ mapItem.Longitude, mapItem.Latitude }
+                },
+                Properties = new Properties{
+                    Values = group.Select(item => item.Total).ToList(),
+                    Tooltip = $"<span class='{mapItem.City}'>{mapItem.City} Total: {group.Sum(item => item.Total)}</span>",
+                    City = mapItem.City
+                }
+            };
 
         public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
             var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
@@ -132,7 +138,9 @@ namespace OutlookInspired.Blazor.Server.Services{
             => await runtime.EvalAsync(true, args);
         public static async ValueTask EvalJSAsync(this XafApplication application,params object[] args) 
             => await application.ServiceProvider.GetRequiredService<IJSRuntime>().EvalAsync(true,args);
-
+        public static DotNetObjectReference<T> DotNetReference<T>(this T value) where T:class 
+            => DotNetObjectReference.Create(value);
+        
         public static void RenderMarkup(this RenderTreeBuilder builder,string dataItemName,object value) 
             => builder.AddMarkupContent(0,   $@"
 <div class=""dxbs-fl-ctrl""><!--!-->
@@ -147,6 +155,7 @@ namespace OutlookInspired.Blazor.Server.Services{
                 builder.AddAttribute(1, "ComponentModel", model);
                 builder.CloseComponent();
             };
+        
         public static RenderFragment Create<T>(this T componentModel,Func<T,RenderFragment> fragmentSelector) where T:IComponentModel 
             => ComponentModelObserver.Create(componentModel, fragmentSelector(componentModel));
         

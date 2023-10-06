@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
@@ -9,7 +10,6 @@ using OutlookInspired.Module.Attributes.Validation;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 
@@ -96,8 +96,9 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[VisibleInDetailView(false)][NotMapped]
 		public virtual List<Order> RecentOrders => ObjectSpace.GetObjectsQuery<Order>()
 			.Where(order => order.Customer.ID == ID && order.OrderDate > DateTime.Now.AddMonths(-2)).ToList();
-		
 
+		Expression<Func<OrderItem, bool>> ISalesMapsMarker.SalesExpression => item => item.Order.Customer.ID == ID;
+		
 		IEnumerable<Order> ISalesMapsMarker.Orders => Orders;
 	}
 	public enum CustomerStatus {

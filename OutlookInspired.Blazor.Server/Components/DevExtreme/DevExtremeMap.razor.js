@@ -34,16 +34,35 @@ export async function RouteMapInit(element,model) {
         type: "roadmap"
     });
 }
-export function updateSalesPeriod(dxMapInstance, model) {
-    dxMapInstance.option('layers[1].dataSource', model.jsMapItems);
+export function updateDatasource(dxMapInstance, model) {
+    dxMapInstance.option('layers[1].dataSource', model.features);
+}
+export function updatePalette(dxMapInstance, newPalette) {
+    const layers = dxMapInstance.option('layers');
+    const updatedLayers = layers.map(layer => {
+        if (layer.name === 'pies') {
+            return { ...layer, palette: newPalette };
+        }
+        return layer;
+    });
+    dxMapInstance.option('layers', updatedLayers);
 }
 
+export async function GenerateColors(number,dotnetCallBack){
+    return DevExpress.viz.generateColors('Material', number, { baseColorSet: 'gradientSet' })
+}
 export async function SalesMapInit(element,model,dotnetCallback) {
     let closestParent = element.closest(".dxbl-modal-body");
+    debugger;
     return new DevExpress.viz.dxVectorMap(element, {
         height: closestParent.clientHeight*0.97,
         width: "100%",
-        onClick: arg => dotnetCallback.invokeMethodAsync('Invoke', arg.target.attribute("city")),
+        onClick: arg => {
+            const clickedElement = arg.target;
+            if (clickedElement != null)
+                clickedElement.selected(!clickedElement.selected());
+            dotnetCallback.invokeMethodAsync('Invoke', arg.target.attribute("city"))
+        },
         onDisposing: () => dotnetHelper.dispose(),
         provider: model.provider,
         apiKey: {
@@ -52,11 +71,13 @@ export async function SalesMapInit(element,model,dotnetCallback) {
         layers: [{
             dataSource: DevExpress.viz.map.sources.usa,
             hoverEnabled: false,
+            selectionMode: 'single'
         }, {
             name: 'pies',
-            dataSource: model.jsMapItems,
+            dataSource: model.features,
             elementType: 'pie',
             dataField: 'values',
+            palette: model.palette
         }],
         tooltip: {
             enabled: true,
@@ -68,7 +89,7 @@ export async function SalesMapInit(element,model,dotnetCallback) {
             },
             zIndex:100000
         },
-        bounds: [-125, 49, -67, 24],
+        bounds: model.bounds,
     });
         
 }

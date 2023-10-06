@@ -6,12 +6,21 @@ using OutlookInspired.Module.Features.Maps;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class MapExtensions{
+        public static string MapItemProperty(this Type salesMarkerType)
+            => salesMarkerType switch{
+                _ when typeof(Customer).IsAssignableFrom(salesMarkerType) => nameof(MapItem.ProductName),
+                _ when typeof(Product).IsAssignableFrom(salesMarkerType) => nameof(MapItem.CustomerName),
+                _ => throw new InvalidOperationException($"Invalid type provided. {salesMarkerType}")
+            };
+
         public static void SetRoutePoints(this Employee employee,params RoutePoint[] routePoints){
             employee.RoutePoints.Clear();
             routePoints.Do(employee.RoutePoints.Add).Enumerate();
         }
-        public static MapItem[] Sales(this ISalesMapsMarker salesMapsMarker,Period period,string city=null) 
-            => salesMapsMarker.ObjectSpace.GetObjectsQuery<OrderItem>().Where(period,city)
+        public static MapItem[] Sales(this ISalesMapsMarker salesMapsMarker, Period period, string city = null) 
+            => salesMapsMarker.ObjectSpace.GetObjectsQuery<OrderItem>()
+                .Where(salesMapsMarker.SalesExpression)
+                .Where(period,city)
                 .Select(item => new MapItem{
                     CustomerName = item.Order.Customer.Name,
                     ProductName = item.Product.Name,

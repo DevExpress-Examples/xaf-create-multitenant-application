@@ -41,8 +41,8 @@ namespace OutlookInspired.Win.Features.Maps{
                     Data = _pieChartDataAdapter=new PieChartDataAdapter(){
                         Mappings ={
                             Latitude =nameof(MapItem.Latitude),Longitude =nameof(MapItem.Longitude),
-                            PieSegment = nameof(MapItem.ProductName), Value = nameof(MapItem.Total) },
-                        PieItemDataMember = nameof(MapItem.City) 
+                            PieSegment = View.ObjectTypeInfo.Type.MapItemProperty(), Value = nameof(MapItem.Total) },
+                        PieItemDataMember = nameof(MapItem.City) ,SummaryFunction = SummaryFunction.Sum,
                     }
                 }
             });

@@ -4,6 +4,7 @@ using DevExpress.XtraCharts;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
+using MapsViewController = OutlookInspired.Win.Features.Maps.MapsViewController;
 
 namespace OutlookInspired.Win.Features.Quotes{
     public class PaletteEntriesController:ViewController<DashboardView>{

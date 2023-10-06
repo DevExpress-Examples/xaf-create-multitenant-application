@@ -9,23 +9,16 @@ using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Editors {
-
-    [ListEditor(typeof(MapItem),false)]
-    public class ChartListEditor : ListEditor {
-        public ChartListEditor(IModelListView info) : base(info) { }
-        public new XafChartAdapter<MapItem> Control => (XafChartAdapter<MapItem>)base.Control;
+    public abstract class ChartListEditor<TObject,TComponent> : ListEditor {
+        protected ChartListEditor(IModelListView info) : base(info) { }
+        public new XafChartAdapter<TObject,TComponent> Control => (XafChartAdapter<TObject,TComponent>)base.Control;
         protected override object CreateControlsCore() 
-            => new XafChartAdapter<MapItem>(new XafChartModel<MapItem>{
-                 ArgumentField = item => item.CustomerName,
-                 ValueField = item => item.Total,
-                 NameField = item => item.CustomerName
-            });
+            => new XafChartAdapter<TObject,TComponent>(new XafChartModel<TObject>());
 
         protected override void AssignDataSourceToControl(Object dataSource){
             if (Control == null) return;
-            Control.Model.Data = dataSource as IEnumerable<MapItem>;
+            Control.Model.Data = dataSource as IEnumerable<TObject>;
         }
-
 
         public override void Refresh() { }
         public override object FocusedObject { get; set; }
@@ -33,7 +26,7 @@ namespace OutlookInspired.Blazor.Server.Editors {
         public override SelectionType SelectionType => SelectionType.None;
     }
 
-    public class XafChartAdapter<T> : IComponentContentHolder {
+    public class XafChartAdapter<T,TComponent> : IComponentContentHolder {
         public XafChartAdapter(XafChartModel<T> model) => Model = model;
 
         public XafChartModel<T> Model{ get; }
