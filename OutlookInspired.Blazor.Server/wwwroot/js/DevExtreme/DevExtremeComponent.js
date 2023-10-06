@@ -1,4 +1,5 @@
-﻿let devExtremeInitPromise = null;
+
+let devExtremeInitPromise = null;
 
 export async function ensureDevExtremeAsync() {
     await loadDevExtreme();
@@ -33,3 +34,4 @@ function loadDevExtreme() {
         });
     }
 }
+

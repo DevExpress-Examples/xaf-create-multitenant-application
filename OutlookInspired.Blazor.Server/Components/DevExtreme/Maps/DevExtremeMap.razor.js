@@ -1,6 +1,4 @@
-﻿
-
-export function printMap(dxMapInstance) {
+﻿export function printMap(dxMapInstance) {
     let mapElement = dxMapInstance.element();
     document.body.innerHTML = "";
     document.body.appendChild(mapElement);
@@ -16,7 +14,7 @@ export function updateMapRouteMode(dxMapInstance, newMode) {
     routes = routes.map(route => ({ ...route, mode: newMode }));
     dxMapInstance.option('routes', routes);
 }
-export async function RouteMapInit(element,model) {
+export async function InitDxMap(element,model) {
     let closestParent = element.closest(".dxbl-modal-body");
     return new DevExpress.ui.dxMap(element, {
         center: JSON.stringify(model.center),
@@ -37,21 +35,8 @@ export async function RouteMapInit(element,model) {
 export function updateDatasource(dxMapInstance, model) {
     dxMapInstance.option('layers[1].dataSource', model.features);
 }
-export function updatePalette(dxMapInstance, newPalette) {
-    const layers = dxMapInstance.option('layers');
-    const updatedLayers = layers.map(layer => {
-        if (layer.name === 'pies') {
-            return { ...layer, palette: newPalette };
-        }
-        return layer;
-    });
-    dxMapInstance.option('layers', updatedLayers);
-}
 
-export async function GenerateColors(number,dotnetCallBack){
-    return DevExpress.viz.generateColors('Material', number, { baseColorSet: 'gradientSet' })
-}
-export async function SalesMapInit(element,model,dotnetCallback) {
+export async function InitVectorMap(element,model,dotnetCallback) {
     let closestParent = element.closest(".dxbl-modal-body");
     debugger;
     return new DevExpress.viz.dxVectorMap(element, {

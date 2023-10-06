@@ -97,6 +97,9 @@ namespace OutlookInspired.Module.Services.Internal{
         public static Stream GetManifestResourceStream(this Assembly assembly, Func<string, bool> nameMatch)
             => assembly.GetManifestResourceStream(assembly.GetManifestResourceNames().First(nameMatch));
 
+        public static byte[] Bytes(this string s, Encoding encoding = null) 
+            => s == null ? Array.Empty<byte>() : (encoding ?? Encoding.UTF8).GetBytes(s);
+
         public static IEnumerable<(TAttribute attribute,IMemberInfo memberInfo)> AttributedMembers<TAttribute>(this ITypeInfo info)  
             => info.Members.SelectMany(memberInfo => memberInfo.FindAttributes<Attribute>().OfType<TAttribute>().Select(attribute => (attribute, memberInfo)));
         public static Type GetAssemblyType(this AppDomain domain, string fullName,bool ignoreCase=false) 

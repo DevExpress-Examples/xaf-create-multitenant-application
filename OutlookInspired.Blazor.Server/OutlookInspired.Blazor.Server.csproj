@@ -9,12 +9,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Components\DevExtreme\DevExtremePivotGrid.razor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Components\DevExtreme\DevExtremePivotGrid.razor.js" />
+    <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
+    <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Model.xafml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Components\DevExtreme\DevExtremePivotGrid.razor.js" />
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Remove="Components\DevExtreme\DevExtremeResources.razor" />
     <Content Remove="UserControls\CustomerEmployees.razor" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +63,14 @@
     <AdditionalFiles Include="Features\Employees\Tasks\ColumnTemplate.razor" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
+    <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
+    <EmbeddedResource Include="Components\DevExtreme\DevExtremeComponent.js" />
+    
+    
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Features\Customers\CardView\" />
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 </Project>

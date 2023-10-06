@@ -1,0 +1,56 @@
+﻿@inherits DevExtremeComponent
+@using OutlookInspired.Blazor.Server.Services
+@using System.Text.Json
+@implements IAsyncDisposable
+
+<div @ref=@Map ></div>
+
+@code {
+    static DevExtremeMap() => ExtractResources<DevExtremeMap>();
+    private InvokeDispatcher _dispatchItemSelection;
+    ElementReference Map { get; set; }
+    IJSObjectReference ClientModule { get; set; }
+    IJSObjectReference ClientMap { get; set; }
+    
+    [Parameter]
+    public Model ComponentModel { get; set; }
+
+    protected override async Task OnInitializedAsync(){
+        await base.OnInitializedAsync();
+        ClientModule = await ImportResource();
+        _dispatchItemSelection = new InvokeDispatcher(element =>{
+            if (element is not JsonElement{ValueKind:JsonValueKind.String } jsonElement) return;
+            ComponentModel.SelectMapItem(ComponentModel.MapSettings.MapItems.First(item => item.City==jsonElement.GetString()));
+        });
+    }
+    
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender){
+        if (ClientModule==null)return;
+        var mapSettings = ComponentModel.MapSettings;
+        if( ClientMap == null){
+            var mapInit = mapSettings.Routes.Any() ? "InitDxMap" : "InitVectorMap";
+            ClientMap = await ClientModule.InvokeAsync<IJSObjectReference>(mapInit, Map, mapSettings, _dispatchItemSelection.DotNetReference());
+        }
+        else if (ComponentModel.ChangeRouteMode){
+            ComponentModel.ChangeRouteMode = false;
+            await ClientModule.InvokeVoidAsync("updateMapRouteMode", ClientMap, mapSettings.Routes.First().Mode.ToLower());
+        }
+        else if (ComponentModel.ChangePeriod){
+            ComponentModel.ChangePeriod = false;
+            await ClientModule.InvokeVoidAsync("updateDatasource", ClientMap, mapSettings);
+        }
+        else if (ComponentModel.PrintMap){
+            ComponentModel.PrintMap = false;
+            await ClientModule.InvokeVoidAsync("printMap", ClientMap);
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync() {
+        if(ClientMap != null)
+            await ClientMap.DisposeAsync();
+        if(ClientModule != null)
+            await ClientModule.DisposeAsync();
+    }
+
+
+}

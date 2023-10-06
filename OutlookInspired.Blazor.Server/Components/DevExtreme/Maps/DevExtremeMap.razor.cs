@@ -1,4 +1,6 @@
-﻿using DevExpress.ExpressApp.Blazor.Components.Models;
+﻿using DevExpress.ExpressApp.Blazor;
+using DevExpress.ExpressApp.Blazor.Components.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
@@ -6,7 +8,7 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 using FeatureCollection = OutlookInspired.Blazor.Server.Services.FeatureCollection;
 
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     public class Location{
         public double Lat{ get; init; }
         public double Lng{ get; init; }
@@ -61,7 +63,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         public MapItem[] MapItems => _mapItems;
         public string[] Palette => _palette;
     }
-    public class Model:ComponentModelBase{
+    public class Model:ComponentModelBase,IComponentContentHolder{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
         public MapSettings MapSettings{
             get => GetPropertyValue<MapSettings>();
@@ -77,6 +79,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
 
         public void SelectMapItem(MapItem item) 
             => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
+        public RenderFragment ComponentContent => this.Create(model => model.Create<DevExtremeMap>());
     }
 
     public class MapItemSelectedArgs:EventArgs{
