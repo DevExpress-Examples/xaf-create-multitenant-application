@@ -530,7 +530,7 @@
     </DashboardView>
     <DetailView Id="Quote_DetailView_Pivot" FreezeLayout="True">
       <Items>
-        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.Model" IsNewNode="True" />
+        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.Pivot.Model" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">

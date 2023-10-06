@@ -55,6 +55,7 @@
     <_ContentIncludedByDefault Remove="Features\Employees\Maps\Maps.razor" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="Components\DevExtreme\Chart\DevExtremePivotGrid.razor" />
     <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />
     <AdditionalFiles Include="Features\Customers\GridView\Employees.razor" />
     <AdditionalFiles Include="Features\Customers\GridView\GridView.razor" />
@@ -63,6 +64,7 @@
     <AdditionalFiles Include="Features\Employees\Tasks\ColumnTemplate.razor" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\DevExtreme\Chart\DevExtremePivotGrid.razor.js" />
     <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />

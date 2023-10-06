@@ -10,6 +10,9 @@ namespace OutlookInspired.Module.Services.Internal{
                 : (modelObjectView is IModelListView modelListView ? modelListView.Columns : ((IModelDetailView) modelObjectView).Items.OfType<IModelMemberViewItem>())
                 .Where(item => propertyEditorType == null || propertyEditorType.IsAssignableFrom(item.PropertyEditorType));
 
+        public static void Hide(this IEnumerable<IModelMemberViewItem> source)
+            => source.Do(item => item.Index = -1).Enumerate();
+        
         public static IModelMemberViewItem[] VisibleMemberViewItems(this IModelObjectView modelObjectView) 
             => modelObjectView.MemberViewItems().VisibleMemberViewItems().ToArray();
 

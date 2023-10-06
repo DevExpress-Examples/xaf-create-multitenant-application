@@ -1,7 +1,4 @@
-﻿using DevExpress.Blazor;
-using DevExpress.ClipboardSource.SpreadsheetML;
-using DevExpress.Data.PivotGrid;
-using DevExpress.ExpressApp.Blazor;
+﻿using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
@@ -17,21 +14,19 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
         public int? Width { get; set; }
         public bool IsProgressBar { get; set; }
         public string DataField { get; set; }
-        public string Area { get; set; }
+        public string Area { get; init; }
         public string DataType { get; set; }
         public string SummaryType { get; set; }
         public bool Expanded{ get; set; } = true;
         public object Format { get; set; }
-
         public string SortOrder{ get; set; }
-        // Add a delegate or an event for the 'selector' if needed
     }
 
 
     public class PivotGridDataSource{
         public List<PivotGridField> Fields{ get; } = new();
         public List<PivotGridField> DataFields=>Fields.Where(field => field.Area=="data").ToList();
-        public object Store { get; set; }  // Replace 'object' with the appropriate type for 'sales'
+        public object Store{ get; set; }
     }
 
     public class PivotGridOptions {

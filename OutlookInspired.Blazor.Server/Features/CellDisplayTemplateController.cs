@@ -8,8 +8,7 @@ namespace OutlookInspired.Blazor.Server.Features{
     public abstract class CellDisplayTemplateController:ViewController<ListView>{
         protected override void OnActivated(){
             base.OnActivated();
-            View.Model.VisibleMemberViewItems().Skip(1)
-                .Do(item => item.Index=-1).Enumerate();
+            View.Model.VisibleMemberViewItems().Skip(1).Hide();
         }
 
         protected override void OnViewControlsCreated(){

@@ -1,11 +1,9 @@
-﻿using DevExpress.Blazor;
-using DevExpress.Data.PivotGrid;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid;
+﻿using OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Blazor.Server.Features.Quotes{
-    public class Model:RootListViewComponentModel<Quote,Model,PivotGrid> {
+namespace OutlookInspired.Blazor.Server.Features.Quotes.Chart{
+    public class Model:RootListViewComponentModel<Quote,Model,Pivot.PivotGrid> {
         public override void Refresh(){
             base.Refresh();
             PivotModel.Options.DataSource.Store = Objects.Select(quote => new{

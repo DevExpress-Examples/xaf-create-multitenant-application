@@ -4,7 +4,7 @@ using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
-    public abstract class DevExtremeComponent:ComponentBase{
+    public abstract class DevExtremeComponent:ComponentBase,IAsyncDisposable{
         protected IJSObjectReference ModuleRef;
         private  const string ResourceName = "DevExtremeComponent.js";
         static DevExtremeComponent(){
@@ -12,6 +12,9 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
             CreateResource<DevExtremeComponent>(memoryStream);
         }
 
+        protected ElementReference Element { get; set; }
+        protected IJSObjectReference ClientModule { get; set; }
+        protected IJSObjectReference ClientObject { get; set; }
         protected static void ExtractResource(string resourceName) 
             => typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
                 .SaveToFile($"wwwroot/js/DevExtreme/{resourceName}");
@@ -27,6 +30,24 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         protected override async Task OnInitializedAsync(){
             ModuleRef = await ImportResource(ResourceName);
             await ModuleRef.InvokeVoidAsync("ensureDevExtremeAsync");
+            ClientModule = await ImportResource();
+        }
+
+        protected override Task OnAfterRenderAsync(bool firstRender){
+            var onAfterRenderAsync = base.OnAfterRenderAsync(firstRender);
+            if (ClientModule != null){
+                OnAfterRenderClientModuleAsync(firstRender);
+            }
+            return onAfterRenderAsync;
+        }
+
+        protected abstract Task OnAfterRenderClientModuleAsync(bool firstRender);
+
+        async ValueTask IAsyncDisposable.DisposeAsync() {
+            if(ClientObject != null)
+                await ClientObject.DisposeAsync();
+            if(ClientModule != null)
+                await ClientModule.DisposeAsync();
         }
 
         protected ValueTask<IJSObjectReference> ImportResource(string resourceName=null) 
