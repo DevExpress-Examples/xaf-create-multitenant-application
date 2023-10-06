@@ -1,0 +1,31 @@
+﻿@inherits DevExtremeComponent
+@implements IAsyncDisposable
+
+    <div @ref=@PivotGrid ></div>
+@code {
+
+    ElementReference PivotGrid { get; set; }
+    IJSObjectReference ClientModule { get; set; }
+    IJSObjectReference ClientGrid { get; set; }
+    [Parameter]
+    public Model Model { get; set; }
+
+    protected override async Task OnInitializedAsync(){
+        await base.OnInitializedAsync();
+        ClientModule = await ImportResource();
+    }
+
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender){
+        if (ClientModule==null)return;
+        ClientGrid = await ClientModule.InvokeAsync<IJSObjectReference>("PivotGridInit", PivotGrid, Model);
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync() {
+        if(ClientGrid != null)
+            await ClientGrid.DisposeAsync();
+        if(ClientModule != null)
+            await ClientModule.DisposeAsync();
+    }
+
+
+}

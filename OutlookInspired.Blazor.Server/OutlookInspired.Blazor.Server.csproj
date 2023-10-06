@@ -12,13 +12,13 @@
     <Compile Remove="Components\DevExtreme\DevExtremePivotGrid.razor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Components\DevExtreme\DevExtremePivotGrid.razor.js" />
+    
     <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Model.xafml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Components\DevExtreme\DevExtremePivotGrid.razor.js" />
+    
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -65,7 +65,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
-    <EmbeddedResource Include="Components\DevExtreme\DevExtremeComponent.js" />
     
     
   </ItemGroup>

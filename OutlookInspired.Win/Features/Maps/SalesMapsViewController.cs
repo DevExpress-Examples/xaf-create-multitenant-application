@@ -10,7 +10,7 @@ using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
 using MapItem = OutlookInspired.Module.BusinessObjects.MapItem;
 
 namespace OutlookInspired.Win.Features.Maps{
-    public class SalesMapsViewController:WinMapsViewController<ISalesMapsMarker>{
+    public abstract class SalesMapsViewController<T>:WinMapsViewController<T> where T:ISalesMapsMarker{
         private VectorItemsLayer _itemsLayer;
         private PieChartDataAdapter _pieChartDataAdapter;
         private ISalesMapsMarker _salesMapsMarker;

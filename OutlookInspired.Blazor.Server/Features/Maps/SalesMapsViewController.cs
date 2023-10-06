@@ -1,6 +1,5 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
@@ -8,7 +7,7 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public class SalesMapsViewController : BlazorMapsViewController<ISalesMapsMarker>{
+    public abstract class SalesMapsViewController<T> : BlazorMapsViewController<T> where T:ISalesMapsMarker{
         private MapItemChartListEditor _chartListEditor;
 
         protected override void OnDeactivated(){

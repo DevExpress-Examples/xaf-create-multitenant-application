@@ -7,7 +7,7 @@
 
 @code {
     static DevExtremeMap() => ExtractResources<DevExtremeMap>();
-    private InvokeDispatcher _dispatchItemSelection;
+    private JsInterop _dispatchItemSelection;
     ElementReference Map { get; set; }
     IJSObjectReference ClientModule { get; set; }
     IJSObjectReference ClientMap { get; set; }
@@ -18,7 +18,7 @@
     protected override async Task OnInitializedAsync(){
         await base.OnInitializedAsync();
         ClientModule = await ImportResource();
-        _dispatchItemSelection = new InvokeDispatcher(element =>{
+        _dispatchItemSelection = new JsInterop(element =>{
             if (element is not JsonElement{ValueKind:JsonValueKind.String } jsonElement) return;
             ComponentModel.SelectMapItem(ComponentModel.MapSettings.MapItems.First(item => item.City==jsonElement.GetString()));
         });

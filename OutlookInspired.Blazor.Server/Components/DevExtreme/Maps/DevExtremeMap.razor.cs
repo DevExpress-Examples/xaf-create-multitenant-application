@@ -1,7 +1,6 @@
 ﻿using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
@@ -89,13 +88,6 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     }
 
     
-    public class InvokeDispatcher {
-        private readonly Action<object> _action;
-        public InvokeDispatcher(Action<object> action) => _action = action;
-
-        [JSInvokable]
-        public void Invoke(object param) => _action.Invoke(param);
-    }
 
 
 }

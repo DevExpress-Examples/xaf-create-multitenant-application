@@ -1,13 +1,12 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public class RouteMapsViewController:BlazorMapsViewController<IRouteMapsMarker>,IMapsRouteController{
+    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T>,IMapsRouteController where T:IRouteMapsMarker{
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;
