@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
+using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
@@ -19,7 +19,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
         }
 
-        protected override Model CustomizeModel(Model model){
+        protected override DxMapModel CustomizeModel(DxMapModel model){
             CalculateRoute(model.MapSettings = model.MapSettings = ((IMapsMarker)View.CurrentObject).MapSettings(
                     ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice, (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data));
             return model;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
@@ -16,11 +15,11 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         protected IJSObjectReference ClientModule { get; set; }
         protected IJSObjectReference ClientObject { get; set; }
         protected static void ExtractResource(string resourceName) 
-            => typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
+            => typeof(DxMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
                 .SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{resourceName}");
         
         protected static void ExtractResource<T>() 
-            => CreateResource<T>(typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
+            => CreateResource<T>(typeof(DxMap).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
 
         private static void CreateResource<T>(Stream manifestResourceStream) 
             => manifestResourceStream.SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{DefaultResourceName(typeof(T))}");

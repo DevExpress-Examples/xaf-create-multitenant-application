@@ -1,19 +1,19 @@
-﻿using OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid;
+﻿using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Features.Quotes.Pivot{
-    public class Model:RootListViewComponentModel<Quote,Model,PivotGrid> {
+namespace OutlookInspired.Blazor.Server.Features.Quotes{
+    public class DxPivotGridModel:RootListViewComponentModel<Quote,Components.DevExtreme.DxPivotGridModel,DxPivotGrid> {
         public override void Refresh(){
             base.Refresh();
-            PivotModel.Options.DataSource.Store = Objects.Select(quote => new{
+            ComponentModel.Options.DataSource.Store = Objects.Select(quote => new{
                 State = quote.CustomerStore.State.ToString(), quote.CustomerStore.City, quote.Total, quote.Opportunity
             }).ToArray();
             SelectedObjects = Objects.Take(1).ToArray();
         }
 
-        public Components.DevExtreme.PivotGrid.Model PivotModel{ get; } = new(){
+        protected override Components.DevExtreme.DxPivotGridModel ComponentModel{ get; }=new(){
             Options ={
                 Scrolling={Mode="virtual"},
                 DataSource = { Fields ={
@@ -35,7 +35,7 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes.Pivot{
                             SortOrder="desc",IsProgressBar = true
                         },
                         
-                }
+                    }
                 }
 
             }

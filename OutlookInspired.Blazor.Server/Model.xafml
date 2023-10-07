@@ -16,7 +16,7 @@
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Model" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
       <Layout>
@@ -244,7 +244,7 @@
         <PropertyEditor Id="Address" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="BAddress" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Model" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
         <PropertyEditor Id="RouteResult" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
       <Layout>
@@ -366,7 +366,7 @@
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Model" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
@@ -459,7 +459,7 @@
       <Items>
         <PropertyEditor Id="Description" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Image" AllowEdit="False" ImageSizeMode="Normal" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Model" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="PrimaryImage" AllowEdit="False" />
       </Items>
@@ -531,7 +531,7 @@
     </DashboardView>
     <DetailView Id="Quote_DetailView_Pivot" FreezeLayout="True">
       <Items>
-        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.Pivot.Model" IsNewNode="True" />
+        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.DxPivotGridModel" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">

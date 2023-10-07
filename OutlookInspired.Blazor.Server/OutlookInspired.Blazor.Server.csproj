@@ -70,17 +70,16 @@
   </ItemGroup>
   <ItemGroup>
     
-    <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\DxMap.razor.js" />
+    
+    <EmbeddedResource Include="Components\DevExtreme\DxPivotGrid.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
-    <EmbeddedResource Include="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
     
     
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\DevExtreme\Chart\" />
     <Folder Include="Features\Customers\CardView\" />
-    <Folder Include="Features\Quotes\Chart\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
   <ItemGroup>

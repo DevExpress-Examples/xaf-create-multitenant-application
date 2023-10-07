@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
+using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
@@ -40,7 +40,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             _chartListEditor.DataSource = Model.MapSettings.MapItems;
         }
 
-        protected override Model CustomizeModel(Model model){
+        protected override DxMapModel CustomizeModel(DxMapModel model){
             model.MapSettings = ((ISalesMapsMarker)View.CurrentObject).MapSettings((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data);
             model.MapItemSelected-=ModelOnMapItemSelected;
             model.MapItemSelected+=ModelOnMapItemSelected;

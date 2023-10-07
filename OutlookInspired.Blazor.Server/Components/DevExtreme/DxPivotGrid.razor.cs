@@ -3,10 +3,10 @@ using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
 
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
-    public class Model:ComponentModelBase,IComponentContentHolder{
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
+    public class DxPivotGridModel:ComponentModelBase,IComponentContentHolder{
         public PivotGridOptions Options{ get; } = new();
-        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DevExtremePivotGrid>());
+        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DxPivotGrid>());
     }
     
     public class PivotGridOptions {
@@ -45,6 +45,8 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
     public class PivotGridScrolling{
         public string Mode{ get; set; } = "standard";
     }
+
+    
 
     public class FieldChooserOptions {
         public bool Enabled { get; set; }

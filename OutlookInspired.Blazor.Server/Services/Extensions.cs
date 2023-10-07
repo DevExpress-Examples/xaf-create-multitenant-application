@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
+using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
@@ -22,7 +22,7 @@ namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
         public static MapSettings MapSettings(this ISalesMapsMarker marker, Period period)
-            => Components.DevExtreme.Maps.MapSettings.New(marker, period);
+            => Components.DevExtreme.MapSettings.New(marker, period);
 
         public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette,Type markerType) 
             => mapItems.GroupBy(item => item.PropertyValue(markerType))
