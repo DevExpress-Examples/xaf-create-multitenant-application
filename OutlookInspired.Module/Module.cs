@@ -13,6 +13,7 @@ using OutlookInspired.Module.Features.Employees;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Features.Orders;
+using OutlookInspired.Module.Features.Quotes;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 using ReportController = OutlookInspired.Module.Features.Customers.ReportController;
@@ -62,7 +63,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
 	    => new []{
-		    typeof(MailMergeController),typeof(ReportController),
+		    typeof(MailMergeController),typeof(ReportController),typeof(ChildViewCriteriaController),
 		    typeof(CommunicationController),typeof(RoutePointController), typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),

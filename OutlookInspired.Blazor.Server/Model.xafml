@@ -319,9 +319,10 @@
       </Layout>
     </DashboardView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
-    <DashboardView Id="Opportunities">
+    <DashboardView Id="Opportunities" MasterDetail="True">
       <Items>
         <DashboardViewItem Id="Quote_ListView" ViewId="Quote_DetailView_Pivot" />
+        <DashboardViewItem Id="QuoteMapItem_ListView" ViewId="QuoteMapItem_DetailView" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main" Caption="Main">
@@ -541,5 +542,17 @@
       </Layout>
     </DetailView>
     <ListView Id="Quote_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Features.Quotes.PivotGridListEditor" DataAccessMode="Queryable" />
+    <DetailView Id="QuoteMapItem_DetailView" FreezeLayout="True">
+      <Items>
+        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.Chart.Model" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True" Removed="True">
+        <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
+          <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" IsNewNode="True">
+            <LayoutItem Id="Model" ViewItem="Model" Index="0" RelativeSize="100" ShowCaption="False" CaptionLocation="Top" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
   </Views>
 </Application>

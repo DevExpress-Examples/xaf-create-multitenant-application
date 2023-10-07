@@ -9,6 +9,19 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
         RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DevExtremePivotGrid>());
     }
     
+    public class PivotGridOptions {
+        public bool AllowSortingBySummary { get; set; }
+        public bool AllowSorting { get; set; }
+        public bool AllowFiltering { get; set; }
+        public bool AllowExpandAll { get; set; }
+        public string Height{ get; set; } = "90vh";
+        public bool ShowBorders { get; set; }
+        public FieldChooserOptions FieldChooser { get;  } = new();
+        public PivotGridDataSource DataSource { get;  } = new();
+        public PivotGridScrolling Scrolling{ get; set; } = new();
+    }
+
+    
     public class PivotGridField {
         public string Caption { get; set; }
         public int? Width { get; set; }
@@ -28,19 +41,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid{
         public List<PivotGridField> DataFields=>Fields.Where(field => field.Area=="data").ToList();
         public object Store{ get; set; }
     }
-
-    public class PivotGridOptions {
-        public bool AllowSortingBySummary { get; set; }
-        public bool AllowSorting { get; set; }
-        public bool AllowFiltering { get; set; }
-        public bool AllowExpandAll { get; set; }
-        public string Height{ get; set; } = "90vh";
-        public bool ShowBorders { get; set; }
-        public FieldChooserOptions FieldChooser { get;  } = new();
-        public PivotGridDataSource DataSource { get;  } = new();
-        public PivotGridScrolling Scrolling{ get; set; } = new();
-    }
-
+    
     public class PivotGridScrolling{
         public string Mode{ get; set; } = "standard";
     }

@@ -70,7 +70,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 .Select(stage => new QuoteMapItem
                 { Stage = stage, Value = ((IQueryable<Quote>)objectSpace.YieldAll().OfType<EFCoreObjectSpace>().First()
                         .Query(typeof(Quote), criteria))
-                    .Where(stage).TotalSum(q => q.Total) });
+                    .Where(stage).TotalSum(q => q.Total) }).Do((item, i) => item.ID=i);
 
         private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage) 
             => objectSpace.GetObjectsQuery<Quote>().Where( stage);

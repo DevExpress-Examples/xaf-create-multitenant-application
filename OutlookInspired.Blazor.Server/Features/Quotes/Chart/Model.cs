@@ -1,41 +1,18 @@
-﻿using OutlookInspired.Blazor.Server.Components.DevExtreme.PivotGrid;
-using OutlookInspired.Blazor.Server.Components.Models;
+﻿using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Quotes.Chart{
-    public class Model:RootListViewComponentModel<Quote,Model,Pivot.PivotGrid> {
+    public class Model:RootListViewComponentModel<QuoteMapItem,Model,Chart> {
         public override void Refresh(){
             base.Refresh();
-            PivotModel.Options.DataSource.Store = Objects.Select(quote => new{
-                State = quote.CustomerStore.State.ToString(), quote.CustomerStore.City, quote.Total, quote.Opportunity
-            }).ToArray();
+            ChartModel.Options.DataSource = Objects.Select(item => new{item.Value,item.Name}).Cast<object>().ToArray();
         }
 
-        public Components.DevExtreme.PivotGrid.Model PivotModel{ get; } = new(){
+        public Components.DevExtreme.Chart.Model ChartModel{ get; } = new(){
             Options ={
-                Scrolling={Mode="virtual"},
-                DataSource = { Fields ={
-                        new PivotGridField{
-                            DataField = nameof(CustomerStore.State).ToLower(), Area = "row",
-                            SortOrder="desc",SummaryType = "count"
-                        },
-                        new PivotGridField{
-                            DataField = nameof(CustomerStore.City).ToLower(), Area = "row",
-                            SortOrder="desc",SummaryType = "count"
-                        },
-                        new PivotGridField{
-                            DataField = nameof(Quote.Total).ToLower(), Area = "data",
-                            SummaryType = "sum", DataType = "number", Format = "currency",SortOrder="desc"
-                        },
-                        new PivotGridField{
-                            DataField = nameof(Quote.Opportunity).ToLower(),
-                            Area = "data", SummaryType = "avg", DataType = "fixedPoint",
-                            SortOrder="desc",IsProgressBar = true
-                        },
-                        
-                }
-                }
-
+                ValueField = nameof(QuoteMapItem.Value).FirstCharacterToLower(),ArgumentField = nameof(QuoteMapItem.Name).FirstCharacterToLower(),
+                Item = {Border ={Visible = false} },Label ={Position = "inside",Visible = true},Height="90vh"
             }
         };
     }

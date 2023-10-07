@@ -98,6 +98,9 @@ namespace OutlookInspired.Module.Services.Internal{
             stream.CopyTo(fileStream);
         }
 
+        public static string FirstCharacterToLower(this string str) =>
+            string.IsNullOrEmpty(str) || char.IsLower(str, 0) ? str : char.ToLowerInvariant(str[0]) + str.Substring(1);
+        
         public static Stream GetManifestResourceStream(this Assembly assembly, Func<string, bool> nameMatch)
             => assembly.GetManifestResourceStream(assembly.GetManifestResourceNames().First(nameMatch));
 

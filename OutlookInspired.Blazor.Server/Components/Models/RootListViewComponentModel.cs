@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
 
 namespace OutlookInspired.Blazor.Server.Components.Models{
-    public abstract class RootListViewComponentModel<T,TModel,TComponent>:UserControlComponentModel where T:BaseObject where TModel:RootListViewComponentModel<T,TModel,TComponent> where TComponent:ComponentBase{
+    public abstract class RootListViewComponentModel<T,TModel,TComponent>:UserControlComponentModel where TModel:RootListViewComponentModel<T,TModel,TComponent> where TComponent:ComponentBase{
         public List<T> Objects{
             get => GetPropertyValue<List<T>>();
             set => SetPropertyValue(value);

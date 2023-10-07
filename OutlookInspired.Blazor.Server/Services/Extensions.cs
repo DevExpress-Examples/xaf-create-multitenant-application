@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
@@ -81,7 +80,7 @@ namespace OutlookInspired.Blazor.Server.Services{
                 { Location = new Location(){ Lat = homeOffice.Latitude, Lng = homeOffice.Longitude } });
             mapSettings.Markers.Add(new MapMarker()
                 { Location = new Location(){ Lat = mapsMarker.Latitude, Lng = mapsMarker.Longitude } });
-            var mode = travelMode.ToLower();
+            var mode = travelMode.FirstCharacterToLower();
             mapSettings.Routes = new List<MapRoute>()
                 { new(){Mode =mode,Color = mode=="driving"?"orange":"blue", Locations = mapSettings.Markers.Select(marker => marker.Location).ToList() } };
             mapSettings.Center = mapSettings.Markers.First().Location;

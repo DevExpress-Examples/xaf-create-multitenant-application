@@ -28,14 +28,10 @@ function PivotCellProgressBar(fields) {
             }
         }
     };
-    
 }
 
 export async function PivotGridInit(element, model) {
-    debugger
-    ;
-    const finalOptions = { ...model.options, ...PivotCellProgressBar(model.options.dataSource.dataFields) };
-    return new DevExpress.ui.dxPivotGrid(element, finalOptions);
+    return new DevExpress.ui.dxPivotGrid(element, { ...model.options, ...PivotCellProgressBar(model.options.dataSource.dataFields) });
 }
 
 

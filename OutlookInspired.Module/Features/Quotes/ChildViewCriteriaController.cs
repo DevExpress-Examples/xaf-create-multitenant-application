@@ -1,19 +1,38 @@
 ﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Win.Features.Quotes{
+namespace OutlookInspired.Module.Features.Quotes{
     public class ChildViewCriteriaController:ViewController<DashboardView>{
         public ChildViewCriteriaController() => TargetViewId = "Opportunities";
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            View.MasterItem().Frame.View.ToListView().CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
+            if (View.MasterItem().Frame.View is ListView listView)
+                listView.CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;
         }
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
-            View.MasterItem().Frame.View.ToListView().CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;
+            var dashboardViewItem = View.MasterItem();
+            if (dashboardViewItem.Frame != null){
+                MasterDashboardViewItemOnControlCreated(dashboardViewItem,EventArgs.Empty);
+            }
+            else{
+                dashboardViewItem.ControlCreated+=MasterDashboardViewItemOnControlCreated;
+            }
+            
+        }
+
+        [Obsolete("blazor")]
+        private void MasterDashboardViewItemOnControlCreated(object sender, EventArgs e){
+            var dashboardViewItem = ((DashboardViewItem)sender);
+            dashboardViewItem.ControlCreated-=MasterDashboardViewItemOnControlCreated;
+            if (dashboardViewItem.Frame.View is ListView listView){
+                listView.CollectionSource.CriteriaApplied+=CollectionSourceOnCriteriaApplied;    
+            }
+            
         }
 
         protected override void OnFrameAssigned(){
@@ -31,6 +50,7 @@ namespace OutlookInspired.Win.Features.Quotes{
             };
         }
 
+        [Obsolete("ondeactivated blazor")]
         private void CollectionSourceOnCriteriaApplied(object sender, EventArgs e){
             var childViewCollectionSource = ((CollectionSource)View.ChildItem().Frame.View.ToListView().CollectionSource);
             ((ProxyCollection)childViewCollectionSource.Collection)

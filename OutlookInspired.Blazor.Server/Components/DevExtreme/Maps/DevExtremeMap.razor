@@ -1,6 +1,7 @@
 ﻿@inherits DevExtremeComponent
 @using OutlookInspired.Blazor.Server.Services
 @using System.Text.Json
+@using OutlookInspired.Module.Services.Internal
 
 <div @ref=@Element ></div>
 
@@ -26,7 +27,7 @@
         }
         else if (ComponentModel.ChangeRouteMode){
             ComponentModel.ChangeRouteMode = false;
-            await ClientModule.InvokeVoidAsync("updateMapRouteMode", ClientObject, mapSettings.Routes.First().Mode.ToLower());
+            await ClientModule.InvokeVoidAsync("updateMapRouteMode", ClientObject, mapSettings.Routes.First().Mode.FirstCharacterToLower());
         }
         else if (ComponentModel.ChangePeriod){
             ComponentModel.ChangePeriod = false;

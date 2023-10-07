@@ -8,6 +8,6 @@
     public Model Model { get; set; }
     
     protected override async Task OnAfterRenderClientModuleAsync(bool firstRender) 
-        => ClientObject = await ClientModule.InvokeAsync<IJSObjectReference>("PivotGridInit", ClientObject, Model);
+        => ClientObject = await ClientModule.InvokeAsync<IJSObjectReference>("ChartInit", Element, Model);
 
 }
