@@ -21,7 +21,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             base.OnActivated();
             if(!Active)return;
             MapsViewController.SalesPeriodAction.Executed+=SalesPeriodActionOnExecuted;
-            var salesListPropertyEditor = View.GetItems<ListPropertyEditor>().FirstOrDefault(editor => editor.MemberInfo.Name==nameof(Product.CitySales));
+            var salesListPropertyEditor = View.GetItems<ListPropertyEditor>().FirstOrDefault(editor => editor.MemberInfo.Name==nameof(ISalesMapsMarker.CitySales));
             if (salesListPropertyEditor != null) salesListPropertyEditor.ControlCreated += OnListPropertyEditorControlCreated;
         }
 
@@ -34,8 +34,8 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
 
         private void ChartListEditorOnControlsCreated(object sender, EventArgs e){
             _chartListEditor.ControlsCreated-=ChartListEditorOnControlsCreated;
-            _chartListEditor.Control.ArgumentField = item => item.CustomerName;
-            _chartListEditor.Control.NameField = item => item.CustomerName;
+            _chartListEditor.Control.ArgumentField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
+            _chartListEditor.Control.NameField = item => item.PropertyValue(View.ObjectTypeInfo.Type);
             _chartListEditor.Control.ValueField = item => item.Total;
             _chartListEditor.DataSource = Model.MapSettings.MapItems;
         }

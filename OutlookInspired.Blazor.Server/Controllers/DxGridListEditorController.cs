@@ -4,30 +4,8 @@ using DevExpress.ExpressApp.Blazor.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using Microsoft.AspNetCore.Components;
 
-namespace OutlookInspired.Blazor.Server.Features{
+namespace OutlookInspired.Blazor.Server.Controllers{
     public class DxGridListEditorController : ViewController<ListView> {
-//         protected override async void OnFrameAssigned(){
-//             base.OnFrameAssigned();
-//             if (Frame.Context == TemplateContext.ApplicationWindow){
-//                 await Application.EvalJSAsync(@"
-//             function addChildEventListener(base, eventName, selector, handler) {
-//                 base.addEventListener(eventName, function (event) {
-//                     var closest = event.target.closest(selector);
-//                     if (closest && base.contains(closest)) {
-//                         handler.call(closest, event);
-//                     }
-//                 });
-//             }
-//             let rootElement = document.querySelector(""body"");
-//             addChildEventListener(rootElement, ""dblclick"", "".xaf-double-click"", () => {
-//                 window.xaf.loadingIndicator.show();
-//                 return false;
-//             });
-// ");
-//             }
-//         }
-
-
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
             

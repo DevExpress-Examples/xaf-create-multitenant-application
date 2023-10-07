@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.Blazor.Editors;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Features{
+namespace OutlookInspired.Blazor.Server.Controllers{
     public abstract class CellDisplayTemplateController:ViewController<ListView>{
         protected override void OnActivated(){
             base.OnActivated();

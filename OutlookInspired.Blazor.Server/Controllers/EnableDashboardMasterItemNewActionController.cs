@@ -3,8 +3,8 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Features{
-    public class EnableDashboardMasterItemNewAction:ViewController<DashboardView>{
+namespace OutlookInspired.Blazor.Server.Controllers{
+    public class EnableDashboardMasterItemNewActionController:ViewController<DashboardView>{
         protected override void OnActivated(){
             base.OnActivated();
             View.MasterItem().ControlCreated+=OnControlCreated;

@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module;
 using OutlookInspired.Module.Features.Quotes;
+using OutlookInspired.Win.Controllers;
 using OutlookInspired.Win.Features;
 using OutlookInspired.Win.Features.Customers;
 using OutlookInspired.Win.Features.Employees;
@@ -12,7 +13,7 @@ using OutlookInspired.Win.Features.Evaluations;
 using OutlookInspired.Win.Features.GridListEditor;
 using OutlookInspired.Win.Features.Maps;
 using OutlookInspired.Win.Features.Quotes;
-using SplitterPositionController = OutlookInspired.Win.Features.SplitterPositionController;
+using SplitterPositionController = OutlookInspired.Win.Controllers.SplitterPositionController;
 
 namespace OutlookInspired.Win;
 

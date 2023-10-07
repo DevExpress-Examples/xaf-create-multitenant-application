@@ -23,6 +23,9 @@ namespace OutlookInspired.Win.Editors {
                     Options = { UseTextOptions = true},TextOptions = { HAlignment = HorzAlignment.Center}
                 }
             };
-
     }
+    public interface IValueCalculator{
+        object Calculate(object eValue);
+    }
+
 }

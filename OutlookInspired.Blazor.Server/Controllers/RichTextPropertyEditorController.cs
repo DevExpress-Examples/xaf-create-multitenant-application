@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Office.Blazor.Editors;
 using ViewType = DevExpress.Blazor.RichEdit.ViewType;
 
-namespace OutlookInspired.Blazor.Server.Features{
+namespace OutlookInspired.Blazor.Server.Controllers{
     public class RichTextPropertyEditorController:ViewController<DetailView>{
         protected override void OnActivated(){
             base.OnActivated();

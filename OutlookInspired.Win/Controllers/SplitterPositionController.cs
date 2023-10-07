@@ -2,7 +2,7 @@ using DevExpress.ExpressApp;
 using DevExpress.XtraEditors;
 using OutlookInspired.Module.Features;
 
-namespace OutlookInspired.Win.Features{
+namespace OutlookInspired.Win.Controllers{
     
     public class SplitterPositionController : Module.Features.SplitterPositionController {
         Control _container;
