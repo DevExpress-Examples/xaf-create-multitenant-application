@@ -544,7 +544,7 @@
     <ListView Id="Quote_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Features.Quotes.PivotGridListEditor" DataAccessMode="Queryable" />
     <DetailView Id="QuoteMapItem_DetailView" FreezeLayout="True">
       <Items>
-        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.Chart.Model" IsNewNode="True" />
+        <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.DxFunnelModel" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">

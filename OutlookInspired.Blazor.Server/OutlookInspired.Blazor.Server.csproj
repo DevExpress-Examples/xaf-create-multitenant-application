@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     
-    <None Remove="Components\DevExtreme\Chart\DevExtremeChart.razor.js" />
+    <None Remove="Components\DevExtreme\Chart\DxChart.razor.js" />
     
     <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
@@ -55,7 +55,7 @@
     <_ContentIncludedByDefault Remove="Features\Employees\Evaluations\EvalTemplate.razor" />
     <_ContentIncludedByDefault Remove="Features\Customers\Maps\Maps.razor" />
     <_ContentIncludedByDefault Remove="Features\Employees\Maps\Maps.razor" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeChart.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DxChart.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeComponent.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeMap.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremePivotGrid.js" />
@@ -70,8 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     
-    <EmbeddedResource Include="Components\DevExtreme\Chart\DevExtremeChart.razor.js" />
-    
     <EmbeddedResource Include="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
@@ -80,7 +78,12 @@
     
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Components\DevExtreme\Chart\" />
     <Folder Include="Features\Customers\CardView\" />
+    <Folder Include="Features\Quotes\Chart\" />
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Components\DevExtreme\DxFunnel.razor.js" />
   </ItemGroup>
 </Project>
