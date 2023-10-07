@@ -1,10 +1,11 @@
 using DevExpress.ExpressApp;
 using DevExpress.XtraEditors;
+using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features;
 
 namespace OutlookInspired.Win.Controllers{
     
-    public class SplitterPositionController : Module.Features.SplitterPositionController {
+    public class SplitterPositionController : Module.Controllers.SplitterPositionController {
         Control _container;
 
         protected override void OnViewControlsCreated() {

@@ -19,7 +19,7 @@
         });
     }
 
-    protected override async Task OnAfterRenderClientModuleAsync(bool firstRender){
+    protected override async Task OnAfterRenderClientModuleAsync(){
         var mapSettings = ComponentModel.MapSettings;
         if( ClientObject == null){
             var mapInit = mapSettings.Routes.Any() ? "InitDxMap" : "InitVectorMap";

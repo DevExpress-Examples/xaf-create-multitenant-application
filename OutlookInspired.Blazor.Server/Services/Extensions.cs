@@ -21,28 +21,19 @@ using OutlookInspired.Module.Services.Internal;
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
-
-
         public static MapSettings MapSettings(this ISalesMapsMarker marker, Period period)
             => Components.DevExtreme.Maps.MapSettings.New(marker, period);
 
-        public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette) 
-            => mapItems.GroupBy(item => item.CustomerName)
+        public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette,Type markerType) 
+            => mapItems.GroupBy(item => item.PropertyValue(markerType))
                 .SelectMany((items, i) => items.Do(item => item.Color = palette[i])).ToArray();
 
-
-        public static object Features(this MapItem[] mapItems,Func<MapItem,string> keySelector) 
-            => new FeatureCollection{ Type = "FeatureCollection",
-                Features = mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList()
-            };
+        public static object Features(this MapItem[] mapItems) 
+            => new FeatureCollection{ Features = mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList() };
 
         private static Feature NewFeature(this MapItem mapItem, IGrouping<string, MapItem> group) 
             => new(){
-                Type = "Feature",
-                Geometry = new Geometry{
-                    Type = "Point",
-                    Coordinates = new List<double>{ mapItem.Longitude, mapItem.Latitude }
-                },
+                Geometry = new Geometry{ Coordinates = new List<double>{ mapItem.Longitude, mapItem.Latitude } },
                 Properties = new Properties{
                     Values = group.Select(item => item.Total).ToList(),
                     Tooltip = $"<span class='{mapItem.City}'>{mapItem.City} Total: {group.Sum(item => item.Total)}</span>",
@@ -53,26 +44,20 @@ namespace OutlookInspired.Blazor.Server.Services{
         public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
             var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
             using var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url);
-            var data = await response.Content.ReadAsStringAsync();
-            var jsonData = JObject.Parse(data);
-            var result = jsonData["resourceSets"]![0]!["resources"]![0];
+            var result = JObject.Parse(await (await httpClient.GetAsync(url)).Content.ReadAsStringAsync())["resourceSets"]![0]!["resources"]![0];
             return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
-                    .Select(item => {
-                        var point = objectSpace.CreateObject<RoutePoint>();
-                        point.ManeuverInstruction =
-                            RemoveTagRegex.Replace(item["instruction"]["text"]!.ToString(), string.Empty);
-                        var distance = (double)item["travelDistance"];
-                        point.Distance = (distance > 0.9)
-                            ? $"{Math.Ceiling(distance):0} mi"
-                            : $"{Math.Ceiling(distance * 52.8) * 100:0} ft";
-                        point.Maneuver = Enum.Parse<BingManeuverType>(item["details"][0]!["maneuverType"]!.ToString());
-                        return point;
-                    }).ToArray(), (double)result["travelDistance"],
-                TimeSpan.FromMinutes((double)result["travelDuration"]),
-                Enum.Parse<TravelMode>(travelMode,true));
+                    .Select(objectSpace.RoutePoint).ToArray(), (double)result["travelDistance"],
+                TimeSpan.FromMinutes((double)result["travelDuration"]), Enum.Parse<TravelMode>(travelMode,true));
         }
 
+        private static RoutePoint RoutePoint(this IObjectSpace objectSpace, JToken item){
+            var point = objectSpace.CreateObject<RoutePoint>();
+            point.ManeuverInstruction = RemoveTagRegex.Replace(item["instruction"]["text"]!.ToString(), string.Empty);
+            var distance = (double)item["travelDistance"];
+            point.Distance = distance > 0.9 ? $"{Math.Ceiling(distance):0} mi" : $"{Math.Ceiling(distance * 52.8) * 100:0} ft";
+            point.Maneuver = Enum.Parse<BingManeuverType>(item["details"][0]!["maneuverType"]!.ToString());
+            return point;
+        }
         
         public static MapSettings MapSettings(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
             var mapSettings = new MapSettings();

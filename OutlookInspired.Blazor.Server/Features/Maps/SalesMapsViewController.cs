@@ -27,7 +27,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
 
         
         private void OnListPropertyEditorControlCreated(object sender, EventArgs e){
-            ((ListPropertyEditor)sender).HideToolBar().ControlCreated-=OnListPropertyEditorControlCreated;
+            ((ListPropertyEditor)sender).ControlCreated-=OnListPropertyEditorControlCreated;
             _chartListEditor = ((MapItemChartListEditor)(((ListPropertyEditor)sender)!).ListView.Editor);
             _chartListEditor.ControlsCreated += ChartListEditorOnControlsCreated;
         }
@@ -50,7 +50,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
         private void ModelOnMapItemSelected(object sender, MapItemSelectedArgs e) 
             => _chartListEditor.DataSource = ((ISalesMapsMarker)View.CurrentObject)
                 .Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data, e.Item.City)
-                .Colorize(Model.MapSettings.Palette).ToArray();
+                .Colorize(Model.MapSettings.Palette,View.ObjectTypeInfo.Type).ToArray();
 
         private void SalesPeriodActionOnExecuted(object sender, ActionBaseEventArgs e){
             var model = CustomizeModel();

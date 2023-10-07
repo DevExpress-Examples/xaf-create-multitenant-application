@@ -24,10 +24,6 @@ namespace OutlookInspired.Module.Features.Employees{
             NewMethod();
         }
 
-        protected override void OnViewControlsCreated(){
-            base.OnViewControlsCreated();
-            View.GetItems<ListPropertyEditor>().Do(editor => editor.HideToolBar()).Enumerate();
-        }
 
         [Obsolete("impl blazor")]
         private void NewMethod(){

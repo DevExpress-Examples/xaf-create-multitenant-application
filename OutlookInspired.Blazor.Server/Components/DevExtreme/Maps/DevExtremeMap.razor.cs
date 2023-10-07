@@ -62,13 +62,11 @@ public class Location{
             var mapItems = marker.Sales(period).ToArray();
             var palette = mapItems.Select(item => item.PropertyValue(marker.GetType())).Distinct().Count().DistinctColors().ToArray();
             return new(){
-                _mapItems = mapItems.Colorize(palette),
+                _mapItems = mapItems.Colorize(palette,marker.GetType()),
                 _palette = palette,
-                _features = (FeatureCollection)mapItems.Features(item => item.PropertyValue(marker.GetType()))
+                _features = (FeatureCollection)mapItems.Features()
             };
         }
-
-
 
         public Location Center{ get; set; }
         public string Provider{ get; set; } = "bing";
@@ -78,11 +76,11 @@ public class Location{
         public bool Controls{ get; set; } = true;
 
         public double[] Bounds 
-            => (MapItems.Min(item => item.Longitude) -
+            =>MapItems!=null? (MapItems.Min(item => item.Longitude) -
                 (MapItems.Max(item => item.Longitude) - MapItems.Min(item => item.Longitude)) * 0.1).YieldItem()
             .Concat(MapItems.Max(item => item.Latitude) + (MapItems.Max(item => item.Latitude) - MapItems.Min(item => item.Latitude)) * 0.1)
             .Concat(MapItems.Max(item => item.Longitude) + (MapItems.Max(item => item.Longitude) - MapItems.Min(item => item.Longitude)) * 0.1)
-            .Concat(MapItems.Min(item => item.Latitude) - (MapItems.Max(item => item.Latitude) - MapItems.Min(item => item.Latitude)) * 0.1 ).ToArray();
+            .Concat(MapItems.Min(item => item.Latitude) - (MapItems.Max(item => item.Latitude) - MapItems.Min(item => item.Latitude)) * 0.1 ).ToArray():null;
 
         public List<MapMarker> Markers{ get; set; } = new();
         public List<MapRoute> Routes{ get; set; } = new();

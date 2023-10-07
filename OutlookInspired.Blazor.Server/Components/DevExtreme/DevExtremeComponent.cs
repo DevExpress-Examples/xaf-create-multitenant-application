@@ -6,7 +6,7 @@ using OutlookInspired.Module.Services.Internal;
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
     public abstract class DevExtremeComponent:ComponentBase,IAsyncDisposable{
         protected IJSObjectReference ModuleRef;
-        private  const string ResourceName = "DevExtremeComponent.js";
+        private  const string ResourceName = $"{nameof(DevExtremeComponent)}.js";
         static DevExtremeComponent(){
             using var memoryStream = new MemoryStream(Resource.Bytes());
             CreateResource<DevExtremeComponent>(memoryStream);
@@ -17,31 +17,30 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         protected IJSObjectReference ClientObject { get; set; }
         protected static void ExtractResource(string resourceName) 
             => typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
-                .SaveToFile($"wwwroot/js/DevExtreme/{resourceName}");
+                .SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{resourceName}");
         
         protected static void ExtractResource<T>() 
             => CreateResource<T>(typeof(DevExtremeMap).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
 
         private static void CreateResource<T>(Stream manifestResourceStream) 
-            => manifestResourceStream.SaveToFile($"wwwroot/js/DevExtreme/{DefaultResourceName(typeof(T))}");
+            => manifestResourceStream.SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{DefaultResourceName(typeof(T))}");
 
         [Inject]
         public IJSRuntime JS{ get; set; }
         protected override async Task OnInitializedAsync(){
-            ModuleRef = await ImportResource(ResourceName);
-            await ModuleRef.InvokeVoidAsync("ensureDevExtremeAsync");
+            await (await ImportResource(ResourceName)).InvokeVoidAsync("ensureDevExtremeAsync");
             ClientModule = await ImportResource();
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender){
             var onAfterRenderAsync = base.OnAfterRenderAsync(firstRender);
             if (ClientModule != null){
-                OnAfterRenderClientModuleAsync(firstRender);
+                OnAfterRenderClientModuleAsync();
             }
             return onAfterRenderAsync;
         }
 
-        protected abstract Task OnAfterRenderClientModuleAsync(bool firstRender);
+        protected abstract Task OnAfterRenderClientModuleAsync();
 
         async ValueTask IAsyncDisposable.DisposeAsync() {
             if(ClientObject != null)
@@ -51,7 +50,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         }
 
         protected ValueTask<IJSObjectReference> ImportResource(string resourceName=null) 
-            => JS.InvokeAsync<IJSObjectReference>("import", $"/js/DevExtreme/{GetResourceName(resourceName)}");
+            => JS.InvokeAsync<IJSObjectReference>("import", $"/js/{nameof(DevExtremeComponent)}/{GetResourceName(resourceName)}");
 
         private string GetResourceName(string resourceName) 
             => resourceName ?? DefaultResourceName(GetType());

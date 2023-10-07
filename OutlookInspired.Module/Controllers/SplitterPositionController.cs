@@ -2,7 +2,8 @@
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model;
 
-namespace OutlookInspired.Module.Features{
+namespace OutlookInspired.Module.Controllers{
+
     public interface IModelListViewSplitterRelativePosition{
         [Category(OutlookInspiredModule.ModelCategory)]
         int RelativePosition{ get; set; }

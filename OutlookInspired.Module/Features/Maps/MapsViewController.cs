@@ -3,6 +3,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Office;
+using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
@@ -51,7 +52,12 @@ namespace OutlookInspired.Module.Features.Maps{
                 SelectionDependencyType = SelectionDependencyType.RequireSingleObject, ImageName = "MapIt",
                 PaintStyle = ActionItemPaintStyle.Image
             };
-            action.Executed+=(_, e) => e.NewDetailView(GetViewId(),TargetWindow.NewModalWindow);
+            action.Executed+=(_, e) => {
+                e.NewDetailView(GetViewId(), TargetWindow.NewModalWindow);
+                var dialogController = Application.CreateController<DialogController>();
+                dialogController.CancelAction.Active[nameof(MapsViewController)] = false;
+                e.ShowViewParameters.Controllers.Add(dialogController);
+            };
             return action;
         }
 

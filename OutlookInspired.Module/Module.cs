@@ -6,15 +6,15 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features;
+using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Customers;
 using OutlookInspired.Module.Features.Employees;
-using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Features.Orders;
 using OutlookInspired.Module.Features.Quotes;
 using OutlookInspired.Module.Features.ViewFilter;
+using OutlookInspired.Module.ModelUpdaters;
 using OutlookInspired.Module.Services.Internal;
 using ReportController = OutlookInspired.Module.Features.Customers.ReportController;
 
@@ -63,7 +63,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
 	    => new []{
-		    typeof(MailMergeController),typeof(ReportController),typeof(ChildViewCriteriaController),
+		    typeof(MailMergeController),typeof(ReportController),typeof(ChildViewCriteriaController),typeof(HideToolBarController),
 		    typeof(CommunicationController),typeof(RoutePointController), typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),

@@ -55,6 +55,10 @@
     <_ContentIncludedByDefault Remove="Features\Employees\Evaluations\EvalTemplate.razor" />
     <_ContentIncludedByDefault Remove="Features\Customers\Maps\Maps.razor" />
     <_ContentIncludedByDefault Remove="Features\Employees\Maps\Maps.razor" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeChart.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeComponent.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeMap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremePivotGrid.js" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />

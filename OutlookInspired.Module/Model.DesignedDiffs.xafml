@@ -37,6 +37,7 @@
   </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
+    <ListView Id="Customer_CitySales_ListView" HideToolBar="True" />
     <ListView Id="Customer_CustomerStores_ListView" IsFooterVisible="True">
       <Columns>
         <ColumnInfo Id="Customer" Index="-1" />
@@ -647,7 +648,7 @@
         <ColumnInfo Id="Email" Index="7" />
       </Columns>
     </ListView>
-    <ListView Id="Employee_RoutePoints_ListView">
+    <ListView Id="Employee_RoutePoints_ListView" HideToolBar="True">
       <HiddenActions>
         <ActionLink ActionId="Delete" IsNewNode="True" />
         <ActionLink ActionId="ListViewShowObject" IsNewNode="True" />
@@ -970,6 +971,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <ListView Id="Product_CitySales_ListView" HideToolBar="True" />
     <DetailView Id="Product_DetailView" FreezeLayout="True">
       <Items>
         <PropertyEditor Id="PrimaryImage" PropertyName="PrimaryImage.Data" />

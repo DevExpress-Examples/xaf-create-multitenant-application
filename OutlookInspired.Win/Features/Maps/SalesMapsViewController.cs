@@ -53,8 +53,7 @@ namespace OutlookInspired.Win.Features.Maps{
 
         private void MapControlOnSelectionChanged(object sender, MapSelectionChangedEventArgs e){
             var chartListEditor = (ChartListEditor)View.GetItems<ListPropertyEditor>()
-                .First(editor => editor.ListView?.Editor is ChartListEditor)
-                .HideToolBar().ListView.Editor;
+                .First(editor => editor.ListView?.Editor is ChartListEditor).ListView.Editor;
             chartListEditor.DataSource = ((MapItem[])_pieChartDataAdapter.DataSource).Where(item => item.City==((MapItem)_itemsLayer.SelectedItem)?.City).ToArray();
             chartListEditor.ChartControl.ApplyColors((KeyColorColorizer)_itemsLayer.Colorizer);
         }
