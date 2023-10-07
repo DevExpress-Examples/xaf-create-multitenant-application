@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components;
 
 namespace OutlookInspired.Blazor.Server.Editors {
-    public abstract class ChartListEditor<TObject,TComponent> : ListEditor where TComponent : ComponentBase{
+    public abstract class ChartListEditor<TObject,TArgument,TValue,TName,TComponent> : ListEditor where TComponent : ComponentBase{
         protected ChartListEditor(IModelListView info) : base(info) { }
-        public new ChartModel<TObject,TComponent> Control => (ChartModel<TObject, TComponent>)base.Control;
+        public new ChartModel<TObject,TArgument,TValue,TName,TComponent> Control => (ChartModel<TObject,TArgument,TValue,TName,TComponent>)base.Control;
         protected override object CreateControlsCore() 
-            => new ChartModel<TObject,TComponent>();
+            => new ChartModel<TObject,TArgument,TValue,TName,TComponent>();
 
         protected override void AssignDataSourceToControl(Object dataSource){
             if (Control == null) return;
