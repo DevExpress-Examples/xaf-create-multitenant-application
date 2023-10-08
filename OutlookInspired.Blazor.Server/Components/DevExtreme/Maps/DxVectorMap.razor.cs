@@ -14,7 +14,15 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
 
         
     }
-    
+    public class MapItemSelectedArgs : EventArgs{
+        public JsonElement Item{ get; }
+
+        public MapItemSelectedArgs(JsonElement item){
+            Item = item;
+        }
+    }
+
+
     public class VectorMapOptions{
         public int Zoom{ get; set; }
         public string Height{ get; set; } = "100%";

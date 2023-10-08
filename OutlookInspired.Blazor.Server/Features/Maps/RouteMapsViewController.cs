@@ -6,7 +6,7 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T,DxMap1Model,DxMap1>,IMapsRouteController where T:IRouteMapsMarker{
+    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T,DxMapModel,DxMap>,IMapsRouteController where T:IRouteMapsMarker{
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;
@@ -19,7 +19,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
         }
 
-        protected override DxMap1Model CustomizeModel(DxMap1Model model){
+        protected override DxMapModel CustomizeModel(DxMapModel model){
             CalculateRoute(model.Options = ((IMapsMarker)View.CurrentObject).DxMapOptions(
                 ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice,
                 (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data));

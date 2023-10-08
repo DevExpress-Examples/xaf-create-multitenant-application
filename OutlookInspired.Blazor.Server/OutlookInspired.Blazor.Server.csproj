@@ -21,6 +21,8 @@
   </ItemGroup>
   <ItemGroup>
     
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap.razor.js" />
+    
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -71,10 +73,6 @@
   <ItemGroup>
     
     <EmbeddedResource Include="Components\DevExtreme\Charts\DxFunnel.razor.js" />
-    
-    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap.razor.js" />
-    
-    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap1.razor.js" />
     
     <EmbeddedResource Include="Components\DevExtreme\Maps\DxVectorMap.razor.js" />
     
