@@ -399,4 +399,5 @@ FodyWeavers.xsd
 /.idea/
 /OutlookInspired.sln.DotSettings
 **/UnusableNodes*.xml
-/OutlookInspired.Blazor.Server/wwwroot/
+
+/OutlookInspired.Blazor.Server/wwwroot/js/DevExtremeComponent/
