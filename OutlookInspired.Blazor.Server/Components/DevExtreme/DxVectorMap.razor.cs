@@ -6,12 +6,12 @@ using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
-    public class DxMap1Model : ComponentModelBase, IComponentContentHolder{
+    public class DxVectorMapModel : ComponentModelBase, IComponentContentHolder{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
         public void SelectMapItem(JsonElement item) 
             => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
         public VectorMapOptions Options{ get; set; } = new();
-        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DxMap1>());
+        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DxVectorMap>());
         public bool PrintMap{
             get => GetPropertyValue<bool>();
             set => SetPropertyValue(value);

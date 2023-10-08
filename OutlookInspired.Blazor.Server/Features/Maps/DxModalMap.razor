@@ -1,10 +1,10 @@
 ﻿@inject IJSRuntime JS;
 @using OutlookInspired.Blazor.Server.Components.DevExtreme
 @using OutlookInspired.Blazor.Server.Services
-<DxMap1 ComponentModel="ComponentModel" CustomizeModel="UpdateHeight"></DxMap1>
+<DxVectorMap ComponentModel="ComponentModel" CustomizeModel="UpdateHeight"></DxVectorMap>
 @code {
     [Parameter]
-    public DxMap1Model ComponentModel { get; set; }
+    public DxVectorMapModel ComponentModel { get; set; }
 
     private async Task UpdateHeight(){
         await JS.EvalAsync(@"window.getClientHeight = (element) => {

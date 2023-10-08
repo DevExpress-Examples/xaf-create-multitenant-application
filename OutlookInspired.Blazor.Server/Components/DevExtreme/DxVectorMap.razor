@@ -6,17 +6,17 @@
 <div @ref=@Element ></div>
 
 @code {
-    static DxMap1() => ExtractResource<DxMap1>();
+    static DxVectorMap() => ExtractResource<DxVectorMap>();
     private DotNetObjectReference<JsInterop> _itemSelected;
     protected override async Task OnInitializedAsync(){
         await base.OnInitializedAsync();
         _itemSelected = new JsInterop(element =>ComponentModel.SelectMapItem(element)).DotNetReference();
     }
     [Parameter]
-    public DxMap1Model ComponentModel { get; set; }
+    public DxVectorMapModel ComponentModel { get; set; }
 
     [Parameter]
-    public EventCallback<DxMap1Model> CustomizeModel { get; set; }
+    public EventCallback<DxVectorMapModel> CustomizeModel { get; set; }
     protected override async Task OnAfterRenderClientModuleAsync(){
         await CustomizeModel.MaybeInvokeAsync(ComponentModel);
         ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitVectorMap", Element, ComponentModel,_itemSelected);

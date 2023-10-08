@@ -40,7 +40,7 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             _chartListEditor.DataSource = _mapItems;
         }
 
-        protected override DxMap1Model CustomizeModel(DxMap1Model model){
+        protected override DxVectorMapModel CustomizeModel(DxVectorMapModel model){
             _mapItems = ((ISalesMapsMarker)View.CurrentObject).Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data).ToArray();
             model.Options = _mapItems.VectorMapOptions(View.ObjectTypeInfo.Type);
             _mapItems = _mapItems.Colorize(model.Options.Layers.OfType<Layer>().First().Palette, View.ObjectTypeInfo.Type);
