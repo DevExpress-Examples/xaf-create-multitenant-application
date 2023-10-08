@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
+using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
@@ -35,10 +35,10 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             => ((DxMapModel)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
 
     }
-    public abstract class BlazorMapsViewController1<TMapsMarker>:ObjectViewController<DetailView,TMapsMarker> where TMapsMarker:IMapsMarker{
+    public abstract class BlazorMapsViewController<TMapsMarker,TMapModel,TComponent>:ObjectViewController<DetailView,TMapsMarker> where TMapsMarker:IMapsMarker where TMapModel:MapModel<TComponent> where TComponent : ComponentBase{
         public Module.Features.Maps.MapsViewController MapsViewController{ get; private set; }
 
-        public DxVectorMapModel Model => (DxVectorMapModel)View.GetItems<ControlViewItem>().First().Control;
+        public TMapModel Model => (TMapModel)View.GetItems<ControlViewItem>().First().Control;
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;
@@ -51,17 +51,17 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             MapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
             MapsViewController.PrintAction.Executed+=PrintActionOnExecuted;
             View.CustomizeViewItemControl<ControlViewItem>(this, item => {
-                if (item.Control is not DxVectorMapModel model) return;
+                if (item.Control is not TMapModel model) return;
                 CustomizeModel(model);
             });
         }
 
-        protected abstract DxVectorMapModel CustomizeModel(DxVectorMapModel model);
+        protected abstract TMapModel CustomizeModel(TMapModel model);
         
-        protected DxVectorMapModel CustomizeModel() => CustomizeModel(Model);
+        protected TMapModel CustomizeModel() => CustomizeModel(Model);
 
         private void PrintActionOnExecuted(object sender, ActionBaseEventArgs e) 
-            => ((DxVectorMapModel)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
+            => ((MapModel<TComponent>)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
 
     }
 }

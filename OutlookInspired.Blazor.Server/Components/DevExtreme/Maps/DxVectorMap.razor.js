@@ -22,6 +22,7 @@ function AssignTooltip(model) {
         }
     };
 }
+
 function AssignOnClick(model, dotnetCallback) {
     return {
         ...model.options,
@@ -40,11 +41,17 @@ function AssignOnClick(model, dotnetCallback) {
         }
     };
 }
+function AssignOnDisposing(model, dotnetCallback) {
+    return {
+        ...model.options,
+        onDisposing: () => dotnetCallback.dispose()
+    };
+}
 
 export async function InitVectorMap(element,model,dotnetCallback) {
-    debugger
     EvalStringDatasource(model);
     AssignTooltip(model);
+    AssignOnDisposing(model,dotnetCallback)
     return new DevExpress.viz.dxVectorMap(element, AssignOnClick(model, dotnetCallback));
 }
 

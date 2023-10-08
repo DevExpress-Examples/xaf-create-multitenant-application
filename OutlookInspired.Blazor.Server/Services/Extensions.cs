@@ -12,21 +12,26 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
+using Route = OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Route;
 
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
+
+        public static async Task<string> ModalBodyHeight(this IJSRuntime js){
+            await js.EvalAsync(@"window.getClientHeight = (element) => {
+    return document.querySelector(element).closest('.dxbl-modal-body').clientHeight;
+};");
+            return $"{await js.InvokeAsync<double>("getClientHeight", ".dxbl-modal-body")}";
+        }
+
         public static Task MaybeInvokeAsync<T>(this EventCallback<T> eventCallback, T value) 
             => eventCallback.HasDelegate ? eventCallback.InvokeAsync(value) : Task.CompletedTask;
-
-        public static MapSettings MapSettings(this ISalesMapsMarker marker, Period period)
-            => Components.DevExtreme.Maps.MapSettings.New(marker, period);
 
         public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette,Type markerType) 
             => mapItems.GroupBy(item => item.PropertyValue(markerType))
@@ -62,10 +67,16 @@ namespace OutlookInspired.Blazor.Server.Services{
         public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
             var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
             using var httpClient = new HttpClient();
-            var result = JObject.Parse(await (await httpClient.GetAsync(url)).Content.ReadAsStringAsync())["resourceSets"]![0]!["resources"]![0];
-            return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
-                    .Select(objectSpace.RoutePoint).ToArray(), (double)result["travelDistance"],
-                TimeSpan.FromMinutes((double)result["travelDuration"]), Enum.Parse<TravelMode>(travelMode,true));
+            var httpResponseMessage = await httpClient.GetAsync(url);
+            if (httpResponseMessage.IsSuccessStatusCode){
+                var readAsStringAsync = await httpResponseMessage.Content.ReadAsStringAsync();
+                var result = JObject.Parse(readAsStringAsync)["resourceSets"]![0]!["resources"]![0];
+                return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
+                        .Select(objectSpace.RoutePoint).ToArray(), (double)result["travelDistance"],
+                    TimeSpan.FromMinutes((double)result["travelDuration"]), Enum.Parse<TravelMode>(travelMode,true));    
+            }
+
+            return new RouteCalculatedArgs(Array.Empty<RoutePoint>(), 0, TimeSpan.Zero, Enum.Parse<TravelMode>(travelMode, true));
         }
 
         private static RoutePoint RoutePoint(this IObjectSpace objectSpace, JToken item){
@@ -77,17 +88,18 @@ namespace OutlookInspired.Blazor.Server.Services{
             return point;
         }
         
-        public static MapSettings MapSettings(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
-            var mapSettings = new MapSettings();
-            mapSettings.Markers.Add(new MapMarker()
-                { Location = new Location(){ Lat = homeOffice.Latitude, Lng = homeOffice.Longitude } });
-            mapSettings.Markers.Add(new MapMarker()
-                { Location = new Location(){ Lat = mapsMarker.Latitude, Lng = mapsMarker.Longitude } });
+        public static DxMapOptions DxMapOptions(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
             var mode = travelMode.FirstCharacterToLower();
-            mapSettings.Routes = new List<MapRoute>()
-                { new(){Mode =mode,Color = mode=="driving"?"orange":"blue", Locations = mapSettings.Markers.Select(marker => marker.Location).ToList() } };
-            mapSettings.Center = mapSettings.Markers.First().Location;
-            return mapSettings;
+            var markers = new[]{
+                new Marker{ Location = new Location{ Lat = homeOffice.Latitude, Lng = homeOffice.Longitude } },
+                new Marker{ Location = new Location{ Lat = mapsMarker.Latitude, Lng = mapsMarker.Longitude } }
+            }.ToList();
+            return new DxMapOptions(){Markers =markers,
+                Routes = new List<Route>()
+                    { new(){Mode =mode,Color = mode=="driving"?"orange":"blue", Locations = markers.Select(marker => marker.Location).ToList() } },
+                Controls = true,
+                Center = markers.First().Location
+            };
         }
 
         public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image",bool useSvgIcon=false)

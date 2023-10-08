@@ -49,7 +49,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
             await DevExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
             ClientModule = await ImportResource();
         }
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender){
             await base.OnAfterRenderAsync(firstRender);
             if (ClientModule != null&&!_clientModuleInit){

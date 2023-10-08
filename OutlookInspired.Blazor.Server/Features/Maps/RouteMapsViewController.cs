@@ -1,13 +1,12 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Blazor.Server.Components.DevExtreme;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T>,IMapsRouteController where T:IRouteMapsMarker{
+    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T,DxMap1Model,DxMap1>,IMapsRouteController where T:IRouteMapsMarker{
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;
@@ -20,19 +19,20 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             MapsViewController.TravelModeAction.Executed+=TravelModeActionOnExecuted;
         }
 
-        protected override DxMapModel CustomizeModel(DxMapModel model){
-            CalculateRoute(model.MapSettings = model.MapSettings = ((IMapsMarker)View.CurrentObject).MapSettings(
-                    ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice, (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data));
+        protected override DxMap1Model CustomizeModel(DxMap1Model model){
+            CalculateRoute(model.Options = ((IMapsMarker)View.CurrentObject).DxMapOptions(
+                ((IModelOptionsHomeOffice)Application.Model.Options).HomeOffice,
+                (string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data));
             return model;
         }
 
-        private void CalculateRoute(MapSettings settings) 
+        private void CalculateRoute(DxMapOptions options) 
             => this.Await(async () => OnRouteCalculated(await ObjectSpace.ManeuverInstructions(
-                settings.Markers.First().Location, settings.Markers.Last().Location, settings.Routes.First().Mode,
-                settings.ApiKey)));
+                options.Markers.First().Location, options.Markers.Last().Location, options.Routes.First().Mode,
+                options.ApiKey.Bing)));
         
         private void TravelModeActionOnExecuted(object sender, ActionBaseEventArgs e) 
-            => CustomizeModel().ChangeRouteMode = true;
+            => CustomizeModel().RouteMode = ((string)Frame.GetController<MapsViewController>().TravelModeAction.SelectedItem.Data).ToLower();
 
         public event EventHandler<RouteCalculatedArgs> RouteCalculated;
 

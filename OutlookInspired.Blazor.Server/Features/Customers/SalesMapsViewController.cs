@@ -2,7 +2,7 @@
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Customers{
-    public class SalesMapsViewController:SalesMapsViewController1<Customer>{
+    public class SalesMapsViewController:SalesMapsViewController<Customer>{
         
     }
 }

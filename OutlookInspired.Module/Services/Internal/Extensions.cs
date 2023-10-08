@@ -97,7 +97,12 @@ namespace OutlookInspired.Module.Services.Internal{
             
             stream.CopyTo(fileStream);
         }
-
+        public static async Task Execute(this object component, 
+            Func<Task<bool>> condition, Func<Task> logic){
+            if (await condition()){
+                await logic();
+            }
+        }
         public static string FirstCharacterToLower(this string str) =>
             string.IsNullOrEmpty(str) || char.IsLower(str, 0) ? str : char.ToLowerInvariant(str[0]) + str.Substring(1);
         

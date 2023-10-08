@@ -2,33 +2,35 @@
     public class DxMap1Model : MapModel<DxMap1>{
 
         public DxMapOptions Options{ get; set; } = new();
+        public string RouteMode{
+            get => GetPropertyValue<string>();
+            set => SetPropertyValue(value);
+        }
     }
 
     public class DxMapOptions{
-        public string Provider{ get; set; }
-        public ApiKeyInfo ApiKey{ get; set; }
-        public int Zoom{ get; set; }
-        public int Height{ get; set; }
-        public string Width{ get; set; }
+        public ApiKey ApiKey{ get; set; } = new();
+        public string Provider{ get; set; } = "bing";
+        public int Zoom{ get; set; } = 16;
+        public string Height{ get; set; } = "100%";
+        public string Width{ get; set; } = "100%";
+        public string Type{ get; set; } = "roadmap";
+        
         public bool Controls{ get; set; }
-        public List<Marker> Markers{ get; set; }
-        public List<Route> Routes{ get; set; }
+        public Location Center{ get; set; }
+        public List<Marker> Markers{ get; init; } = new();
+        public List<Route> Routes{ get; init; } = new();
     }
-
-    public class ApiKeyInfo{
-        public string Bing{ get; set; }
-    }
-
+    
     public class Marker{
-        public string Location{ get; set; }
-        // Additional properties like latitude and longitude can go here if you prefer to use different types for location.
+        public Location Location{ get; init; } = new();
     }
 
     public class Route{
         public int Weight{ get; set; }
         public string Color{ get; set; }
         public double Opacity{ get; set; }
-        public string Mode{ get; set; }
-        public List<object> Locations{ get; set; }
+        public string Mode{ get; init; }
+        public List<Location> Locations{ get; set; } = new();
     }
 }
