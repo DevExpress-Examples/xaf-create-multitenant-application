@@ -16,7 +16,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         public Margin TitleMargin{ get; set; }
         public string ArgumentField{ get; set; }
         public string ValueField{ get; set; }
-        public string Palette{ get; set; }
+        public string[] Palette{ get; set; }
         public ExportOptions Export{ get; set; }=new();
         public TooltipOptions Tooltip{ get; set; }=new();
         public ItemOptions Item{ get; set; } = new();

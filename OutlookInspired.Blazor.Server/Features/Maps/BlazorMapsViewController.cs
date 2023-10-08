@@ -34,4 +34,33 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
             => ((DxMapModel)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
 
     }
+    public abstract class BlazorMapsViewController1<TMapsMarker>:ObjectViewController<DetailView,TMapsMarker> where TMapsMarker:IMapsMarker{
+        public Module.Features.Maps.MapsViewController MapsViewController{ get; private set; }
+
+        public DxMap1Model Model => (DxMap1Model)View.GetItems<ControlViewItem>().First().Control;
+        protected override void OnDeactivated(){
+            base.OnDeactivated();
+            if (!Active)return;
+            Frame.GetController<Module.Features.Maps.MapsViewController>().PrintAction.Executed-=PrintActionOnExecuted;
+        }
+
+        protected override void OnActivated(){
+            base.OnActivated();
+            if (!(Active[nameof(NestedFrame)] = Frame is not NestedFrame&&View.CurrentObject!=null))return;
+            MapsViewController = Frame.GetController<Module.Features.Maps.MapsViewController>();
+            MapsViewController.PrintAction.Executed+=PrintActionOnExecuted;
+            View.CustomizeViewItemControl<ControlViewItem>(this, item => {
+                if (item.Control is not DxMap1Model model) return;
+                CustomizeModel(model);
+            });
+        }
+
+        protected abstract DxMap1Model CustomizeModel(DxMap1Model model);
+        
+        protected DxMap1Model CustomizeModel() => CustomizeModel(Model);
+
+        private void PrintActionOnExecuted(object sender, ActionBaseEventArgs e) 
+            => ((DxMap1Model)View.GetItems<ControlViewItem>().First().Control).PrintMap = true;
+
+    }
 }

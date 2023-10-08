@@ -5,6 +5,7 @@ using OutlookInspired.Module.Services.Internal;
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
     public abstract class DevExtremeComponent:ComponentBase,IAsyncDisposable{
         protected IJSObjectReference ModuleRef;
+        private bool _clientModuleInit;
         private  const string ResourceName = $"{nameof(DevExtremeComponent)}.js";
         static DevExtremeComponent(){
             using var memoryStream = new MemoryStream(Resource.Bytes());
@@ -14,6 +15,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         protected ElementReference Element { get; set; }
         protected IJSObjectReference ClientModule { get; set; }
         protected IJSObjectReference ClientObject { get; set; }
+        protected IJSObjectReference DevExtremeModule{ get; set; }
         protected static void ExtractResource(string resourceName) 
             => typeof(DxMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
                 .SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{resourceName}");
@@ -27,16 +29,20 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         [Inject]
         public IJSRuntime JS{ get; set; }
         protected override async Task OnInitializedAsync(){
-            await (await ImportResource(ResourceName)).InvokeVoidAsync("ensureDevExtremeAsync");
+            DevExtremeModule = await ImportResource(ResourceName);
+            await DevExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
             ClientModule = await ImportResource();
         }
 
-        protected override Task OnAfterRenderAsync(bool firstRender){
-            var onAfterRenderAsync = base.OnAfterRenderAsync(firstRender);
-            if (ClientModule != null){
-                OnAfterRenderClientModuleAsync();
+        
+
+        protected override async Task OnAfterRenderAsync(bool firstRender){
+            await base.OnAfterRenderAsync(firstRender);
+            if (ClientModule != null&&!_clientModuleInit){
+                _clientModuleInit = true;
+                await OnAfterRenderClientModuleAsync();
+                _clientModuleInit = false;
             }
-            return onAfterRenderAsync;
         }
 
         protected abstract Task OnAfterRenderClientModuleAsync();
@@ -63,7 +69,14 @@ let devExtremeInitPromise = null;
 export async function ensureDevExtremeAsync() {
     await loadDevExtreme();
 }
-
+export function printElement(element) {
+    document.body.innerHTML = """";
+    document.body.appendChild(element);
+    setTimeout(() => {
+        window.print();
+        location.reload();
+    }, 2000);
+}
 function loadDevExtreme() {
     return devExtremeInitPromise || (devExtremeInitPromise = new Promise(async (resolve, _) => {
         await loadScriptAsync(""https://cdnjs.cloudflare.com/ajax/libs/devextreme-quill/1.6.2/dx-quill.min.js"");

@@ -4,7 +4,14 @@ let devExtremeInitPromise = null;
 export async function ensureDevExtremeAsync() {
     await loadDevExtreme();
 }
-
+export function printElement(element) {
+    document.body.innerHTML = "";
+    document.body.appendChild(element);
+    setTimeout(() => {
+        window.print();
+        location.reload();
+    }, 2000);
+}
 function loadDevExtreme() {
     return devExtremeInitPromise || (devExtremeInitPromise = new Promise(async (resolve, _) => {
         await loadScriptAsync("https://cdnjs.cloudflare.com/ajax/libs/devextreme-quill/1.6.2/dx-quill.min.js");

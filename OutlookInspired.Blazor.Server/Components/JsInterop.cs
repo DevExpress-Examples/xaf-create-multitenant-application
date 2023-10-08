@@ -1,11 +1,12 @@
+using System.Text.Json;
 using Microsoft.JSInterop;
 
 namespace OutlookInspired.Blazor.Server.Components{
     public class JsInterop {
-        private readonly Action<object> _action;
-        public JsInterop(Action<object> action) => _action = action;
+        private readonly Action<JsonElement> _action;
+        public JsInterop(Action<JsonElement> action) => _action = action;
 
         [JSInvokable]
-        public void Invoke(object param) => _action.Invoke(param);
+        public void Invoke(JsonElement param) => _action.Invoke(param);
     }
 }

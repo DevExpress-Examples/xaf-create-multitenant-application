@@ -1,11 +1,9 @@
-﻿using OutlookInspired.Module.BusinessObjects;
-
-namespace OutlookInspired.Blazor.Server.Services{
+﻿namespace OutlookInspired.Blazor.Server.Services{
 
     public class FeatureCollection{
         public string Type{ get; set; } = "FeatureCollection";
         public List<Feature> Features{ get; set; }
-        public List<string> Names{ get; set; }
+        
     }
 
     public class Feature{

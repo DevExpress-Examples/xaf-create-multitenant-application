@@ -21,7 +21,7 @@
     public ChartModel<TObject,TArgument,TValue,TName,XafChart<TObject,TArgument,TValue,TName>> ComponentModel { get; set; }
     
 
-    private void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj) 
+    private static void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj) 
         => obj.PointAppearance.Color = obj.Point.DataItems.Cast<MapItem>().First().Color.ColorFromHex();
 
 }

@@ -15,7 +15,7 @@ export function updateMapRouteMode(dxMapInstance, newMode) {
     dxMapInstance.option('routes', routes);
 }
 export async function InitDxMap(element,model) {
-    let closestParent = element.closest(".dxbl-modal-body");
+    let closestParent = element.closest(".dxbl-modal-body").clientHeight;
     return new DevExpress.ui.dxMap(element, {
         center: JSON.stringify(model.center),
         markers: model.markers.map(marker => ({
@@ -44,9 +44,14 @@ export async function InitVectorMap(element,model,dotnetCallback) {
         width: "100%",
         onClick: arg => {
             const clickedElement = arg.target;
-            if (clickedElement != null)
+            if (clickedElement != null){
                 clickedElement.selected(!clickedElement.selected());
-            dotnetCallback.invokeMethodAsync('Invoke', arg.target.attribute("city"))
+                for (let i = 0; i < clickedElement.attributes.length; i++) {
+                    const attribute = clickedElement.attributes[i];
+                    attributes[attribute.name] = attribute.value;
+                }
+                dotnetCallback.invokeMethodAsync('Invoke', {clickedElement,attributes})
+            }
         },
         onDisposing: () => dotnetHelper.dispose(),
         provider: model.provider,

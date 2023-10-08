@@ -21,6 +21,9 @@ using OutlookInspired.Module.Services.Internal;
 namespace OutlookInspired.Blazor.Server.Services{
     public static class Extensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
+        public static Task MaybeInvokeAsync<T>(this EventCallback<T> eventCallback, T value) 
+            => eventCallback.HasDelegate ? eventCallback.InvokeAsync(value) : Task.CompletedTask;
+
         public static MapSettings MapSettings(this ISalesMapsMarker marker, Period period)
             => Components.DevExtreme.MapSettings.New(marker, period);
 
@@ -28,8 +31,22 @@ namespace OutlookInspired.Blazor.Server.Services{
             => mapItems.GroupBy(item => item.PropertyValue(markerType))
                 .SelectMany((items, i) => items.Do(item => item.Color = palette[i])).ToArray();
 
-        public static object Features(this MapItem[] mapItems) 
-            => new FeatureCollection{ Features = mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList() };
+        public static object FeatureCollection(this MapItem[] mapItems) 
+            => new FeatureCollection{ Features = mapItems.Features() };
+
+        public static VectorMapOptions VectorMapOptions(this MapItem[] mapItems,Type markerType){
+            var palette = mapItems.Select(item => item.PropertyValue(markerType)).Distinct().Count().DistinctColors().ToArray();
+            return new VectorMapOptions{
+                Layers = {new Layer(){
+                    DataSource = mapItems.FeatureCollection(),
+                    Palette =palette,DataField =nameof(Properties.Values).FirstCharacterToLower(),ElementType = "pie",Name = "pies",SelectionMode = "single"
+                }},
+                Bounds =mapItems.Bounds(),Tooltip = {Enabled = true,ZIndex = 10000},
+                Attributes=new[]{nameof(MapItem.City).FirstCharacterToLower()}
+            };
+        }
+        public static List<Feature> Features(this MapItem[] mapItems) 
+            => mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList();
 
         private static Feature NewFeature(this MapItem mapItem, IGrouping<string, MapItem> group) 
             => new(){

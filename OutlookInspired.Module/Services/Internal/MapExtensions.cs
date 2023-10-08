@@ -6,6 +6,14 @@ using OutlookInspired.Module.Features.Maps;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class MapExtensions{
+        static readonly double[] UsaBounds = { -124.566244, 49.384358, -66.934570, 24.396308 };
+        public static double[] Bounds(this MapItem[] mapItems) 
+            => !mapItems.Any() ? UsaBounds : 
+                (mapItems.Min(item => item.Longitude) - (mapItems.Max(item => item.Longitude) - mapItems.Min(item => item.Longitude)) * 0.1).YieldItem()
+                .Concat(mapItems.Max(item => item.Latitude) + (mapItems.Max(item => item.Latitude) - mapItems.Min(item => item.Latitude)) * 0.1)
+                .Concat(mapItems.Max(item => item.Longitude) + (mapItems.Max(item => item.Longitude) - mapItems.Min(item => item.Longitude)) * 0.1)
+                .Concat(mapItems.Min(item => item.Latitude) - (mapItems.Max(item => item.Latitude) - mapItems.Min(item => item.Latitude)) * 0.1).ToArray();
+
         public static string MapItemProperty(this Type salesMarkerType)
             => salesMarkerType switch{
                 _ when typeof(Customer).IsAssignableFrom(salesMarkerType) => nameof(MapItem.ProductName),

@@ -16,8 +16,8 @@
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
-        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.DxModalMapModel" />
+        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" /> 
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
@@ -459,7 +459,7 @@
       <Items>
         <PropertyEditor Id="Description" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Image" AllowEdit="False" ImageSizeMode="Normal" />
-        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Components.DevExtreme.DxMapModel" />
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.DxModalMapModel" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="PrimaryImage" AllowEdit="False" />
       </Items>

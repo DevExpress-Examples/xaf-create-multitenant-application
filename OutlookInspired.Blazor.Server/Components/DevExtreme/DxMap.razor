@@ -15,7 +15,7 @@
         await base.OnInitializedAsync();
         _dispatchItemSelection = new JsInterop(element =>{
             if (element is not JsonElement{ValueKind:JsonValueKind.String } jsonElement) return;
-            ComponentModel.SelectMapItem(ComponentModel.MapSettings.MapItems.First(item => item.City==jsonElement.GetString()));
+            // ComponentModel.SelectMapItem(ComponentModel.MapSettings.MapItems.First(item => item.City==jsonElement.GetString()));
         });
     }
 

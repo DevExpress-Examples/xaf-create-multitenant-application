@@ -72,6 +72,8 @@
     
     <EmbeddedResource Include="Components\DevExtreme\DxMap.razor.js" />
     
+    <EmbeddedResource Include="Components\DevExtreme\DxMap1.razor.js" />
+    
     <EmbeddedResource Include="Components\DevExtreme\DxPivotGrid.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
