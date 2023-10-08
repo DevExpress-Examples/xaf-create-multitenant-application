@@ -3,9 +3,8 @@ using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
-using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     public class DxVectorMapModel : ComponentModelBase, IComponentContentHolder{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
         public void SelectMapItem(JsonElement item) 
@@ -37,11 +36,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         public double[] Bounds{ get; set; }
         public string[] Attributes{ get; set; }
     }
-
-    public class ApiKey{
-        public string Bing{ get; set; } = "AgPa0XVf4_HaN5BOPbTUw5KNvYEGOx-EftnjNRnCILfNgobxJC_deESiKqcfEgLd";
-    }
-
+    
     public class BaseLayer{
         public object DataSource{ get; set; }
     }
@@ -54,7 +49,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         
         public string ElementType{ get; set; } 
         public string DataField{ get; set; }
-        public string[] Palette{ get; set; }
+        public string[] Palette{ get; init; }
     }
     
     public class Tooltip{

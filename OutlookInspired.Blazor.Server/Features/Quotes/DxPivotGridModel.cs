@@ -1,10 +1,11 @@
 ﻿using OutlookInspired.Blazor.Server.Components.DevExtreme;
+using OutlookInspired.Blazor.Server.Components.DevExtreme.Pivot;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Quotes{
-    public class DxPivotGridModel:RootListViewComponentModel<Quote,Components.DevExtreme.DxPivotGridModel,DxPivotGrid> {
+    public class DxPivotGridModel:RootListViewComponentModel<Quote,Components.DevExtreme.Pivot.DxPivotGridModel,DxPivotGrid> {
         public override void Refresh(){
             base.Refresh();
             ComponentModel.Options.DataSource.Store = Objects.Select(quote => new{
@@ -13,7 +14,7 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
             SelectedObjects = Objects.Take(1).ToArray();
         }
 
-        protected override Components.DevExtreme.DxPivotGridModel ComponentModel{ get; }=new(){
+        protected override Components.DevExtreme.Pivot.DxPivotGridModel ComponentModel{ get; }=new(){
             Options ={
                 Scrolling={Mode="virtual"},
                 DataSource = { Fields ={

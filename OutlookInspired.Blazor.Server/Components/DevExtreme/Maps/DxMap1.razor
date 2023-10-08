@@ -1,0 +1,23 @@
+﻿@inherits DevExtremeComponent<DxMap1Model>
+@using OutlookInspired.Blazor.Server.Services
+
+<div @ref=@Element ></div>
+
+@code {
+    static DxMap1() => ExtractResource<DxMap1>();
+    private DotNetObjectReference<JsInterop> _itemSelected;
+    protected override async Task OnInitializedAsync(){
+        await base.OnInitializedAsync();
+        _itemSelected = new JsInterop(element =>ComponentModel.SelectMapItem(element)).DotNetReference();
+    }
+    
+    protected override async Task OnAfterRenderClientModuleAsync(){
+        ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitDxMap", Element, ComponentModel,_itemSelected);
+        var printMap = ComponentModel.PrintMap;
+        if (printMap){
+            ComponentModel.PrintMap = false;
+            await DevExtremeModule.InvokeVoidAsync("printElement", Element);
+        }
+    }
+
+}

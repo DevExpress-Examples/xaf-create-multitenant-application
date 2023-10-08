@@ -70,11 +70,15 @@
   </ItemGroup>
   <ItemGroup>
     
-    <EmbeddedResource Include="Components\DevExtreme\DxMap.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\Charts\DxFunnel.razor.js" />
     
-    <EmbeddedResource Include="Components\DevExtreme\DxVectorMap.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap.razor.js" />
     
-    <EmbeddedResource Include="Components\DevExtreme\DxPivotGrid.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap1.razor.js" />
+    
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DxVectorMap.razor.js" />
+    
+    <EmbeddedResource Include="Components\DevExtreme\Pivot\DxPivotGrid.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
     
@@ -83,8 +87,5 @@
   <ItemGroup>
     <Folder Include="Features\Customers\CardView\" />
     <Folder Include="wwwroot\js\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Components\DevExtreme\DxFunnel.razor.js" />
   </ItemGroup>
 </Project>

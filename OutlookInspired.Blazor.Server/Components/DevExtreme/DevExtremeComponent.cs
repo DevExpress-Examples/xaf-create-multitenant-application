@@ -1,30 +1,35 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DevExpress.ExpressApp.Blazor.Components.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
-    public abstract class DevExtremeComponent:ComponentBase,IAsyncDisposable{
-        protected IJSObjectReference ModuleRef;
+    public abstract class DevExtremeComponent<TModel>:ComponentBase,IAsyncDisposable where TModel:ComponentModelBase{
         private bool _clientModuleInit;
-        private  const string ResourceName = $"{nameof(DevExtremeComponent)}.js";
+        private  const string ResourceName = $"DevExtremeComponent.js";
         static DevExtremeComponent(){
             using var memoryStream = new MemoryStream(Resource.Bytes());
-            CreateResource<DevExtremeComponent>(memoryStream);
+            CreateResource<DevExtremeComponent<TModel>>(memoryStream);
         }
+        
+        [Parameter]
+        public TModel ComponentModel { get; set; }
 
         protected ElementReference Element { get; set; }
         protected IJSObjectReference ClientModule { get; set; }
         protected IJSObjectReference ClientObject { get; set; }
         protected IJSObjectReference DevExtremeModule{ get; set; }
         protected static void ExtractResource(string resourceName) 
-            => typeof(DxMap).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
-                .SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{resourceName}");
-        
+            => typeof(DevExtremeComponent<>).Assembly.GetManifestResourceStream(name => name.EndsWith(resourceName))
+                .SaveToFile($"wwwroot/js/DevExtreme/{resourceName}");
+        [Parameter]
+        public EventCallback<TModel> CustomizeModel { get; set; }
         protected static void ExtractResource<T>() 
-            => CreateResource<T>(typeof(DxMap).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
+            => CreateResource<T>(typeof(DevExtremeComponent<>).Assembly.GetManifestResourceStream(name => name.EndsWith($"{typeof(T)}.razor.js")));
 
         private static void CreateResource<T>(Stream manifestResourceStream) 
-            => manifestResourceStream.SaveToFile($"wwwroot/js/{nameof(DevExtremeComponent)}/{DefaultResourceName(typeof(T))}");
+            => manifestResourceStream.SaveToFile($"wwwroot/js/DevExtreme/{DefaultResourceName(typeof(T))}");
 
         [Inject]
         public IJSRuntime JS{ get; set; }
@@ -40,6 +45,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
             await base.OnAfterRenderAsync(firstRender);
             if (ClientModule != null&&!_clientModuleInit){
                 _clientModuleInit = true;
+                await CustomizeModel.MaybeInvokeAsync(ComponentModel);
                 await OnAfterRenderClientModuleAsync();
                 _clientModuleInit = false;
             }
@@ -55,7 +61,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         }
 
         protected ValueTask<IJSObjectReference> ImportResource(string resourceName=null) 
-            => JS.InvokeAsync<IJSObjectReference>("import", $"/js/{nameof(DevExtremeComponent)}/{GetResourceName(resourceName)}");
+            => JS.InvokeAsync<IJSObjectReference>("import", $"/js/{nameof(DevExtremeComponent<TModel>)}/{GetResourceName(resourceName)}");
 
         private string GetResourceName(string resourceName) 
             => resourceName ?? DefaultResourceName(GetType());

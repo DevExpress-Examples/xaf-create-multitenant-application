@@ -1,10 +1,7 @@
-﻿@inherits DevExtremeComponent
+﻿@inherits DevExtremeComponent<DxFunnelModel>
     <div @ref=@Element ></div>
 @code {
     static DxFunnel() => ExtractResource<DxFunnel>();
-
-    [Parameter]
-    public DxFunnelModel ComponentModel { get; set; }
     
     protected override async Task OnAfterRenderClientModuleAsync() 
         => ClientObject = await ClientModule.InvokeAsync<IJSObjectReference>("ChartInit", Element, ComponentModel);

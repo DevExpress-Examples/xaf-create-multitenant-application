@@ -7,7 +7,7 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     public class DxMapModel : ComponentModelBase, IComponentContentHolder{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
 

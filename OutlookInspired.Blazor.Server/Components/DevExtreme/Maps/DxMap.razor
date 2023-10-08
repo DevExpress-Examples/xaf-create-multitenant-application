@@ -1,4 +1,4 @@
-﻿@inherits DevExtremeComponent
+﻿@inherits DevExtremeComponent<DxMapModel>
 @using OutlookInspired.Blazor.Server.Services
 @using System.Text.Json
 @using OutlookInspired.Module.Services.Internal
@@ -8,8 +8,7 @@
 @code {
     static DxMap() => ExtractResource<DxMap>();
     private JsInterop _dispatchItemSelection;
-    [Parameter]
-    public DxMapModel ComponentModel { get; set; }
+    
 
     protected override async Task OnInitializedAsync(){
         await base.OnInitializedAsync();

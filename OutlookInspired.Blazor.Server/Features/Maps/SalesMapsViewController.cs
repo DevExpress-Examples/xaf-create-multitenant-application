@@ -1,6 +1,7 @@
 ﻿using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Blazor.Server.Components.DevExtreme;
+using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;

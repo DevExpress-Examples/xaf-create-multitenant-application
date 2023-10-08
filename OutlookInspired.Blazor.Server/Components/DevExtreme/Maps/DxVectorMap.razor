@@ -1,4 +1,4 @@
-﻿@inherits DevExtremeComponent
+﻿@inherits DevExtremeComponent<DxVectorMapModel>
 @using OutlookInspired.Blazor.Server.Services
 @using System.Text.Json
 @using OutlookInspired.Module.Services.Internal
@@ -12,13 +12,8 @@
         await base.OnInitializedAsync();
         _itemSelected = new JsInterop(element =>ComponentModel.SelectMapItem(element)).DotNetReference();
     }
-    [Parameter]
-    public DxVectorMapModel ComponentModel { get; set; }
-
-    [Parameter]
-    public EventCallback<DxVectorMapModel> CustomizeModel { get; set; }
+    
     protected override async Task OnAfterRenderClientModuleAsync(){
-        await CustomizeModel.MaybeInvokeAsync(ComponentModel);
         ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitVectorMap", Element, ComponentModel,_itemSelected);
         var layer = ComponentModel.LayerDatasource;
         if (layer!=null){

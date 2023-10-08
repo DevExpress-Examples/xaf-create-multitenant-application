@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Blazor.Server.Components.DevExtreme;
+using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
     public abstract class BlazorMapsViewController<TMapsMarker>:ObjectViewController<DetailView,TMapsMarker> where TMapsMarker:IMapsMarker{

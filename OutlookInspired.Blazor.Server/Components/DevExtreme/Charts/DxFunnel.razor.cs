@@ -3,7 +3,7 @@ using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
 
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Charts{
     public class DxFunnelModel : ComponentModelBase, IComponentContentHolder{
         public FunnelChartOptions Options{ get; } = new();
         RenderFragment IComponentContentHolder.ComponentContent 

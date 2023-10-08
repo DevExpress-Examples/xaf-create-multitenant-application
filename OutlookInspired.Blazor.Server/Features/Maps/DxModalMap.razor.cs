@@ -1,6 +1,7 @@
 ﻿using DevExpress.ExpressApp.Blazor;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components.DevExtreme;
+using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
