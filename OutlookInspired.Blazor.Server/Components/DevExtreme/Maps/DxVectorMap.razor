@@ -1,4 +1,4 @@
-﻿@inherits DevExtremeComponent<DxVectorMapModel>
+﻿@inherits MapComponent<DxVectorMapModel,DxVectorMap>
 @using OutlookInspired.Blazor.Server.Services
 @using System.Text.Json
 @using OutlookInspired.Module.Services.Internal
@@ -20,11 +20,7 @@
             ComponentModel.LayerDatasource = null;
             await ClientModule.InvokeVoidAsync("SetLayerDatasource", ClientObject, layer);
         }
-        var printMap = ComponentModel.PrintMap;
-        if (printMap){
-            ComponentModel.PrintMap = false;
-            await DevExtremeModule.InvokeVoidAsync("printElement", Element);
-        }
+        
     }
 
 }

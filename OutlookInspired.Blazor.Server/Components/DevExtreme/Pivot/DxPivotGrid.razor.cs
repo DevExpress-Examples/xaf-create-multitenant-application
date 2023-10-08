@@ -1,12 +1,6 @@
-﻿using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Blazor.Components.Models;
-using Microsoft.AspNetCore.Components;
-using OutlookInspired.Blazor.Server.Services;
-
-namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Pivot{
-    public class DxPivotGridModel:ComponentModelBase,IComponentContentHolder{
+﻿namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Pivot{
+    public class DxPivotGridModel:DevExtremeModel<DxPivotGrid>{
         public PivotGridOptions Options{ get; } = new();
-        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DevExpress.Blazor.DxPivotGrid>());
     }
     
     public class PivotGridOptions {

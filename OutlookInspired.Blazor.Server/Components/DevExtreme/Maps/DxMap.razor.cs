@@ -1,14 +1,11 @@
 ﻿using System.Text.Json;
-using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Blazor.Components.Models;
-using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
-    public class DxMapModel : ComponentModelBase, IComponentContentHolder{
+    public class DxMapModel : MapModel<DxMap>{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
 
         public MapSettings MapSettings{
@@ -19,14 +16,10 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
         public bool ChangeRouteMode{ get; set; }
         public bool ChangePeriod{ get; set; }
 
-        public bool PrintMap{
-            get => GetPropertyValue<bool>();
-            set => SetPropertyValue(value);
-        }
 
         public void SelectMapItem(JsonElement item) => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
 
-        public RenderFragment ComponentContent => this.Create(model => model.Create<DxMap>());
+        
     }
 
     public class MapItemSelectedArgs : EventArgs{
@@ -89,7 +82,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
 
         public List<MapMarker> Markers{ get; set; } = new();
         public List<MapRoute> Routes{ get; set; } = new();
-        public MapItem[] MapItems{ get; private set; }
+        public MapItem[] MapItems{ get; private init; }
 
         public string[] Palette{ get; private set; }
     }

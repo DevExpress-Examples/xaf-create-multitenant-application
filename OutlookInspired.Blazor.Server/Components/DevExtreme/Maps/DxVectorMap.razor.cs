@@ -1,20 +1,12 @@
 ﻿using System.Text.Json;
-using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Blazor.Components.Models;
-using Microsoft.AspNetCore.Components;
-using OutlookInspired.Blazor.Server.Services;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
-    public class DxVectorMapModel : ComponentModelBase, IComponentContentHolder{
+    public class DxVectorMapModel : MapModel<DxVectorMap>{
         public event EventHandler<MapItemSelectedArgs> MapItemSelected;
         public void SelectMapItem(JsonElement item) 
             => MapItemSelected?.Invoke(this, new MapItemSelectedArgs(item));
         public VectorMapOptions Options{ get; set; } = new();
-        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<DxVectorMap>());
-        public bool PrintMap{
-            get => GetPropertyValue<bool>();
-            set => SetPropertyValue(value);
-        }
+        
         public BaseLayer LayerDatasource{
             get => GetPropertyValue<BaseLayer>();
             set => SetPropertyValue(value);
