@@ -1,21 +1,31 @@
-﻿using DevExpress.ExpressApp.Data;
+﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Data;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]
-    public class QuoteMapItem:IMapsMarker{
+    public class QuoteMapItem:IMapsMarker,IMapItem,IObjectSpaceLink{
         [Key]
         public int ID{ get; set; }
-        public Stage Stage { get; init; }
+        public Stage Stage { get; set; }
         public DateTime Date { get; set; }
         public string City{ get; set; }
         string IBaseMapsMarker.Title => City;
         public double Latitude{ get; set; }
         public double Longitude { get; set; }
+        decimal IMapItem.Total{
+            get => Value;
+            init => Value=value;
+        }
+
+        
+
         public string Name => Enum.GetName(typeof (Stage), Stage);
         public int Index => (int) Stage;
-        public Decimal Value { get; set; }
+        public decimal Value { get; set; }
+        IObjectSpace IObjectSpaceLink.ObjectSpace{ get; set; }
     }
     
     public enum Stage{

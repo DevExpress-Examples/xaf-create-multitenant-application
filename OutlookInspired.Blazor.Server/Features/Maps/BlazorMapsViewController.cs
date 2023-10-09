@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public abstract class BlazorMapsViewController<TMapsMarker,TMapModel,TComponent>:ObjectViewController<DetailView,TMapsMarker> where TMapsMarker:IMapsMarker where TMapModel:MapModel<TComponent> where TComponent : ComponentBase{
+    public abstract class BlazorMapsViewController<TMapsMarker, TMapModel, TComponent> : ObjectViewController<DetailView, TMapsMarker>
+        where TMapsMarker : IMapsMarker where TMapModel : MapModel<TComponent> where TComponent : ComponentBase{
         public Module.Features.Maps.MapsViewController MapsViewController{ get; private set; }
 
         public TMapModel Model => (TMapModel)View.GetItems<ControlViewItem>().First().Control;

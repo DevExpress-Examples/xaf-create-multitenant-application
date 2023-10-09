@@ -14,7 +14,7 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
             SelectedObjects = Objects.Take(1).ToArray();
         }
 
-        protected override Components.DevExtreme.Pivot.DxPivotGridModel ComponentModel{ get; }=new(){
+        public override Components.DevExtreme.Pivot.DxPivotGridModel ComponentModel{ get; }=new(){
             Options ={
                 Scrolling={Mode="virtual"},
                 DataSource = { Fields ={

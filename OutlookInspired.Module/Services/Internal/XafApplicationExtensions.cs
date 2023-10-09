@@ -13,7 +13,7 @@ namespace OutlookInspired.Module.Services.Internal{
             => application.NewDetailView(space => space.GetObject(instance),modelDetailView,isRoot);
 
         public static DetailView NewDetailView<T>(this XafApplication application,Func<IObjectSpace,T> currentObjectFactory,IModelDetailView modelDetailView=null,bool isRoot=true){
-            var objectSpace = application.CreateObjectSpace(typeof(T));
+            var objectSpace = application.CreateObjectSpace(modelDetailView?.ModelClass.TypeInfo.Type??typeof(T));
             var currentObject = currentObjectFactory(objectSpace);
             modelDetailView ??= application.FindModelDetailView(currentObject.GetType());
             var detailView = application.CreateDetailView(objectSpace, modelDetailView,isRoot);

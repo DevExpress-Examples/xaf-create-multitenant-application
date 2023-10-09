@@ -10,7 +10,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
         }
         public override RenderFragment ComponentContent => ComponentModel.Create(model => model.Create<TComponent>());
 
-        protected virtual TModel ComponentModel => (TModel)(object)this;
+        public virtual TModel ComponentModel => (TModel)(object)this;
 
         public override void Refresh() => Objects = ObjectSpace.GetObjects<T>(Criteria).ToList();
         

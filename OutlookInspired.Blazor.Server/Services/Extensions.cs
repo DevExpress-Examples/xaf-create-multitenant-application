@@ -1,28 +1,19 @@
-﻿using System.Text.RegularExpressions;
-using DevExpress.Blazor;
+﻿using DevExpress.Blazor;
 using DevExpress.Blazor.Internal;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.Components;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.DC;
-using DevExpress.Map.Native;
-using DevExpress.Persistent.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
-using Newtonsoft.Json.Linq;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
-using Route = OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Route;
 
 namespace OutlookInspired.Blazor.Server.Services{
-    public static class Extensions{
-        private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
-
+    internal static class Extensions{
         public static async Task<string> ModalBodyHeight(this IJSRuntime js){
             await js.EvalAsync(@"window.getClientHeight = (element) => {
     return document.querySelector(element).closest('.dxbl-modal-body').clientHeight;
@@ -33,74 +24,7 @@ namespace OutlookInspired.Blazor.Server.Services{
         public static Task MaybeInvokeAsync<T>(this EventCallback<T> eventCallback, T value) 
             => eventCallback.HasDelegate ? eventCallback.InvokeAsync(value) : Task.CompletedTask;
 
-        public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette,Type markerType) 
-            => mapItems.GroupBy(item => item.PropertyValue(markerType))
-                .SelectMany((items, i) => items.Do(item => item.Color = palette[i])).ToArray();
-
-        public static object FeatureCollection(this MapItem[] mapItems) 
-            => new FeatureCollection{ Features = mapItems.Features() };
-
-        public static VectorMapOptions VectorMapOptions(this MapItem[] mapItems,Type markerType){
-            var palette = mapItems.Select(item => item.PropertyValue(markerType)).Distinct().Count().DistinctColors().ToArray();
-            return new VectorMapOptions{
-                Layers = {new Layer(){
-                    DataSource = mapItems.FeatureCollection(),
-                    Palette =palette,DataField =nameof(Properties.Values).FirstCharacterToLower(),ElementType = "pie",Name = "pies",SelectionMode = "single"
-                }},
-                Bounds =mapItems.Bounds(),Tooltip = {Enabled = true,ZIndex = 10000},
-                Attributes=new[]{nameof(MapItem.City).FirstCharacterToLower()}
-            };
-        }
-        public static List<Feature> Features(this MapItem[] mapItems) 
-            => mapItems.GroupBy(item => item.City).Select(group => group.First().NewFeature(group)).ToList();
-
-        private static Feature NewFeature(this MapItem mapItem, IGrouping<string, MapItem> group) 
-            => new(){
-                Geometry = new Geometry{ Coordinates = new List<double>{ mapItem.Longitude, mapItem.Latitude } },
-                Properties = new Properties{
-                    Values = group.Select(item => item.Total).ToList(),
-                    Tooltip = $"<span class='{mapItem.City}'>{mapItem.City} Total: {group.Sum(item => item.Total)}</span>",
-                    City = mapItem.City
-                }
-            };
-
-        public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
-            var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
-            using var httpClient = new HttpClient();
-            var httpResponseMessage = await httpClient.GetAsync(url);
-            if (httpResponseMessage.IsSuccessStatusCode){
-                var readAsStringAsync = await httpResponseMessage.Content.ReadAsStringAsync();
-                var result = JObject.Parse(readAsStringAsync)["resourceSets"]![0]!["resources"]![0];
-                return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
-                        .Select(objectSpace.RoutePoint).ToArray(), (double)result["travelDistance"],
-                    TimeSpan.FromMinutes((double)result["travelDuration"]), Enum.Parse<TravelMode>(travelMode,true));    
-            }
-
-            return new RouteCalculatedArgs(Array.Empty<RoutePoint>(), 0, TimeSpan.Zero, Enum.Parse<TravelMode>(travelMode, true));
-        }
-
-        private static RoutePoint RoutePoint(this IObjectSpace objectSpace, JToken item){
-            var point = objectSpace.CreateObject<RoutePoint>();
-            point.ManeuverInstruction = RemoveTagRegex.Replace(item["instruction"]["text"]!.ToString(), string.Empty);
-            var distance = (double)item["travelDistance"];
-            point.Distance = distance > 0.9 ? $"{Math.Ceiling(distance):0} mi" : $"{Math.Ceiling(distance * 52.8) * 100:0} ft";
-            point.Maneuver = Enum.Parse<BingManeuverType>(item["details"][0]!["maneuverType"]!.ToString());
-            return point;
-        }
         
-        public static DxMapOptions DxMapOptions(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
-            var mode = travelMode.FirstCharacterToLower();
-            var markers = new[]{
-                new Marker{ Location = new Location{ Lat = homeOffice.Latitude, Lng = homeOffice.Longitude } },
-                new Marker{ Location = new Location{ Lat = mapsMarker.Latitude, Lng = mapsMarker.Longitude } }
-            }.ToList();
-            return new DxMapOptions(){Markers =markers,
-                Routes = new List<Route>()
-                    { new(){Mode =mode,Color = mode=="driving"?"orange":"blue", Locations = markers.Select(marker => marker.Location).ToList() } },
-                Controls = true,
-                Center = markers.First().Location
-            };
-        }
 
         public static RenderFragment RenderIconCssOrImage(this IImageUrlService service, string imageName, string className = "xaf-image",bool useSvgIcon=false)
             => DxImage.IconCssOrImage(null, service.GetImageUrl(imageName), className,useSvgIcon);

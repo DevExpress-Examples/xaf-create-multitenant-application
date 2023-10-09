@@ -14,17 +14,30 @@ function EvalStringDatasource(model) {
     })
 }
 
-function AssignTooltip(model) {
-    model.options.tooltip = {
-        ...model.options.tooltip,
-        customizeTooltip: function (arg) {
-            return arg.layer.type === 'marker' ? {text: arg.attribute('tooltip')} : null;
+function AssignAnnotation(model, annotationData) {
+    if (!model.options.annotations) return;
+    
+    model.options.commonAnnotationSettings = {
+        type: 'custom',
+        template(annotation, container) {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", "annotation");
+
+            const foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+            
+            foreignObject.setAttribute("width", annotation.width);
+            foreignObject.setAttribute("height", annotation.height);
+            const div = document.createElement("div");
+            div.innerHTML = annotation.data; 
+
+            foreignObject.appendChild(div);
+            svg.appendChild(foreignObject);
+            container.appendChild(svg);
         }
     };
 }
-
 function AssignOnClick(model, dotnetCallback) {
-    return {
+    model.options = {
         ...model.options,
         onClick: arg => {
             const clickedElement = arg.target;
@@ -42,17 +55,29 @@ function AssignOnClick(model, dotnetCallback) {
     };
 }
 function AssignOnDisposing(model, dotnetCallback) {
-    return {
+    model.options = {
         ...model.options,
         onDisposing: () => dotnetCallback.dispose()
     };
 }
-
+function AssignTooltip(model) {
+    model.options.tooltip = {
+        ...model.options.tooltip,
+        customizeTooltip: function (arg) {
+            return arg.layer.type === 'marker' ? {text: arg.attribute('tooltip')} : null;
+        }
+    };
+}
 export async function InitVectorMap(element,model,dotnetCallback) {
-    EvalStringDatasource(model);
+    debugger
     AssignTooltip(model);
-    AssignOnDisposing(model,dotnetCallback)
-    return new DevExpress.viz.dxVectorMap(element, AssignOnClick(model, dotnetCallback));
+    if (dotnetCallback) {
+        AssignOnDisposing(model, dotnetCallback);
+        AssignOnClick(model, dotnetCallback);
+    } 
+    AssignAnnotation(model)
+    EvalStringDatasource(model);
+    return new DevExpress.viz.dxVectorMap(element, model.options);
 }
 
 

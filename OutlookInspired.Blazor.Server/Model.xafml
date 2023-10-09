@@ -17,7 +17,7 @@
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
         <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" />
         <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.ModalDxVectorMapModel" />
-        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" /> 
+        <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
@@ -250,7 +250,6 @@
       <Layout>
         <LayoutGroup Id="Main">
           <LayoutGroup Id="SimpleEditors">
-            <LayoutItem Id="MapsControl" RelativeSize="67.0701427684668" />
             <LayoutGroup Id="Auto55738e8a-ad25-43c5-8135-f7030b1fbeb6" RelativeSize="32.92985723153321">
               <LayoutGroup Id="Auto545e433b-2786-4e52-bd8b-09fc12509e50" RelativeSize="9.083044982698961">
                 <LayoutItem Id="Picture" RelativeSize="21.77191328934967" />
@@ -529,6 +528,11 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
+    <DetailView Id="Quote_DetailView_Maps">
+      <Items>
+        <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.ModalDxVectorMapModel" />
+      </Items>
+    </DetailView>
     <DetailView Id="Quote_DetailView_Pivot" FreezeLayout="True">
       <Items>
         <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.DxPivotGridModel" IsNewNode="True" />
@@ -541,7 +545,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Quote_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Features.Quotes.PivotGridListEditor" DataAccessMode="Queryable" />
+    <ListView Id="Quote_ListView" DataAccessMode="Queryable" />
     <DetailView Id="QuoteMapItem_DetailView" FreezeLayout="True">
       <Items>
         <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.DxFunnelModel" IsNewNode="True" />

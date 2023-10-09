@@ -7,7 +7,11 @@ using OutlookInspired.Module.Features.Maps;
 namespace OutlookInspired.Module.Services.Internal{
     internal static class MapExtensions{
         static readonly double[] UsaBounds = { -124.566244, 49.384358, -66.934570, 24.396308 };
-        public static double[] Bounds(this MapItem[] mapItems) 
+
+        public static string[] Palette(this MapItem[] mapItems,Type objectType) 
+            => mapItems.Select(item => item.PropertyValue(objectType)).Distinct().Count().DistinctColors().ToArray();
+
+        public static double[] Bounds<TMapItem>(this TMapItem[] mapItems) where TMapItem:IMapItem
             => !mapItems.Any() ? UsaBounds : 
                 (mapItems.Min(item => item.Longitude) - (mapItems.Max(item => item.Longitude) - mapItems.Min(item => item.Longitude)) * 0.1).YieldItem()
                 .Concat(mapItems.Max(item => item.Latitude) + (mapItems.Max(item => item.Latitude) - mapItems.Min(item => item.Latitude)) * 0.1)
@@ -56,21 +60,25 @@ namespace OutlookInspired.Module.Services.Internal{
                 : period == Period.ThisMonth ? item.Order.OrderDate.Month == DateTime.Now.Month && item.Order.OrderDate.Year == DateTime.Now.Year
                 : period != Period.FixedDate) &&(city==null||item.Order.Store.City==city));
 
-
-        public static decimal Opportunity(this IObjectSpace objectSpace,Stage stage,string city)
+        public static string OpportunityCallout(this IObjectSpace objectSpace,QuoteMapItem item) 
+            => $"TOTAL<br><color=206,113,0><b><size=+4>{objectSpace.Opportunity(item.Stage, item.City)}</color></size></b><br>{item.City}";
+        
+        public static decimal Opportunity(this IObjectSpace objectSpace,Stage stage,string city)    
             => objectSpace.Quotes(stage).Where(q => q.CustomerStore.City == city).TotalSum(q => q.Total);
 
         public static CustomerStore[] Stores(this IObjectSpace objectSpace, Stage stage) 
             => objectSpace.Quotes(stage).Select(quote => quote.CustomerStore).Distinct().ToArray();
 
         public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage)
-            => objectSpace.Quotes(stage).Select(quote => new QuoteMapItem{
-                Stage = stage,
-                Value = quote.Total,
-                Date = quote.Date,
-                City = quote.CustomerStore.City,
-                Latitude = quote.CustomerStore.Latitude,
-                Longitude = quote.CustomerStore.Longitude
+            => objectSpace.Quotes(stage).ToArray().Select(quote => {
+                var mapItem = objectSpace.CreateObject<QuoteMapItem>();
+                mapItem.Stage = stage;
+                mapItem.Value = quote.Total;
+                mapItem.Date = quote.Date;
+                mapItem.City = quote.CustomerStore.City;
+                mapItem.Latitude = quote.CustomerStore.Latitude;
+                mapItem.Longitude = quote.CustomerStore.Longitude;
+                return mapItem;
             }).ToArray().Do((item, i) => item.ID=i).ToArray();
          
         public static IEnumerable<QuoteMapItem> Opportunities(this IObjectSpace objectSpace,string criteria=null)

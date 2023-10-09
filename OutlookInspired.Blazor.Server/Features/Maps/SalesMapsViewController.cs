@@ -42,21 +42,22 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
 
         protected override DxVectorMapModel CustomizeModel(DxVectorMapModel model){
             _mapItems = ((ISalesMapsMarker)View.CurrentObject).Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data).ToArray();
-            model.Options = _mapItems.VectorMapOptions(View.ObjectTypeInfo.Type);
-            _mapItems = _mapItems.Colorize(model.Options.Layers.OfType<Layer>().First().Palette, View.ObjectTypeInfo.Type);
+            model.Options = _mapItems.VectorMapOptions<MapItem,PieLayer>(_mapItems.Palette(View.ObjectTypeInfo.Type),
+                items => items.Select(item => item.Total).ToList());
+            _mapItems = _mapItems.Colorize(model.Options.Layers.OfType<PieLayer>().First().Palette, View.ObjectTypeInfo.Type);
             model.MapItemSelected-=ModelOnMapItemSelected;
             model.MapItemSelected+=ModelOnMapItemSelected;
             return model;
         }
-        
+
         private void ModelOnMapItemSelected(object sender, MapItemSelectedArgs e) 
             => _chartListEditor.DataSource = ((ISalesMapsMarker)View.CurrentObject)
                 .Sales((Period)MapsViewController.SalesPeriodAction.SelectedItem.Data, e.Item.GetProperty(nameof(MapItem.City).FirstCharacterToLower()).GetString())
-                .Colorize(Model.Options.Layers.OfType<Layer>().First().Palette,View.ObjectTypeInfo.Type).ToArray();
+                .Colorize(Model.Options.Layers.OfType<PieLayer>().First().Palette,View.ObjectTypeInfo.Type).ToArray();
 
         private void SalesPeriodActionOnExecuted(object sender, ActionBaseEventArgs e){
             var model = CustomizeModel();
-            model.LayerDatasource = model.Options.Layers.OfType<Layer>().First();
+            model.LayerDatasource = model.Options.Layers.OfType<PieLayer>().First();
             _chartListEditor.DataSource = _mapItems;
         }
     }

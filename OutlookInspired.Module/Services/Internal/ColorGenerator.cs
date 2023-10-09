@@ -2,8 +2,32 @@
 
 namespace OutlookInspired.Module.Services.Internal{
     public static class ColorGenerator{
-        public static IEnumerable<string> DistinctColors(this int i) 
-            => Enumerable.Range(0, i).Select(i1 => Color.FromArgb(GetRGB(i1)).ToHex());
+        public static string[] DistinctColors(this int i){
+            var colors = new List<Color>();
+            var index = 0;
+            while (colors.Count < i){
+                var color = Color.FromArgb(GetRGB(index));
+                if (!IsInvalidColor(color) && !color.IsSimilarToExistingColors( colors))
+                    colors.Add(color.DarkenColor());
+                index++;
+            }
+            return colors.Select(c => c.ToHex()).ToArray();
+        }
+
+        static bool IsSimilarToExistingColors(this Color newColor, List<Color> existingColors) 
+            => existingColors.Select(color 
+                => Math.Sqrt(Math.Pow(newColor.R - color.R, 2) + Math.Pow(newColor.G - color.G, 2) + Math.Pow(newColor.B - color.B, 2))).Any(distance => distance < 10);
+
+        static Color DarkenColor(this Color color,float darkeningFactor=0.3f) 
+            => Color.FromArgb((int)(color.R * darkeningFactor), (int)(color.G * darkeningFactor), (int)(color.B * darkeningFactor));
+
+        static bool IsInvalidColor(Color color){
+            var luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
+            var nearWhite = luminance > 0.4;
+            var nearBlack = luminance < 0.2;
+            var nearGray = Math.Abs(color.R - color.G) < 10 && Math.Abs(color.G - color.B) < 10;
+            return nearWhite || nearBlack || nearGray;
+        }
 
         public static string ToHex(this Color color) 
             => $"#{color.R:X2}{color.G:X2}{color.B:X2}";

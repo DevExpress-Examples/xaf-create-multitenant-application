@@ -7,10 +7,12 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
     public class DxFunnelModel:RootListViewComponentModel<QuoteMapItem,Components.DevExtreme.Charts.DxFunnelModel,DxFunnel> {
         public override void Refresh(){
             base.Refresh();
-            ComponentModel.Options.DataSource = Objects.Select(item => new{item.Value,item.Name}).Cast<object>().ToArray();
+            var dataSource = Objects.Select(item => new{item.Value,item.Name}).Cast<object>().ToArray();
+            ComponentModel.Options.DataSource = dataSource;
+            ComponentModel.Options.Palette = dataSource.Length.DistinctColors();
         }
 
-        protected override Components.DevExtreme.Charts.DxFunnelModel ComponentModel{ get; } = new(){
+        public override Components.DevExtreme.Charts.DxFunnelModel ComponentModel{ get; } = new(){
             Options ={
                 ValueField = nameof(QuoteMapItem.Value).FirstCharacterToLower(),
                 ArgumentField = nameof(QuoteMapItem.Name).FirstCharacterToLower(),

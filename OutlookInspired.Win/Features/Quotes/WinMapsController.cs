@@ -56,7 +56,9 @@ namespace OutlookInspired.Win.Features.Quotes{
             return itemsLayer;
         }
         
-        Stage Stage => (Stage)MapsViewController.StageAction.SelectedItem.Data;
+        // Stage Stage => (Stage)MapsViewController.StageAction.SelectedItem.Data;
+        [Obsolete("win throws")]
+        Stage Stage => (Stage)Stage.High;
         public PaletteEntry[] PaletteEntries{ get; set; }
 
         private void SetAdapterDataSource(){
@@ -74,9 +76,7 @@ namespace OutlookInspired.Win.Features.Quotes{
         private void MapControlOnSelectionChanged(object sender, MapSelectionChangedEventArgs e){
             if (e.Selection.FirstOrDefault() is not QuoteMapItem mapItem) return;
             _callOut.Location = mapItem.ToGeoPoint();
-            using var objectSpace = Application.NewObjectSpace();
-            var opportunity = objectSpace.Opportunity(Stage, mapItem.City);
-            _callOut.Text = $"TOTAL<br><color=206,113,0><b><size=+4>{opportunity:c}</color></size></b><br>{mapItem.City}";
+            _callOut.Text = ObjectSpace.OpportunityCallout(mapItem);
 
         }
     }

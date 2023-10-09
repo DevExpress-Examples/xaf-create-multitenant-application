@@ -58,6 +58,8 @@ namespace OutlookInspired.Win.Features.Maps{
             chartListEditor.ChartControl.ApplyColors((KeyColorColorizer)_itemsLayer.Colorizer);
         }
 
+        // private Period Period => (Period)MapsViewController.SalesPeriodAction.SelectedItem.Data;
+        [Obsolete("win throws")]
         private Period Period => (Period)MapsViewController.SalesPeriodAction.SelectedItem.Data;
         private void SetPieAdapterDataSource() 
             => _pieChartDataAdapter.DataSource = _salesMapsMarker.Sales(Period);
