@@ -11,7 +11,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         }
 
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
-        [FieldSize(FieldSizeAttribute.Unlimited)]
         public byte[] About{ get; set; }
     }
 }

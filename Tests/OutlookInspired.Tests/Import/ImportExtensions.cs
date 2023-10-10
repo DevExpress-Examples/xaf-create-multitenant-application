@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.XtraRichEdit;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
@@ -99,7 +100,7 @@ namespace OutlookInspired.Tests.Import{
         }
 
         static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Evaluations.Include(evaluation => evaluation.Employee)
+            => new RichEditDocumentServer().Use(server => sqliteContext.Evaluations.Include(evaluation => evaluation.Employee)
                 .Include(evaluation => evaluation.CreatedBy).ToNowObservable()
                 .Select(sqlLite => {
                     var evaluation = objectSpace.CreateObject<Evaluation>();
@@ -110,21 +111,21 @@ namespace OutlookInspired.Tests.Import{
                     evaluation.StartOn = sqlLite.CreatedOn;
                     evaluation.EndOn = sqlLite.CreatedOn.AddHours(1);
                     evaluation.Rating = (EvaluationRating)sqlLite.Rating;
-                    evaluation.Description = sqlLite.Details;
-                    var description = Regex.Replace(evaluation.Description, $@"Raise:\s*{Raise.Yes}", "");
+                    evaluation.Description = server.Load(sqlLite.Details.Bytes()).OpenXmlBytes;
+                    var description = Regex.Replace(sqlLite.Details, $@"Raise:\s*{Raise.Yes}", "");
                     if (!description.Equals(evaluation.Description)){
                         evaluation.Raise=Raise.Yes;
                     }
-                    description = Regex.Replace(evaluation.Description, $@"Bonus:\s*{Bonus.Yes}", "");
+                    description = Regex.Replace(sqlLite.Details, $@"Bonus:\s*{Bonus.Yes}", "");
                     if (!description.Equals(evaluation.Description)){
                         evaluation.Bonus=Bonus.Yes;
                     }
                     return evaluation;
                 })
-                .ToUnit();
+                .ToUnit());
 
         static IObservable<Unit> ImportOrder(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Orders.Include(order => order.Employee).Include(order => order.Customer)
+            => new RichEditDocumentServer().Use(server => sqliteContext.Orders.Include(order => order.Employee).Include(order => order.Customer)
                 .Include(order => order.Store).ToNowObservable()
                 .Select(sqlLite => {
                     var order = objectSpace.CreateObject<Order>();
@@ -135,28 +136,28 @@ namespace OutlookInspired.Tests.Import{
                     order.ShippingAmount = sqlLite.ShippingAmount;
                     order.RefundTotal = sqlLite.RefundTotal;
                     order.TotalAmount = sqlLite.TotalAmount;
-                    order.Comments = sqlLite.Comments;
+                    order.Comments = server.Load(sqlLite.Comments.Bytes()).OpenXmlBytes;
                     order.Store = objectSpace.FindSqlLiteObject<CustomerStore>(sqlLite.Store.Id);
                     order.InvoiceNumber = sqlLite.InvoiceNumber;
                     order.OrderDate = sqlLite.OrderDate;
-                    order.OrderTerms = sqlLite.OrderTerms;
+                    order.OrderTerms = server.Load(sqlLite.OrderTerms.Bytes()).OpenXmlBytes;
                     order.SaleAmount = sqlLite.SaleAmount;
                     order.ShipDate = sqlLite.ShipDate;
                     order.ShipmentCourier = (ShipmentCourier)sqlLite.ShipmentCourier;
                     order.ShipmentStatus = (ShipmentStatus)sqlLite.ShipmentStatus;
                     order.PONumber = sqlLite.PONumber;
                     return order;
-                }).ToUnit();
+                }).ToUnit());
 
         static IObservable<Unit> ImportProduct(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Products.Include(product => product.Engineer).Include(product => product.Support)
+            => new RichEditDocumentServer().Use(server => sqliteContext.Products.Include(product => product.Engineer).Include(product => product.Support)
                 .Include(product => product.PrimaryImage).ToNowObservable()
                 .Select(sqlLite => {
                     var product = objectSpace.CreateObject<Product>();
                     product.IdInt64 = sqlLite.Id;
                     product.Category = (ProductCategory)sqlLite.Category;
                     product.Name = sqlLite.Name;
-                    product.Description = sqlLite.Description;
+                    product.Description = server.Load(sqlLite.Description.Bytes()).OpenXmlBytes;
                     product.Available = sqlLite.Available;
                     product.Backorder = sqlLite.Backorder;
                     product.Cost = sqlLite.Cost;
@@ -172,7 +173,7 @@ namespace OutlookInspired.Tests.Import{
                     product.RetailPrice = sqlLite.RetailPrice;
                     product.SalePrice = sqlLite.SalePrice;
                     return product;
-                }).ToUnit();
+                }).ToUnit());
 
         static IObservable<Unit> ImportProductImages(this IObjectSpace objectSpace, DevAvDb sqliteContext)
             => sqliteContext.ProductImages.Include(productImage => productImage.Product)
@@ -274,7 +275,7 @@ namespace OutlookInspired.Tests.Import{
                 }).ToUnit();
 
         static IObservable<Unit> ImportCustomerCommunication(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.CustomerCommunications.Include(customerCommunication => customerCommunication.Employee)
+            => new RichEditDocumentServer().Use(server => sqliteContext.CustomerCommunications.Include(customerCommunication => customerCommunication.Employee)
                 .Include(customerCommunication => customerCommunication.CustomerEmployee).ToNowObservable()
                 .Select(sqlLite => {
                     var customerCommunication = objectSpace.CreateObject<CustomerCommunication>();
@@ -282,10 +283,10 @@ namespace OutlookInspired.Tests.Import{
                     customerCommunication.Employee = objectSpace.FindSqlLiteObject<Employee>(sqlLite.Employee.Id);
                     customerCommunication.CustomerEmployee = objectSpace.FindSqlLiteObject<CustomerEmployee>(sqlLite.CustomerEmployee.Id);
                     customerCommunication.Date = sqlLite.Date;
-                    customerCommunication.Purpose = sqlLite.Purpose;
+                    customerCommunication.Purpose = server.Load(sqlLite.Purpose.Bytes()).OpenXmlBytes;
                     customerCommunication.Type = sqlLite.Type;
                     return customerCommunication;
-                }).ToUnit();
+                }).ToUnit());
 
         static IObservable<Unit> ImportProbation(this IObjectSpace objectSpace, DevAvDb sqliteContext)
             => sqliteContext.Probations.ToNowObservable()
@@ -307,7 +308,7 @@ namespace OutlookInspired.Tests.Import{
                 .ToUnit();
         
         static IObservable<Unit> ImportEmployeeTasks(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.EmployeeTasks.Include(employeeTask => employeeTask.CustomerEmployee)
+            => new RichEditDocumentServer().Use(server => sqliteContext.EmployeeTasks.Include(employeeTask => employeeTask.CustomerEmployee)
                 .Include(employeeTask => employeeTask.Owner).Include(employeeTask => employeeTask.AssignedEmployee)
                 .Include(employeeTask => employeeTask.AssignedEmployees).ToNowObservable()
                 .SelectMany(sqlLite => {
@@ -319,7 +320,7 @@ namespace OutlookInspired.Tests.Import{
                     task.Status = (EmployeeTaskStatus)sqlLite.Status;
                     task.Category = sqlLite.Category;
                     task.Completion = sqlLite.Completion;
-                    task.Description = sqlLite.Description;
+                    task.Description = server.Load(sqlLite.Description.Bytes()).OpenXmlBytes;
                     task.Predecessors = sqlLite.Predecessors;
                     task.Priority = (EmployeeTaskPriority)sqlLite.Priority;
                     task.Private = sqlLite.Private;
@@ -331,11 +332,11 @@ namespace OutlookInspired.Tests.Import{
                     task.StartDate = sqlLite.StartDate;
                     task.AttachedCollectionsChanged = sqlLite.AttachedCollectionsChanged;
                     task.ReminderDateTime = sqlLite.ReminderDateTime;
-                    task.RtfTextDescription = sqlLite.RtfTextDescription;
+                    task.RtfTextDescription = server.Load(sqlLite.RtfTextDescription.Bytes()).OpenXmlBytes;
                     return sqlLite.AssignedEmployees
                         .Do(employee => task.AssignedEmployees.Add(objectSpace.FindSqlLiteObject<Employee>(employee.Id)))
                         .To(task).ToNowObservable();
-                }).ToUnit();
+                }).ToUnit());
 
         static IObservable<Unit> ImportTaskAttachedFiles(this IObjectSpace objectSpace, DevAvDb sqliteContext)
             => sqliteContext.TaskAttachedFiles.Include(taskAttachedFile => taskAttachedFile.EmployeeTask).ToNowObservable()
@@ -350,35 +351,43 @@ namespace OutlookInspired.Tests.Import{
                     return taskAttachedFile;
                 }).ToUnit();
 
-        static IObservable<Unit> ImportCustomer(this IObjectSpace objectSpace, DevAvDb sqliteContext)
-            => sqliteContext.Customers.ToNowObservable()
-                .Select(sqlLite => {
-                    var customer = objectSpace.CreateObject<Customer>();
-                    customer.IdInt64 = sqlLite.Id;
-                    customer.Logo = sqlLite.Logo;
-                    customer.Profile = sqlLite.Profile;
-                    customer.Fax = sqlLite.Fax;
-                    customer.Name = sqlLite.Name;
-                    customer.Phone = sqlLite.Phone;
-                    customer.Status = (CustomerStatus)sqlLite.Status;
-                    customer.Website = sqlLite.Website;
-                    customer.AnnualRevenue = sqlLite.AnnualRevenue;
-                    customer.TotalEmployees = sqlLite.TotalEmployees;
-                    customer.TotalStores = sqlLite.TotalStores;
-                    customer.BillingAddressCity = sqlLite.BillingAddressCity;
-                    customer.BillingAddressLatitude = sqlLite.BillingAddressLatitude;
-                    customer.BillingAddressLine = sqlLite.BillingAddressLine;
-                    customer.BillingAddressLongitude = sqlLite.BillingAddressLongitude;
-                    customer.BillingAddressState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.BillingAddressState.ToString());
-                    customer.BillingAddressZipCode = sqlLite.BillingAddressZipCode;
-                    customer.HomeOfficeCity = sqlLite.HomeOfficeCity;
-                    customer.HomeOfficeLatitude = sqlLite.HomeOfficeLatitude;
-                    customer.HomeOfficeLine = sqlLite.HomeOfficeLine;
-                    customer.HomeOfficeLongitude = sqlLite.HomeOfficeLongitude;
-                    customer.HomeOfficeState = Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.HomeOfficeState.ToString());
-                    customer.HomeOfficeZipCode = sqlLite.HomeOfficeZipCode;
-                    return customer;
-                }).ToUnit();
+        static IObservable<Unit> ImportCustomer(this IObjectSpace objectSpace, DevAvDb sqliteContext){
+            return new RichEditDocumentServer().Use(server => {
+                return sqliteContext.Customers.ToNowObservable()
+                    .Select(sqlLite => {
+                        var customer = objectSpace.CreateObject<Customer>();
+                        customer.IdInt64 = sqlLite.Id;
+                        customer.Logo = sqlLite.Logo;
+                        customer.Profile = server.Load(sqlLite.Profile.Bytes()).OpenXmlBytes;
+                        customer.Fax = sqlLite.Fax;
+                        customer.Name = sqlLite.Name;
+                        customer.Phone = sqlLite.Phone;
+                        customer.Status = (CustomerStatus)sqlLite.Status;
+                        customer.Website = sqlLite.Website;
+                        customer.AnnualRevenue = sqlLite.AnnualRevenue;
+                        customer.TotalEmployees = sqlLite.TotalEmployees;
+                        customer.TotalStores = sqlLite.TotalStores;
+                        customer.BillingAddressCity = sqlLite.BillingAddressCity;
+                        customer.BillingAddressLatitude = sqlLite.BillingAddressLatitude;
+                        customer.BillingAddressLine = sqlLite.BillingAddressLine;
+                        customer.BillingAddressLongitude = sqlLite.BillingAddressLongitude;
+                        customer.BillingAddressState =
+                            Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.BillingAddressState
+                                .ToString());
+                        customer.BillingAddressZipCode = sqlLite.BillingAddressZipCode;
+                        customer.HomeOfficeCity = sqlLite.HomeOfficeCity;
+                        customer.HomeOfficeLatitude = sqlLite.HomeOfficeLatitude;
+                        customer.HomeOfficeLine = sqlLite.HomeOfficeLine;
+                        customer.HomeOfficeLongitude = sqlLite.HomeOfficeLongitude;
+                        customer.HomeOfficeState =
+                            Enum.Parse<OutlookInspired.Module.BusinessObjects.StateEnum>(sqlLite.HomeOfficeState
+                                .ToString());
+                        customer.HomeOfficeZipCode = sqlLite.HomeOfficeZipCode;
+                        return customer;
+                    }).ToUnit();
+            });
+
+        }
 
         static IObservable<Unit> ImportCustomerStore(this IObjectSpace objectSpace, DevAvDb sqliteContext)
             => sqliteContext.CustomerStores.Include(customerStore => customerStore.Customer)

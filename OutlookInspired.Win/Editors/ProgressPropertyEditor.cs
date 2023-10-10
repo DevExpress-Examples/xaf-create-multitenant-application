@@ -2,7 +2,6 @@
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Utils;
-using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
@@ -13,9 +12,18 @@ namespace OutlookInspired.Win.Editors {
         public ProgressPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model) { }
         protected override object CreateControlCore() => new ProgressBarControl();
 
-        class RepositoryItemProgressBar:DevExpress.XtraEditors.Repository.RepositoryItemProgressBar,IValueCalculator{
-            public object Calculate(object value) => Convert.ToDecimal(value) * 100;
+        class ProgressBarControl:DevExpress.XtraEditors.ProgressBarControl{
+            protected override object ConvertCheckValue(object val) => val is double doubleValue ? (int)(doubleValue * 100) : base.ConvertCheckValue(val);
         }
+        class RepositoryItemProgressBar:DevExpress.XtraEditors.Repository.RepositoryItemProgressBar,IValueCalculator{
+            [Obsolete("remove it and test")]
+            public object Calculate(object value) => Convert.ToDecimal(value) * 100;
+
+            protected override int ConvertValue(object val) 
+                => val is double doubleValue ? (int)(doubleValue * 100) : base.ConvertValue(val);
+        }
+
+
         protected override RepositoryItem CreateRepositoryItem()
             => new RepositoryItemProgressBar(){
                 PercentView = true, ShowTitle = true, DisplayFormat ={ FormatType = FormatType.Numeric, FormatString = "{0}%" },

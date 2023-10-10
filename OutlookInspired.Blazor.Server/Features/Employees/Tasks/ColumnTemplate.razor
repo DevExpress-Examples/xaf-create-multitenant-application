@@ -2,6 +2,7 @@
 @using OutlookInspired.Module.BusinessObjects
 @using OutlookInspired.Blazor.Server.Services
 @using OutlookInspired.Blazor.Server.Components;
+@using OutlookInspired.Module.Services.Internal
 <div class="container">
     <div class="row">
         <div class="col-md-6 tasks-div">
@@ -13,12 +14,12 @@
     </div>
     <div class="row">
         <div class="col-md-12 tasks-div">
-            @Task.Description
+            @Task.Description.ToDocument(server => server.Text)
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <ProgressBar ComponentModel="@(new ProgressBarModel{Width=Task.Completion.ToString()})"/>
+            <ProgressBar ComponentModel="@(new ProgressBarModel{Width=Task.Completion})"/>
         </div>
     </div>
 </div>

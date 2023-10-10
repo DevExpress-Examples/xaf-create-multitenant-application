@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp.Model;
 using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Editors {
     [PropertyEditor(typeof(object), Module.Services.Internal.EditorAliases.LabelPropertyEditor,false)]
@@ -17,7 +18,9 @@ namespace OutlookInspired.Blazor.Server.Editors {
     }
     
     public class LabelModelAdapter:ComponentModelAdapter<Label,LabelModel>{
-        public override void SetPropertyValue(object value) => Model.Text=$"{value}";
+        public override void SetPropertyValue(object value) 
+            => Model.Text = value is byte[] bytes ? bytes.ToDocument(server => server.Text) : $"{value}";
+
         public override object GetPropertyValue() => Model.Text;
     }
 

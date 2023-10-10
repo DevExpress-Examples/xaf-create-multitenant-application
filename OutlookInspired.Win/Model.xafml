@@ -23,7 +23,7 @@
     <SchemaModule Name="SystemWindowsFormsModule" Version="23.2.1.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
-    <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor" >
+    <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">
       <ChartSettings CustomizationEnabled="False" Settings="﻿&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#xD;&#xA;&lt;ChartXmlSerializer version=&quot;23.1.5.0&quot;&gt;&#xD;&#xA;  &lt;Chart PaletteName=&quot;Office 2013&quot; AppearanceNameSerializable=&quot;Default&quot; SelectionMode=&quot;None&quot; SeriesSelectionMode=&quot;Series&quot;&gt;&#xD;&#xA;    &lt;Border Visibility=&quot;False&quot; /&gt;&#xD;&#xA;    &lt;DataContainer BoundSeriesSorting=&quot;None&quot; ValidateDataMembers=&quot;true&quot;&gt;&#xD;&#xA;      &lt;SeriesSerializable&gt;&#xD;&#xA;        &lt;Item1 Name=&quot;Series 1&quot; SeriesID=&quot;1&quot; ArgumentDataMember=&quot;ProductName&quot; ColorDataMember=&quot;ProductName&quot;&gt;&#xD;&#xA;          &lt;QualitativeSummaryOptions SummaryFunction=&quot;SUM([Total])&quot; /&gt;&#xD;&#xA;        &lt;/Item1&gt;&#xD;&#xA;      &lt;/SeriesSerializable&gt;&#xD;&#xA;      &lt;SeriesTemplate /&gt;&#xD;&#xA;    &lt;/DataContainer&gt;&#xD;&#xA;    &lt;Diagram Rotated=&quot;true&quot; RuntimePaneCollapse=&quot;true&quot; RuntimePaneResize=&quot;false&quot; PaneLayoutDirection=&quot;Vertical&quot; TypeNameSerializable=&quot;XYDiagram&quot;&gt;&#xD;&#xA;      &lt;AxisX VisibleInPanesSerializable=&quot;-1&quot;&gt;&#xD;&#xA;        &lt;Tickmarks Visible=&quot;false&quot; MinorVisible=&quot;false&quot; /&gt;&#xD;&#xA;        &lt;Label TextPattern=&quot;{V:$##,#0}&quot; Visible=&quot;false&quot;&gt;&#xD;&#xA;          &lt;ResolveOverlappingOptions AllowStagger=&quot;false&quot; AllowRotate=&quot;false&quot; /&gt;&#xD;&#xA;        &lt;/Label&gt;&#xD;&#xA;      &lt;/AxisX&gt;&#xD;&#xA;      &lt;AxisY VisibleInPanesSerializable=&quot;-1&quot; /&gt;&#xD;&#xA;      &lt;SelectionOptions /&gt;&#xD;&#xA;    &lt;/Diagram&gt;&#xD;&#xA;    &lt;Legend CrosshairContentOffset=&quot;4&quot; MaxCrosshairContentWidth=&quot;50&quot; MaxCrosshairContentHeight=&quot;0&quot; LegendID=&quot;-1&quot; Visibility=&quot;False&quot; /&gt;&#xD;&#xA;  &lt;/Chart&gt;&#xD;&#xA;&lt;/ChartXmlSerializer&gt;" />
     </ListView>
     <DetailView Id="Customer_DetailView_Child">
@@ -81,7 +81,6 @@
     </DashboardView>
     <ListView Id="Employee_AssignedTasks_ListView_Child">
       <Columns>
-        <ColumnInfo Id="Description" RowIndex="1" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Completion" RowIndex="2" Index="1" OwnerBand="Main" />
         <ColumnInfo Id="DueDate" RowIndex="0" Index="1" OwnerBand="Main" />
@@ -190,6 +189,30 @@
         <ControlDetailItem Id="MapsControl" ControlTypeName="DevExpress.XtraMap.MapControl" />
         <PropertyEditor Id="RouteResult" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutGroup Id="Auto7f26b532-5e95-4984-975f-7d112e3f48be" RelativeSize="66.82494460272238" TextAlignMode="AlignWithChildren">
+              <LayoutItem Id="MapsControl" ShowCaption="False" CaptionLocation="Top" />
+            </LayoutGroup>
+            <LayoutGroup Id="Auto55738e8a-ad25-43c5-8135-f7030b1fbeb6" RelativeSize="33.17505539727762">
+              <LayoutGroup Id="Auto545e433b-2786-4e52-bd8b-09fc12509e50" TextAlignMode="AlignWithChildren" RelativeSize="9.083044982698961">
+                <LayoutItem Id="Picture" RelativeSize="22.041984732824428" />
+                <LayoutGroup Id="Auto5ce01d17-5e7e-4055-b926-eeb5c8eef21e" TextAlignMode="AlignWithChildren" RelativeSize="77.95801526717557">
+                  <LayoutItem Id="FullName" RelativeSize="44.285714285714285" />
+                  <LayoutItem Id="Address" RelativeSize="55.714285714285715" />
+                </LayoutGroup>
+              </LayoutGroup>
+              <LayoutItem Id="Item2" RelativeSize="1.9031141868512111" />
+              <LayoutItem Id="AAddress" RelativeSize="1.9031141868512111" />
+              <LayoutItem Id="BAddress" RelativeSize="1.9031141868512111" />
+              <LayoutItem Id="Item1" RelativeSize="1.3840830449826989" />
+              <LayoutItem Id="RouteResult" RelativeSize="2.292387543252595" />
+              <LayoutItem Id="RoutePoints" RelativeSize="81.53114186851211" />
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
     </DetailView>
     <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
     <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor">
@@ -206,7 +229,7 @@
       </BandsLayout>
     </ListView>
     <ListView Id="Employee_EvaluationsCreatedBy_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
-    <ListView Id="Employee_ListView" ShowFindPanel="True">
+    <ListView Id="Employee_ListView" ShowFindPanel="True" Filter="[City] = 'Glendale'">
       <SplitLayout SplitterPosition="1262" />
     </ListView>
     <ListView Id="Employee_ListView_Card" ClassName="OutlookInspired.Module.BusinessObjects.Employee" AutoExpandAllGroups="True" IsGroupPanelVisible="True" MasterDetailView="Employee_DetailView_Child" ShowFindPanel="True" IsNewNode="True">
@@ -238,7 +261,6 @@
       </Columns>
       <SplitLayout SplitterPosition="1262" IsNewNode="True" />
     </ListView>
-    <ListView Id="Employee_RoutePoints_ListView" />
     <DashboardView Id="EmployeeCardListView">
       <Layout>
         <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren">
@@ -250,7 +272,7 @@
     </DashboardView>
     <DetailView Id="EmployeeLayoutView_DetailView">
       <Items>
-        <ControlDetailItem Id="EmployeesLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.EmployeesLayoutView" />
+        <ControlDetailItem Id="EmployeesLayoutView" ControlTypeName="OutlookInspired.Win.Features.Employees.EmployeesLayoutView" />
       </Items>
     </DetailView>
     <DashboardView Id="EmployeeListView">
@@ -264,6 +286,51 @@
     </DashboardView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalStart="2019-12-01" SelectedIntervalEnd="2019-12-31" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
     <ListView Id="Event_ListView" ResourceClass="" />
+    <DetailView Id="Order_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main" TextAlignMode="UseParentOptions">
+          <TabbedGroup Id="Item1" Index="0" RelativeSize="100">
+            <LayoutGroup Id="Item2">
+              <LayoutGroup Id="Order">
+                <LayoutGroup Id="Order_col1" RelativeSize="49.85581544376802">
+                  <LayoutItem Id="InvoiceNumber" RelativeSize="2.605570530098832" />
+                  <LayoutItem Id="PONumber" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="Employee" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="OrderDate" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="SaleAmount" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="ShippingAmount" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="TotalAmount" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="ShipDate" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="ShipMethod" RelativeSize="83.55795148247978" />
+                </LayoutGroup>
+                <LayoutGroup Id="Order_col2" RelativeSize="50.14418455623198">
+                  <LayoutItem Id="ShipmentCourier" RelativeSize="2.605570530098832" />
+                  <LayoutItem Id="ShipmentStatus" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="RefundTotal" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="PaymentTotal" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="PaymentStatus" RelativeSize="1.9766397124887691" />
+                  <LayoutItem Id="ActualWeight" RelativeSize="89.4878706199461" />
+                </LayoutGroup>
+              </LayoutGroup>
+            </LayoutGroup>
+            <LayoutGroup Id="OrderItems_Group" TextAlignMode="AlignWithChildren" Direction="Vertical">
+              <LayoutItem Id="OrderItems1" ViewItem="OrderItems" Index="0" RelativeSize="100" IsNewNode="True" />
+              <LayoutItem Id="OrderItems" TextAlignMode="AutoSize" RelativeSize="50.028074115665355" Index="1" Removed="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="Item3" TextAlignMode="AlignWithChildren">
+              <LayoutItem Id="OrderTerms" TextAlignMode="AutoSize" />
+            </LayoutGroup>
+            <LayoutGroup Id="Item4" TextAlignMode="AlignWithChildren">
+              <LayoutItem Id="Comments" ShowCaption="False" TextAlignMode="AutoSize" ViewItem="Comments" CaptionLocation="Left" Index="0" RelativeSize="100" IsNewNode="True" />
+              <LayoutItem Id="Comments1" Removed="True" />
+            </LayoutGroup>
+          </TabbedGroup>
+          <LayoutGroup Id="OrderItems_Group" Caption="Order Items" Index="1" RelativeSize="65.20423600605143" Removed="True">
+            <LayoutItem Id="OrderItems" Removed="True" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
     <DetailView Id="Order_DetailView_Child">
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
@@ -283,7 +350,12 @@
         <PropertyEditor Id="InvoiceDocument" PropertyEditorType="OutlookInspired.Win.Editors.PrintLayoutRichTextEditor" />
       </Items>
     </DetailView>
-    <ListView Id="Order_ListView" ShowFindPanel="True" />
+    <ListView Id="Order_ListView" ShowFindPanel="True">
+      <Columns>
+        <ColumnInfo Id="PaymentStatus" ImageEditorFixedWidth="30" />
+        <ColumnInfo Id="ShipmentStatus" ImageEditorFixedWidth="30" />
+      </Columns>
+    </ListView>
     <DetailView Id="OrderGridView_DetailView">
       <Items>
         <ControlDetailItem Id="OrderGridView" ControlTypeName="OutlookInspired.Win.Features.Orders.OrderGridView" />
@@ -293,13 +365,10 @@
       <Layout>
         <LayoutGroup Id="Main">
           <LayoutGroup Id="SimpleEditors" TextAlignMode="AlignWithChildren" RelativeSize="100" />
-          <LayoutGroup Id="SizeableEditors" Caption="Description" RelativeSize="96.8413496051687" Removed="True">
-            <LayoutItem Id="Description" Removed="True" />
-          </LayoutGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Product_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor" >
+    <ListView Id="Product_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">
       <ChartSettings CustomizationEnabled="False" Settings="﻿&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#xD;&#xA;&lt;ChartXmlSerializer version=&quot;23.2.1.0&quot;&gt;&#xD;&#xA;  &lt;Chart PaletteName=&quot;Office 2013&quot; AppearanceNameSerializable=&quot;Default&quot; SelectionMode=&quot;None&quot; SeriesSelectionMode=&quot;Series&quot;&gt;&#xD;&#xA;    &lt;Border Visibility=&quot;False&quot; /&gt;&#xD;&#xA;    &lt;DataContainer BoundSeriesSorting=&quot;None&quot; ValidateDataMembers=&quot;true&quot;&gt;&#xD;&#xA;      &lt;SeriesSerializable&gt;&#xD;&#xA;        &lt;Item1 Name=&quot;Series 1&quot; SeriesID=&quot;0&quot; ArgumentDataMember=&quot;CustomerName&quot; ColorDataMember=&quot;Customer.Name&quot;&gt;&#xD;&#xA;          &lt;QualitativeSummaryOptions SummaryFunction=&quot;SUM([Total])&quot; /&gt;&#xD;&#xA;        &lt;/Item1&gt;&#xD;&#xA;      &lt;/SeriesSerializable&gt;&#xD;&#xA;      &lt;SeriesTemplate /&gt;&#xD;&#xA;    &lt;/DataContainer&gt;&#xD;&#xA;    &lt;Diagram Rotated=&quot;true&quot; RuntimePaneCollapse=&quot;true&quot; RuntimePaneResize=&quot;false&quot; PaneLayoutDirection=&quot;Vertical&quot; TypeNameSerializable=&quot;XYDiagram&quot;&gt;&#xD;&#xA;      &lt;AxisX VisibleInPanesSerializable=&quot;-1&quot;&gt;&#xD;&#xA;        &lt;Tickmarks Visible=&quot;false&quot; MinorVisible=&quot;false&quot; /&gt;&#xD;&#xA;        &lt;Label Visible=&quot;false&quot; /&gt;&#xD;&#xA;      &lt;/AxisX&gt;&#xD;&#xA;      &lt;AxisY VisibleInPanesSerializable=&quot;-1&quot;&gt;&#xD;&#xA;        &lt;Label TextPattern=&quot;{V:$##,#0}&quot;&gt;&#xD;&#xA;          &lt;ResolveOverlappingOptions AllowStagger=&quot;false&quot; AllowRotate=&quot;false&quot; /&gt;&#xD;&#xA;        &lt;/Label&gt;&#xD;&#xA;      &lt;/AxisY&gt;&#xD;&#xA;      &lt;SelectionOptions /&gt;&#xD;&#xA;    &lt;/Diagram&gt;&#xD;&#xA;    &lt;Legend CrosshairContentOffset=&quot;4&quot; MaxCrosshairContentWidth=&quot;50&quot; MaxCrosshairContentHeight=&quot;0&quot; LegendID=&quot;-1&quot; Visibility=&quot;False&quot; /&gt;&#xD;&#xA;  &lt;/Chart&gt;&#xD;&#xA;&lt;/ChartXmlSerializer&gt;" />
     </ListView>
     <DetailView Id="Product_DetailView_Maps">
@@ -311,17 +380,16 @@
       <Layout>
         <LayoutGroup Id="Main">
           <LayoutGroup Id="SimpleEditors" TextAlignMode="AlignWithChildren">
-            <LayoutItem Id="MapsControl" RelativeSize="62.907823883433636" />
-            <LayoutGroup Id="Autod57882cd-856e-4ea1-b705-4f3947c6cd3a" TextAlignMode="AlignWithChildren" RelativeSize="37.092176116566364">
+            <LayoutItem Id="MapsControl" RelativeSize="62.83634061411839" />
+            <LayoutGroup Id="Autod57882cd-856e-4ea1-b705-4f3947c6cd3a" TextAlignMode="AlignWithChildren" RelativeSize="37.16365938588161">
               <LayoutGroup Id="Auto7232bb75-2212-4025-846c-d1f63f07de17" Caption="Auto7232bb75-2212-4025-846c-d1f63f07de17(5)" TextAlignMode="AlignWithChildren" RelativeSize="9.204840103716508">
-                <LayoutItem Id="Image" RelativeSize="21.093082835183605" />
-                <LayoutGroup Id="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c" Caption="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c(7)" TextAlignMode="AlignWithChildren" RelativeSize="78.90691716481639">
+                <LayoutItem Id="Image" RelativeSize="21.039182282793867" />
+                <LayoutGroup Id="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c" Caption="Auto078d352c-0e3c-4dfd-863f-4a3da43bd08c(7)" TextAlignMode="AlignWithChildren" RelativeSize="78.96081771720613">
                   <LayoutItem Id="Name" RelativeSize="27.230046948356808" />
                   <LayoutItem Id="Description" RelativeSize="72.7699530516432" />
                 </LayoutGroup>
               </LayoutGroup>
-              <LayoutItem Id="Item1" Index="1" RelativeSize="7.087294727744166" SizeConstraintsType="Custom" MinSize="10, 94" MaxSize="0, 94" IsNewNode="True" />
-              <LayoutItem Id="CitySales" Index="2" RelativeSize="83.70786516853933" />
+              <LayoutItem Id="CitySales" Index="1" RelativeSize="90.7951598962835" />
             </LayoutGroup>
           </LayoutGroup>
         </LayoutGroup>

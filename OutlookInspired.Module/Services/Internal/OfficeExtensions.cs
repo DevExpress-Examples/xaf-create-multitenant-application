@@ -3,6 +3,17 @@ using DevExpress.XtraRichEdit;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class OfficeExtensions{
+        public static T ToDocument<T>(this byte[] bytes,Func<IRichEditDocumentServer,T> data){
+            using var server = new RichEditDocumentServer();
+            return server.ToDocument(bytes,() => data(server));
+        }
+
+        public static T ToDocument<T>(this IRichEditDocumentServer server,byte[] bytes,Func<T> data,DocumentFormat? documentFormat=null){
+            using var memoryStream = new MemoryStream(bytes);
+            server.LoadDocument(memoryStream, documentFormat??DocumentFormat.Undefined);
+            return data();
+        }
+
         public static byte[] AddWaterMark(this byte[] bytes,string text){
             using var processor = new PdfDocumentProcessor();
             using var memoryStream = new MemoryStream(bytes);

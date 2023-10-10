@@ -20,11 +20,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         [RuleRequiredField]
         [FontSizeDelta(8)]
         public virtual string Subject { get; set; }
-        [FieldSize(FieldSizeAttribute.Unlimited)]
-        public virtual string Description { get; set; }
-        [FieldSize(FieldSizeAttribute.Unlimited)]
+        
+        public virtual byte[] Description { get; set; }
+        
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
-        public virtual string RtfTextDescription { get; set; }
+        public virtual byte[] RtfTextDescription { get; set; }
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
         public virtual EmployeeTaskStatus Status { get; set; }

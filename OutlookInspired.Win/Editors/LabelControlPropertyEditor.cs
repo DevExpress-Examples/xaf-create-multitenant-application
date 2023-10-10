@@ -5,6 +5,7 @@ using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using OutlookInspired.Module.Attributes;
+using OutlookInspired.Module.Services.Internal;
 using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
 namespace OutlookInspired.Win.Editors{
@@ -26,9 +27,8 @@ namespace OutlookInspired.Win.Editors{
                 }
             };
 
-        protected override void ReadValueCore(){
-            base.ReadValueCore();
-            Control.Text =DisplayFormat!=String.Empty? string.Format(DisplayFormat,PropertyValue):$"{PropertyValue}";
-        }
+        protected override void ReadValueCore()
+            => Control.Text = PropertyValue is byte[] bytes ? bytes.ToDocument(server => server.Text) :
+                DisplayFormat != String.Empty ? string.Format(DisplayFormat, PropertyValue) : $"{PropertyValue}";
     }
 }

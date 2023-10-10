@@ -1,16 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 using Newtonsoft.Json;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
@@ -47,10 +44,12 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual decimal TotalAmount { get; set; }
         public  virtual DateTime? ShipDate { get; set; }
         public  virtual OrderShipMethod ShipMethod { get; set; }
-        public  virtual string OrderTerms { get; set; }
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+        public  virtual byte[] OrderTerms { get; set; }
         [Aggregated]
         public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
         public  virtual ShipmentCourier ShipmentCourier { get; set; }
+        [EditorAlias(EditorAliases.EnumImageOnlyEditor)]
         public  virtual ShipmentStatus ShipmentStatus { get; set; }
 
         [VisibleInDetailView(false)]
@@ -69,12 +68,13 @@ namespace OutlookInspired.Module.BusinessObjects{
         [VisibleInDetailView(false)]
         [NotMapped]
         public virtual byte[] InvoiceDocument{ get; set; } = Array.Empty<byte>();
-        public  virtual string Comments { get; set; }
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+        public  virtual byte[] Comments { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal RefundTotal { get; set; }
         [DataType(DataType.Currency)]
         public  virtual decimal PaymentTotal { get; set; }
-        
+        [EditorAlias(EditorAliases.EnumImageOnlyEditor)]
         public PaymentStatus PaymentStatus 
             => PaymentTotal == decimal.Zero && RefundTotal == decimal.Zero ? PaymentStatus.Unpaid :
                 RefundTotal == TotalAmount ? PaymentStatus.RefundInFull :

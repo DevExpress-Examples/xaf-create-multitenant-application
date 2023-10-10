@@ -37,8 +37,14 @@ namespace OutlookInspired.Module.BusinessObjects{
 		}
 
 
-		[FieldSize(FieldSizeAttribute.Unlimited)]
-		public virtual string Description{ get; set; }
+		
+		string IEvent.Description{
+			get => Description.GetString();
+			set => throw new NotImplementedException();
+		}
+
+		[EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+		public virtual byte[] Description{ get; set; }
 		public virtual DateTime? EndOn { get; set; }
 		[ImmediatePostData][Browsable(false)]
 		public virtual Boolean AllDay { get; set; }

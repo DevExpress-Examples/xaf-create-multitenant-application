@@ -56,9 +56,8 @@ namespace OutlookInspired.Win.Features.Quotes{
             return itemsLayer;
         }
         
-        // Stage Stage => (Stage)MapsViewController.StageAction.SelectedItem.Data;
-        [Obsolete("win throws")]
-        Stage Stage => (Stage)Stage.High;
+        Stage Stage => (Stage)MapsViewController.StageAction.SelectedItem.Data;
+        
         public PaletteEntry[] PaletteEntries{ get; set; }
 
         private void SetAdapterDataSource(){

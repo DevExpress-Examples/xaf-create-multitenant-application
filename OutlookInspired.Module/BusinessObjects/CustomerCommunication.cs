@@ -1,4 +1,5 @@
-﻿using DevExpress.Persistent.Base;
+﻿using DevExpress.ExpressApp.Editors;
+using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("ProductQuickComparisons")]
@@ -7,6 +8,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual CustomerEmployee CustomerEmployee { get; set; }
         public virtual DateTime Date { get; set; }
         public virtual string Type { get; set; }
-        public virtual string Purpose { get; set; }
+        [EditorAlias(EditorAliases.RichTextPropertyEditor)]
+        public virtual byte[] Purpose { get; set; }
     }
 }

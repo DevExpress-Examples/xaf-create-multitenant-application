@@ -1,4 +1,6 @@
-﻿namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Charts{
+﻿using OutlookInspired.Module.BusinessObjects;
+
+namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Charts{
     public class DxFunnelModel : DevExtremeModel<DxFunnel>{
         public FunnelChartOptions Options{ get; } = new();
     }
@@ -9,7 +11,8 @@
         public Margin TitleMargin{ get; set; }
         public string ArgumentField{ get; set; }
         public string ValueField{ get; set; }
-        public string[] Palette{ get; set; }
+        public (string color, Stage stage)[] PaletteData{ get; set; }
+        public string[] Palette => PaletteData.Select(t => t.color).ToArray();
         public ExportOptions Export{ get; set; }=new();
         public TooltipOptions Tooltip{ get; set; }=new();
         public ItemOptions Item{ get; set; } = new();

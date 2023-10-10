@@ -21,8 +21,9 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
         private void StageActionOnExecuted(object sender, ActionBaseEventArgs e) => CustomizeModel().Redraw=true;
 
         protected override DxVectorMapModel CustomizeModel(DxVectorMapModel model){
-            var mapItems = ObjectSpace.Opportunities((Stage)Frame.GetController<MapsViewController>().StageAction.SelectedItem.Data).ToArray();
-            model.Options = mapItems.VectorMapOptions<QuoteMapItem, BubbleLayer>(Palette,
+            var stage = (Stage)Frame.GetController<MapsViewController>().StageAction.SelectedItem.Data;
+            var mapItems = ObjectSpace.Opportunities(stage).ToArray();
+            model.Options = mapItems.VectorMapOptions<QuoteMapItem, BubbleLayer>(Palette.Where(t => t.stage==stage).Select(t => t.color).ToArray(),
                 items => items.Sum(item => item.Total).YieldItem().Select(arg => arg.RoundNumber()).ToList());
             var quoteMapItem = mapItems.First();
             model.Options.Annotations.Add(new Annotation(){
@@ -32,6 +33,6 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
             return model;
         }
 
-        public string[] Palette{ get; set; }
+        public (string color, Stage stage)[] Palette{ get; set; }
     }
 }

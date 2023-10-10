@@ -2,9 +2,11 @@
 
 namespace OutlookInspired.Blazor.Server.Components{
     public class ProgressBarModel : ComponentModelBase{
-        public string Width{
-            get => GetPropertyValue<string>();
+        public int Width{
+            get => GetPropertyValue<int>();
             set => SetPropertyValue( value);
         }
+
+        
     }
 }

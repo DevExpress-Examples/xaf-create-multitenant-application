@@ -47,6 +47,7 @@ namespace OutlookInspired.Blazor.Server.Editors {
         public sealed override IComponentModel ComponentModel => Model;
         public virtual TModel Model{ get; } = new();
         protected override RenderFragment CreateComponent() => Model.Create(RenderFragment);
+        
         protected abstract RenderFragment RenderFragment(TModel model);
     }
 }

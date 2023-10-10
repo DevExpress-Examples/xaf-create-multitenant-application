@@ -2,12 +2,13 @@
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
+using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Quotes{
     public class PaletteController:ViewController<DashboardView>{
-        private string[] _palette;
+        private (string color, Stage stage)[] _palette;
         public PaletteController() => TargetViewId = "Opportunities";
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
@@ -24,7 +25,7 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
         private void OnChartControlCreated(object sender, EventArgs e){
             var controlViewItem = ((ControlViewItem)sender);
             controlViewItem.ControlCreated-=OnChartControlCreated;
-            _palette = ((DxFunnelModel)controlViewItem.Control).ComponentModel.Options.Palette;
+            _palette = ((DxFunnelModel)controlViewItem.Control).ComponentModel.Options.PaletteData;
         }
 
         private void OnMasterItemControlCreated(object sender, EventArgs e){

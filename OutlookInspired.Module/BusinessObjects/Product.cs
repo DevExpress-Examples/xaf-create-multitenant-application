@@ -19,6 +19,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.DetailView, CardViewDetailView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
     [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = DevExpress.Drawing.DXFontStyle.Strikeout)]
+    [XafDefaultProperty(nameof(Name))]
     public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
         
         public const string CardViewDetailView = "ProductCardView_DetailView";
@@ -27,8 +28,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         
         [FontSizeDelta(8)]
         public  virtual string Name { get; set; }
-        [FieldSize(-1)]
-        public  virtual string Description { get; set; }
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+        public  virtual byte[] Description { get; set; }
         public  virtual DateTime ProductionStart { get; set; }
         public  virtual bool Available { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

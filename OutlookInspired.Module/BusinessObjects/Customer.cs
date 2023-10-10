@@ -80,8 +80,8 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[Aggregated]
 		public virtual ObservableCollection<CustomerStore> CustomerStores{ get; set; } = new();
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
-		[FieldSize(-1)]
-		public virtual string Profile { get; set; }
+		[EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+		public virtual byte[] Profile { get; set; }
 		[ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
 			DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
 		[VisibleInListView(false)][VisibleInLookupListView(false)]

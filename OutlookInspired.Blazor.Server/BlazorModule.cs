@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Blazor.Server.Controllers;
 using OutlookInspired.Blazor.Server.Features.Customers;
@@ -18,8 +17,6 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
         e.Store = new ModelDifferenceDbStore((XafApplication)sender, typeof(ModelDifference), false, "Blazor");
         e.Handled = true;
     }
-    public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) 
-        => ModuleUpdater.EmptyModuleUpdaters;
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
         => new[]{
@@ -28,7 +25,7 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(Features.Employees.Tasks.CellDisplayTemplateController),typeof(Features.Orders.DetailRowController),
             typeof(RouteMapsViewController),typeof(RouteMapsViewController),typeof(MapsViewController),typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(Features.Orders.RouteMapsViewController),
-            typeof(BlazorMapsViewController),typeof(PaletteController)
+            typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController)
         };
 
     public override void Setup(XafApplication application) {
