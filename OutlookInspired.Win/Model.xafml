@@ -67,7 +67,7 @@
     </ListView>
     <DetailView Id="CustomerLayoutView_DetailView">
       <Items>
-        <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.UserControls.CustomerLayoutView" />
+        <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.Features.Customers.CustomerLayoutView" />
       </Items>
     </DetailView>
     <DashboardView Id="CustomerListView">

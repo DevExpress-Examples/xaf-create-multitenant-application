@@ -27,10 +27,12 @@ namespace OutlookInspired.Tests.Assert{
                     listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject));
         }
         
-        public static IObservable<Unit> AssertNestedQuote(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex) 
-            => source.AssertNestedListView(nestedFrame, typeof(Quote),tabIndex,AssertNestedQuoteItem,frame =>frame.AssertAction(nestedFrame) );
+        public static IObservable<Frame> AssertNestedQuote(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex) 
+            => source.AssertNestedListView(nestedFrame, typeof(Quote),tabIndex,AssertRootQuote,frame =>frame.AssertAction(nestedFrame) )
+                .SelectMany(frame => frame.Observe())
+                ;
 
-        public static IObservable<Unit> AssertNestedQuoteItem(this Frame nestedFrame) 
+        public static IObservable<Unit> AssertRootQuote(this Frame nestedFrame) 
             => nestedFrame.AssertNestedListView(typeof(QuoteItem),assert:frame => frame.AssertAction(nestedFrame)).ToUnit();
     }
 }

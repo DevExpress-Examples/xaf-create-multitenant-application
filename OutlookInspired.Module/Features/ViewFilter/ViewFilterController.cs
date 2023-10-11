@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.ViewFilter{

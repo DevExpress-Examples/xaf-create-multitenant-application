@@ -39,8 +39,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		
 		string IEvent.Description{
-			get => Description.GetString();
-			set => throw new NotImplementedException();
+			get => Description.ToDocument(server => server.Text);
+			set => Description=value.Bytes().ToDocument(server => server.OpenXmlBytes);
 		}
 
 		[EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]

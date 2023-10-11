@@ -131,7 +131,7 @@ namespace OutlookInspired.Tests.Assert{
     
         static AssertAction QuoteAssertAction(this EmployeeDepartment? department,Frame frame) 
             => department switch{
-                _ when frame.View.IsRoot=> XAF.Testing.XAF.AssertAction.HasObject,
+                _ when frame.View.IsRoot && department!=null=> XAF.Testing.XAF.AssertAction.HasObject,
                 EmployeeDepartment.Shipping or EmployeeDepartment.Engineering or EmployeeDepartment.Management
                     or EmployeeDepartment.IT when !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.Process,
                 _ => XAF.Testing.XAF.AssertAction.DetailViewSave

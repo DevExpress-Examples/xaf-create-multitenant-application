@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
@@ -57,7 +58,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> ToController<T>(this IObservable<Frame> source) where T : Controller 
             => source.SelectMany(window => window.Controllers.Cast<Controller>()).OfType<T>();
 
-        public static IObservable<Window> CloseWindow<TFrame>(this IObservable<TFrame> source) where TFrame:Frame
+        public static IObservable<Window> CloseWindow(this IObservable<Frame> source) 
             => source.Cast<Window>().DelayOnContext().Do(frame => frame.Close()).DelayOnContext().IgnoreElements();
         
         public static IObservable<Unit> WhenAcceptTriggered(this IObservable<DialogController> source) 
@@ -210,7 +211,7 @@ namespace XAF.Testing.XAF{
         private static IObservable<Frame> CreateNewObjectEditor(this Frame frame) 
             => Observable.Defer(() => frame.View.WhenControlsCreated()
                 .StartWith(frame.View.ToListView().Editor.Control).WhenNotDefault()
-                .SelectMany(_ => frame.View.ToListView().WhenObjects()
+                .SelectMany(_ => frame.View.ToListView().WhenObjects(1)
                     .Do(existingObject => ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(frame.View
                         .ToCompositeView().CloneExistingObjectMembers(true,existingObject).ToArray())))
                 .To(frame));

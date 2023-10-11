@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Win.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using XAF.Testing.RX;
@@ -10,10 +11,11 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Assert{
     static class FilterActionExtensions{
         
-        internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount)
+        internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount,Action<NestedFrame> action=null)
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
+                .Do(frame => action?.Invoke(frame))
                 .AssertSingleChoiceAction(ViewFilterController.FilterViewActionId,_ => filtersCount)
-                .AssertFilterAction().IgnoreElements().Concat(source);
+                .AssertFilterAction().IgnoreElements().Concat(source).ReplayFirstTake();
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source) 
             => source.AssertFilters().IgnoreElements()

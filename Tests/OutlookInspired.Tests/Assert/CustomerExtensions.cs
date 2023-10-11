@@ -25,9 +25,9 @@ namespace OutlookInspired.Tests.Assert{
             // .Select(frame => frame)
             // .ReplayFirstTake()
             // .FilterListViews(action.Application);
-            var customerTabControl = action.Application.AssertTabbedGroup(typeof(Customer), 4);
+            var customerTabControl = action.Application.AssertTabbedGroup(typeof(Customer), 5);
             return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: customerTabControl.AssertCustomerDetailView,assert:frame => frame.AssertAction())
+                    existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
                 .AssertFilterAction(filtersCount:7)
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
                 .If(_ => viewVariant=="CustomerListView",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
@@ -36,31 +36,37 @@ namespace OutlookInspired.Tests.Assert{
                 .Merge(customerTabControl.IgnoreElements().To<Frame>());
         }
 
-        internal static IObservable<Unit> AssertCustomerDetailView(this IObservable<TabbedGroup> source,Frame frame) 
-            => frame.Defer(() => frame.AssertNestedCustomerEmployee().IgnoreElements()
-                    .Concat(source.AssertNestedQuote(frame,1)).IgnoreElements()
-                    .Concat(source.AssertNestedCustomerStore(frame)).IgnoreElements()
-                    .Concat(source.AssertNestedOrder(frame,3))
+        internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<TabbedGroup> source,Frame frame) 
+            => frame.Defer(() => source.AssertNestedCustomerEmployee(frame,1).IgnoreElements()
+                    .ConcatDefer(() => source.AssertNestedQuote(frame,2)).IgnoreElements()
+                    .ConcatDefer(() => source.AssertNestedCustomerStore(frame)).IgnoreElements()
+                    .ConcatDefer(() => source.AssertNestedOrder(frame,4))
                 )
                 .ReplayFirstTake();
         
-        private static IObservable<Unit> AssertNestedCustomerStore(this IObservable<TabbedGroup> source,Frame nestedFrame){
+        internal static IObservable<Frame> AssertNestedCustomerEmployee(this IObservable<TabbedGroup> source, Frame nestedFrame,int tabIndex)
+            => source.AssertNestedListView(nestedFrame, typeof(CustomerEmployee),tabIndex, existingObjectDetailViewFrame => 
+                existingObjectDetailViewFrame.AssertRootCustomerEmployee(), frame =>frame.AssertAction(nestedFrame) );
+        
+        internal static IObservable<Frame> AssertNestedCustomerEmployee(this Frame nestedFrame) 
+            => nestedFrame.AssertNestedListView(typeof(CustomerEmployee), existingObjectDetailViewFrame => 
+                    existingObjectDetailViewFrame.AssertRootCustomerEmployee(),
+                frame =>frame.AssertAction(nestedFrame) );
+        
+        private static IObservable<Frame> AssertNestedCustomerStore(this IObservable<TabbedGroup> source,Frame nestedFrame){
             var customerStoreTabbedGroup = nestedFrame.Application.AssertTabbedGroup(typeof(CustomerStore),3);
-            return source.AssertNestedListView(nestedFrame, typeof(CustomerStore), selectedTabPageIndex: 2,
-                frame => customerStoreTabbedGroup.AssertRootCustomerStore(frame),frame => frame.AssertAction(nestedFrame))
-                .MergeToUnit(customerStoreTabbedGroup);
+            return source.AssertNestedListView(nestedFrame, typeof(CustomerStore), selectedTabPageIndex: 3,
+                frame => customerStoreTabbedGroup.AssertRootCustomerStore(frame).ToUnit(),frame => frame.AssertAction(nestedFrame))
+                .Merge(customerStoreTabbedGroup.To<Frame>().IgnoreElements());
         }
 
-        private static IObservable<Unit> AssertRootCustomerStore(this IObservable<TabbedGroup> source, Frame frame) 
+        private static IObservable<Frame> AssertRootCustomerStore(this IObservable<TabbedGroup> source, Frame frame) 
             => frame.Defer(() => frame.AssertNestedCustomerEmployee().IgnoreElements()
                     .Concat(source.AssertNestedOrder(frame, 1).IgnoreElements())
                     .Concat(source.AssertNestedQuote(frame, 2)))
-                .Merge(source.IgnoreElements().To<Unit>());
+                .Merge(source.IgnoreElements().To<Frame>());
 
-        internal static IObservable<Unit> AssertNestedCustomerEmployee(this Frame nestedFrame) 
-            => nestedFrame.AssertNestedListView(typeof(CustomerEmployee), existingObjectDetailViewFrame => 
-                existingObjectDetailViewFrame.AssertRootCustomerEmployee(),
-                frame =>frame.AssertAction(nestedFrame) ).ToUnit();
+        
         
         static IObservable<Unit> AssertRootCustomerEmployee(this  Frame frame)
             => frame.AssertNestedListView(typeof(CustomerCommunication),assert:frame1 => frame1.AssertAction()).ToUnit();

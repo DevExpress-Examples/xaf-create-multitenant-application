@@ -50,7 +50,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 : view.ToListView().CollectionSource.Objects<T>();
         internal static CompositeView ToCompositeView(this View view) => (CompositeView)view ;
         internal static IEnumerable<NestedFrame> ToFrame(this IEnumerable<DashboardViewItem> source)
-            => source.Select(item => item.Frame).Cast<NestedFrame>();
+            => source.Select(item => (NestedFrame)item.Frame);
 
         internal static IEnumerable<DashboardViewItem> Items(this DashboardView dashboardView,params ViewType[] viewTypes)
             => dashboardView.GetItems<DashboardViewItem>().Where(item =>viewTypes.Length==0|| viewTypes.Any(viewType =>item.Model.View.Is(viewType) ));

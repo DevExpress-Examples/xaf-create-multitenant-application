@@ -30,13 +30,14 @@ namespace OutlookInspired.Tests.Assert{
             //     .AssertGridControlDetailViewObjects().To<Frame>();
             // .AssertListView(assert: AssertAction.HasObject);
             // .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame));
-
+            var orderTabGroup = action.Application.AssertTabbedGroup(typeof(Order),4);
             return action.Application.AssertDashboardListView(navigationView, viewVariant,
-                    existingObjectDetailview: frame => frame.AssertOrderDetailView(),assert:frame => frame.AssertAction())
-                // .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                // .AssertOrderReportsAction()
-                // .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                // .If(frame => viewVariant=="Detail",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+                    existingObjectDetailview: frame => orderTabGroup.AssertRootOrder(frame),assert:frame => frame.AssertAction())
+                .Merge(orderTabGroup.To<Frame>().IgnoreElements())
+                .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .AssertOrderReportsAction()
+                .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .If(_ => viewVariant=="Detail",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
                 .AssertFilterAction(filtersCount: 12)
                 .FilterListViews(action.Application);
         }
@@ -53,11 +54,17 @@ namespace OutlookInspired.Tests.Assert{
                     .SelectUntilViewClosed(frame => ((DetailView)frame.View).AssertRichEditControl().To(frame)
                         .CloseWindow().To(action.Frame())),() => item)));
         
-        internal static IObservable<Unit> AssertOrderDetailView(this Frame frame) 
-            => frame.AssertNestedOrderItems( ).ReplayFirstTake();
+        // internal static IObservable<Unit> AssertOrderDetailView(this Frame frame) 
+            // => frame.AssertNestedOrderItems( ).ReplayFirstTake();
 
-        public static IObservable<Unit> AssertNestedOrder(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex) 
-            => source.AssertNestedListView(nestedFrame, typeof(Order),tabIndex,existingObjectDetailView => 
-                existingObjectDetailView.AssertNestedListView(typeof(OrderItem),assert:frame => frame.AssertAction(nestedFrame)).ToUnit(),frame =>frame.AssertAction(nestedFrame) );
+        public static IObservable<Frame> AssertNestedOrder(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex){
+            var orderTabGroup = nestedFrame.Application.AssertTabbedGroup(typeof(Order),4);
+            return source.AssertNestedListView(nestedFrame, typeof(Order), tabIndex, existingObjectDetailView 
+                        => orderTabGroup.AssertRootOrder(existingObjectDetailView), frame => frame.AssertAction(nestedFrame))
+                .Merge(orderTabGroup.To<Frame>().IgnoreElements());
+        }
+
+        private static IObservable<Unit> AssertRootOrder(this IObservable<TabbedGroup> orderTabGroup,Frame nestedFrame) 
+            => orderTabGroup.AssertNestedListView(nestedFrame, typeof(OrderItem),1, assert: frame => frame.AssertAction(nestedFrame)).ToUnit();
     }
 }

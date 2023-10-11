@@ -30,6 +30,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual string Name { get; set; }
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
         public  virtual byte[] Description { get; set; }
+
+        [Browsable(false)]
+        public virtual string DescriptionString => Description.ToDocument(server => server.Text);
         public  virtual DateTime ProductionStart { get; set; }
         public  virtual bool Available { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

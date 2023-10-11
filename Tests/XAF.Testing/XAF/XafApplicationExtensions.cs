@@ -278,8 +278,8 @@ namespace XAF.Testing.XAF{
                 .Where(e => !e.Handled)
                 .Select(e => e.Exception)
                 .Merge(application.WhenGridListEditorDataError())
-                
-                .Do(exception => exception.ThrowCaptured()).ToUnit();
+                .Do(exception => exception.ThrowCaptured())
+                .ToUnit();
         public static IObservable<Exception> WhenGridListEditorDataError(this WinApplication application) 
             => application.WhenFrame(typeof(object),ViewType.ListView)
                 .SelectUntilViewClosed(frame => frame.View.ToListView().Editor is GridListEditor gridListEditor

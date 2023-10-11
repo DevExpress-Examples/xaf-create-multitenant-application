@@ -9,6 +9,9 @@ namespace OutlookInspired.Module.Services.Internal{
         }
 
         public static T ToDocument<T>(this IRichEditDocumentServer server,byte[] bytes,Func<T> data,DocumentFormat? documentFormat=null){
+            if (bytes == null || bytes.Length == 0){
+                return default;
+            }
             using var memoryStream = new MemoryStream(bytes);
             server.LoadDocument(memoryStream, documentFormat??DocumentFormat.Undefined);
             return data();

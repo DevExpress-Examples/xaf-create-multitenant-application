@@ -59,6 +59,7 @@ namespace OutlookInspired.Win.Editors
         public virtual Type ObjectType => throw new NotImplementedException();
 
         public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,ObjectType);
+        // public object CurrentObject => SelectedObjects.Cast<object>().FirstOrDefault();
 
         public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();
         public SelectionType SelectionType => SelectionType.Full;

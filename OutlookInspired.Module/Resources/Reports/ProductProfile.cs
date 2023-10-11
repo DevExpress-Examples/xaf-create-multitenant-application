@@ -220,7 +220,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // xrLabel1
             // 
             this.xrLabel1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Description]")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[DescriptionString]")});
             this.xrLabel1.Font = new DevExpress.Drawing.DXFont("Segoe UI", 11F);
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 312.4583F);
             this.xrLabel1.Name = "xrLabel1";

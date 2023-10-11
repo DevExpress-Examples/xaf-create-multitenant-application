@@ -103,6 +103,7 @@ namespace XAF.Testing.RX{
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
             => source.Assert(_ => message,timeout,caller);
 
+        static Logger _logger = new Logger();
         public static TimeSpan? DelayOnContextInterval=250.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
@@ -113,7 +114,10 @@ namespace XAF.Testing.RX{
                 .Timeout(timeout ?? TimeoutInterval, timeoutMessage);
         }
 
-        public static IObservable<T> Throw<T>(this Exception exception) => Observable.Throw<T>(exception);
+        public static IObservable<T> Throw<T>(this Exception exception,[CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0) 
+            => Observable.Throw<T>(new Exception($"{exception.Message} (Caller: {memberName} in {filePath} at line {lineNumber})", exception));
+
         public static string MessageFactory<TSource>(this Func<TSource, string> messageFactory, string caller) => $"{caller}: {messageFactory(default)}";
 
         public static IObservable<T> ReplayFirstTake<T>(this IObservable<T> source,ConnectionMode mode=ConnectionMode.AutoConnect){

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 
 namespace OutlookInspired.Module.Services.Internal{
-    public static class AwaitVoidService{
+    internal static class AwaitVoidService{
         public static void Await(this object any, Func<Task> invoker) {
             var originalContext = SynchronizationContext.Current;
             try {
@@ -19,7 +19,8 @@ namespace OutlookInspired.Module.Services.Internal{
         }
 
     }
-    public sealed class SingleThreadedSynchronizationContext : SynchronizationContext {
+
+    internal sealed class SingleThreadedSynchronizationContext : SynchronizationContext {
         public BlockingCollection<(SendOrPostCallback d, object state)> Queue{ get; } = new();
 
         public override void Post(SendOrPostCallback d, object state){

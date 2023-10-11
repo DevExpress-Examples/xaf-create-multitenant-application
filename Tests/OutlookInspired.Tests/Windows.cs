@@ -1,8 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Security;
-using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
 using Humanizer;
 using NUnit.Framework;
@@ -16,8 +12,10 @@ using XAF.Testing.XAF;
 #pragma warning disable CS8974 
 
 namespace OutlookInspired.Tests{
+    
     [Apartment(ApartmentState.STA)][Order(1)]
     public class Windows:TestBase{
+
         
 #if TEST
         [RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
@@ -27,10 +25,16 @@ namespace OutlookInspired.Tests{
 #endif
         
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
+#if TEST
             UtilityExtensions.TimeoutInterval = 120.Seconds();
-            
+#else
+            var logContext = LogContext.None;
+            Console.SetOut(await Logger.Writer(logContext));
+            if (logContext == LogContext.All){
+                UtilityExtensions.TimeoutInterval = 1.Days();    
+            }
+#endif
             using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
-            
             application.StartWinTest(assert(application,navigationView, viewVariant),user);
         }
 
@@ -41,7 +45,9 @@ namespace OutlookInspired.Tests{
             {(EmployeeDepartment)(-1),"Admin"}
         };
         
-        public static IEnumerable TestCases => Users().SelectMany(TestCaseData);
+        public static IEnumerable TestCases => Users()
+            
+            .SelectMany(TestCaseData);
         
         private static IEnumerable<TestCaseData> TestCaseData(string user){
             yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
@@ -90,49 +96,11 @@ namespace OutlookInspired.Tests{
         
         [SetUp]
         public void Setup(){
-            Console.WriteLine("Setup");
             StopServer();
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => {
-                if (errors == SslPolicyErrors.None)
-                    return true;
-                Console.WriteLine("ServerCertificateValidationCallback invoked");
-                return false;
-            };
-            var process = new Process{
-                StartInfo = new ProcessStartInfo{
-                    FileName = "dotnet",
-                    Arguments = "run --configuration TEST",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = Path.GetFullPath($"{AppDomain.CurrentDomain.BaseDirectory}/../../../../../OutlookInspired.MiddleTier")
-                }
-            };
-
-            process.Start();
-
-            // Wait for the process to start by checking its output
-            var processStarted = false;
-            while (!processStarted){
-                var output = process.StandardOutput.ReadLine();
-                if (output != null && output.Contains("Now listening on")) processStarted = true;
-                Console.Write(output);
-                
-            }
-
-            // Now the process has started
+            this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => output.Contains("Now listening on")));
         }
         
-        private static void StopServer()
-        {
-            var processes = Process.GetProcessesByName("OutlookInspired.MiddleTier");
-
-            foreach (var process in processes)
-            {
-                process.Kill();
-                process.WaitForExit(); // Wait for the process to exit
-            }
-        }
+        private static void StopServer() => AppDomain.CurrentDomain.KillAll();
 
         [TearDown]
         public void TearDown() => StopServer();

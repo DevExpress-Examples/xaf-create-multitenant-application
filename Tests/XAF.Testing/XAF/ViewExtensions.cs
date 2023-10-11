@@ -16,9 +16,10 @@ using View = DevExpress.ExpressApp.View;
 namespace XAF.Testing.XAF{
     public static class ViewExtensions{
         public static IEnumerable<NestedFrame> ToFrame(this IEnumerable<DashboardViewItem> source)
-            => source.Select(item => item.Frame).Cast<NestedFrame>();
+            => source.Select(item => (NestedFrame)item.Frame);
+
         public static IObservable<NestedFrame> ToFrame(this IObservable<DashboardViewItem> source)
-            => source.Select(item => item.Frame).Cast<NestedFrame>();
+            => source.Select(item => (NestedFrame)item.Frame);
 
         public static IObservable<object> WhenPropertyEditorControl(this DetailView detailView)
             => detailView.WhenViewItemControl<PropertyEditor>();
@@ -99,11 +100,13 @@ namespace XAF.Testing.XAF{
 
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
+            // if (compositeView.ObjectTypeInfo.Type.Name == "Product"){
+                // return Enumerable.Empty<Unit>();
+            // }
             var memberInfos = compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
                 .Do(memberInfo => compositeView.ObjectSpace.SetValue(compositeView.CurrentObject,memberInfo,  existingObject))
                 .ToArray();
-            return memberInfos
-                .IgnoreElements().ToUnit();
+            return memberInfos.IgnoreElements().ToUnit();
         }
 
         public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null) 
@@ -173,8 +176,8 @@ namespace XAF.Testing.XAF{
         public static IObservable<TView> TakeUntilViewDisposed<TView>(this IObservable<TView> source) where TView:View 
             => source.TakeWhileInclusive(view => !view.IsDisposed);
 
-        internal static ListView AsListView(this View view) => view as ListView;
-        internal static ListView ToListView(this View view) => ((ListView)view);
+        public static ListView AsListView(this View view) => view as ListView;
+        public static ListView ToListView(this View view) => ((ListView)view);
 
         public static IObservable<T> WhenControlsCreated<T>(this IObservable<T> source) where T:View 
             => source.SelectMany(view => view.WhenViewEvent(nameof(View.ControlsCreated)));

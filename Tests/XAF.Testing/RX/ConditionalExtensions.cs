@@ -3,6 +3,8 @@ using System.Reactive.Subjects;
 
 namespace XAF.Testing.RX{
     public static class ConditionalExtensions{
+        public static IObservable<T> TakeFirst<T>(this IObservable<T> source, Func<T, bool> predicate)
+            => source.Where(predicate).Take(1);
         public static IConnectableObservable<T> TakeAndReplay<T>(this IObservable<T> source, int count)
             => source.Take(count).Replay(count);
         

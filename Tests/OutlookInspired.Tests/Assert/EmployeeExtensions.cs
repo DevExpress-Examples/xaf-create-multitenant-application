@@ -19,30 +19,31 @@ namespace OutlookInspired.Tests.Assert{
         private static IObservable<Frame> AssertEmployeeListView(this SingleChoiceAction action,string navigationView, string viewVariant){
             // return action.Application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
             //     .AssertSelectDashboardListViewObject()
-            //     // .AssertMasterFrame().ToFrame()
-            //     .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems());
-            //     .AssertEmployeeDashboardChildView(application, viewVariant)
-            //     .AssertMapItAction(typeof(Employee),
-            //         frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject))
-            // .AssertFilterAction(filterCount);
-            //     .DelayOnContext(60)
-            //     .FilterListViews(application);
-            // .AssertSelectDashboardListViewObject()
+            //     //     // .AssertMasterFrame().ToFrame()
+            //     //     .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems());
+            //     .AssertEmployeeDashboardChildView(action.Application, viewVariant)
+            // //     .AssertMapItAction(typeof(Employee),
+            // //         frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject))
+            //
+            // // .AssertFilterAction(7,frame => frame.ClearFilter())
+            // //     .DelayOnContext(60)
+            // .FilterListViews(action.Application);
+            // // .AssertSelectDashboardListViewObject()
             // .AssertMapItAction(typeof(Employee),
             // frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject));
             
             return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: frame => frame.AssertEmployeeDetailView(),
+                    existingObjectDetailview: frame => frame.AssertEmployeeDetailView().ToUnit(),
                     assert: frame => frame.AssertAction())
                 .AssertEmployeeDashboardChildView(action.Application, viewVariant)
                 .AssertMapItAction(typeof(Employee),
                     frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
                 .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
-                .AssertFilterAction(filtersCount: 7)
+                .AssertFilterAction(filtersCount: 7,frame => frame.ClearFilter())
                 .FilterListViews(action.Application);
         }
 
-        internal static IObservable<Unit> AssertEmployeeDetailView(this Frame frame)
+        internal static IObservable<Frame> AssertEmployeeDetailView(this Frame frame)
             => frame.AssertNestedEmployeeTask( ).IgnoreElements()
                 .Concat(frame.AssertNestedEvaluation())
                 .ReplayFirstTake();
@@ -56,8 +57,8 @@ namespace OutlookInspired.Tests.Assert{
                     .ConcatDefer(() => {
                         var employeeTaskTabControl = application.AssertTabbedGroup(typeof(EmployeeTask),3);
                         return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
-                                frame1 => frame1.AssertRootEmployeeTask(employeeTaskTabControl),frame => frame.AssertAction())
-                            .Merge(employeeTaskTabControl.IgnoreElements().To<Unit>()).IgnoreElements();
+                                frame1 => frame1.AssertRootEmployeeTask(employeeTaskTabControl).ToUnit(),frame => frame.AssertAction())
+                            .Merge(employeeTaskTabControl.IgnoreElements().To<Frame>()).IgnoreElements();
                     }).To<Frame>()))
                 .Concat(source).ReplayFirstTake()
                 ;
@@ -69,24 +70,21 @@ namespace OutlookInspired.Tests.Assert{
                 .TakeUntil(source.DashboardViewItem(item => !item.MasterViewItem())
                     .ToFrame().ToDetailView().SelectMany(view => view.NestedListViews(typeof(EmployeeTask))).Take(1));
 
-        internal static IObservable<Unit> AssertNestedEmployeeTask(this Frame frame){
+        internal static IObservable<Frame> AssertNestedEmployeeTask(this Frame frame){
             var tabControl = frame.Application.AssertTabbedGroup(typeof(EmployeeTask),3);
             return frame.AssertNestedListView(typeof(EmployeeTask),
-                existingObjectDetailview => existingObjectDetailview.AssertRootEmployeeTask(tabControl),
-                assert: frame1 => frame1.AssertAction()).ToUnit()
-                .Merge(tabControl.To<Unit>().IgnoreElements())
+                existingObjectDetailview => existingObjectDetailview.AssertRootEmployeeTask(tabControl).ToUnit(),
+                assert: frame1 => frame1.AssertAction())
+                .Merge(tabControl.To<Frame>().IgnoreElements())
                 .ReplayFirstTake();
         }
 
-        static IObservable<Unit> AssertRootEmployeeTask(this  Frame nestedFrame,IObservable<TabbedGroup> tabControl) 
-            => tabControl.AssertNestedListView(nestedFrame, typeof(TaskAttachedFile), 1, _ => Observable.Empty<Unit>(),
-                    frame => frame.AssertAction())
-                .Concat(tabControl.AssertNestedListView(nestedFrame, typeof(Employee), 2, _ => Observable.Empty<Unit>(),
-                    frame => frame.AssertAction(nestedFrame)));
+        static IObservable<Frame> AssertRootEmployeeTask(this  Frame nestedFrame,IObservable<TabbedGroup> tabControl) 
+            => tabControl.AssertNestedListView(nestedFrame, typeof(TaskAttachedFile), 1, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(),inlineEdit:true)
+                .Concat(tabControl.AssertNestedListView(nestedFrame, typeof(Employee), 2, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(nestedFrame)));
         
-        
-        static IObservable<Unit> AssertNestedEvaluation(this Frame nestedFrame)
-            => nestedFrame.AssertNestedListView(typeof(Evaluation), _ => Observable.Empty<Unit>(), assert: frame => frame.AssertAction(nestedFrame)).ToUnit();
+        static IObservable<Frame> AssertNestedEvaluation(this Frame nestedFrame)
+            => nestedFrame.AssertNestedListView(typeof(Evaluation), _ => Observable.Empty<Unit>(), assert: frame => frame.AssertAction(nestedFrame));
 
 
     }

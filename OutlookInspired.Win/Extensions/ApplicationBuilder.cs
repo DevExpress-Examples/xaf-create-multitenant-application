@@ -58,8 +58,7 @@ namespace OutlookInspired.Win.Extensions{
         private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder,string address=null) 
             => builder.Security.UseMiddleTierMode(options => {
                 options.BaseAddress = new Uri(address??"https://localhost:5001/");
-                options.Events.OnHttpClientCreated = client =>
-                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
                 options.Events.OnCustomAuthenticate = (_, _, args) => {
                     args.Handled = true;
                     var msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate",
@@ -68,10 +67,8 @@ namespace OutlookInspired.Win.Extensions{
                     if (msg.StatusCode == HttpStatusCode.Unauthorized){
                         throw new UserFriendlyException(token);
                     }
-
                     msg.EnsureSuccessStatusCode();
-                    args.HttpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("bearer", token);
+                    args.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
                 };
             });
 

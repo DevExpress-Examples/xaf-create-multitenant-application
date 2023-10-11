@@ -15,15 +15,20 @@ namespace XAF.Testing.XAF{
                 .Merge(application.WhenFrameCreated().Take(1)
                     .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
                     .IgnoreElements().To<T>())
-                .Merge(test.BufferUntilCompleted().Do(_ => application.Exit()).SelectMany())
+                .Merge(test.BufferUntilCompleted().Do(_ => application.Terminate()).SelectMany())
                 .Merge(application.ThrowWhenHandledExceptions().To<T>())
                 .Catch<T, Exception>(exception => {
                     exception=exception.AddScreenshot();
-                    context.Send(_ => application.Exit(),null);
-                    return exception.Throw<T>();
+                    context.Send(_ => application.Terminate(),null);
+                    return Observable.Throw<T>(exception);
                 })
             );
-        
+
+        private static void Terminate(this XafApplication application){
+            Console.WriteLine(Logger.ExitSignal);
+            application.Exit();
+        }
+
         public static void DeleteModelDiffs(this WinApplication application,string connectionString,string modelDifferenceTableName,string modelDifferenceAspectTableName){
             application.ConnectionString=connectionString;
             if (application.DbExist()){

@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using XAF.Testing.RX;
@@ -59,9 +60,11 @@ namespace XAF.Testing.XAF{
             }
         }
         
-        private static IObservable<T> Trigger<T>(this IObservable<T> afterExecuted, Action action)
+        private static IObservable<T> Trigger<T>(this IObservable<T> afterExecuted, Action action,[CallerMemberName]string caller="")
             => afterExecuted.Merge(Observable.Defer(() => {
+                
                 action();
+                caller = caller;
                 return Observable.Empty<T>();
             }),new SynchronizationContextScheduler(SynchronizationContext.Current!));
         

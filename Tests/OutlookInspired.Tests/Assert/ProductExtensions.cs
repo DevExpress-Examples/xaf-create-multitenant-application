@@ -24,7 +24,7 @@ namespace OutlookInspired.Tests.Assert{
             // UtilityExtensions.TimeoutInterval = 60.Seconds();
             var productTabControl = action.Application.AssertTabbedGroup(typeof(Product), 2);
             return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl))
+                    existingObjectDetailview: frame => frame.AssertProductDetailView(productTabControl).ToUnit())
                 .FilterListViews(action.Application)
                 .Merge(productTabControl.IgnoreElements().To<Frame>())
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
@@ -32,9 +32,8 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertFilterAction(filtersCount:9);
         }
 
-        internal static IObservable<Unit> AssertProductDetailView(this Frame frame, IObservable<TabbedGroup> productTabControl) 
-            => frame.AssertNestedOrderItems( productTabControl)
-                .ReplayFirstTake();
+        internal static IObservable<Frame> AssertProductDetailView(this Frame frame, IObservable<TabbedGroup> productTabControl) 
+            => frame.AssertNestedOrderItems( productTabControl).ReplayFirstTake();
         
         
     }
