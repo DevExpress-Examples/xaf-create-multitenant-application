@@ -30,7 +30,7 @@ namespace OutlookInspired.Tests{
 #else
             var logContext = LogContext.None;
             Console.SetOut(await Logger.Writer(logContext));
-            if (logContext == LogContext.All){
+            if (logContext != LogContext.None){
                 UtilityExtensions.TimeoutInterval = 1.Days();    
             }
 #endif
@@ -46,7 +46,7 @@ namespace OutlookInspired.Tests{
         };
         
         public static IEnumerable TestCases => Users()
-            
+            // .Where(user => user=="johnh")
             .SelectMany(TestCaseData);
         
         private static IEnumerable<TestCaseData> TestCaseData(string user){

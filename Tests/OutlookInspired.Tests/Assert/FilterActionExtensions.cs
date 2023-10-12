@@ -19,7 +19,9 @@ namespace OutlookInspired.Tests.Assert{
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source) 
             => source.AssertFilters().IgnoreElements()
-                .Concat(source.AssertItemsAdded(source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.All^AssertAction.Process, true).ToSecond()));
+                .Concat(source.AssertItemsAdded()
+                    .Merge(source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewDelete, true).ToSecond().IgnoreElements()))
+                .ReplayFirstTake();
         
         private static IObservable<Frame> AssertFilters(this IObservable<SingleChoiceAction> source) 
             => source.SelectMany(filterAction => filterAction.Items<ViewFilter>().ToNowObservable()
