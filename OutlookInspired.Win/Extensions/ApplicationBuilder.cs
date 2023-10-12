@@ -14,6 +14,14 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Extensions{
     public static class ApplicationBuilder{
+        public static WinApplication BuildApplication(this IWinApplicationBuilder builder,string connectionString, bool useSecuredProvider, string address=null){
+            builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
+            builder.AddModules();
+            builder.AddObjectSpaceProviders(connectionString, useSecuredProvider);
+            builder.AddSecurity(connectionString == null, address);
+            builder.AddBuildSteps(connectionString);
+            return builder.Build();
+        }
         public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString){
             builder.AddBuildStep(application => {
             application.DatabaseUpdateMode = DatabaseUpdateMode.Never;

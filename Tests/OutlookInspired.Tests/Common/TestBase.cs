@@ -1,5 +1,8 @@
 ﻿using DevExpress.ExpressApp.Win;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Win.Extensions;
+using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 using ApplicationBuilder = OutlookInspired.Win.ApplicationBuilder;
 
@@ -19,10 +22,18 @@ namespace OutlookInspired.Tests.Common{
         }
 
         private static WinApplication XafApplication(bool useServer, bool useSecuredProvider, string connectionString){
+            var builder = WinApplication.CreateBuilder(options => {
+                options.Services.AddSingleton<ITabControlObserver, TabControlObserver>();
+                options.Services.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
+                options.Services.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
+                options.Services.AddSingleton<INewObjectController, NewObjectController>();
+                options.Services.AddSingleton(typeof(IObjectSelector<>),typeof(ObjectSelector<>));
+            });
 #if TEST
-            var application = ApplicationBuilder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
+            var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
 #else
-            var application = ApplicationBuilder.BuildApplication(useServer ? null : connectionString, useSecuredProvider);
+            var application = builder.BuildApplication(useServer ? null : connectionString, useSecuredProvider);
+            
 #endif
             return application;
         }

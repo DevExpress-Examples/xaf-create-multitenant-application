@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace XAF.Testing{
@@ -60,10 +61,11 @@ namespace XAF.Testing{
         
         public static void MoveActiveWindowToMainMonitorAndWaitForRender(){
             var hWnd = GetForegroundWindow();
-            if (hWnd == IntPtr.Zero||Screen.FromHandle(hWnd).Equals(Screen.PrimaryScreen)) return;
-            ShowWindow(hWnd, SwRestore);
-            var mainMonitorBounds = Screen.PrimaryScreen.Bounds;
-            SetWindowPos(hWnd, IntPtr.Zero, mainMonitorBounds.Left, mainMonitorBounds.Top, 0, 0, SwpNozorder);
+            // if (hWnd == IntPtr.Zero||Screen.FromHandle(hWnd).Equals(Screen.PrimaryScreen)) return;
+            // ShowWindow(hWnd, SwRestore);
+            // var mainMonitorBounds = Screen.PrimaryScreen.Bounds;
+            // SetWindowPos(hWnd, IntPtr.Zero, mainMonitorBounds.Left, mainMonitorBounds.Top, 0, 0, SwpNozorder);
+            throw new NotImplementedException();
             SendMessage(hWnd, WmPaint, IntPtr.Zero, IntPtr.Zero);
             UpdateWindow(hWnd);
             SetForegroundWindow(hWnd);

@@ -1,12 +1,29 @@
 ﻿using System.Diagnostics;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
-using XAF.Testing.XAF;
 
 namespace XAF.Testing.RX{
     public static class UtilityExtensions{
+        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,int seconds=1,bool delayOnEmpty=false) 
+            => source.DelayOnContext(seconds.Seconds(),delayOnEmpty);
+        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan? timeSpan,bool delayOnEmpty=false) 
+            => source.If(_ => timeSpan.HasValue,arg => arg.DelayOnContext( (TimeSpan)timeSpan!),arg => arg.Observe())
+                .SwitchIfEmpty(timeSpan.Observe().Where(_ => delayOnEmpty).WhenNotDefault().SelectMany(span => span.DelayOnContext((TimeSpan)span!)
+                    .Select(_ => default(T)).IgnoreElements()));
+
+        private static IObservable<T> DelayOnContext<T>(this T arg,TimeSpan timeSpan) 
+            => arg.Observe()
+                //     .SelectManySequential( arg1 => {
+                //     return Observable.Return(arg1).Delay(timeSpan).ObserveOnContext();
+                // })
+                .Delay(timeSpan, new SynchronizationContextScheduler(SynchronizationContext.Current!))
+        ;
+
+        public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan timeSpan) 
+            => source.DelayOnContext((TimeSpan?)timeSpan);
         public static IObservable<T> SubscribeReplay<T>(this IObservable<T> source, int bufferSize = 0){
             var replay = bufferSize > 0 ? source.Replay(bufferSize) : source.Replay();
             replay.Connect();
@@ -103,7 +120,7 @@ namespace XAF.Testing.RX{
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source, string message, TimeSpan? timeout = null,[CallerMemberName]string caller="")
             => source.Assert(_ => message,timeout,caller);
 
-        static Logger _logger = new Logger();
+        
         public static TimeSpan? DelayOnContextInterval=250.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);

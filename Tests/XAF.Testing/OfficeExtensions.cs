@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DevExpress.XtraRichEdit;
+﻿using DevExpress.XtraRichEdit;
 
 namespace XAF.Testing{
     public static class OfficeExtensions{

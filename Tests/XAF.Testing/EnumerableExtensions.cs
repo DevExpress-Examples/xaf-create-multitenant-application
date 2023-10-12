@@ -1,5 +1,3 @@
-using XAF.Testing.XAF;
-
 namespace XAF.Testing{
     public static class EnumerableExtensions{
         public static IEnumerable<TSource> WhereNotDefault<TSource>(this IEnumerable<TSource> source) {

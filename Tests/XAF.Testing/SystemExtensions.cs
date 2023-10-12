@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Reactive.Linq;
 using XAF.Testing.RX;
 
@@ -31,6 +30,16 @@ namespace XAF.Testing{
             return start;
         }
 
+        public static T CreateInstance<T>(this Type type) => (T)CreateInstance(type);
+
+        public static object CreateInstance(this Type type){
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+
+            if (type.GetConstructor(Type.EmptyTypes) != null)
+                return Activator.CreateInstance(type);
+            throw new InvalidOperationException($"Type {type.FullName} does not have a parameterless constructor.");
+        }
         public static void KillAll(this AppDomain appDomain) 
             => Process.GetProcessesByName("OutlookInspired.MiddleTier")
                 .Do(process => {

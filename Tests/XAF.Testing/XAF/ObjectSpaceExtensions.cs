@@ -12,6 +12,12 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
+        public static void SetValue(this IObjectSpace objectSpace, object newObject,IMemberInfo memberInfo, object existingObject){
+            var existingValue = memberInfo.GetValue(existingObject);
+            memberInfo.SetValue(newObject, memberInfo.IsPersistent ? objectSpace.GetObject(existingValue) : existingValue);
+        }
+        public static void SetValue(this IObjectSpaceLink newObject,IMemberInfo memberInfo, object existingObject) 
+            => newObject.ObjectSpace.SetValue(newObject, memberInfo, existingObject);
         public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
             => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
 

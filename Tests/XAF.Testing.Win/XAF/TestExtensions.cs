@@ -4,8 +4,9 @@ using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using XAF.Testing.RX;
+using XAF.Testing.XAF;
 
-namespace XAF.Testing.XAF{
+namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
         public static TestObserver<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user=null) 
             => application.Start( test, new WindowsFormsSynchronizationContext(),user);

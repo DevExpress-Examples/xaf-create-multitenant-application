@@ -6,6 +6,7 @@ using DevExpress.ExpressApp.Win.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using XAF.Testing.RX;
+using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{

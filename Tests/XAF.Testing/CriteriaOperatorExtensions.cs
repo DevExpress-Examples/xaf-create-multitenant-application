@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using DevExpress.Data.Filtering;
 
-namespace XAF.Testing.XAF{
+namespace XAF.Testing{
     public static class CriteriaOperatorExtensions{
         static readonly MethodInfo FromLambdaMethod=typeof(CriteriaOperator).GetMethods(BindingFlags.Public|BindingFlags.Static)
             .First(info => info.Name=="FromLambda"&&info.GetGenericArguments().Length==1);

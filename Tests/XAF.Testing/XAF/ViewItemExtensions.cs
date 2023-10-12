@@ -6,6 +6,8 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class ViewItemExtensions{
+        public static IObservable<TListEditor> WhenControlsCreated<TListEditor>(this TListEditor listEditor) where TListEditor:ListEditor 
+            => listEditor.WhenEvent(nameof(listEditor.ControlsCreated)).StartWith(listEditor.Control).WhenNotDefault().To(listEditor);
         public static IObservable<TTabbedControl> WhenTabControl<TTabbedControl>(this IObservable<DashboardViewItem> source) 
             => source.SelectMany(item => item.Frame.View.ToDetailView().WhenTabControl().Cast<TTabbedControl>());
         public static IObservable<TView> ToView<TView>(this IObservable<DashboardViewItem> source)

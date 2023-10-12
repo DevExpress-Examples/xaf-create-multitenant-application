@@ -1,5 +1,4 @@
 using System.Collections;
-using System.IO;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
@@ -39,6 +38,13 @@ namespace XAF.Testing{
         public static ExceptionDispatchInfo Capture(this Exception exception)
             =>ExceptionDispatchInfo.Capture(exception);
 
+        public static object GetPropertyValue(this object obj, string propertyName) 
+            => obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!.GetValue(obj);
+
+        public static void SetPropertyValue(this object obj, string propertyName, object value) 
+            => obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+                .SetValue(obj, value);
+        
         public static IOrderedEnumerable<MemberInfo> GetMembers(this Type type, MemberTypes memberType,  BindingFlags? flags=null) 
             => type.GetMembers(flags??BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(member => member.MemberType == memberType)

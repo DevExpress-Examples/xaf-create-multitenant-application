@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
@@ -10,70 +9,10 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Win;
-using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.XtraGrid.Views.Base;
 using XAF.Testing.RX;
-using ListView = DevExpress.ExpressApp.ListView;
-using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{
-        public static bool DbExist(this XafApplication application) {
-            var builder = new SqlConnectionStringBuilder(application.ConnectionString);
-            var initialCatalog = "Initial catalog";
-            var databaseName = builder[initialCatalog].ToString();
-            builder.Remove(initialCatalog);
-            using var sqlConnection = new SqlConnection(builder.ConnectionString);
-            return sqlConnection.DbExists(databaseName);
-        }
-        public static bool DbExists(this IDbConnection dbConnection, string databaseName=null){
-            if (dbConnection.State != ConnectionState.Open) {
-                dbConnection.Open();
-            }
-            using var dbCommand = dbConnection.CreateCommand();
-            dbCommand.CommandText = $"SELECT db_id('{databaseName??dbConnection.Database}')";
-            return dbCommand.ExecuteScalar() != DBNull.Value;
-        }
-
-        public static IObservable<(ListView listView, XafApplication application)> WhenListViewCreated(this IObservable<XafApplication> source,Type objectType=null) 
-            => source.SelectMany(application => application.WhenListViewCreated(objectType).Pair(application));
-
-        public static IObservable<ListView> WhenListViewCreated(this XafApplication application,Type objectType=null) 
-            => application.WhenEvent<ListViewCreatedEventArgs>(nameof(XafApplication.ListViewCreated))
-                .Select(pattern => pattern.ListView)
-                .Where(view => objectType==null||objectType.IsAssignableFrom(view.ObjectTypeInfo.Type));
-        
-        public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
-            => source.Select(t => t.e.View);
-
-
-        public static IObservable<Unit> FilterListViews(this XafApplication application, Func<DetailView, LambdaExpression, IObservable<object>> userControlSelector, 
-            params LambdaExpression[] expressions) 
-            => application.FuseAny(expressions)
-                .Select(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
-                    .SelectMany(view => view.WhenControlsCreated())
-                    .SelectMany(view => userControlSelector(view, expression))
-                    .MergeToUnit(application.WhenListViewCreating(expression.Parameters.First().Type)
-                        .Select(t => t.e.CollectionSource).Do(collectionSourceBase => collectionSourceBase.SetCriteria(expression))))
-                .Merge();
-        
-        public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
-            => application.WhenDetailViewCreated().Where(t =>objectType?.IsAssignableFrom(t.e.View.ObjectTypeInfo.Type)??true);
-
-        public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application) 
-            => application.WhenEvent<DetailViewCreatedEventArgs>(nameof(XafApplication.DetailViewCreated)).InversePair(application);
-
-        public static IObservable<Window> WhenWindowCreated(this XafApplication application,bool isMain=false,bool emitIfMainExists=true) {
-            var windowCreated = application.WhenFrameCreated().Select(frame => frame).OfType<Window>();
-            return isMain ? emitIfMainExists && application.MainWindow != null ? application.MainWindow.Observe().ObserveOn(SynchronizationContext.Current!)
-                : windowCreated.WhenMainWindowAvailable() : windowCreated;
-        }
-
-        private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>()
-                .SelectMany(window => window.WhenEvent("Showing").To(window)).Take(1);
-
         public static IObservable<Frame> WhenFrameCreated(this XafApplication application,TemplateContext templateContext=default)
             => application.WhenEvent<FrameCreatedEventArgs>(nameof(XafApplication.FrameCreated)).Select(e => e.Frame)
                 .Where(frame => frame.Application==application&& (templateContext==default ||frame.Context == templateContext));
@@ -110,19 +49,109 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<Window> Navigate(this XafApplication application,string viewId) 
             => application.Navigate(viewId,application.WhenFrame(viewId).Take(1)).Cast<Window>();
+        public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
+            => application.WhenFrameCreated().Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
+                .WhenViewChanged();
 
+        public static IObservable<DetailView> WhenExistingObjectRootDetailView(this XafApplication application,Type objectType=null)
+            => application.WhenExistingObjectRootDetailViewFrame(objectType).Select(frame => frame.View).Cast<DetailView>();
+        public static IObservable<Frame> WhenExistingObjectRootDetailViewFrame(this XafApplication application,Type objectType=null)
+            => application.WhenRootDetailViewFrame(objectType).Where(frame => !frame.View.ToDetailView().IsNewObject());
+
+        public static IObservable<DetailView> WhenRootDetailView(this XafApplication application, Type objectType=null) 
+            => application.WhenRootDetailViewFrame(objectType).Select(frame => frame.View).OfType<DetailView>();
+        public static IObservable<Frame> WhenRootDetailViewFrame(this XafApplication application, Type objectType=null) 
+            => application.WhenRootFrame(objectType,ViewType.DetailView);
+        public static IObservable<Frame> WhenRootFrame(this XafApplication application, Type objectType=null) 
+            => application.WhenRootFrame(objectType,ViewType.DetailView).WhenNotDefault(frame => frame.View.CurrentObject);
+
+        public static IObservable<DetailView> NewObjectRootDetailView(this XafApplication application,Type objectType)
+            => application.NewObjectRootFrame(objectType).Select(frame => frame.View.ToDetailView());
+        public static IObservable<Frame> NewObjectRootFrame(this XafApplication application,Type objectType=null)
+            => application.WhenRootFrame(objectType).Where(frame => frame.View.ToCompositeView().IsNewObject());
+        
         public static IObservable<DashboardView> WhenDashboardViewCreated(this XafApplication application) 
             => application.WhenEvent<DashboardViewCreatedEventArgs>(nameof(XafApplication.DashboardViewCreated)).Select(e => e.View);
-        
-        public static IObservable<DevExpress.XtraLayout.TabbedGroup> WhenDashboardViewTabControl(this XafApplication application, string viewVariant,Type objectType) 
-            => application.WhenDashboardViewCreated().When(viewVariant)
-                .Select(_ => application.WhenDetailViewCreated(objectType).ToDetailView()).Switch()
-                .SelectMany(detailView => detailView.WhenTabControl()).Cast<DevExpress.XtraLayout.TabbedGroup>();
+        public static IObservable<(Type type, object keyValue, XafApplication application)> WhenDeleteObject(this IObservable<Frame> source)
+            => source.SelectMany(frame => {
+                    var keyValue = frame.View.ObjectSpace.GetKeyValue(frame.View.CurrentObject);
+                    var type = frame.View.ObjectTypeInfo.Type;
+                    var application = frame.Application;
+                    return frame.GetController<DeleteObjectsViewController>().DeleteAction
+                        .Trigger(frame.WhenDisposedFrame().Select(_ => (type,keyValue,application)));
+            });
+        public static IObservable<(Type type, object keyValue, XafApplication application, Frame parent,bool isAggregated)> WhenDeleteObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
+            => source.SelectMany(t => {
+                    var keyValue = t.frame.View.ObjectSpace.GetKeyValue(t.frame.View.CurrentObject);
+                    var type = t.frame.View.ObjectTypeInfo.Type;
+                    var application = t.frame.Application;
+                    return t.frame.GetController<DeleteObjectsViewController>().DeleteAction
+                        .Trigger(!t.isAggregated ? t.frame.WhenDisposedFrame().Take(1) : t.parent.Observe().WhenNotDefault()
+                                .SelectMany(frame => frame.View.ObjectSpace.WhenModifyChanged().Take(1)
+                                    .Select(_ => frame.GetController<ModificationsController>().SaveAction)
+                                    .SelectMany(simpleAction => simpleAction.Trigger())))
+                        .Select(_ => (type, keyValue, application, t.parent, t.isAggregated)).Take(1);
+            });
         
         public static IObservable<Frame> Navigate(this XafApplication application,string viewId, IObservable<Frame> afterNavigation) 
             => afterNavigation.Publish(source => application.MainWindow == null ? application.WhenWindowCreated(true)
                     .SelectMany(window => window.Navigate(viewId, source))
                 : application.MainWindow.Navigate(viewId, source));
+        
+        public static bool DbExist(this XafApplication application) {
+            var builder = new SqlConnectionStringBuilder(application.ConnectionString);
+            var initialCatalog = "Initial catalog";
+            var databaseName = builder[initialCatalog].ToString();
+            builder.Remove(initialCatalog);
+            using var sqlConnection = new SqlConnection(builder.ConnectionString);
+            return sqlConnection.DbExists(databaseName);
+        }
+        public static bool DbExists(this IDbConnection dbConnection, string databaseName=null){
+            if (dbConnection.State != ConnectionState.Open) {
+                dbConnection.Open();
+            }
+            using var dbCommand = dbConnection.CreateCommand();
+            dbCommand.CommandText = $"SELECT db_id('{databaseName??dbConnection.Database}')";
+            return dbCommand.ExecuteScalar() != DBNull.Value;
+        }
+
+        public static IObservable<(ListView listView, XafApplication application)> WhenListViewCreated(this IObservable<XafApplication> source,Type objectType=null) 
+            => source.SelectMany(application => application.WhenListViewCreated(objectType).Pair(application));
+
+        public static IObservable<ListView> WhenListViewCreated(this XafApplication application,Type objectType=null) 
+            => application.WhenEvent<ListViewCreatedEventArgs>(nameof(XafApplication.ListViewCreated))
+                .Select(pattern => pattern.ListView)
+                .Where(view => objectType==null||objectType.IsAssignableFrom(view.ObjectTypeInfo.Type));
+        
+        public static IObservable<DetailView> ToDetailView(this IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> source) 
+            => source.Select(t => t.e.View);
+
+
+        public static IObservable<Unit> FilterListViews(this XafApplication application, Func<DetailView, System.Linq.Expressions.LambdaExpression, IObservable<object>> userControlSelector, 
+            params System.Linq.Expressions.LambdaExpression[] expressions) 
+            => application.FuseAny(expressions)
+                .Select(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
+                    .SelectMany(view => view.WhenControlsCreated())
+                    .SelectMany(view => userControlSelector(view, expression))
+                    .MergeToUnit(application.WhenListViewCreating(expression.Parameters.First().Type)
+                        .Select(t => t.e.CollectionSource).Do(collectionSourceBase => collectionSourceBase.SetCriteria(expression))))
+                .Merge();
+        
+        public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
+            => application.WhenDetailViewCreated().Where(t =>objectType?.IsAssignableFrom(t.e.View.ObjectTypeInfo.Type)??true);
+
+        public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application) 
+            => application.WhenEvent<DetailViewCreatedEventArgs>(nameof(XafApplication.DetailViewCreated)).InversePair(application);
+
+        public static IObservable<Window> WhenWindowCreated(this XafApplication application,bool isMain=false,bool emitIfMainExists=true) {
+            var windowCreated = application.WhenFrameCreated().Select(frame => frame).OfType<Window>();
+            return isMain ? emitIfMainExists && application.MainWindow != null ? application.MainWindow.Observe().ObserveOn(SynchronizationContext.Current!)
+                : windowCreated.WhenMainWindowAvailable() : windowCreated;
+        }
+
+        private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
+            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>()
+                .SelectMany(window => window.WhenEvent("Showing").To(window)).Take(1);
 
         private static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation){
             var controller = window.GetController<ShowNavigationItemController>();
@@ -145,47 +174,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<(XafApplication application, LogonEventArgs e)> WhenLoggedOn(this XafApplication application) 
             => application.WhenEvent<LogonEventArgs>(nameof(XafApplication.LoggedOn)).InversePair(application);
         
-        public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
-            => application.WhenFrameCreated().Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
-                .WhenViewChanged();
-
-        public static IObservable<DetailView> WhenExistingObjectRootDetailView(this XafApplication application,Type objectType=null)
-            => application.WhenExistingObjectRootDetailViewFrame(objectType).Select(frame => frame.View).Cast<DetailView>();
-        public static IObservable<Frame> WhenExistingObjectRootDetailViewFrame(this XafApplication application,Type objectType=null)
-            => application.WhenRootDetailViewFrame(objectType).Where(frame => !frame.View.ToDetailView().IsNewObject());
-
-        public static IObservable<DetailView> WhenRootDetailView(this XafApplication application, Type objectType=null) 
-            => application.WhenRootDetailViewFrame(objectType).Select(frame => frame.View).OfType<DetailView>();
-        public static IObservable<Frame> WhenRootDetailViewFrame(this XafApplication application, Type objectType=null) 
-            => application.WhenRootFrame(objectType,ViewType.DetailView);
-        public static IObservable<Frame> WhenRootFrame(this XafApplication application, Type objectType=null) 
-            => application.WhenRootFrame(objectType,ViewType.DetailView).WhenNotDefault(frame => frame.View.CurrentObject);
-
-        public static IObservable<DetailView> NewObjectRootDetailView(this XafApplication application,Type objectType)
-            => application.NewObjectRootFrame(objectType).Select(frame => frame.View.ToDetailView());
-        public static IObservable<Frame> NewObjectRootFrame(this XafApplication application,Type objectType=null)
-            => application.WhenRootFrame(objectType).Where(frame => frame.View.ToCompositeView().IsNewObject());
-
-        public static IObservable<(Type type, object keyValue, XafApplication application)> WhenDeleteObject(this IObservable<Frame> source)
-            => source.SelectMany(frame => {
-                    var keyValue = frame.View.ObjectSpace.GetKeyValue(frame.View.CurrentObject);
-                    var type = frame.View.ObjectTypeInfo.Type;
-                    var application = frame.Application;
-                    return frame.GetController<DeleteObjectsViewController>().DeleteAction
-                        .Trigger(frame.WhenDisposedFrame().Select(_ => (type,keyValue,application)));
-            });
-        public static IObservable<(Type type, object keyValue, XafApplication application, Frame parent,bool isAggregated)> WhenDeleteObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
-            => source.SelectMany(t => {
-                    var keyValue = t.frame.View.ObjectSpace.GetKeyValue(t.frame.View.CurrentObject);
-                    var type = t.frame.View.ObjectTypeInfo.Type;
-                    var application = t.frame.Application;
-                    return t.frame.GetController<DeleteObjectsViewController>().DeleteAction
-                        .Trigger(!t.isAggregated ? t.frame.WhenDisposedFrame().Take(1) : t.parent.Observe().WhenNotDefault()
-                                .SelectMany(frame => frame.View.ObjectSpace.WhenModifyChanged().Take(1)
-                                    .Select(_ => frame.GetController<ModificationsController>().SaveAction)
-                                    .SelectMany(simpleAction => simpleAction.Trigger())))
-                        .Select(_ => (type, keyValue, application, t.parent, t.isAggregated)).Take(1);
-            });
+        
         public static IEnumerable<IObjectSpaceProvider> ObjectSpaceProviders(this XafApplication application, params Type[] objectTypes) 
             => objectTypes.Select(application.GetObjectSpaceProvider).Distinct();
         public static IObjectSpace CreateObjectSpace(this XafApplication application, bool useObjectSpaceProvider,Type type=null,bool nonSecuredObjectSpace=false,
@@ -271,23 +260,5 @@ namespace XAF.Testing.XAF{
             => application.WhenRootFrame(objectType,viewTypes).Select(frame => frame.View);
         public static IObservable<Frame> WhenRootFrame(this XafApplication application,Type objectType,params ViewType[] viewTypes) 
             => application.WhenFrame(objectType,viewTypes).When(TemplateContext.View);
-
-        public static IObservable<Unit> ThrowWhenHandledExceptions(this WinApplication application) 
-            => application.WhenEvent<CustomHandleExceptionEventArgs>(nameof(application.CustomHandleException))
-                .Do(e =>e.Handled= e.Exception.ToString().Contains("DevExpress.XtraMap.Drawing.RenderController.Render"))
-                .Where(e => !e.Handled)
-                .Select(e => e.Exception)
-                .Merge(application.WhenGridListEditorDataError())
-                .Do(exception => exception.ThrowCaptured())
-                .ToUnit();
-        public static IObservable<Exception> WhenGridListEditorDataError(this WinApplication application) 
-            => application.WhenFrame(typeof(object),ViewType.ListView)
-                .SelectUntilViewClosed(frame => frame.View.ToListView().Editor is GridListEditor gridListEditor
-                    ? gridListEditor.WhenControlsCreated().StartWith(gridListEditor.Control).WhenNotDefault().Take(1)
-                        .SelectMany(_ => gridListEditor.GridView
-                            .WhenEvent<ColumnViewDataErrorEventArgs>(nameof(gridListEditor.GridView.DataError))
-                            .Select(e => e.DataException))
-                    : Observable.Empty<Exception>());
-
     }
 }

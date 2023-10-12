@@ -3,6 +3,7 @@ using DevExpress.ExpressApp;
 using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing.RX;
+using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{

@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp;
 using OutlookInspired.Module.Features.Maps;
 using XAF.Testing.RX;
+using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{

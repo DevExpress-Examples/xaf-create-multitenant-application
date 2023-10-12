@@ -7,8 +7,7 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.XtraGrid;
+using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using View = DevExpress.ExpressApp.View;
@@ -100,13 +99,9 @@ namespace XAF.Testing.XAF{
 
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
-            // if (compositeView.ObjectTypeInfo.Type.Name == "Product"){
-                // return Enumerable.Empty<Unit>();
-            // }
-            var memberInfos = compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
+            return compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
                 .Do(memberInfo => compositeView.ObjectSpace.SetValue(compositeView.CurrentObject,memberInfo,  existingObject))
-                .ToArray();
-            return memberInfos.IgnoreElements().ToUnit();
+                .ToArray().IgnoreElements().ToUnit();
         }
 
         public static IEnumerable<(string name, object value)> CloneExistingObjectMembers(this ListView listView,bool inLineEdit, object existingObject = null) 
@@ -122,15 +117,7 @@ namespace XAF.Testing.XAF{
         public static IEnumerable<TView> Views<TView>(this DashboardView dashboardView) where TView:View
             => dashboardView.GetItems<DashboardViewItem>().Select(item => item.InnerView).OfType<TView>();
         static IObservable<T> SelectObject<T>(this IObservable<ListView> source,params T[] objects) where T : class 
-            => source.SelectMany(view => {
-                var gridView = (view.Editor as GridListEditor)?.GridView;
-                if (gridView == null)
-                    throw new NotImplementedException(nameof(view.Editor));
-                gridView.ClearSelection();
-                return objects.ToNowObservable().SwitchIfEmpty(Observable.Defer(() => gridView.GetRow(gridView.GetRowHandle(0)).Observe()))
-                    .SelectMany(obj => gridView.WhenSelectRow(obj))
-                    .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
-            });
+            => source.SelectMany(view => view.ObjectSpace.ServiceProvider.GetRequiredService<IObjectSelector<T>>().SelectObject(view,objects));
 
         public static IObservable<object> SelectObject(this ListView listView, params object[] objects)
             => listView.SelectObject<object>(objects);
@@ -160,9 +147,9 @@ namespace XAF.Testing.XAF{
         public static IModelViewLayoutElement LayoutGroupItem(this DetailView detailView,Func<IModelViewLayoutElement,bool> match)
             => detailView.Model.Layout.Flatten().FirstOrDefault(match);
 
-        public static IObservable<object> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element)
-            => detailView.LayoutManager.WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
-                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup));
+        public static IObservable<object> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element) 
+            => detailView.ObjectSpace.ServiceProvider.GetRequiredService<ITabControlObserver>().WhenTabControl(detailView, element);
+
         public static IObservable<TViewItem> NestedViewItems<TView,TViewItem>(this TView view, params Type[] objectTypes ) where TView : DetailView where TViewItem:ViewItem,IFrameContainer 
             => view.NestedFrameContainers(objectTypes).OfType<TViewItem>();
         
@@ -210,25 +197,6 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> ToEditFrame(this IObservable<ListView> source) 
             => source.Select(view => view.EditFrame);
 
-        public static IObservable<GridControl> WhenControlViewItemGridControl(this DetailView detailView)
-            => detailView.WhenControlViewItemWinControl<GridControl>();
-
-        public static IObservable<(TItem item, Control control)> WhenWinControl<TItem>(this IEnumerable<TItem> source,Type controlType) where TItem:ViewItem 
-            => source.ToNowObservable()
-                .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>()
-                    .SelectMany(control => control.Controls.Cast<Control>().Prepend(control))
-                    .WhenNotDefault().Where(controlType.IsInstanceOfType)
-                    .Select(control => (item,control)))
-                ;
         
-        public static IObservable<T> WhenControlViewItemWinControl<T>(this DetailView detailView) where T:Control 
-            => detailView.GetItems<ControlViewItem>().WhenWinControl(typeof(T)).Select(t => t.control).Cast<T>();
-        public static IObservable<T> WhenViewItemWinControl<T>(this DetailView detailView) where T:Control 
-            => detailView.GetItems<ViewItem>().WhenWinControl(typeof(T)).Select(t => t.control).Cast<T>();
-        public static IObservable<(ViewItem item, Control control)> WhenViewItemWinControl(this DetailView detailView,Type controlType)  
-            => detailView.WhenViewItemWinControl<ViewItem>(controlType);
-        public static IObservable<(TItem item, Control control)> WhenViewItemWinControl<TItem>(this DetailView detailView,Type controlType) where TItem:ViewItem  
-            => detailView.GetItems<TItem>().WhenWinControl(controlType);    
-
     }
 }
