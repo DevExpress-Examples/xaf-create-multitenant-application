@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Configurations>Debug;Release;Test</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageReference Include="Shouldly" Version="4.2.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\XAF.Testing.Blazor\XAF.Testing.Blazor.csproj" />
+        <ProjectReference Include="..\..\OutlookInspired.Blazor.Server\OutlookInspired.Blazor.Server.csproj" />
+    </ItemGroup>
+</Project>

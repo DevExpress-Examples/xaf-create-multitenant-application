@@ -47,20 +47,20 @@ namespace OutlookInspired.Tests{
         };
         
         public static IEnumerable TestCases => Users()
-            .Where(user => user=="Admin")
+            // .Where(user => user=="Admin")
             .SelectMany(TestCaseData);
         
         private static IEnumerable<TestCaseData> TestCaseData(string user){
-            // yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
-            // yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
-            // yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
-            // yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
-            // yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
-            // yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
-            // yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
+            yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
+            yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
+            yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
+            yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
+            yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
             yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
-            // yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
-            // yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
+            yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
+            yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
             // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
         }
 
