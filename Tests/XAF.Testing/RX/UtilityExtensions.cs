@@ -31,7 +31,12 @@ namespace XAF.Testing.RX{
         }
 
         public static IObservable<T> Log<T>(this IObservable<T> source,Func<T,string> messageFactory,[CallerMemberName]string caller="") 
-            => source.Do(x => Console.WriteLine($"{caller}: {messageFactory(x)}"));
+            => source.Do(x => $"{caller}: {messageFactory(x)}".LogValue());
+
+        public static T LogValue<T>(this T value){
+            Console.WriteLine(value);
+            return value;
+        }
 
         public static IObservable<T> ReplayConnect<T>(this IObservable<T> source, int bufferSize = 0) 
             => source.SubscribeReplay(bufferSize);

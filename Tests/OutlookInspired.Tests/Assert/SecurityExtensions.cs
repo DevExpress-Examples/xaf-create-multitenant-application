@@ -102,7 +102,7 @@ namespace OutlookInspired.Tests.Assert{
 
         static AssertAction EmployeeAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch {
-                null => XAF.Testing.XAF.AssertAction.HasObject,
+                null => XAF.Testing.XAF.AssertAction.DetailViewSave,
                 EmployeeDepartment.Sales when frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
                 _ when !frame.View.IsRoot && source.View.ObjectTypeInfo.Type == typeof(EmployeeTask) => XAF.Testing.XAF.AssertAction.HasObject,
                 _ => XAF.Testing.XAF.AssertAction.DetailViewSave,
