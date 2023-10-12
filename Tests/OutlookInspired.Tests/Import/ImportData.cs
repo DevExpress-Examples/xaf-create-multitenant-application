@@ -18,7 +18,7 @@ namespace OutlookInspired.Tests.Import{
             
             using var application = await SetupWinApplication(application => {
                 application.Security = null;
-                return application.ServiceProvider.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
+                return application.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
             },useServer:false,useSecuredProvider:false);
             
             

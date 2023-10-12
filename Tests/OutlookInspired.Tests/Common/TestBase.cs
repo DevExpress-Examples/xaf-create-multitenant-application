@@ -4,7 +4,6 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Win.Extensions;
 using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
-using ApplicationBuilder = OutlookInspired.Win.ApplicationBuilder;
 
 namespace OutlookInspired.Tests.Common{
     public abstract class TestBase{
@@ -27,6 +26,9 @@ namespace OutlookInspired.Tests.Common{
                 options.Services.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
                 options.Services.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
                 options.Services.AddSingleton<INewObjectController, NewObjectController>();
+                options.Services.AddSingleton<INewRowAdder, NewRowAdder>();
+                options.Services.AddSingleton<IReportAsserter, ReportAsserter>();
+                options.Services.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
                 options.Services.AddSingleton(typeof(IObjectSelector<>),typeof(ObjectSelector<>));
             });
 #if TEST

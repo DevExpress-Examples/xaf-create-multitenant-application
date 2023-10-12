@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.ViewVariantsModule;
-using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using Unit = System.Reactive.Unit;
@@ -156,7 +155,7 @@ namespace XAF.Testing.XAF{
             => source.SelectMany(frame => frame.WhenObjects(count)).Select(t => t);
 
         public static IObservable<(Frame frame, object o)> WhenObjects(this Frame frame,int count=0) 
-            => frame.Application.ServiceProvider.GetRequiredService<IFrameObjectObserver>().WhenObjects(frame,count);
+            => frame.Application.GetRequiredService<IFrameObjectObserver>().WhenObjects(frame,count);
 
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> ProcessSelectedObject(this IObservable<Window> source)
             => source.SelectMany(window => window.ProcessSelectedObject());
@@ -171,7 +170,7 @@ namespace XAF.Testing.XAF{
         
         
         private static IObservable<Unit> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
-            => source.SelectMany(frame => frame.Application.ServiceProvider.GetRequiredService<IDashboardColumnViewObjectSelector>()
+            => source.SelectMany(frame => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>()
                 .SelectDashboardColumnViewObject(frame, itemSelector));
 
         public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
@@ -187,16 +186,13 @@ namespace XAF.Testing.XAF{
             => Observable.Defer(() => frame.View.WhenControlsCreated()
                 .StartWith(frame.View.ToListView().Editor.Control).WhenNotDefault()
                 .SelectMany(_ => frame.View.ToListView().WhenObjects(1)
-                    .Do(existingObject => {
-                        // ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(frame.View
-                            // .ToCompositeView().CloneExistingObjectMembers(true,existingObject).ToArray())
-                            throw new NotImplementedException();
-                    }))
+                    .Do(existingObject => frame.Application.GetRequiredService<INewRowAdder>()
+                        .AddNewRowAndCloneMembers(frame,existingObject)))
                 .To(frame));
         
 [Obsolete("remove the take(1)")]
         private static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-            => frame.Application.ServiceProvider.GetRequiredService<INewObjectController>().CreateNewObjectController(frame);
+            => frame.Application.GetRequiredService<INewObjectController>().CreateNewObjectController(frame);
 
         public static IObservable<Frame> CreateNewObject(this IObservable<Frame> source)
             => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
@@ -213,18 +209,8 @@ namespace XAF.Testing.XAF{
                     .ToFrame().ToNowObservable())
                 .CreateNewObject();
 
-        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame listViewFrame){
-            throw new NotImplementedException();
-            // return listViewFrame.WhenGridControl()
-            //     .Publish(source => source.SelectMany(t => listViewFrame.Application.WhenFrame(((NestedFrame)t.frame)
-            //                 .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
-            //             .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-            //                 .Equals(((ColumnView)t.gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
-            //         .Merge(Observable.Defer(() =>
-            //             source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
-            //     .SwitchIfEmpty(listViewFrame.ProcessListViewSelectedItem())
-            //     .Select(detailViewFrame => (frame: listViewFrame, detailViewFrame));
-        }
+        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
+            => frame.Application.GetRequiredService<ISelectedObjectProcessor>().ProcessSelectedObject(frame);
 
         public static DetailView DashboardChildDetailView(this NestedFrame listViewFrame) 
             => ((DashboardView)listViewFrame.ViewItem.View).Views<DetailView>().First(detailView => detailView!=listViewFrame.View);

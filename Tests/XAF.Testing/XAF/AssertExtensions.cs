@@ -115,15 +115,14 @@ namespace XAF.Testing.XAF{
             Func<SingleChoiceAction,ChoiceActionItem, bool> itemSelector = null, Func<SingleChoiceAction,int> reportsCount = null)
             => source.AssertDashboardViewReportsAction(actionId,itemSelector,(action, item) => item!=null?-1:reportsCount?.Invoke(action)??-1);
 
-        public static IObservable<SingleChoiceAction> AssertReports(this IObservable<SingleChoiceAction> source,Func<SingleChoiceAction,ChoiceActionItem,bool> itemSelector=null){
-            throw new NotImplementedException();
-            // return source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
-            //         .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
-            //         .Where(item => itemSelector?.Invoke(action, item) ?? true)
-            //         .SelectManySequential(item =>
-            //             action.Trigger(action.Controller.Frame.AssertReport(item.ToString()), () => item)))
-            //     .IgnoreElements().To<SingleChoiceAction>().Concat(source);
-        }
+        public static IObservable<SingleChoiceAction> AssertReports(this IObservable<SingleChoiceAction> source,Func<SingleChoiceAction,ChoiceActionItem,bool> itemSelector=null) 
+            => source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
+                    .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
+                    .Where(item => itemSelector?.Invoke(action, item) ?? true)
+                    .SelectManySequential(item =>
+                        action.Trigger(action.Controller.Frame.Application.GetRequiredService<IReportAsserter>()
+                                .AssertReport(action.Controller.Frame, item.ToString()), () => item)))
+                .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
         public static IObservable<Frame> AssertReports(this XafApplication application, string navigationView, string viewVariant,int reportsCount){
             // return application.AssertListView(navigationView, viewVariant, assert: _ => AssertAction.HasObject)
@@ -140,7 +139,7 @@ namespace XAF.Testing.XAF{
             => source.DashboardViewItem( masterItem).Select(item => item)
                 .MergeIgnored(item => item.Frame.WhenDisposedFrame().Select(unit => unit))
                 .Assert(item => $"{item?.Id}")
-                .Select(item => item);
+                .ReplayFirstTake();
 
         public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId)
             => application.Navigate(viewId).Assert($"{viewId}");
@@ -217,8 +216,7 @@ namespace XAF.Testing.XAF{
                 .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
 
         private static IObservable<(Frame frame, object o)> AssertListViewHasObjects(
-            this IObservable<(Frame frame, Frame parent, bool aggregated)> source, Func<Frame, AssertAction> assert,
-            [CallerMemberName] string caller = "") 
+            this IObservable<(Frame frame, Frame parent, bool aggregated)> source, Func<Frame, AssertAction> assert, [CallerMemberName] string caller = "") 
             => source.ToFirst().If(frame => frame.Assert(assert).HasFlag(AssertAction.HasObject), frame => frame.Observe().AssertListViewHasObjects(caller)).ReplayFirstTake();
         static AssertAction Assert(this Frame frame,Func<Frame, AssertAction> assert,AssertAction assertAction=AssertAction.All) 
             => assert?.Invoke(frame)??assertAction;

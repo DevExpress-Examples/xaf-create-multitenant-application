@@ -7,7 +7,6 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
-using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using View = DevExpress.ExpressApp.View;
@@ -117,7 +116,7 @@ namespace XAF.Testing.XAF{
         public static IEnumerable<TView> Views<TView>(this DashboardView dashboardView) where TView:View
             => dashboardView.GetItems<DashboardViewItem>().Select(item => item.InnerView).OfType<TView>();
         static IObservable<T> SelectObject<T>(this IObservable<ListView> source,params T[] objects) where T : class 
-            => source.SelectMany(view => view.ObjectSpace.ServiceProvider.GetRequiredService<IObjectSelector<T>>().SelectObject(view,objects));
+            => source.SelectMany(view => view.ObjectSpace.GetRequiredService<IObjectSelector<T>>().SelectObject(view,objects));
 
         public static IObservable<object> SelectObject(this ListView listView, params object[] objects)
             => listView.SelectObject<object>(objects);
@@ -148,7 +147,7 @@ namespace XAF.Testing.XAF{
             => detailView.Model.Layout.Flatten().FirstOrDefault(match);
 
         public static IObservable<object> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element) 
-            => detailView.ObjectSpace.ServiceProvider.GetRequiredService<ITabControlObserver>().WhenTabControl(detailView, element);
+            => detailView.ObjectSpace.GetRequiredService<ITabControlObserver>().WhenTabControl(detailView, element);
 
         public static IObservable<TViewItem> NestedViewItems<TView,TViewItem>(this TView view, params Type[] objectTypes ) where TView : DetailView where TViewItem:ViewItem,IFrameContainer 
             => view.NestedFrameContainers(objectTypes).OfType<TViewItem>();

@@ -24,4 +24,16 @@ namespace XAF.Testing.XAF{
         IObservable<Frame> CreateNewObjectController(Frame frame);
     }
 
+    public interface INewRowAdder{
+        void AddNewRowAndCloneMembers(Frame frame, object existingObject);
+    }
+    
+    public interface IReportAsserter{
+        IObservable<Unit> AssertReport(Frame frame, string item);
+    }
+
+    public interface ISelectedObjectProcessor{
+        IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(Frame listViewFrame);
+    }
+
 }

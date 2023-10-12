@@ -12,6 +12,9 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
+        public static T GetRequiredService<T>(this IObjectSpace objectSpace) where T : notnull 
+            => objectSpace.ServiceProvider.GetRequiredService<T>();
+
         public static void SetValue(this IObjectSpace objectSpace, object newObject,IMemberInfo memberInfo, object existingObject){
             var existingValue = memberInfo.GetValue(existingObject);
             memberInfo.SetValue(newObject, memberInfo.IsPersistent ? objectSpace.GetObject(existingValue) : existingValue);
@@ -19,7 +22,7 @@ namespace XAF.Testing.XAF{
         public static void SetValue(this IObjectSpaceLink newObject,IMemberInfo memberInfo, object existingObject) 
             => newObject.ObjectSpace.SetValue(newObject, memberInfo, existingObject);
         public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
-            => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
+            => objectSpace.GetObjectByKey<TUser>(objectSpace.GetRequiredService<ISecurityStrategyBase>().UserId);
 
         public static IEnumerable<IMemberInfo> CloneableOwnMembers(this IObjectSpace objectSpace,Type type)
             => objectSpace.TypesInfo.FindTypeInfo(type).OwnMembers.Where(info => !info.IsList && !info.IsKey);

@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.XtraGrid;
 using XAF.Testing.RX;
+using XAF.Testing.XAF;
 
 namespace XAF.Testing.Win.XAF{
     public static class ViewExtensions{
@@ -12,12 +13,11 @@ namespace XAF.Testing.Win.XAF{
             => detailView.WhenControlViewItemWinControl<GridControl>();
 
         public static IObservable<(TItem item, Control control)> WhenWinControl<TItem>(this IEnumerable<TItem> source,Type controlType) where TItem:ViewItem 
-            => source.ToNowObservable().Do(item => throw new NotImplementedException()).To<(TItem item, Control control)>()
-                // .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>()
-                //     .SelectMany(control => control.Controls.Cast<Control>().Prepend(control))
-                //     .WhenNotDefault().Where(controlType.IsInstanceOfType)
-                //     .Select(control => (item,control)))
-        ;
+            => source.ToNowObservable()
+                .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>()
+                .SelectMany(control => control.Controls.Cast<Control>().Prepend(control))
+                .WhenNotDefault().Where(controlType.IsInstanceOfType)
+                .Select(control => (item,control)));
         
         public static IObservable<T> WhenControlViewItemWinControl<T>(this DetailView detailView) where T:Control 
             => detailView.GetItems<ControlViewItem>().WhenWinControl(typeof(T)).Select(t => t.control).Cast<T>();

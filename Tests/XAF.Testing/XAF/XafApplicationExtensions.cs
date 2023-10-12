@@ -9,10 +9,14 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
+using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{
+        public static T GetRequiredService<T>(this XafApplication application) where T : notnull 
+            => application.ServiceProvider.GetRequiredService<T>();
+
         public static IObservable<Frame> WhenFrameCreated(this XafApplication application,TemplateContext templateContext=default)
             => application.WhenEvent<FrameCreatedEventArgs>(nameof(XafApplication.FrameCreated)).Select(e => e.Frame)
                 .Where(frame => frame.Application==application&& (templateContext==default ||frame.Context == templateContext));
