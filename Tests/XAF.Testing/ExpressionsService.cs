@@ -62,7 +62,7 @@ public static class ExpressionExtensions{
 
 // using System.Linq.Expressions;
 //
-// namespace OutlookInspired.Tests.ImportData{
+// namespace OutlookInspired.Win.Tests.ImportData{
 //     public static class ExpressionExtensions{
 //         public static Expression<TDelegate> Lambda<TDelegate>(this Expression body, params ParameterExpression[]? parameters)
 //             => Expression.Lambda<TDelegate>(body, parameters);

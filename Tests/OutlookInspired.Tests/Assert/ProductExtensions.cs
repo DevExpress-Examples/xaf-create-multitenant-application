@@ -1,13 +1,10 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Products;
 using OutlookInspired.Tests.Common;
 using XAF.Testing.RX;
-using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{
@@ -33,7 +30,7 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertFilterAction(filtersCount:9);
         }
 
-        internal static IObservable<Frame> AssertProductDetailView(this Frame frame, IObservable<TabbedGroup> productTabControl) 
+        internal static IObservable<Frame> AssertProductDetailView(this Frame frame, IObservable<ITabControlProvider> productTabControl) 
             => frame.AssertNestedOrderItems( productTabControl).ReplayFirstTake();
         
         

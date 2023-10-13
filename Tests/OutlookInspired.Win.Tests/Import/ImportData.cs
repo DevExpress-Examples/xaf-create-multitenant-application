@@ -1,12 +1,12 @@
 using System.Reactive.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Common;
+using OutlookInspired.Tests.Import;
+using OutlookInspired.Win.Tests.Common;
 using Shouldly;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.Import{
+namespace OutlookInspired.Win.Tests.Import{
     [Order(0)]
     public class ImportData:TestBase{
 #if TEST

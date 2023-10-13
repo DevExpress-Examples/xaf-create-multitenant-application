@@ -1,23 +1,13 @@
-﻿using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq.Expressions;
-using System.Reactive;
+﻿using System.Reactive;
 using System.Reactive.Linq;
-using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Security;
-using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.XtraGrid.Views.Base;
 using XAF.Testing.RX;
-using ListView = DevExpress.ExpressApp.ListView;
-using View = DevExpress.ExpressApp.View;
+using XAF.Testing.XAF;
 
-namespace XAF.Testing.XAF{
+namespace XAF.Testing.Win.XAF{
     public static class XafApplicationExtensions{
         
         

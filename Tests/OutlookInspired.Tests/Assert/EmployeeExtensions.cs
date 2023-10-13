@@ -3,11 +3,9 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
-using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Common;
 using XAF.Testing.RX;
-using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{
@@ -45,7 +43,7 @@ namespace OutlookInspired.Tests.Assert{
                 .FilterListViews(action.Application);
         }
 
-        internal static IObservable<Frame> AssertEmployeeDetailView(this IObservable<TabbedGroup> source, Frame nestedFrame)
+        internal static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame nestedFrame)
             => nestedFrame.AssertNestedEmployeeTask( ).IgnoreElements()
                 .Concat(source.AssertNestedListView(nestedFrame, typeof(Evaluation),1, _ => Observable.Empty<Unit>(), assert: frame => frame.AssertAction(nestedFrame)))
                 .ReplayFirstTake();
@@ -58,14 +56,17 @@ namespace OutlookInspired.Tests.Assert{
                     .SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation().IgnoreElements()
                     .ConcatDefer(() => {
                         var employeeTaskTabControl = application.AssertTabbedGroup(typeof(EmployeeTask),3);
-                        return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
-                                frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
+                        var assertNestedListView = employeeTaskTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask),1,frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
                             .Merge(employeeTaskTabControl.IgnoreElements().To<Frame>()).IgnoreElements();
+                        // return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
+                                // frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
+                            // .Merge(employeeTaskTabControl.IgnoreElements().Select(provider => default(Frame))).IgnoreElements();
+                            return assertNestedListView;
                     }).To<Frame>()))
                 .Concat(source).ReplayFirstTake();
         }
 
-        private static IObservable<TabbedGroup> WhenEmployeeTabControl(this IObservable<Frame> source, XafApplication application, string viewVariant) 
+        private static IObservable<ITabControlProvider> WhenEmployeeTabControl(this IObservable<Frame> source, XafApplication application, string viewVariant) 
             => application.WhenDashboardViewTabbedGroup( viewVariant,typeof(Employee),2)
                 .Replay(1).AutoConnect()
                 .TakeUntil(source.DashboardViewItem(item => !item.MasterViewItem())
@@ -80,7 +81,7 @@ namespace OutlookInspired.Tests.Assert{
                 .ReplayFirstTake();
         }
 
-        static IObservable<Frame> AssertRootEmployeeTask(this  IObservable<TabbedGroup> tabControl,Frame nestedFrame) 
+        static IObservable<Frame> AssertRootEmployeeTask(this  IObservable<ITabControlProvider> tabControl,Frame nestedFrame) 
             => tabControl.AssertNestedListView(nestedFrame, typeof(TaskAttachedFile), 1, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(),inlineEdit:true)
                 .Concat(tabControl.AssertNestedListView(nestedFrame, typeof(Employee), 2, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(nestedFrame)));
         

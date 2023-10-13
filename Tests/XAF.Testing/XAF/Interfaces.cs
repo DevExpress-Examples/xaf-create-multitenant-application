@@ -4,8 +4,17 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 
 namespace XAF.Testing.XAF{
+    public interface ITabControlProvider{
+        object TabControl{ get; }
+        int TabPages{ get; }
+        void SelectTab(int pageIndex);
+    }
+    public interface ITabControlAsserter{
+        IObservable<ITabControlProvider> AssertTabbedGroup(Type objectType, int tabPages);
+    }
+
     public interface ITabControlObserver{
-        IObservable<object> WhenTabControl(DetailView detailView, IModelViewLayoutElement element);
+        IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element);
     }
     
     public interface IDashboardColumnViewObjectSelector{

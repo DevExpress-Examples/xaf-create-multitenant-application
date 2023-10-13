@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Reactive.Concurrency;
+﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Utils.Controls;
@@ -15,10 +13,8 @@ using DevExpress.XtraGrid.Views.Layout.Handler;
 using DevExpress.XtraScheduler;
 using DevExpress.XtraScheduler.Xml;
 using XAF.Testing.RX;
-using ListView = System.Windows.Forms.ListView;
-using View = DevExpress.ExpressApp.View;
 
-namespace XAF.Testing.XAF{
+namespace XAF.Testing.Win.XAF{
     public static class WinComponentExtensions{
         public static void ClearFilter(this Frame frame){
             if (frame.View is not DevExpress.ExpressApp.ListView listView) return;

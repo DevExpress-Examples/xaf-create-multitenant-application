@@ -2,13 +2,11 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Orders;
 using OutlookInspired.Tests.Common;
 using XAF.Testing;
 using XAF.Testing.RX;
-using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{
@@ -38,7 +36,7 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
                 .AssertOrderReportsAction()
                 .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                .If(_ => viewVariant=="Detail",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+                // .If(_ => viewVariant=="Detail",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
                 .AssertFilterAction(filtersCount: 12)
                 .FilterListViews(action.Application);
         }
@@ -58,14 +56,16 @@ namespace OutlookInspired.Tests.Assert{
         // internal static IObservable<Unit> AssertOrderDetailView(this Frame frame) 
             // => frame.AssertNestedOrderItems( ).ReplayFirstTake();
 
-        public static IObservable<Frame> AssertNestedOrder(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex){
+        public static IObservable<Frame> AssertNestedOrder(this IObservable<ITabControlProvider> source,Frame nestedFrame,int tabIndex){
             var orderTabGroup = nestedFrame.Application.AssertTabbedGroup(typeof(Order),4);
             return source.AssertNestedListView(nestedFrame, typeof(Order), tabIndex, existingObjectDetailView 
                         => orderTabGroup.AssertRootOrder(existingObjectDetailView), frame => frame.AssertAction(nestedFrame))
                 .Merge(orderTabGroup.To<Frame>().IgnoreElements());
         }
+        
+        
 
-        private static IObservable<Unit> AssertRootOrder(this IObservable<TabbedGroup> orderTabGroup,Frame nestedFrame) 
+        private static IObservable<Unit> AssertRootOrder(this IObservable<ITabControlProvider> orderTabGroup,Frame nestedFrame) 
             => orderTabGroup.AssertNestedListView(nestedFrame, typeof(OrderItem),1, assert: frame => frame.AssertAction(nestedFrame)).ToUnit();
     }
 }

@@ -1,43 +1,69 @@
-﻿using DevExpress.ExpressApp.Win;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections;
+using DevExpress.ExpressApp;
+using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Win.Extensions;
-using XAF.Testing.Win.XAF;
+using OutlookInspired.Tests.Assert;
+using XAF.Testing;
+using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Common{
-    public abstract class TestBase{
-        public async Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup = null,bool useServer=true,bool runInMainMonitor=false,bool useSecuredProvider=true){
-            var connectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
-            var application = XafApplication(useServer, useSecuredProvider, connectionString);
-            application.DeleteModelDiffs(connectionString,nameof(OutlookInspiredEFCoreDbContext.ModelDifferences),nameof(OutlookInspiredEFCoreDbContext.ModelDifferenceAspects));
-            application.SplashScreen = null;  
-            if (beforeSetup != null){
-                await beforeSetup(application);
-            }
-            application.Setup();
-            application.ChangeStartupState(FormWindowState.Maximized,moveToInactiveMonitor:!runInMainMonitor);
-            return application;
+    public class TestBase{
+        private static readonly Dictionary<EmployeeDepartment, string> Roles = new(){
+            { EmployeeDepartment.Sales, "clarkm"},{EmployeeDepartment.HumanResources,"gretas"},
+            {EmployeeDepartment.Support,"jamesa"},{EmployeeDepartment.Shipping,"dallasl"},
+            {EmployeeDepartment.Engineering,"barta"},{EmployeeDepartment.Management,"johnh"},{EmployeeDepartment.IT,"bradleyj"},
+            {(EmployeeDepartment)(-1),"Admin"}
+        };
+
+        public static IEnumerable TestCases 
+            => Users()
+                // .Where(user => user=="Admin")
+                .SelectMany(TestCaseData);
+
+        private static IEnumerable<TestCaseData> TestCaseData(string user){
+            yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("EmployeeListView","EmployeeCardListView",user, AssertEmployeeListView);
+            yield return new TestCaseData("CustomerListView","CustomerListView",user,AssertCustomerListView);
+            yield return new TestCaseData("CustomerListView","CustomerCardListView",user, AssertCustomerListView);
+            yield return new TestCaseData("ProductListView","ProductCardView",user, AssertProductListView);
+            yield return new TestCaseData("ProductListView","ProductListView",user, AssertProductListView);
+            yield return new TestCaseData("OrderListView","OrderListView",user, AssertOrderListView);
+            yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
+            yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
+            yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
+            // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
         }
 
-        private static WinApplication XafApplication(bool useServer, bool useSecuredProvider, string connectionString){
-            var builder = WinApplication.CreateBuilder(options => {
-                options.Services.AddSingleton<ITabControlObserver, TabControlObserver>();
-                options.Services.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
-                options.Services.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
-                options.Services.AddSingleton<INewObjectController, NewObjectController>();
-                options.Services.AddSingleton<INewRowAdder, NewRowAdder>();
-                options.Services.AddSingleton<IReportAsserter, ReportAsserter>();
-                options.Services.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
-                options.Services.AddSingleton(typeof(IObjectSelector<>),typeof(ObjectSelector<>));
-            });
-#if TEST
-            var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
-#else
-            var application = builder.BuildApplication(useServer ? null : connectionString, useSecuredProvider);
-            
-#endif
-            return application;
+        private static IEnumerable<string> Users(){
+            var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
+            return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
+                roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
         }
+
+
+        public IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){
+            throw new NotImplementedException();
+        }
+        static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant) 
+            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+                .If(action => action.CanNavigate(navigationView), _ => application.AssertListView(navigationView, viewVariant));
+
+        static IObservable<Frame> AssertReports(XafApplication application, string navigationView, string viewVariant)
+            => application.AssertReports(navigationView, viewVariant, reportsCount: 11);
+        static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
+            => application.AssertOpportunitiesView( navigationView, viewVariant);
+
+        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant) 
+            => application.AssertProductListView( navigationView, viewVariant);
+
+        static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
+            => application.AssertOrderListView( navigationView, viewVariant);
+
+        static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant) 
+            => application.AssertEmployeeListView(navigationView, viewVariant);
+
+        static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant) 
+            => application.AssertCustomerListView(navigationView, viewVariant);
     }
 }

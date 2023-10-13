@@ -2,11 +2,9 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.XtraLayout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Common;
 using XAF.Testing.RX;
-using XAF.Testing.Win.XAF;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Assert{
@@ -28,7 +26,7 @@ namespace OutlookInspired.Tests.Assert{
                     listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject));
         }
         
-        public static IObservable<Frame> AssertNestedQuote(this IObservable<TabbedGroup> source,Frame nestedFrame,int tabIndex) 
+        public static IObservable<Frame> AssertNestedQuote(this IObservable<ITabControlProvider> source,Frame nestedFrame,int tabIndex) 
             => source.AssertNestedListView(nestedFrame, typeof(Quote),tabIndex,AssertRootQuote,frame =>frame.AssertAction(nestedFrame) )
                 .SelectMany(frame => frame.Observe())
                 ;

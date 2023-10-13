@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
-        <UseWindowsForms>true</UseWindowsForms>
+        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>OutlookInspired.Tests</RootNamespace>
         <Configurations>Debug;Release;Test</Configurations>
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
@@ -16,16 +15,10 @@
         <PackageReference Include="Shouldly" Version="4.2.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\XAF.Testing.Win\XAF.Testing.Win.csproj" />
-        <ProjectReference Include="..\..\OutlookInspired.Win\OutlookInspired.Win.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Import\devav.sqlite3" />
-      <EmbeddedResource Include="Import\devav.sqlite3" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="DevExpress.DevAV.v23.2.Data">
-        <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
-      </Reference>
+        
+        <ProjectReference Include="..\..\OutlookInspired.Module\OutlookInspired.Module.csproj" />
+        
+        <ProjectReference Include="..\XAF.Testing\XAF.Testing.csproj" />
+        
     </ItemGroup>
 </Project>
