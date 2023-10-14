@@ -41,7 +41,7 @@ jobs:
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
-          **\*.Tests.dll
+          **\*Win*\*.Tests.dll
           !**\obj\**
         testFiltercriteria: TestCategory=ImportData
         diagnosticsEnabled: true
@@ -60,7 +60,7 @@ jobs:
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
-          **\*.Tests.dll
+          **\*Win*\*.Tests.dll
           !**\obj\**
         testFiltercriteria: TestCategory=WindowsTest
         diagnosticsEnabled: true

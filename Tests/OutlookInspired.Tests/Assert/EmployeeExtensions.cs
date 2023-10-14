@@ -16,26 +16,10 @@ namespace OutlookInspired.Tests.Assert{
 
 
         private static IObservable<Frame> AssertEmployeeListView(this SingleChoiceAction action,string navigationView, string viewVariant){
-            // return action.Application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
-            //     .AssertFilterAction(filtersCount: 7, frame => frame.ClearFilter());
-            //     .AssertSelectDashboardListViewObject()
-            //     //     // .AssertMasterFrame().ToFrame()
-            //     //     .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems());
-            //     .AssertEmployeeDashboardChildView(action.Application, viewVariant)
-            // //     .AssertMapItAction(typeof(Employee),
-            // //         frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject))
-            //
-            // // .AssertFilterAction(7,frame => frame.ClearFilter())
-            // //     .DelayOnContext(60)
-            // .FilterListViews(action.Application);
-            // // .AssertSelectDashboardListViewObject()
-            // .AssertMapItAction(typeof(Employee),
-            // frame => frame.AssertNestedListView(typeof(RoutePoint), assert: AssertAction.HasObject));
             var employeeTab = action.Application.AssertTabbedGroup(typeof(Employee),2,view => view.Model.IsDefault());
             return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(),
-                    assert: frame => frame.AssertAction())
-                .Merge(employeeTab.To<Frame>().IgnoreElements())
+                    existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
+                .Merge(employeeTab.To<Frame>().IgnoreElements()).ReplayFirstTake()
                 .AssertEmployeeDashboardChildView(action.Application, viewVariant)
                 .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
                 .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
@@ -56,12 +40,9 @@ namespace OutlookInspired.Tests.Assert{
                     .SelectMany(nestedFrame => nestedFrame.AssertNestedEvaluation().IgnoreElements()
                     .ConcatDefer(() => {
                         var employeeTaskTabControl = application.AssertTabbedGroup(typeof(EmployeeTask),3);
-                        var assertNestedListView = employeeTaskTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask),1,frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
+                        return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask),1,
+                                frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
                             .Merge(employeeTaskTabControl.IgnoreElements().To<Frame>()).IgnoreElements();
-                        // return employeeTabControl.AssertNestedListView(nestedFrame, typeof(EmployeeTask), 1,
-                                // frame => employeeTaskTabControl.AssertRootEmployeeTask(frame).ToUnit(),frame => frame.AssertAction())
-                            // .Merge(employeeTaskTabControl.IgnoreElements().Select(provider => default(Frame))).IgnoreElements();
-                            return assertNestedListView;
                     }).To<Frame>()))
                 .Concat(source).ReplayFirstTake();
         }
@@ -72,18 +53,19 @@ namespace OutlookInspired.Tests.Assert{
                 .TakeUntil(source.DashboardViewItem(item => !item.MasterViewItem())
                     .ToFrame().ToDetailView().SelectMany(view => view.NestedListViews(typeof(EmployeeTask))).Take(1));
 
-        internal static IObservable<Frame> AssertNestedEmployeeTask(this Frame frame){
-            var tabControl = frame.Application.AssertTabbedGroup(typeof(EmployeeTask),3);
-            return frame.AssertNestedListView(typeof(EmployeeTask),
-                existingObjectDetailview => tabControl.AssertRootEmployeeTask(existingObjectDetailview).ToUnit(),
-                assert: frame1 => frame1.AssertAction())
+        internal static IObservable<Frame> AssertNestedEmployeeTask(this Frame nestedFrame){
+            var tabControl = nestedFrame.Application.AssertTabbedGroup(typeof(EmployeeTask),3);
+            return nestedFrame.AssertNestedListView(typeof(EmployeeTask),
+                existingObjectDetailview => tabControl.AssertRootEmployeeTask(existingObjectDetailview).ToUnit(), assert: frame => frame.AssertAction(nestedFrame))
                 .Merge(tabControl.To<Frame>().IgnoreElements())
                 .ReplayFirstTake();
         }
 
         static IObservable<Frame> AssertRootEmployeeTask(this  IObservable<ITabControlProvider> tabControl,Frame nestedFrame) 
             => tabControl.AssertNestedListView(nestedFrame, typeof(TaskAttachedFile), 1, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(),inlineEdit:true)
-                .Concat(tabControl.AssertNestedListView(nestedFrame, typeof(Employee), 2, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(nestedFrame)));
+                .IgnoreElements()
+                .Concat(tabControl.AssertNestedListView(nestedFrame, typeof(Employee), 2, _ => Observable.Empty<Unit>(), frame => frame.AssertAction(nestedFrame)))
+                .ReplayFirstTake();
         
         static IObservable<Frame> AssertNestedEvaluation(this Frame nestedFrame)
             => nestedFrame.AssertNestedListView(typeof(Evaluation), _ => Observable.Empty<Unit>(), assert: frame => frame.AssertAction(nestedFrame));

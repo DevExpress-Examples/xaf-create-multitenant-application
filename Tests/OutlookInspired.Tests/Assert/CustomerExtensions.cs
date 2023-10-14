@@ -15,25 +15,15 @@ namespace OutlookInspired.Tests.Assert{
                 .If(action => action.CanNavigate(navigationView), action => action.AssertCustomerListView(navigationView, viewVariant));
 
         private static IObservable<Frame> AssertCustomerListView(this SingleChoiceAction action, string navigationView, string viewVariant){
-            // return action.Application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
-            // .AssertSelectDashboardListViewObject()
-            // // // //     .AssertGridControlDetailViewObjects(view => !new[]{ nameof(Customer.RecentOrders), nameof(Customer.Employees) }.Contains(view.LevelName)
-            // // // //         ? throw new NotImplementedException(view.LevelName) : 1).ToFirst().To<Frame>();
-            // // // .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
-            // .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-            // .Select(frame => frame)
-            // .ReplayFirstTake()
-            // .FilterListViews(action.Application);
-            
-            var customerTabControl = action.Application.GetRequiredService<ITabControlAsserter>().AssertTabbedGroup(typeof(Customer), 5);
+            var customerTabControl = action.Application.AssertTabbedGroup(typeof(Customer),5);
             return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
                     existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
-                .AssertFilterAction(filtersCount:7)
+                .Merge(customerTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
-                // .If(_ => viewVariant=="CustomerListView",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
+                .If(_ => viewVariant=="CustomerListView",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
                 .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .FilterListViews(action.Application)
-                .Merge(customerTabControl.IgnoreElements().To<Frame>());
+                .AssertFilterAction(filtersCount:7)
+                .FilterListViews(action.Application);
         }
 
         internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,Frame frame) 

@@ -6,6 +6,7 @@ using OutlookInspired.Tests.Assert;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+#pragma warning disable CS8974 // Converting method group to non-delegate type
 
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
@@ -17,9 +18,7 @@ namespace OutlookInspired.Tests.Common{
         };
 
         public static IEnumerable TestCases 
-            => Users()
-                // .Where(user => user=="Admin")
-                .SelectMany(TestCaseData);
+            => Users().SelectMany(TestCaseData);
 
         private static IEnumerable<TestCaseData> TestCaseData(string user){
             yield return new TestCaseData("EmployeeListView","EmployeeListView",user, AssertEmployeeListView);
@@ -32,7 +31,6 @@ namespace OutlookInspired.Tests.Common{
             yield return new TestCaseData("OrderListView","Detail",user, AssertOrderListView);
             yield return new TestCaseData("Evaluation_ListView",null,user, AssertEvaluation);
             yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
-            // yield return new TestCaseData("ReportDataV2_ListView",null,AssertReports)
         }
 
         private static IEnumerable<string> Users(){
@@ -48,16 +46,14 @@ namespace OutlookInspired.Tests.Common{
         static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant) 
             => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), _ => application.AssertListView(navigationView, viewVariant));
-
-        static IObservable<Frame> AssertReports(XafApplication application, string navigationView, string viewVariant)
-            => application.AssertReports(navigationView, viewVariant, reportsCount: 11);
+        
         static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertOpportunitiesView( navigationView, viewVariant);
 
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertProductListView( navigationView, viewVariant);
 
-        static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
+        public static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertOrderListView( navigationView, viewVariant);
 
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant) 

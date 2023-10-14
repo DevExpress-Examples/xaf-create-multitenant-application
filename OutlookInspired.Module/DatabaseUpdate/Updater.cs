@@ -92,18 +92,18 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
         viewFilter = ObjectSpace.CreateObject<ViewFilter>();
         viewFilter.SetCriteria<Order>(order => order.RefundTotal==order.TotalAmount);
         viewFilter.Name = "Refunds";
-        viewFilter = ObjectSpace.CreateObject<ViewFilter>();
-        viewFilter.SetCriteria<Order>(order => order.TotalAmount>5000);
-        viewFilter.Name = "Sales > $5000";
-        viewFilter = ObjectSpace.CreateObject<ViewFilter>();
-        viewFilter.SetCriteria<Order>(order => order.TotalAmount<5000);
-        viewFilter.Name = "Sales < $5000";
-        new[]{ "Jim Packard", "Harv Mudd", "Clark Morgan" }
-            .Do(name => {
-                viewFilter = ObjectSpace.CreateObject<ViewFilter>();
-                viewFilter.SetCriteria<Order>(order => order.Employee.FullName == name);
-                viewFilter.Name = $"Sales by {name}";
-            }).Enumerate();
+        // viewFilter = ObjectSpace.CreateObject<ViewFilter>();
+        // viewFilter.SetCriteria<Order>(order => order.TotalAmount>5000);
+        // viewFilter.Name = "Sales > $5000";
+        // viewFilter = ObjectSpace.CreateObject<ViewFilter>();
+        // viewFilter.SetCriteria<Order>(order => order.TotalAmount<5000);
+        // viewFilter.Name = "Sales < $5000";
+        // new[]{ "Jim Packard", "Harv Mudd", "Clark Morgan" }
+        //     .Do(name => {
+        //         viewFilter = ObjectSpace.CreateObject<ViewFilter>();
+        //         viewFilter.SetCriteria<Order>(order => order.Employee.FullName == name);
+        //         viewFilter.Name = $"Sales by {name}";
+        //     }).Enumerate();
     }
 
     private void DateFilters<T>(string dateProperty) where T:IViewFilter{

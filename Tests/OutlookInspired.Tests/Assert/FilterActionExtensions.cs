@@ -13,12 +13,13 @@ namespace OutlookInspired.Tests.Assert{
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .Do(frame => action?.Invoke(frame))
                 .AssertSingleChoiceAction(ViewFilterController.FilterViewActionId,_ => filtersCount)
-                .AssertFilterAction().IgnoreElements().Concat(source).ReplayFirstTake();
+                .AssertFilterAction().IgnoreElements().Concat(source)
+                .ReplayFirstTake();
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source) 
             => source.AssertFilters().IgnoreElements()
                 .Concat(source.AssertItemsAdded()
-                    .Merge(source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewDelete, true).ToSecond().IgnoreElements()))
+                    .Merge(source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewSave, true).ToSecond().IgnoreElements()))
                 .ReplayFirstTake();
         
         private static IObservable<Frame> AssertFilters(this IObservable<SingleChoiceAction> source) 

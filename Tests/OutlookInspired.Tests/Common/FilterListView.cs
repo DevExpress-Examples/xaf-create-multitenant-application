@@ -10,11 +10,10 @@ namespace OutlookInspired.Tests.Common{
     static class FilterListView{
 
         internal static IObservable<Frame> FilterListViews(this IObservable<Frame> source, XafApplication application)
-            => source.Merge(application.FilterAllListViews(source));
-        
-        static IObservable<Frame> FilterAllListViews(this XafApplication application,IObservable<Frame> assert) 
             => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
-                .IgnoreElements().TakeUntilCompleted(assert).To<Frame>();
+                .IgnoreElements().TakeUntilCompleted(source).To<Frame>();
+        
+        
 
         public static LambdaExpression[] Expressions()
             => new LambdaExpression[]{

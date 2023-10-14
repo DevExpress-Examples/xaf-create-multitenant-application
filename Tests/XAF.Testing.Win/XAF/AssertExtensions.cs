@@ -59,8 +59,7 @@ namespace XAF.Testing.Win.XAF{
 
         public static IObservable<object> AssertObjectsCount(this View view, int objectsCount) 
             => view.WhenDataSourceChanged().FirstAsync(o => o is CollectionSourceBase collectionSourceBase
-                    ? collectionSourceBase.GetCount() == objectsCount
-                    : ((GridControl)o).MainView.DataRowCount == objectsCount)
+                    ? collectionSourceBase.GetCount() == objectsCount : ((GridControl)o).MainView.DataRowCount == objectsCount)
                 .Assert($"{nameof(AssertObjectsCount)} {view.Id}");
 
         public static IObservable<object> WhenDataSourceChanged(this View view) 
@@ -81,7 +80,17 @@ namespace XAF.Testing.Win.XAF{
                 .Assert($"{caller} {nameof(RichEditControl.DocumentLoaded)}")
                 .If(_ => assertMailMerge, control => control.WhenEvent(nameof(control.MailMergeFinished)).To(control)
                     .Assert($"{caller} {nameof(RichEditControl.MailMergeFinished)}"),control => control.Observe());
-        
+
+        public static IObservable<Frame> AssertDashboardViewShowInDocumentAction(this SingleChoiceAction action, ChoiceActionItem item) 
+            => action.Frame().GetController<RichTextServiceController>()
+                .WhenEvent<CustomRichTextRibbonFormEventArgs>(nameof(RichTextServiceController.CustomCreateRichTextRibbonForm)).Take(1)
+                .Do(e => e.RichTextRibbonForm.WindowState = FormWindowState.Maximized)
+                .SelectMany(e => e.RichTextRibbonForm.RichEditControl.Observe()
+                    .AssertRichEditControl(caller: $"{nameof(AssertDashboardViewShowInDocumentAction)} {item}")
+                    .Buffer(e.RichTextRibbonForm.WhenEvent(nameof(e.RichTextRibbonForm.Activated)).DelayOnContext()).SelectMany().Take(1)
+                    .Do(richEditControl => richEditControl.FindForm()?.Close())
+                    .DelayOnContext()).Take(1).To<Frame>();
+
         public static IObservable<MapControl> AssertMapsControl(this DetailView detailView)
             => detailView.WhenControlViewItemControl().OfType<MapControl>().WhenNotDefault(control => control.Layers.Count)
                 .SelectMany(control => control.Layers.OfType<ImageLayer>().ToNowObservable()
@@ -132,8 +141,6 @@ namespace XAF.Testing.Win.XAF{
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()
                 .SelectMany(frame => frame.Observe().AssertGridControlDetailViewObjects(count,caller).IgnoreElements().ToFirst().To<Frame>())
                 .Concat(source).ReplayFirstTake();
-
-        
 
         public static IObservable<Unit> AssertDetailViewGridControlHasObjects(this IObservable<DashboardViewItem> source)
             => source.SelectMany(item => item.InnerView.ToDetailView().WhenControlViewItemGridControl().WhenObjects()).ToUnit().Assert();

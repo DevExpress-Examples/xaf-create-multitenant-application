@@ -16,28 +16,19 @@ namespace OutlookInspired.Tests.Assert{
                 .If(action => action.CanNavigate(navigationView), action => action.AsserOrderListView( navigationView, viewVariant));
 
         private static IObservable<Frame> AsserOrderListView(this SingleChoiceAction action, string navigationView, string viewVariant){
-            // return action.Application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
-                    // .AssertSelectDashboardListViewObject()
-                    // .AssertOrderReportsAction()
-                    // .FilterListViews(action.Application)
-                // .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                // .FilterListViews(action.Application)
-                // .AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems));
-                
-            //     // .AssertFilterAction(filtersCount);
-            //     .AssertMasterFrame().ToFrame()
-            //     .AssertGridControlDetailViewObjects().To<Frame>();
-            // .AssertListView(assert: AssertAction.HasObject);
-            // .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame));
             var orderTabGroup = action.Application.AssertTabbedGroup(typeof(Order),4);
             return action.Application.AssertDashboardListView(navigationView, viewVariant,
                     existingObjectDetailview: frame => orderTabGroup.AssertRootOrder(frame),assert:frame => frame.AssertAction())
-                .Merge(orderTabGroup.To<Frame>().IgnoreElements())
+                .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake()
                 .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+                .ReplayFirstTake()
                 .AssertOrderReportsAction()
                 .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                // .If(_ => viewVariant=="Detail",frame => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
-                .AssertFilterAction(filtersCount: 12)
+                
+                
+                .Select(frame => frame)
+                .AssertFilterAction(filtersCount: 7)
                 .FilterListViews(action.Application);
         }
 

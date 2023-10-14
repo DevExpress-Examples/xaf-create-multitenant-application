@@ -14,16 +14,14 @@ namespace OutlookInspired.Tests.Assert{
                 .If(action => action.CanNavigate(navigationView), action => action.AssertOpportunitiesView(navigationView, viewVariant));
 
         private static IObservable<Frame> AssertOpportunitiesView(this SingleChoiceAction action, string navigationView, string viewVariant){
-            // return application.AssertNavigation(navigationView).AssertChangeViewVariant(viewVariant)
-            // .AssertMapItAction(typeof(Quote));
-            return action.Application.AssertDashboardListView(navigationView, viewVariant,
-                    listViewFrameSelector: item => item.MasterViewItem())
-                .FilterListViews(action.Application).DelayOnContext().Select(frame => frame)
+            return action.Application.AssertDashboardListView(navigationView, viewVariant, listViewFrameSelector: item => item.MasterViewItem())
                 .AssertMapItAction(typeof(Quote))
                 .AssertFilterAction(filtersCount:5)
                 .CloseWindow()
                 .ConcatDefer(() => action.Application.AssertDashboardListView(navigationView, viewVariant,
-                    listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject));
+                    listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject))
+                .FilterListViews(action.Application).DelayOnContext().Select(frame => frame);
+            
         }
         
         public static IObservable<Frame> AssertNestedQuote(this IObservable<ITabControlProvider> source,Frame nestedFrame,int tabIndex) 

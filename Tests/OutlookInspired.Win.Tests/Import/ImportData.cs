@@ -7,11 +7,8 @@ using Shouldly;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Win.Tests.Import{
-    [Order(0)]
+    
     public class ImportData:TestBase{
-#if TEST
-        
-#endif
         [Category(nameof(ImportData))]
         [Test]
         public async Task Test(){

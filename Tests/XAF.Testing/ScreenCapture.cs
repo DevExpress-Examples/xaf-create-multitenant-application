@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
-using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace XAF.Testing{
     public static class ScreenCapture{
@@ -59,26 +59,32 @@ namespace XAF.Testing{
             return result;
         }
         
-        public static void MoveActiveWindowToMainMonitorAndWaitForRender(){
+        public static void MoveActiveWindowToMainMonitorAndWaitForRender(this Rectangle mainMonitor,Func<IntPtr,bool> primaryScreen){
             var hWnd = GetForegroundWindow();
-            // if (hWnd == IntPtr.Zero||Screen.FromHandle(hWnd).Equals(Screen.PrimaryScreen)) return;
-            // ShowWindow(hWnd, SwRestore);
-            // var mainMonitorBounds = Screen.PrimaryScreen.Bounds;
-            // SetWindowPos(hWnd, IntPtr.Zero, mainMonitorBounds.Left, mainMonitorBounds.Top, 0, 0, SwpNozorder);
-            throw new NotImplementedException();
+            if (hWnd == IntPtr.Zero||primaryScreen(hWnd)) return;
+            MoveActiveWindowToMainMonitorAndWaitForRender(mainMonitor, hWnd);
+        }
+
+        public static void MoveActiveWindowToMainMonitorAndWaitForRender(this Rectangle mainMonitor, IntPtr hWnd){
+            ShowWindow(hWnd, SwRestore);
+            var mainMonitorBounds = mainMonitor;
+            SetWindowPos(hWnd, IntPtr.Zero, mainMonitorBounds.Left, mainMonitorBounds.Top, 0, 0, SwpNozorder);
+
             SendMessage(hWnd, WmPaint, IntPtr.Zero, IntPtr.Zero);
             UpdateWindow(hWnd);
             SetForegroundWindow(hWnd);
             ShowWindow(hWnd, SwMaximize);
             SendMessage(hWnd, WmPaint, IntPtr.Zero, IntPtr.Zero);
             UpdateWindow(hWnd);
-        }    
-        
+        }
+
         public static string CaptureActiveWindowAndSave(string path=null){
-            MoveActiveWindowToMainMonitorAndWaitForRender();
+            // MoveActiveWindowToMainMonitorAndWaitForRender();
             var filename = path??Path.GetTempFileName().Replace(".tmp", ".bmp");
             CaptureActiveWindow().Save(filename);
             return filename;
         }
     }
+    
+
 }

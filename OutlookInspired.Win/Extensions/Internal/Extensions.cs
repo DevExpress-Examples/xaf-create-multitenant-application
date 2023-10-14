@@ -72,14 +72,10 @@ namespace OutlookInspired.Win.Extensions.Internal{
         public static GeoPoint ToGeoPoint(this IMapsMarker mapsMarker) 
             => new(mapsMarker.Latitude, mapsMarker.Longitude);
         
-        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType){
-            if (columnView.FocusedRowObject == null || !columnView.IsServerMode)
-                return columnView.FocusedRowObject;
-            else if (columnView.IsNotGroupedRow()&&columnView.IsNotInvalidRow())
-                return objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
-            else
-                return null;
-        }
+        public static object FocusedRowObject(this ColumnView columnView, IObjectSpace objectSpace,Type objectType) 
+            => columnView.FocusedRowObject == null || !columnView.IsServerMode ? columnView.FocusedRowObject
+                : !columnView.IsNotGroupedRow() || !columnView.IsNotInvalidRow() ? null
+                : objectSpace.GetObjectByKey(objectType, columnView.FocusedRowObject);
 
         public static Dictionary<PivotGridField, RepositoryItem> AddRepositoryItems(this PivotGridControl pivotGridControl,ListView view) 
             => view.Model.Columns.Where(column => column.Index>=0)

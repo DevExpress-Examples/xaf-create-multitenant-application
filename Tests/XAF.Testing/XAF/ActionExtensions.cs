@@ -60,10 +60,7 @@ namespace XAF.Testing.XAF{
         }
         
         private static IObservable<T> Trigger<T>(this IObservable<T> afterExecuted, Action action)
-            => afterExecuted.Merge(Observable.Defer(() => {
-                action();
-                return Observable.Empty<T>();
-            }),new SynchronizationContextScheduler(SynchronizationContext.Current!));
+            => afterExecuted.Merge(action.DeferAction(action).To<T>(),new SynchronizationContextScheduler(SynchronizationContext.Current!));
         
     }
     

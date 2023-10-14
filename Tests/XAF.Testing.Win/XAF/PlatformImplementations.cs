@@ -1,57 +1,50 @@
 ﻿using System.Reactive;
-using System.Reactive.Linq;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.ExpressApp.Win.Layout;
-using DevExpress.Utils.Controls;
-using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraLayout;
 using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
+using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.Win.XAF{
     public static class PlatformImplementations{
         public static void AddPlatformServices(this IServiceCollection serviceCollection){
+            serviceCollection.AddSingleton<IRichEditControlAsserter, RichEditControlAsserter>();
+            serviceCollection.AddSingleton<IPdfViewerAsserter, PdfViewerAsserter>();
+            serviceCollection.AddSingleton<IDashboardViewGridControlDetailViewObjectsAsserter, DashboardViewGridControlDetailViewObjectsAsserter>();
+            serviceCollection.AddSingleton<IFilterClearer, FilterClearer>();
+            serviceCollection.AddSingleton<IDashboardDocumentActionAsserter, DashboardDocumentActionAsserter>();
             serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
+            serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
+            serviceCollection.AddSingleton<IObjectCountAsserter, ObjectCountAsserter>();
             serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IReportAsserter, ReportAsserter>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
+            serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
+            serviceCollection.AddSingleton<IMapControlAsserter, MapControlAsserter>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
     }
     
     public class NewObjectController : INewObjectController{
         public IObservable<Frame> CreateNewObjectController(Frame frame) 
-            => frame.View.WhenObjectViewObjects(1).Take(1)
-                .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
-                        .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
+            => frame.CreateNewObjectController();
     }
     
     public class NewRowAdder : INewRowAdder{
         public void AddNewRowAndCloneMembers(Frame frame, object existingObject) 
-            => ((GridListEditor)frame.View.ToListView().Editor).GridView
-                .AddNewRow(frame.View.ToCompositeView().CloneExistingObjectMembers(true, existingObject).ToArray());
+            => frame.AddNewRowAndCloneMembers(existingObject);
     }
 
     public class ObjectSelector<T> : IObjectSelector<T> where T : class{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 
-            => view.Defer(() => {
-                var gridView = (view.Editor as GridListEditor)?.GridView;
-                if (gridView == null)
-                    throw new NotImplementedException(nameof(ListView.Editor));
-                gridView.ClearSelection();
-                return objects.ToNowObservable()
-                    .SwitchIfEmpty(Observable.Defer(() => gridView.GetRow(gridView.GetRowHandle(0)).Observe()))
-                    .SelectMany(obj => gridView.WhenSelectRow(obj))
-                    .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
-            });
+            => view.SelectObject(objects);
     }
     
     public class ReportAsserter : IReportAsserter{
@@ -59,17 +52,19 @@ namespace XAF.Testing.Win.XAF{
             => frame.AssertReport(item).ToUnit();
     }
 
+    public class MapControlAsserter : IMapControlAsserter{
+        public IObservable<Unit> AssertMapControl(DetailView detailView) 
+            => detailView.AssertMapsControl().ToUnit();
+    }
+
+    public class WindowMaximizer : IWindowMaximizer{
+        public IObservable<Window> WhenMaximized(Window window) 
+            => window.WhenMaximized();
+    }
+
     public class SelectedObjectProcessor : ISelectedObjectProcessor{
         public IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(Frame listViewFrame) 
-            => listViewFrame.WhenGridControl()
-                .Publish(source => source.SelectMany(t => listViewFrame.Application.WhenFrame(((NestedFrame)t.frame)
-                            .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
-                        .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-                            .Equals(((ColumnView)t.gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
-                    .Merge(Observable.Defer(() =>
-                        source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
-                .SwitchIfEmpty(listViewFrame.ProcessListViewSelectedItem())
-                .Select(detailViewFrame => (frame: listViewFrame, detailViewFrame));
+            => listViewFrame.ProcessSelectedObject();
     }
 
     class TabControlProvider:ITabControlProvider{
@@ -79,13 +74,42 @@ namespace XAF.Testing.Win.XAF{
         public int TabPages => ((TabbedControlGroup)TabControl).TabPages.Count;
         public void SelectTab(int pageIndex) => ((TabbedControlGroup)TabControl).SelectedTabPageIndex = pageIndex;
     }
-    public class TabControlObserver:ITabControlObserver{
-        public IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element) 
-            => ((WinLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
-                .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup))
-                .Select(o => new TabControlProvider((TabbedControlGroup)o));
+
+    public class DashboardDocumentActionAsserter : IDashboardDocumentActionAsserter{
+        public IObservable<Frame> AssertDashboardViewShowInDocumentAction(SingleChoiceAction action, ChoiceActionItem item) 
+            => action.AssertDashboardViewShowInDocumentAction(item);
     }
 
+    class RichEditControlAsserter:IRichEditControlAsserter{
+        public IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge) 
+            => detailView.AssertRichEditControl(assertMailMerge).ToUnit();
+    }
+    class PdfViewerAsserter:IPdfViewerAsserter{
+        public IObservable<Unit> Assert(DetailView detailView) 
+            => detailView.AssertPdfViewer().ToUnit();
+    }
+    class DashboardViewGridControlDetailViewObjectsAsserter:IDashboardViewGridControlDetailViewObjectsAsserter{
+        public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames) 
+            => frame.Observe().AssertDashboardViewGridControlDetailViewObjects(relationNames);
+    }
+    public class FilterClearer : IFilterClearer{
+        public void Clear(ListView listView) => listView.ClearFilter();
+    }
+
+    public class TabControlObserver:ITabControlObserver{
+        public IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element) 
+            => detailView.WhenTabControl(element);
+    }
+    public class ObjectCountAsserter : IObjectCountAsserter{
+        public IObservable<object> AssertObjectsCount(View view, int objectsCount) 
+            => view.AssertObjectsCount(objectsCount);
+    }
+
+    class TabControlAsserter:ITabControlAsserter{
+        public IObservable<ITabControlProvider> AssertTabbedGroup(Type objectType, int tabPages){
+            throw new NotImplementedException("Check employee");
+        }
+    }
 
 
 }

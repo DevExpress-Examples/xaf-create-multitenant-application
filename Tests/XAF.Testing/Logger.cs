@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.IO.Pipes;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -17,7 +16,7 @@ namespace XAF.Testing{
         public TimeSpan ConnectionTimeout{ get; set; } = 5.Seconds();
         public string PowerShellName{ get; set; } = "pwsh.exe";
     }
-    public static class NetworkExtensions{
+    public static class LoggerExtensions{
         public static IObservable<NamedPipeClientStream> ConnectClient(this Logger logger,LogContext context=default) 
             => logger.StartServer(context).Connect();
 
@@ -77,12 +76,17 @@ namespace XAF.Testing{
                 .SelectManySequential(clientStream => clientStream.ConnectAsync().ToObservable()
                     .Catch<Unit,TimeoutException>(_ => Observable.Empty<Unit>()).To(clientStream))
                 .Timeout(logger.ConnectionTimeout).WhenNotDefault(stream => stream.IsConnected).Take(1);
+
+        public static async Task WriteAsync(this LogContext context) 
+            => Console.SetOut(await Logger.Writer(context));
     }
 
     public readonly struct LogContext : IEquatable<LogContext>{
         public override bool Equals(object obj){
             return obj is LogContext other && Equals(other);
         }
+
+        
 
         public override int GetHashCode() => CustomValue != null ? CustomValue.GetHashCode() : 0;
 

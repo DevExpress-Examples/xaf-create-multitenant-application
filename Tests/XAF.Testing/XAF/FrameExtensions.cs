@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
@@ -12,6 +13,12 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class FrameExtensions{
+        public static IObservable<Window> WhenMaximized(this IObservable<Window> source) 
+            => source.SelectMany(WhenMaximized);
+
+        private static IObservable<Window> WhenMaximized(this Window window) 
+            => window.Application.GetRequiredService<IWindowMaximizer>().WhenMaximized(window);
+
         public static IObservable<T> SelectUntilViewClosed<T,TFrame>(this IObservable<TFrame> source, Func<TFrame, IObservable<T>> selector) where TFrame:Frame 
             => source.SelectMany(frame => selector(frame).TakeUntilViewClosed(frame));
         
@@ -166,12 +173,12 @@ namespace XAF.Testing.XAF{
                 .SwitchIfEmpty(Observable.Defer(() => source.SelectMany(window => window.DashboardViewItems(ViewType.ListView).ToNowObservable()
                     .Where(itemSelector??(_ =>true) ).Select(item => item.InnerView.ToListView())
                     .SelectMany(listView => listView.SelectObject()).ToUnit())));
-
-        
         
         private static IObservable<Unit> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
-            => source.SelectMany(frame => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>()
-                .SelectDashboardColumnViewObject(frame, itemSelector));
+            => source.SelectMany(frame => frame.SelectDashboardColumnViewObject(itemSelector));
+
+        public static IObservable<Unit> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector) 
+            => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>().SelectDashboardColumnViewObject(frame, itemSelector);
 
         public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToListView());
@@ -186,11 +193,13 @@ namespace XAF.Testing.XAF{
             => Observable.Defer(() => frame.View.WhenControlsCreated()
                 .StartWith(frame.View.ToListView().Editor.Control).WhenNotDefault()
                 .SelectMany(_ => frame.View.ToListView().WhenObjects(1)
-                    .Do(existingObject => frame.Application.GetRequiredService<INewRowAdder>()
-                        .AddNewRowAndCloneMembers(frame,existingObject)))
+                    .Do(frame.AddNewRowAndCloneMembers))
                 .To(frame));
-        
-[Obsolete("remove the take(1)")]
+
+        private static void AddNewRowAndCloneMembers(this Frame frame, object existingObject) 
+            => frame.Application.GetRequiredService<INewRowAdder>().AddNewRowAndCloneMembers(frame,existingObject);
+
+        [Obsolete("remove the take(1)")]
         private static IObservable<Frame> CreateNewObjectController(this Frame frame) 
             => frame.Application.GetRequiredService<INewObjectController>().CreateNewObjectController(frame);
 
@@ -211,6 +220,10 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
             => frame.Application.GetRequiredService<ISelectedObjectProcessor>().ProcessSelectedObject(frame);
+
+        public static IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(this Frame frame, params string[] relationNames) 
+            => frame.Application.GetRequiredService<IDashboardViewGridControlDetailViewObjectsAsserter>()
+                .AssertDashboardViewGridControlDetailViewObjects(frame,relationNames);
 
         public static DetailView DashboardChildDetailView(this NestedFrame listViewFrame) 
             => ((DashboardView)listViewFrame.ViewItem.View).Views<DetailView>().First(detailView => detailView!=listViewFrame.View);

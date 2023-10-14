@@ -40,8 +40,8 @@ namespace XAF.Testing{
                 return Activator.CreateInstance(type);
             throw new InvalidOperationException($"Type {type.FullName} does not have a parameterless constructor.");
         }
-        public static void KillAll(this AppDomain appDomain) 
-            => Process.GetProcessesByName("OutlookInspired.MiddleTier")
+        public static void KillAll(this AppDomain appDomain,string processName) 
+            => Process.GetProcessesByName(processName)
                 .Do(process => {
                     process.Kill();
                     process.WaitForExit();

@@ -24,6 +24,7 @@ namespace OutlookInspired.Tests.Assert{
 
         private static int AssertOrderReportActionItems(this SingleChoiceAction action, Employee employee, ChoiceActionItem item) 
             => employee?.Department switch{
+                EmployeeDepartment.Shipping when item is{ Data: null }=>0,
                 null or EmployeeDepartment.Sales or EmployeeDepartment.Shipping when item?.Data == null => 2,
                 EmployeeDepartment.IT when item==null=>2,
                 EmployeeDepartment.IT when item.Data==null=>0,
@@ -89,10 +90,10 @@ namespace OutlookInspired.Tests.Assert{
                 _ => throw new NotImplementedException(item.Caption)
             };
 
-        static AssertAction EmployeeTaskAssertAction(this EmployeeDepartment? department,Frame frame) 
+        static AssertAction EmployeeTaskAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction TaskAttachedFileAssertAction(this EmployeeDepartment? department) 
@@ -102,10 +103,9 @@ namespace OutlookInspired.Tests.Assert{
 
         static AssertAction EmployeeAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch {
-                null => XAF.Testing.XAF.AssertAction.All,
                 EmployeeDepartment.Sales when frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
                 _ when !frame.View.IsRoot && source.View.ObjectTypeInfo.Type == typeof(EmployeeTask) => XAF.Testing.XAF.AssertAction.HasObject,
-                _ => XAF.Testing.XAF.AssertAction.All,
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete,
             };
 
         static AssertAction CustomerAssertAction(this EmployeeDepartment? department,Frame frame) 
@@ -119,14 +119,14 @@ namespace OutlookInspired.Tests.Assert{
             => department switch{
                 EmployeeDepartment.Support or EmployeeDepartment.Shipping or EmployeeDepartment.Engineering
                     or EmployeeDepartment.Management or EmployeeDepartment.IT when !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.Process,
-                _=>XAF.Testing.XAF.AssertAction.All
+                _=>XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction QuoteItemAssertAction(this EmployeeDepartment? department,Frame frame) 
             => department switch{
                 EmployeeDepartment.Shipping or EmployeeDepartment.Engineering or EmployeeDepartment.Management or EmployeeDepartment.IT when
                     !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.NotHasObject,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
     
         static AssertAction QuoteAssertAction(this EmployeeDepartment? department,Frame frame) 
@@ -134,20 +134,20 @@ namespace OutlookInspired.Tests.Assert{
                 _ when frame.View.IsRoot && department!=null=> XAF.Testing.XAF.AssertAction.HasObject,
                 EmployeeDepartment.Shipping or EmployeeDepartment.Engineering or EmployeeDepartment.Management
                     or EmployeeDepartment.IT when !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction CustomerStoreAssertAction(this EmployeeDepartment? department,Frame frame) 
             => department switch{
                 EmployeeDepartment.Support or EmployeeDepartment.Shipping or EmployeeDepartment.Engineering
                     or EmployeeDepartment.Management or EmployeeDepartment.IT when !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction OrderAssertAction(this EmployeeDepartment? department,Frame frame) 
             => department switch{
                 EmployeeDepartment.Support or EmployeeDepartment.Engineering or EmployeeDepartment.Management when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction OrderItemAssertAction(this EmployeeDepartment? department,Frame frame) 
@@ -155,19 +155,20 @@ namespace OutlookInspired.Tests.Assert{
                 EmployeeDepartment.Support when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
                 EmployeeDepartment.Engineering or EmployeeDepartment.Management when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.NotHasObject,
                 _ when !frame.View.IsRoot&& frame.ParentObject() is Product=> XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
         static AssertAction CustomerEmployeeAssertAction(this EmployeeDepartment? department,Frame frame) 
             => department switch{
                 EmployeeDepartment.Support or EmployeeDepartment.Shipping or EmployeeDepartment.Engineering
                     or EmployeeDepartment.Management or EmployeeDepartment.IT when !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.All
+                _ => XAF.Testing.XAF.AssertAction.AllButDelete
             };
 
-        static AssertAction EvaluationAssertAction(this EmployeeDepartment? department, Frame frame) 
+        static AssertAction EvaluationAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
+                _ when source!=null=> XAF.Testing.XAF.AssertAction.AllButDelete,
                 _ => XAF.Testing.XAF.AssertAction.All
             };
 
@@ -185,8 +186,8 @@ namespace OutlookInspired.Tests.Assert{
                 _ when type == typeof(CustomerCommunication) => department.CustomerCommunicationAssertAction(frame),
                 _ when type == typeof(Customer) => department.CustomerAssertAction(frame),
                 _ when type == typeof(Employee) => department.EmployeeAssertAction(frame,source),
-                _ when type == typeof(Evaluation) => department.EvaluationAssertAction(frame),
-                _ when type == typeof(EmployeeTask) => department.EmployeeTaskAssertAction(frame),
+                _ when type == typeof(Evaluation) => department.EvaluationAssertAction(frame,source),
+                _ when type == typeof(EmployeeTask) => department.EmployeeTaskAssertAction(frame,source),
                 _ when type == typeof(TaskAttachedFile) => department.TaskAttachedFileAssertAction(),
                 _ when type == typeof(Product) => department.TaskAttachedFileAssertAction(),
                 _ => throw new NotImplementedException($"{frame.View} {department}")

@@ -16,10 +16,10 @@ namespace XAF.Testing.RX{
 
         private static IObservable<T> DelayOnContext<T>(this T arg,TimeSpan timeSpan) 
             => arg.Observe()
-                //     .SelectManySequential( arg1 => {
-                //     return Observable.Return(arg1).Delay(timeSpan).ObserveOnContext();
-                // })
-                .Delay(timeSpan, new SynchronizationContextScheduler(SynchronizationContext.Current!))
+                .SelectManySequential( arg1 => {
+                return Observable.Return(arg1).Delay(timeSpan).ObserveOnContext();
+                })
+                // .Delay(timeSpan, new SynchronizationContextScheduler(SynchronizationContext.Current!))
         ;
 
         public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan timeSpan) 
@@ -129,7 +129,8 @@ namespace XAF.Testing.RX{
         public static TimeSpan? DelayOnContextInterval=250.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
-            return source.TakeAndReplay(1).RefCount()
+            // return source.TakeAndReplay(1).RefCount()
+            return source.ReplayFirstTake()
                 .DelayOnContext(DelayOnContextInterval)
                 .Log(messageFactory, caller)
                 .ThrowIfEmpty(timeoutMessage)
