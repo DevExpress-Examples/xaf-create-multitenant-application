@@ -1,5 +1,4 @@
 ﻿using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
@@ -96,9 +95,11 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<T> TemplateChanged<T>(this IObservable<T> source) where T : Frame 
             => source.SelectMany(item => item.Template != null ? item.Observe() : item.WhenTemplateChanged().Select(_ => item));
-        public static IObservable<T> WhenFrame<T>(this T frame,ViewType viewType, Type types) where T : Frame 
+        public static IObservable<T> WhenFrame<T>(this T frame,ViewType viewType, params Type[] types) where T : Frame 
             => frame.View != null ? frame.When(viewType) && frame.When(types) ? frame.Observe() : Observable.Empty<T>()
                 : frame.WhenViewChanged().Where(t => t.When(viewType) && t.When(types)).To(frame);
+        public static IObservable<T> WhenFrame<T>(this T frame, params string[] viewIds) where T : Frame 
+            => frame.WhenViewChanged().Where(frame1 => viewIds.Contains(frame1.View.Id));
         public static IObservable<TFrame> WhenViewChanged<TFrame>(this IObservable<TFrame> source) where TFrame : Frame
             => source.SelectMany(frame => frame.WhenViewChanged());
         

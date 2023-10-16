@@ -5,6 +5,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+using static XAF.Testing.Monitor;
 
 namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
@@ -19,7 +20,7 @@ namespace XAF.Testing.Win.XAF{
                 .Merge(test.BufferUntilCompleted().Do(_ => application.Terminate()).SelectMany())
                 .Merge(application.ThrowWhenHandledExceptions().To<T>())
                 .Catch<T, Exception>(exception => {
-                    Screen.PrimaryScreen.Bounds.MoveActiveWindowToMainMonitorAndWaitForRender(ptr => Screen.FromHandle(ptr).Equals(Screen.PrimaryScreen));
+                    MoveActiveWindowToMainMonitor();
                     exception=exception.AddScreenshot();
                     context.Send(_ => application.Terminate(),null);
                     return Observable.Throw<T>(exception);
@@ -32,16 +33,11 @@ namespace XAF.Testing.Win.XAF{
         }
 
 
-        public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source){
-            return source.DoWhen(_ => Screen.AllScreens.Length > 1, form => {
-                var currentScreen = Screen.FromControl(form);
-                var inactiveScreen = Screen.AllScreens.FirstOrDefault(screen => !Equals(screen, currentScreen));
-                if (inactiveScreen != null){
-                    form.StartPosition = FormStartPosition.Manual;
-                    form.Location = new Point(inactiveScreen.Bounds.Left, inactiveScreen.Bounds.Top);
-                }
-            });
-        }
+        public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 
+            => source.Do( form => form.Handle.UseInactiveMonitorBounds(bounds => {
+                form.StartPosition = FormStartPosition.Manual;
+                form.Location = new Point(bounds.Left, bounds.Top);    
+            }));
 
         public static void ChangeStartupState(this WinApplication application,FormWindowState windowState,bool moveToInactiveMonitor=true) 
             => application.WhenFrameCreated(TemplateContext.ApplicationWindow)

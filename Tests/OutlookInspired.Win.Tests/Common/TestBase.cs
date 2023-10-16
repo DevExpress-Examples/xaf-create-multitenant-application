@@ -1,15 +1,12 @@
 ﻿using DevExpress.ExpressApp.Win;
-using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Win.Extensions;
-using XAF.Testing;
 using XAF.Testing.Win.XAF;
 
 namespace OutlookInspired.Win.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         public async Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup = null,bool useServer=true,bool runInMainMonitor=false,bool useSecuredProvider=true){
-            var connectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
-            var application = WinApplication(useServer, useSecuredProvider, connectionString);
-            application.DeleteModelDiffs(connectionString,nameof(OutlookInspiredEFCoreDbContext.ModelDifferences),nameof(OutlookInspiredEFCoreDbContext.ModelDifferenceAspects));
+            var application = WinApplication(useServer, useSecuredProvider, ConnectionString);
+            DeleteModelDiffs(application);
             application.SplashScreen = null;  
             if (beforeSetup != null){
                 await beforeSetup(application);

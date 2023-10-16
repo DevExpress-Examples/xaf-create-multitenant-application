@@ -61,7 +61,7 @@ namespace OutlookInspired.Blazor.Server.Services{
                 .AddNonPersistent();
             return builder;
         }
-
+        
         public static IBlazorApplicationBuilder AddModules(this IBlazorApplicationBuilder builder){
             builder.Modules
                 .AddConditionalAppearance()

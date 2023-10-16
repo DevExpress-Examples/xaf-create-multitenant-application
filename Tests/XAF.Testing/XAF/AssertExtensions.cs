@@ -296,7 +296,7 @@ namespace XAF.Testing.XAF{
                 .ReplayFirstTake();
 
         public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId)
-            => application.Navigate(viewId).Assert($"{viewId}");
+            => application.Navigate2(viewId).Assert($"{viewId}");
 
         public static IObservable<Frame> AssertDashboardListViewEditViewHasObject(this IObservable<Frame> source,Func<Frame,IObservable<Frame>> detailView=null)
             =>source.SelectMany(frame => frame.DashboardViewItems<ListView>().ToNowObservable()

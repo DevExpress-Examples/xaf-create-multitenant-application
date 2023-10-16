@@ -32,7 +32,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterExecuted,params object[] selection)
             => afterExecuted.Trigger(() => action.DoExecute(selection));
         public static IObservable<Unit> Trigger(this SimpleAction action, params object[] selection)
-            => action.Trigger(action.WhenExecuteCompleted().ToUnit(),selection);
+            => action.Trigger(action.WhenExecuteCompleted().Select(args => args).ToUnit(),selection);
         
         public static void DoExecute(this SimpleAction action, params object[] selection) 
             => action.DoExecute(() => action.DoExecute(),selection);

@@ -113,6 +113,9 @@ namespace XAF.Testing.RX{
         public static IObservable<T> DoOnComplete<T>(this IObservable<T> source, Action onComplete)
             => source.Do(_ => { }, onComplete);
         
+        public static IObservable<T> DoOnError<T>(this IObservable<T> source, Action<Exception> onError) 
+            => source.Do(_ => { }, onError);
+        
         public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 45).Seconds();
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source,string message) 
@@ -129,12 +132,8 @@ namespace XAF.Testing.RX{
         public static TimeSpan? DelayOnContextInterval=250.Milliseconds();
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
-            // return source.TakeAndReplay(1).RefCount()
-            return source.ReplayFirstTake()
-                .DelayOnContext(DelayOnContextInterval)
-                .Log(messageFactory, caller)
-                .ThrowIfEmpty(timeoutMessage)
-                .Timeout(timeout ?? TimeoutInterval, timeoutMessage);
+            return source.Log(messageFactory, caller).ThrowIfEmpty(timeoutMessage).Timeout(timeout ?? TimeoutInterval, timeoutMessage)
+                .ReplayFirstTake().DelayOnContext(DelayOnContextInterval);
         }
 
         public static IObservable<T> Throw<T>(this Exception exception,[CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "",

@@ -6,18 +6,12 @@
 <table>
     <tr>
         <td class="evaluations-td" style="@Context.FontSize()">@(((Evaluation)Context.DataItem).Subject)</td>
-        <td >
-            <strong>@(((Evaluation)Context.DataItem).Manager)</strong>
-        </td>
-        <td >
-            <table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Raise))</td><td>RAISE</td></tr></table>
-        </td>
+        <td ><strong>@(((Evaluation)Context.DataItem).Manager)</strong></td>
+        <td ><table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Raise))</td><td>RAISE</td></tr></table></td>
     </tr>
     <tr>
         <td class="evaluations-td" colspan="2">@(((Evaluation)Context.DataItem).Description.ToDocument(evaluation => evaluation.Text))</td>
-        <td>
-            <table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Bonus))</td><td>BONUS</td></tr></table>
-        </td>
+        <td><table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Bonus))</td><td>BONUS</td></tr></table></td>
     </tr>
 </table>
 @code {
@@ -30,7 +24,6 @@
     public static RenderFragment Create(GridDataColumnCellDisplayTemplateContext context) 
         => @<ColumnTemplate Context="@context"/>;
 }
-@code {
-}
+
 
 

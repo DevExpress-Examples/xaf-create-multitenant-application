@@ -50,9 +50,12 @@ namespace XAF.Testing.XAF{
             Func<Frame,ViewType> viewType = null, Nesting nesting = Nesting.Any) where T:Frame
             => source.Where(frame => frame.When(nesting))
                 .SelectMany(frame => frame.WhenFrame(viewType?.Invoke(frame)??ViewType.Any, objectType?.Invoke(frame)));
-        
+        [Obsolete]
         public static IObservable<Window> Navigate(this XafApplication application,string viewId) 
             => application.Navigate(viewId,application.WhenFrame(viewId).Take(1)).Cast<Window>();
+        public static IObservable<Window> Navigate2(this XafApplication application,string viewId) 
+            => application.Navigate(viewId,(frame =>frame.WhenFrame(viewId))).Take(1).Cast<Window>();
+        
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
             => application.WhenFrameCreated().Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
                 .WhenViewChanged();
@@ -97,10 +100,15 @@ namespace XAF.Testing.XAF{
                         .Select(_ => (type, keyValue, application, t.parent, t.isAggregated)).Take(1);
             });
         
+        [Obsolete]
         public static IObservable<Frame> Navigate(this XafApplication application,string viewId, IObservable<Frame> afterNavigation) 
             => afterNavigation.Publish(source => application.MainWindow == null ? application.WhenWindowCreated(true)
                     .SelectMany(window => window.Navigate(viewId, source))
                 : application.MainWindow.Navigate(viewId, source));
+        public static IObservable<Frame> Navigate(this XafApplication application,string viewId, Func<Frame,IObservable<Frame>> afterNavigation) 
+            => application.Defer(() => application.MainWindow == null ? application.WhenWindowCreated(true)
+                    .SelectMany(window => window.Navigate(viewId,afterNavigation(window)))
+                : application.MainWindow.Navigate(viewId, afterNavigation(application.MainWindow)));
         
         public static bool DbExist(this XafApplication application) {
             var builder = new SqlConnectionStringBuilder(application.ConnectionString);
@@ -154,10 +162,9 @@ namespace XAF.Testing.XAF{
         }
 
         private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>()
-                .SelectMany(window => window.WhenEvent("Showing").To(window)).Take(1);
+            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1);
 
-        private static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation){
+        public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation){
             var controller = window.GetController<ShowNavigationItemController>();
             return controller.ShowNavigationItemAction.Trigger(afterNavigation,
                     () => controller.FindNavigationItemByViewShortcut(new ViewShortcut(viewId, null)));
@@ -243,7 +250,6 @@ namespace XAF.Testing.XAF{
                         .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,true,t.parent))));
                 }
             );
-
 
         public static IObservable<IObjectSpace> WhenObjectSpaceCreated(this XafApplication application,bool includeNonPersistent=true,bool includeNested=false) 
             => application.WhenEvent<ObjectSpaceCreatedEventArgs>(nameof(XafApplication.ObjectSpaceCreated)).InversePair(application)

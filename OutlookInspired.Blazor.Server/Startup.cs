@@ -19,14 +19,18 @@ public class Startup {
         services.AddServerSideBlazor();
         services.AddHttpContextAccessor();
         services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
+        
         services.AddXaf(Configuration, builder => {
-            builder.UseApplication<OutlookInspiredBlazorApplication>();
+            Configure(builder);
             builder.AddModules().AddObjectSpaceProviders(Configuration).AddSecurity().AddBuildStep();
         });
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/LoginPage");
     }
 
-    
+    protected virtual void Configure(IBlazorApplicationBuilder builder){
+        
+    }
+
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
         if(env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();

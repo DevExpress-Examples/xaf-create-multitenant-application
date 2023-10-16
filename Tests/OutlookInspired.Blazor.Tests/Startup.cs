@@ -1,0 +1,29 @@
+﻿using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using DevExpress.ExpressApp.Blazor;
+using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
+using XAF.Testing.Blazor.XAF;
+
+namespace OutlookInspired.Blazor.Tests{
+    public class Startup:Server.Startup, IApplicationStartup{
+        public Startup(IConfiguration configuration) : base(configuration){
+        }
+
+        private readonly ISubject<BlazorApplication> _whenApplicationSubject = Subject.Synchronize(new Subject<BlazorApplication>());
+        private readonly ISubject<BlazorApplication> _whenLogonSubject = Subject.Synchronize(new Subject<BlazorApplication>());
+
+        public IObservable<BlazorApplication> WhenApplication => _whenApplicationSubject.AsObservable();
+        public string User{ get; set; }
+
+        protected override void Configure(IBlazorApplicationBuilder builder){
+            base.Configure(builder);
+            builder.ConfigureXafApplication(this, application => {
+                _whenLogonSubject.OnNext(application);
+                _whenLogonSubject.OnCompleted();
+                _whenApplicationSubject.OnNext(application);
+            });
+            
+        }
+    }
+
+}

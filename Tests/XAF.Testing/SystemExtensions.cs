@@ -8,10 +8,15 @@ namespace XAF.Testing{
             => process.WhenEvent<DataReceivedEventArgs>(nameof(Process.OutputDataReceived))
                 .TakeUntil(process.WhenExited())
                 .Select(pattern => pattern.Data);
-        
-        public static IObservable<Process> WhenExited(this Process process) 
-            => process.WhenEvent(nameof(Process.Exited)).Take(1).To(process);
-        
+
+        public static Process Start(this ProcessStartInfo processStartInfo) 
+            => Process.Start(processStartInfo);
+
+        public static IObservable<Process> WhenExited(this Process process){
+            process.EnableRaisingEvents=true;
+            return process.WhenEvent(nameof(Process.Exited)).Take(1).To(process);
+        }
+
         public static bool StartWithEvents(this Process process,bool outputDataReceived=true,bool outputErrorReceived=true,bool enableRaisingEvents=true,bool createNoWindow=true){
             process.StartInfo.RedirectStandardOutput = outputDataReceived;
             process.StartInfo.RedirectStandardError = outputErrorReceived;
@@ -32,14 +37,8 @@ namespace XAF.Testing{
 
         public static T CreateInstance<T>(this Type type) => (T)CreateInstance(type);
 
-        public static object CreateInstance(this Type type){
-            if (type.IsValueType)
-                return Activator.CreateInstance(type);
+        public static object CreateInstance(this Type type,params object[] args) => Activator.CreateInstance(type,args:args);
 
-            if (type.GetConstructor(Type.EmptyTypes) != null)
-                return Activator.CreateInstance(type);
-            throw new InvalidOperationException($"Type {type.FullName} does not have a parameterless constructor.");
-        }
         public static void KillAll(this AppDomain appDomain,string processName) 
             => Process.GetProcessesByName(processName)
                 .Do(process => {

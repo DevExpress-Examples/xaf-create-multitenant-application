@@ -22,7 +22,12 @@ using ReportController = OutlookInspired.Module.Features.Customers.ReportControl
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
 [assembly:InternalsVisibleTo("OutlookInspired.Blazor.Server")]
 namespace OutlookInspired.Module;
-
+public class MyClass:ObjectViewController<ListView,Employee>{
+	protected override void OnViewControlsCreated(){
+		base.OnViewControlsCreated();
+		throw new NotImplementedException();
+	}
+}
 public sealed class OutlookInspiredModule : ModuleBase{
 	public const string ModelCategory = "OutlookInspired";
     public OutlookInspiredModule() {
@@ -67,7 +72,8 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		    typeof(CommunicationController),typeof(RoutePointController), typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),
-		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController)
+		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController),
+		    
 	    };
 
     public override void Setup(XafApplication application) {
@@ -75,10 +81,9 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    application.ObjectSpaceCreated += Application_ObjectSpaceCreated;
     }
     
-    private void Application_ObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e) {
-	    if (e.ObjectSpace is CompositeObjectSpace{ Owner: not CompositeObjectSpace } compositeObjectSpace) {
-		    compositeObjectSpace.PopulateAdditionalObjectSpaces((XafApplication)sender);
-	    }
+    private void Application_ObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e){
+	    if (e.ObjectSpace is not CompositeObjectSpace{ Owner: not CompositeObjectSpace } compositeObjectSpace) return;
+	    compositeObjectSpace.PopulateAdditionalObjectSpaces((XafApplication)sender);
     }
     
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {

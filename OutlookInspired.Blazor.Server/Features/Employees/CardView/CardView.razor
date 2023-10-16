@@ -6,7 +6,7 @@
         @foreach (var employee in ComponentModel.Objects){
             <SideBySideInfoCard CurrentObject="employee" Model="@ComponentModel" Image="@employee.Picture?.Data?.ToBase64Image()" HeaderText="@employee.FullName" 
                                 InfoItems="@(new Dictionary<string, string>{{ "ADDRESS", employee.Address },
-                                               { "EMAIL", employee.Email },{ "PHONE", employee.HomePhone } })"/>
+                                               { "EMAIL", $"<a href=\"mailto:{employee.Email}\">{employee.Email}</a>" },{ "PHONE", employee.HomePhone } })"/>
         }
     </Content>
 </StackedCardView>
@@ -14,6 +14,5 @@
 @code {
     [Parameter]
     public Model ComponentModel { get; set; }
-    public static RenderFragment Create(Model model)
-        => @<CardView ComponentModel=@model />;
+    
 }
