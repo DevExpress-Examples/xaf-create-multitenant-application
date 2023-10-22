@@ -1,9 +1,13 @@
-﻿using DevExpress.ExpressApp;
-
+﻿using System.Reactive.Linq;
+using DevExpress.ExpressApp;
+using DevExpress.Persistent.Base;
+using Humanizer;
 using NUnit.Framework;
 using XAF.Testing;
+using XAF.Testing.RX;
 using XAF.Testing.Win.XAF;
 using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
+
 
 #pragma warning disable CS8974 
 
@@ -18,9 +22,11 @@ namespace OutlookInspired.Win.Tests{
         [TestCaseSource(nameof(TestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
-            using var application = await SetupWinApplication(useServer:true,runInMainMonitor:false);
+            // UtilityExtensions.DelayOnContextInterval = 2.Seconds();
+            using var application = await SetupWinApplication(useServer:false,runInMainMonitor:false);
             
-            application.StartWinTest(assert(application,navigationView, viewVariant),user);
+            
+            await application.StartWinTest(assert(application,navigationView, viewVariant),user,LogContext);
         }
 
         [SetUp]
@@ -30,7 +36,8 @@ namespace OutlookInspired.Win.Tests{
 #if TEST
             XAF.Testing.RX.UtilityExtensions.TimeoutInterval=TimeSpan.FromSeconds(120);
 #else
-            this.Await(async () => await LogContext.None.WriteAsync());
+            // this.Await(async () => await LogContext.None.WriteAsync());
+            // throw new NotImplementedException();
 #endif
         }
         

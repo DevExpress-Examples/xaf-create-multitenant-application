@@ -22,7 +22,8 @@ public class Startup {
         
         services.AddXaf(Configuration, builder => {
             Configure(builder);
-            builder.AddModules().AddObjectSpaceProviders(Configuration).AddSecurity().AddBuildStep();
+            builder.UseApplication<OutlookInspiredBlazorApplication>().AddModules()
+                .AddObjectSpaceProviders(Configuration).AddSecurity().AddBuildStep();
         });
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/LoginPage");
     }

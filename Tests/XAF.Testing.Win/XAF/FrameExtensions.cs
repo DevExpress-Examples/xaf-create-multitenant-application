@@ -27,7 +27,8 @@ namespace XAF.Testing.Win.XAF{
         public static IObservable<Window> WhenMaximized(this Window window) 
             => window.Observe().Do(_ => ((Form)window.Template).WindowState = FormWindowState.Maximized)
                 .DelayOnContext();
-
+        public static IObservable<Window> CloseWindow(this IObservable<Frame> source) 
+            => source.Cast<Window>().DelayOnContext().Do(frame => frame.Close()).DelayOnContext().IgnoreElements();
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame)
             => frame.WhenGridControl()
                 .Publish(source => source

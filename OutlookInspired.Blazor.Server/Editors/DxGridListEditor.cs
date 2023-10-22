@@ -14,6 +14,7 @@ namespace OutlookInspired.Blazor.Server.Editors{
 
     public class DxGridAdapter:DevExpress.ExpressApp.Blazor.Editors.DxGridAdapter,ISupportInlineActions{
         public DxGridAdapter(DxGridModel gridModel) : base(gridModel){
+            
         }
 
         void ISupportInlineActions.SetupActionColumn(ListEditorInlineActionControlContainer actionContainer){

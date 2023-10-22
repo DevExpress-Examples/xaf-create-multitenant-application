@@ -32,14 +32,17 @@ namespace XAF.Testing.XAF{
         void Clear(ListView listView);
     }
 
-    public interface IDashboardDocumentActionAsserter{
-        IObservable<Frame> AssertDashboardViewShowInDocumentAction(SingleChoiceAction action, ChoiceActionItem item);
+    public interface IDocumentActionAssertion{
+        IObservable<Frame> Assert(SingleChoiceAction action, ChoiceActionItem item);
     }
 
     public interface ITabControlObserver{
         IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element);
     }
-    
+
+    public interface IDataSourceChanged{
+        IObservable<EventPattern<object>> WhenDatasourceChanged(object editor);
+    }
     public interface IDashboardColumnViewObjectSelector{
         IObservable<Unit> SelectDashboardColumnViewObject(Frame frame, Func<DashboardViewItem, bool> itemSelector = null);
     }
@@ -67,9 +70,13 @@ namespace XAF.Testing.XAF{
     public interface ISelectedObjectProcessor{
         IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(Frame listViewFrame);
     }
-    
-    public interface IMapControlAsserter{
-        IObservable<Unit> AssertMapControl(DetailView detailView);
+
+
+    public interface IMapsControlAssertion:IViewItemControlAssertion{
+        
+    }
+    public interface IViewItemControlAssertion{
+        IObservable<Unit> Assert(DetailView detailView);
     }
 
     public interface IWindowMaximizer{

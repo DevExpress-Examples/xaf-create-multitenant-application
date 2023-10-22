@@ -12,13 +12,12 @@ namespace OutlookInspired.Tests.Assert{
                     .SelectMany(action => action.Trigger(action.Application.WhenFrame(objectType, ViewType.DetailView).Cast<Window>().Take(1)
                         .WhenMaximized()
                         .SelectMany(frame1 => ((DetailView)frame1.View).AssertMapsControl()
-                            .Select(control => control)
                             .Zip(assert?.Invoke(frame1) ?? default(Frame).Observe()).Take(1)
                             .Select(_ => frame1))))
-                    .CloseWindow().To(frame).Finally(() => {})
+                    .CloseWindow(frame).To(frame)
                 )
-                .Select(frame => frame)
-                .ConcatDefer(() => source)
+                .IgnoreElements()
+                .Concat(source)
                 .ReplayFirstTake();
     }
 }

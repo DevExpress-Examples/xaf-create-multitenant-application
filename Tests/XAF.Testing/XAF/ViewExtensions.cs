@@ -107,11 +107,10 @@ namespace XAF.Testing.XAF{
             => inLineEdit ? listView.ToListView().Model.MemberViewItems().Where(item => !item.ModelMember.MemberInfo.IsKey)
                     .Select(item => (item.ModelMember.MemberInfo.Name, item.ModelMember.MemberInfo.GetValue(existingObject)))
                 : listView.CloneExistingObjectMembers(true, existingObject)
-                    .Do(t => listView.EditView.ObjectTypeInfo.FindMember(t.name)
-                        .SetValue(listView.EditView.CurrentObject, t.value)).ToArray();
+                    .Do(t => listView.EditView.ObjectTypeInfo.FindMember(t.name).SetValue(listView.EditView.CurrentObject, t.value)).ToArray();
 
 
-        public static bool IsNewObject(this CompositeView compositeView)
+        public static bool IsNewObject(this View compositeView)
             => compositeView.ObjectSpace.IsNewObject(compositeView.CurrentObject);
         public static IEnumerable<TView> Views<TView>(this DashboardView dashboardView) where TView:View
             => dashboardView.GetItems<DashboardViewItem>().Select(item => item.InnerView).OfType<TView>();
@@ -123,11 +122,14 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<TO> SelectObject<TO>(this ListView listView,params TO[] objects) where TO : class 
             => listView.Editor.WhenControlsCreated().To(listView.Editor).StartWith(listView.Editor).WhenNotDefault(editor => editor.Control).Take(1)
-                .SelectMany(editor => editor.Control.WhenEvent("DataSourceChanged").To(editor.Control.GetPropertyValue("DataSource")).StartWith(editor.Control.GetPropertyValue("DataSource")).WhenNotDefault()).To(listView)
+                .SelectMany(editor => editor.WhenEvent("DataSourceChanged")
+                    .To(editor.GetPropertyValue("DataSource"))
+                    .StartWith(editor.GetPropertyValue("DataSource")).WhenNotDefault()
+                ).To(listView)
                 .SelectObject(objects);
 
-        public static IObservable<T> WhenControlsCreated<T>(this T view) where T : View 
-            => view.WhenViewEvent(nameof(View.ControlsCreated));
+        public static IObservable<T> WhenControlsCreated<T>(this T view,bool emitExisting=false) where T : View 
+            =>emitExisting&&view.IsControlCreated?view.Observe(): view.WhenViewEvent(nameof(View.ControlsCreated));
         public static IObservable<T> WhenCurrentObjectChanged<T>(this T view) where T:View 
             => view.WhenViewEvent(nameof(View.CurrentObjectChanged)).To(view);
         public static IObservable<T> WhenSelectionChanged<T>(this T view, int waitUntilInactiveSeconds = 0) where T : View

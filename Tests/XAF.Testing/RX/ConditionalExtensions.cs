@@ -10,6 +10,8 @@ namespace XAF.Testing.RX{
         
         public static IObservable<T> TakeUntilCompleted<T,T2>(this IObservable<T> source, IObservable<T2> next)
             => source.TakeUntil(next.WhenCompleted());
+        public static IObservable<T> TakeUntilFinished<T,T2>(this IObservable<T> source, IObservable<T2> next)
+            => source.TakeUntil(next.WhenFinished());
 
         public static IObservable<TResult> If<TSource, TResult>(this IObservable<TSource> source,
             Func<int,TSource, bool> predicate, Func<TSource, IObservable<TResult>> thenSource, Func<TSource, IObservable<TResult>> elseSource) 

@@ -73,7 +73,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
         
-        modelBuilder.Entity<ApplicationUser>().ToTable(nameof(ApplicationUser));
+        
         modelBuilder.OnProductImage()
 	        .OnTaskAttachedFile()
 	        .OnEvaluation()
@@ -180,11 +180,25 @@ static class ModelCreating{
     }
 
 	internal static ModelBuilder OnEmployee(this ModelBuilder modelBuilder){
+		// modelBuilder.Entity<Employee>()
+		// 	.HasKey(e => e.ID);  // Set as primary key
+		//
+		// modelBuilder.Entity<Employee>()
+		// 	.HasOne(e => e.User)
+		// 	.WithOne(u => u.Employee)
+		// 	.HasForeignKey<Employee>(e => e.ID);  // Set as foreign key
+
+		
 	    var employee = modelBuilder.Entity<Employee>();
-	    employee.ToTable(nameof(Employee));
+	    modelBuilder.Entity<Employee>()
+		    .HasOne(e => e.User)
+		    .WithOne(u => u.Employee)
+		    .HasForeignKey<Employee>(e => e.UserId);
+	    // employee.ToTable(nameof(Employee));
 	    employee.HasOne(e => e.Picture).WithMany(picture => picture.Employees);
 	    employee.HasOne(e => e.ProbationReason).WithMany(probation => probation.Employees).HasForeignKey(e => e.ProbationReasonId);
 	    employee.HasMany(e => e.OwnedTasks).WithOne(et => et.Owner).HasForeignKey(et => et.OwnerId);
+	    
 	    return modelBuilder;
 	}
 	

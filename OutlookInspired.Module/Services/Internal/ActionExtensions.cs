@@ -1,4 +1,5 @@
-﻿using DevExpress.Data.Filtering;
+﻿using System.Reactive.Linq;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
@@ -7,6 +8,13 @@ using DevExpress.Persistent.BaseImpl.EF;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ActionExtensions{
+        public static void TryExecute(this SimpleAction action){
+            if (!action.Available()) return;
+            action.DoExecute();
+        }
+        
+        public static bool Available(this ActionBase action) => action.Active && action.Enabled;
+
         public static void ShowReportPreview(this SingleChoiceAction action,Type reportDataType, CriteriaOperator criteria=null) 
             => action.Controller.Frame.GetController<ReportServiceController>()
                 .ShowPreview(ReportDataProvider.GetReportStorage(action.Application.ServiceProvider)

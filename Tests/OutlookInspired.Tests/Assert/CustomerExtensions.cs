@@ -11,7 +11,7 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Assert{
     static class CustomerExtensions{
         public static IObservable<Frame> AssertCustomerListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), action => action.AssertCustomerListView(navigationView, viewVariant));
 
         private static IObservable<Frame> AssertCustomerListView(this SingleChoiceAction action, string navigationView, string viewVariant){
@@ -22,7 +22,7 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
                 .If(_ => viewVariant=="CustomerListView",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
                 .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .AssertFilterAction(filtersCount:7)
+                .AssertFilterAction(action.Application,filtersCount:7)
                 .FilterListViews(action.Application);
         }
 

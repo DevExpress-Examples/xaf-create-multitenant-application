@@ -12,6 +12,33 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
+        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> ObjectChanged(this IObservable<IObjectSpace> source) 
+            => source.SelectMany(item => item.WhenObjectChanged());
+
+        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> WhenObjectChanged(this IObjectSpace objectSpace,params Type[] objectTypes) 
+            => objectSpace.WhenEvent<ObjectChangedEventArgs>(nameof(IObjectSpace.ObjectChanged)).InversePair(objectSpace)
+                .TakeUntil(objectSpace.WhenDisposed())
+                .Where(t =>!objectTypes.Any() ||objectTypes.Any(type => type.IsInstanceOfType(t.source.Object)));
+        
+        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> WhenObjectChanged(this IObjectSpace objectSpace,Type objectType,params string[] properties) 
+            => objectSpace.WhenEvent<ObjectChangedEventArgs>(nameof(IObjectSpace.ObjectChanged)).InversePair(objectSpace)
+                .TakeUntil(objectSpace.WhenDisposed())
+                .Where(t =>objectType.IsInstanceOfType(t.source.Object)&&properties.Any(s => t.source.PropertyName==s));
+        
+        public static T EnsureObject<T>(this IObjectSpace objectSpace,
+            Expression<Func<T, bool>> criteriaExpression = null, Action<T> initialize = null, Action<T> update = null,
+            bool inTransaction = false) where T : class{
+            var o = objectSpace.FirstOrDefault(criteriaExpression??(arg =>true) ,inTransaction);
+            if (o != null) {
+                update?.Invoke(o);
+                return o;
+            }
+            var ensureObject = objectSpace.CreateObject<T>();
+            initialize?.Invoke(ensureObject);
+            update?.Invoke(ensureObject);
+            return ensureObject;
+        }
+
         public static T GetRequiredService<T>(this IObjectSpace objectSpace) where T : notnull 
             => objectSpace.ServiceProvider.GetRequiredService<T>();
 

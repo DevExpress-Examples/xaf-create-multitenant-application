@@ -30,8 +30,6 @@ namespace XAF.Testing{
             return ms.ToArray();
 
         }
-        public static Exception AddScreenshot(this Exception exception) 
-            => new($"{exception.Message} {ScreenCapture.CaptureActiveWindowAndSave()}", exception);
 
         public static void ThrowCaptured(this Exception exception)
             =>exception.Capture().Throw();

@@ -2,15 +2,17 @@
 using System.Reactive.Subjects;
 using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
+using OutlookInspired.Tests.Assert;
 using XAF.Testing.Blazor.XAF;
+using XAF.Testing.XAF;
 
-namespace OutlookInspired.Blazor.Tests{
+namespace OutlookInspired.Blazor.Tests.Common{
     public class Startup:Server.Startup, IApplicationStartup{
         public Startup(IConfiguration configuration) : base(configuration){
         }
 
         private readonly ISubject<BlazorApplication> _whenApplicationSubject = Subject.Synchronize(new Subject<BlazorApplication>());
-        private readonly ISubject<BlazorApplication> _whenLogonSubject = Subject.Synchronize(new Subject<BlazorApplication>());
+        // private readonly ISubject<BlazorApplication> _whenLogonSubject = Subject.Synchronize(new Subject<BlazorApplication>());
 
         public IObservable<BlazorApplication> WhenApplication => _whenApplicationSubject.AsObservable();
         public string User{ get; set; }
@@ -18,11 +20,13 @@ namespace OutlookInspired.Blazor.Tests{
         protected override void Configure(IBlazorApplicationBuilder builder){
             base.Configure(builder);
             builder.ConfigureXafApplication(this, application => {
-                _whenLogonSubject.OnNext(application);
-                _whenLogonSubject.OnCompleted();
+                // _whenLogonSubject.OnNext(application);
+                // _whenLogonSubject.OnCompleted();
                 _whenApplicationSubject.OnNext(application);
             });
-            
+            builder.Services.AddPlatformServices();
+            builder.Services.AddSingleton<IMapsControlAssertion,MapControlAssertion>();
+            builder.Services.AddSingleton<IFilterViewAssertion,FilterViewAssertion>();
         }
     }
 

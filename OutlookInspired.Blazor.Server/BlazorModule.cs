@@ -7,6 +7,7 @@ using OutlookInspired.Blazor.Server.Features.Employees;
 using OutlookInspired.Blazor.Server.Features.Evaluations;
 using OutlookInspired.Blazor.Server.Features.Maps;
 using OutlookInspired.Blazor.Server.Features.Quotes;
+using OutlookInspired.Blazor.Server.Features.ViewFilter;
 using CellDisplayTemplateController = OutlookInspired.Blazor.Server.Features.Employees.Evaluations.CellDisplayTemplateController;
 
 namespace OutlookInspired.Blazor.Server;
@@ -25,7 +26,7 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(Features.Employees.Tasks.CellDisplayTemplateController),typeof(Features.Orders.DetailRowController),
             typeof(RouteMapsViewController),typeof(RouteMapsViewController),typeof(MapsViewController),typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(Features.Orders.RouteMapsViewController),
-            typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController)
+            typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController),typeof(ViewFilterController)
         };
 
     public override void Setup(XafApplication application) {

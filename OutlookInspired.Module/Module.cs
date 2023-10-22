@@ -22,12 +22,6 @@ using ReportController = OutlookInspired.Module.Features.Customers.ReportControl
 [assembly:InternalsVisibleTo("OutlookInspired.Win")]
 [assembly:InternalsVisibleTo("OutlookInspired.Blazor.Server")]
 namespace OutlookInspired.Module;
-public class MyClass:ObjectViewController<ListView,Employee>{
-	protected override void OnViewControlsCreated(){
-		base.OnViewControlsCreated();
-		throw new NotImplementedException();
-	}
-}
 public sealed class OutlookInspiredModule : ModuleBase{
 	public const string ModelCategory = "OutlookInspired";
     public OutlookInspiredModule() {
@@ -73,7 +67,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),
 		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController),
-		    
+		    // typeof(MyClass)
 	    };
 
     public override void Setup(XafApplication application) {

@@ -7,6 +7,7 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions{
+        
         public static IEnumerable<IUserControl> FilterUserControl(this DetailView view, LambdaExpression expression) 
             => view.UserControl().YieldItem().WhereNotDefault()
                 .Where(control => control.ObjectType == expression.Parameters.First().Type)

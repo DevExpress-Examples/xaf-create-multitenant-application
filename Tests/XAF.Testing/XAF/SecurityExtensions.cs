@@ -4,11 +4,20 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
+using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using XAF.Testing.RX;
 using static DevExpress.ExpressApp.Security.SecurityOperations;
 
 namespace XAF.Testing.XAF{
     public static class SecurityExtensions{
+        public static TUser EnsureUser<TUser>(this IObjectSpace objectSpace,string userName,Action<TUser> configure=null) where TUser:PermissionPolicyUser, ISecurityUserWithLoginInfo 
+            => objectSpace.EnsureObject<TUser>(u => u.UserName == userName, user => {
+                user.UserName = userName;
+                configure?.Invoke(user);
+                objectSpace.CommitChanges();
+                user.CreateUserLoginInfo(SecurityDefaults.PasswordAuthentication, objectSpace.GetKeyValueAsString(user));
+            });
+
         public static IObservable<LambdaExpression> FuseAny(this XafApplication application, params LambdaExpression[] expressions)
             => expressions.Select(expression => application.FuseAny(expression, expressions)).ToObservable().WhenNotDefault();
         public static LambdaExpression FuseAny(this XafApplication application, LambdaExpression expression,params LambdaExpression[] expressions) 

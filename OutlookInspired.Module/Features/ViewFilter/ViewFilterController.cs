@@ -41,6 +41,7 @@ namespace OutlookInspired.Module.Features.ViewFilter{
 
         private void AddDialogController(ShowViewParameters showViewParameters){
             var controller = Application.CreateController<DialogController>();
+            controller.Activated+=ListViewDialogControllerOnActivated;
             showViewParameters.Controllers.Add(controller);
             controller.AcceptAction.Executed += (_, _) => {
                 AddFilterItems();
@@ -52,6 +53,17 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             }; 
         }
 
+        private void ListViewDialogControllerOnActivated(object sender, EventArgs e){
+            var dialogController = ((DialogController)sender);
+            dialogController.Activated-=ListViewDialogControllerOnActivated;
+            dialogController.Frame.GetController<NewObjectViewController>().ObjectCreated+=OnObjectCreated;
+        }
+
+        private void OnObjectCreated(object sender, ObjectCreatedEventArgs e){
+            ((NewObjectViewController)sender).ObjectCreated-=OnObjectCreated;
+            ((BusinessObjects.ViewFilter)e.CreatedObject).DataType = View.ObjectTypeInfo.Type;
+        }
+        
         private void CreateViewFilterListView(ShowViewParameters showViewParameters){
             var listView = Application.CreateListView(typeof(BusinessObjects.ViewFilter), true);
             listView.Editor.NewObjectCreated += (_, args) => ((BusinessObjects.ViewFilter)((ObjectManipulatingEventArgs)args).Object).DataType = View.ObjectTypeInfo.Type;
@@ -71,21 +83,20 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             AddFilterItems();
             Application.ObjectSpaceCreated+=ApplicationOnObjectSpaceCreated;
         }
+        
 
         private void ApplicationOnObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e){
             e.ObjectSpace.Committing+=ObjectSpaceOnCommitting;
             e.ObjectSpace.Disposed+=ObjectSpaceOnDisposed;
         }
 
-        private void ObjectSpaceOnDisposed(object sender, EventArgs e){
-            ((IObjectSpace)sender).Committing-=ObjectSpaceOnCommitting;
-        }
+        private void ObjectSpaceOnDisposed(object sender, EventArgs e) 
+            => ((IObjectSpace)sender).Committing-=ObjectSpaceOnCommitting;
 
         private void ObjectSpaceOnCommitting(object sender, CancelEventArgs e){
             var objectSpace = ((IObjectSpace)sender);
-            if (objectSpace.ModifiedObjects.Cast<object>().OfType<IViewFilter>().Any()){
-                objectSpace.Committed+=OnCommitted;    
-            }
+            if (!objectSpace.ModifiedObjects.Cast<object>().OfType<IViewFilter>().Any()) return;
+            objectSpace.Committed+=OnCommitted;
         }
 
         private void OnCommitted(object sender, EventArgs e){
@@ -93,10 +104,10 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             AddFilterItems();
         }
 
-
         private void ObjectSpaceOnCommitted(object sender, EventArgs e) => AddFilterItems();
-
+        
         public void AddFilterItems(){
+            if (View==null)return;
             FilterAction.Items.Clear();
             var viewCriteria =View is ListView listView? listView.CollectionSource.GetTotalCriteria():null;
             FilterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),

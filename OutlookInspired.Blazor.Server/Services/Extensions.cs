@@ -1,4 +1,5 @@
-﻿using DevExpress.Blazor;
+﻿using System.Text.Json;
+using DevExpress.Blazor;
 using DevExpress.Blazor.Internal;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor.Components;
@@ -73,6 +74,21 @@ namespace OutlookInspired.Blazor.Server.Services{
                 await runtime.InvokeVoidAsync("eval", args);
             }
         }
+
+        public static async ValueTask Console(this IJSRuntime runtime, Action<JsonElement> onError){
+            await runtime.EvalAsync(@"
+window.registerErrorBroker = function(errorBroker) {
+    window.errorBroker = errorBroker;
+};");
+            await runtime.InvokeVoidAsync("registerErrorBroker", new JsInterop(onError).DotNetReference());
+            await runtime.EvalAsync(@"
+const originalConsoleWarn = console.warn;
+console.warn = function(...args) {
+  window.errorBroker.invokeMethodAsync('Invoke', args);
+  originalConsoleWarn.apply(console, args);
+};");
+        }
+        
         public static async ValueTask EvalAsync(this IJSRuntime runtime,params object[] args) 
             => await runtime.EvalAsync(true, args);
         public static async ValueTask EvalJSAsync(this XafApplication application,params object[] args) 

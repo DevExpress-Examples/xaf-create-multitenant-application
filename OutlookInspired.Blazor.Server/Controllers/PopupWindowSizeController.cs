@@ -16,10 +16,10 @@ namespace OutlookInspired.Blazor.Server.Controllers{
 
         private void ApplicationOnCustomizeTemplate(object sender, CustomizeTemplateEventArgs e){
             if (e.Template is not IPopupWindowTemplateSize size) return;
-            size.MaxWidth = "100vw";
-            size.Width = "100vw";
-            size.MaxHeight = "100vh";
-            size.Height = "100vh";
+            size.MaxWidth = "90vw";
+            size.Width = "90vw";
+            size.MaxHeight = "90vh";
+            size.Height = "90vh";
 
         }
     }

@@ -46,7 +46,7 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             ObjectSpace.GetObjectsQuery<Employee>().ToArray()
                 .Do(employee => {
                     employee.User = ObjectSpace.EnsureUser(employee.FirstName.ToLower()
-                        .Concat(employee.LastName.ToLower().Take(1)).StringJoin(""));
+                        .Concat(employee.LastName.ToLower().Take(1)).StringJoin(""),user => user.Employee=employee);
                     employee.User.Roles.Add(defaultRole);
                     employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
                 })

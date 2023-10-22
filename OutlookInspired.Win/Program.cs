@@ -25,8 +25,8 @@ static class Program {
             Tracing.LocalUserAppDataPath = Application.LocalUserAppDataPath;
         }
         Tracing.Initialize();
-        // var winApplication = ApplicationBuilder.BuildApplication(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-        var winApplication = ApplicationBuilder.BuildApplication();
+        var winApplication = ApplicationBuilder.BuildApplication(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+        // var winApplication = ApplicationBuilder.BuildApplication();
         try {
             winApplication.Setup();
             winApplication.Start();

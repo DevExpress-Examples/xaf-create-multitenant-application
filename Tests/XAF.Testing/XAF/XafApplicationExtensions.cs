@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,7 @@ namespace XAF.Testing.XAF{
                 .Where(frame => frame.Application==application&& (templateContext==default ||frame.Context == templateContext));
 
         public static IObservable<Frame> WhenFrame(this XafApplication application)
-            => application.WhenFrameViewChanged();
+            => application.WhenFrameViewChanged().Merge(application.MainWindow.Observe().WhenNotDefault().WhenViewChanged().WhenNotDefault(window => window.View));
         public static IObservable<Frame> WhenFrame(this XafApplication application, Type objectType , params ViewType[] viewTypes) 
             => application.WhenFrame(objectType).WhenFrame(viewTypes);
 
@@ -57,7 +58,8 @@ namespace XAF.Testing.XAF{
             => application.Navigate(viewId,(frame =>frame.WhenFrame(viewId))).Take(1).Cast<Window>();
         
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
-            => application.WhenFrameCreated().Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
+            => application.WhenFrameCreated()
+                // .Where(frame => frame.Context!=TemplateContext.ApplicationWindow).Select(frame => frame)
                 .WhenViewChanged();
 
         public static IObservable<DetailView> WhenExistingObjectRootDetailView(this XafApplication application,Type objectType=null)
@@ -72,6 +74,9 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> WhenRootFrame(this XafApplication application, Type objectType=null) 
             => application.WhenRootFrame(objectType,ViewType.DetailView).WhenNotDefault(frame => frame.View.CurrentObject);
 
+        public static IObservable<LayoutManager> WhenLayoutCreated(this LayoutManager layoutManager) 
+            => layoutManager.WhenEvent(nameof(layoutManager.LayoutCreated)).To(layoutManager);
+        
         public static IObservable<DetailView> NewObjectRootDetailView(this XafApplication application,Type objectType)
             => application.NewObjectRootFrame(objectType).Select(frame => frame.View.ToDetailView());
         public static IObservable<Frame> NewObjectRootFrame(this XafApplication application,Type objectType=null)
@@ -79,6 +84,13 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<DashboardView> WhenDashboardViewCreated(this XafApplication application) 
             => application.WhenEvent<DashboardViewCreatedEventArgs>(nameof(XafApplication.DashboardViewCreated)).Select(e => e.View);
+        public static IObservable<Frame> WhenDeleteObject(this IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame,Frame parent)> source,Frame parentFrame)
+            => source.SelectMany(t => t.frame.GetController<DeleteObjectsViewController>().DeleteAction
+                .Trigger( t.frame.View.ObjectSpace.GetObjectByKey(t.frame.View.ObjectTypeInfo.Type, t.keyValue)).To<Frame>().IgnoreElements()
+                .Concat(t.frame.WhenAggregatedSave(t.parent).Select(frame => frame).IgnoreElements()
+                    .ConcatDefer(() => t.frame.WhenDialogAccept(parentFrame).Select(_ => t.frame)))
+                );
+
         public static IObservable<(Type type, object keyValue, XafApplication application)> WhenDeleteObject(this IObservable<Frame> source)
             => source.SelectMany(frame => {
                     var keyValue = frame.View.ObjectSpace.GetKeyValue(frame.View.CurrentObject);
@@ -110,8 +122,8 @@ namespace XAF.Testing.XAF{
                     .SelectMany(window => window.Navigate(viewId,afterNavigation(window)))
                 : application.MainWindow.Navigate(viewId, afterNavigation(application.MainWindow)));
         
-        public static bool DbExist(this XafApplication application) {
-            var builder = new SqlConnectionStringBuilder(application.ConnectionString);
+        public static bool DbExist(this XafApplication application,string connectionString=null) {
+            var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);
@@ -162,7 +174,8 @@ namespace XAF.Testing.XAF{
         }
 
         private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1);
+            => windowCreated.When(TemplateContext.ApplicationWindow).Select(window => window).TemplateChanged().Cast<Window>().Take(1)
+                .Select(window => window);
 
         public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation){
             var controller = window.GetController<ShowNavigationItemController>();
@@ -237,17 +250,32 @@ namespace XAF.Testing.XAF{
                                   (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type)))
                 .InversePair(application);
         
-        public static IObservable<(ITypeInfo typeInfo, object keyValue, bool needsDelete, Frame source)> WhenSaveObject(this IObservable<(Frame frame, Frame parent,bool isAggregated)> source)
-            => source.If(t => t.frame.GetController<DialogController>()==null,t => {
-                    var currentObjectInfo = t.frame.View.CurrentObjectInfo();
-                    (t.frame.GetController<ModificationsController>()??t.parent.GetController<ModificationsController>()).SaveAction.DoExecute();
-                    return currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,false,source: t.parent));
+        public static Controller GetController(this Frame frame, string controllerName) 
+            => frame.Controllers.Cast<Controller>().FirstOrDefault(controller => controller.Name==controllerName);
+        
+        public static IEnumerable<T> GetControllers<T>(this Frame frame) where T:Controller
+            => frame.GetControllers(typeof(T)).Cast<T>();
+        public static IObservable<Frame> NavigateBack(this XafApplication application){
+            var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
+            return viewNavigationController.NavigateBackAction
+                .Trigger(application.WhenFrame(Nesting.Root).OfType<Window>()
+                        .SelectMany(window => window.View.WhenControlsCreated(emitExisting:true).Take(1).To(window)),
+                    () => viewNavigationController.NavigateBackAction.Items.First())
+                .Select(window => window);
+        }
+
+        public static IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame)> WhenSaveObject(this IObservable<Frame> source,Frame parentFrame)
+            => source.If(frame => frame.GetController<DialogController>()==null,frame => {
+                    var currentObjectInfo = frame.View.CurrentObjectInfo();
+                    return frame.Observe().ToController<ModificationsController>()
+                        .SelectMany(controller => controller.SaveAction.Trigger()).To(frame).CloseWindow(parentFrame)
+                        .Select(frame1 => (currentObjectInfo.typeInfo,currentObjectInfo.keyValue,source: frame1));
                 },
-                t => {
-                    var currentObjectInfo = t.frame.View.CurrentObjectInfo();
-                    var acceptAction = t.frame.GetController<DialogController>().AcceptAction;
-                    return acceptAction.Trigger(acceptAction.WhenExecuteCompleted()
-                        .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,true,t.parent))));
+                frame => {
+                    var currentObjectInfo = frame.View.CurrentObjectInfo();
+                    var acceptAction = frame.GetController<DialogController>().AcceptAction;
+                    return acceptAction.Trigger().Take(1).BufferUntilCompleted()
+                        .SelectMany(_ => currentObjectInfo.Observe().Select(t1 => (t1.typeInfo,t1.keyValue,parentFrame)));
                 }
             );
 

@@ -5,9 +5,11 @@ using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.Validation;
+using OutlookInspired.Module.Attributes.Appearance;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
@@ -15,6 +17,7 @@ using EditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 namespace OutlookInspired.Module.BusinessObjects{
 
     [XafDefaultProperty(nameof(Name))]
+    [DeactivateAction(ListViewProcessCurrentObjectController.ListViewShowObjectActionId)]
     public class ViewFilter:BaseObject{
         
         [RuleRequiredField]

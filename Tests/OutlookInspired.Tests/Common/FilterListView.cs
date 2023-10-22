@@ -9,10 +9,13 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Common{
     static class FilterListView{
 
+        internal static IObservable<XafApplication> FilterListViews(this XafApplication application)
+            => application.FilterListViews((view, expression) => view.FilterUserControl(expression).ToObservable(), Expressions())
+                .IgnoreElements().TakeUntilDisposed(application).To<XafApplication>().Merge(application.Observe());
+        
         internal static IObservable<Frame> FilterListViews(this IObservable<Frame> source, XafApplication application)
             => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
-                .IgnoreElements().TakeUntilCompleted(source).To<Frame>();
-        
+                .IgnoreElements().TakeUntilFinished(source).To<Frame>();
         
 
         public static LambdaExpression[] Expressions()

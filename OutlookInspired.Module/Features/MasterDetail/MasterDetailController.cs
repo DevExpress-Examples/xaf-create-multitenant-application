@@ -41,6 +41,7 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             }
             _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
             _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;
+            _childFrame.View.ObjectSpace.ModifiedChanged-=ObjectSpaceOnModifiedChanged;
             View.ChildItem().ControlCreated-=OnChildItemControlCreated;
             View.MasterItem().ControlCreated-=OnChildItemControlCreated;
         }
@@ -59,8 +60,12 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             }
         }
 
-        private void OnChildItemControlCreated(object sender, EventArgs e) 
-            => _childFrame = (NestedFrame)((DashboardViewItem)sender)!.Frame;
+        private void OnChildItemControlCreated(object sender, EventArgs e){
+            _childFrame = (NestedFrame)((DashboardViewItem)sender)!.Frame;
+            _childFrame.View.ObjectSpace.ModifiedChanged+=ObjectSpaceOnModifiedChanged;
+        }
+
+        private void ObjectSpaceOnModifiedChanged(object sender, EventArgs e) => ((IObjectSpace)sender).CommitChanges();
 
         private void OnMasterItemControlCreated(object sender, EventArgs e){
             _masterFrame = (NestedFrame)(((DashboardViewItem)sender)!).Frame;

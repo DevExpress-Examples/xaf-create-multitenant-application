@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
+using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Blazor.Tests.Common;
+using XAF.Testing;
 using XAF.Testing.RX;
-using XAF.Testing.XAF;
+
 
 #pragma warning disable CS8974 
 
 namespace OutlookInspired.Blazor.Tests{
     public class Blazor:TestBase{
         
+
 #if TEST
         [OutlookInspired.Tests.Common.RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
         [Category("BlazorTest")]
@@ -18,11 +21,14 @@ namespace OutlookInspired.Blazor.Tests{
         [TestCaseSource(nameof(BlazorTestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
-            await StartBlazorApp(user, application => application.AssertNavigation("EmployeeListView")
-                    .AssertChangeViewVariant("EmployeeCardListView")
-                    .Catch<Frame,Exception>(exception => exception.Throw<Frame>()).ToUnit(),
-                browser:Environment.GetEnvironmentVariable("XAFTESTBrowser"),moveToInactiveWindow:true);
+            // UtilityExtensions.DelayOnContextInterval = 2.Seconds();
+            UtilityExtensions.TimeoutInterval = 15.Seconds();
+            
+            await StartBlazorTest(user, application => assert(application, navigationView, viewVariant).ToUnit(),
+                    browser:Environment.GetEnvironmentVariable("XAFTESTBrowser"),inactiveMonitorLocation:WindowPosition.FullScreen)
+                .Log(LogContext, inactiveMonitorLocation:WindowPosition.BottomRight,alwaysOnTop:true);
         }
+
 
         public static IEnumerable BlazorTestCases 
             => TestCases.Cast<object>().Take(1);

@@ -6,7 +6,7 @@ using XAF.Testing.XAF;
 using NotImplementedException = System.NotImplementedException;
 
 namespace OutlookInspired.Tests.Assert{
-    static class SecurityExtensions{
+    public static class SecurityExtensions{
 
         public static int AssertDashboardViewShowInDocumentActionItems(this SingleChoiceAction action)
             => action.UseCurrentEmployee(employee => employee?.Department switch{
@@ -65,13 +65,11 @@ namespace OutlookInspired.Tests.Assert{
                 _ => throw new NotImplementedException(viewId)
             }).Contains(user.Employee().Department));
 
-        public static int AssertNavigationItems(this SingleChoiceAction action, ChoiceActionItem item=null) 
-            => action.UseCurrentUser(user => user.IsAdmin() ? item.AssertAdminNavigationItems() : item.AssertEmployeeNavigationItems( user));
+        public static int NavigationItems(this SingleChoiceAction action, ChoiceActionItem item=null) 
+            => action.UseCurrentUser(user => user.IsAdmin() ? item.AdminNavigationItems() : item.EmployeeNavigationItems( user));
 
-        private static int AssertEmployeeNavigationItems(this ChoiceActionItem item, ApplicationUser user){
-            if (item == null){
-                return 1;
-            }
+        private static int EmployeeNavigationItems(this ChoiceActionItem item, ApplicationUser user){
+            if (item == null) return 1;
             var employee = user.Employee();
             return employee.Department switch{
                 EmployeeDepartment.Sales => 7,
@@ -82,7 +80,7 @@ namespace OutlookInspired.Tests.Assert{
             };
         }
 
-        private static int AssertAdminNavigationItems(this ChoiceActionItem item) 
+        private static int AdminNavigationItems(this ChoiceActionItem item) 
             => item switch{
                 null => 2,
                 { Caption: "Default" } => 11,
@@ -93,7 +91,7 @@ namespace OutlookInspired.Tests.Assert{
         static AssertAction EmployeeTaskAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
-                _ => XAF.Testing.XAF.AssertAction.AllButDelete
+                _ => XAF.Testing.XAF.AssertAction.All
             };
 
         static AssertAction TaskAttachedFileAssertAction(this EmployeeDepartment? department) 
@@ -168,12 +166,15 @@ namespace OutlookInspired.Tests.Assert{
         static AssertAction EvaluationAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
-                _ when source!=null=> XAF.Testing.XAF.AssertAction.AllButDelete,
+                // _ when source!=null=> XAF.Testing.XAF.AssertAction.All,
                 _ => XAF.Testing.XAF.AssertAction.All
             };
 
-        public static AssertAction AssertAction(this Frame frame,Frame source=null) 
-            => frame.Assert( frame.View.ObjectTypeInfo.Type, frame.View.ObjectSpace.CurrentUser().Employee()?.Department,source);
+        public static AssertAction AssertAction(this Frame frame,Frame source=null){
+            var masterFrame = frame.MasterFrame();
+            return masterFrame.Assert(masterFrame.View.ObjectTypeInfo.Type,
+                masterFrame.View.ObjectSpace.CurrentUser().Employee()?.Department, source);
+        }
 
         private static AssertAction Assert(this Frame frame, Type type, EmployeeDepartment? department,Frame source) 
             => type switch{

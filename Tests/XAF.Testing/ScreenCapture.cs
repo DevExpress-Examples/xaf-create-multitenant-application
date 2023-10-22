@@ -21,10 +21,11 @@ namespace XAF.Testing{
 
         
         public static string CaptureActiveWindowAndSave(string path=null){
-            // MoveActiveWindowToMainMonitorAndWaitForRender();
+            Monitor.MoveActiveWindowToMainMonitor();
             var filename = path??Path.GetTempFileName().Replace(".tmp", ".bmp");
-            CaptureActiveWindow().Save(filename);
-            return filename;
+            using var bitmap = CaptureActiveWindow();
+            bitmap.Save(filename);
+            return new Uri(filename).AbsoluteUri;
         }
     }
     

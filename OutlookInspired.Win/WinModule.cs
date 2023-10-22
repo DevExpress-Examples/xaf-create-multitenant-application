@@ -35,7 +35,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),typeof(MapsViewController),
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),
-            typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),
+            typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),typeof(MyClass),
             typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
         };
 

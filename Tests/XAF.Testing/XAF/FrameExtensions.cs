@@ -44,7 +44,7 @@ namespace XAF.Testing.XAF{
             var action = frame.GetController<ListViewProcessCurrentObjectController>().ProcessCurrentObjectAction;
             return action.Trigger(action.WhenExecuted()
                 .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type,ViewType.DetailView))
-                .Take(1),selectedObject().YieldItem().Cast<object>().ToArray());
+                .Take(1).Select(frame1 => frame1),selectedObject().YieldItem().Cast<object>().ToArray());
         }
 
         
@@ -57,8 +57,33 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> ToController<T>(this IObservable<Frame> source) where T : Controller 
             => source.SelectMany(window => window.Controllers.Cast<Controller>()).OfType<T>();
 
-        public static IObservable<Window> CloseWindow(this IObservable<Frame> source) 
-            => source.Cast<Window>().DelayOnContext().Do(frame => frame.Close()).DelayOnContext().IgnoreElements();
+        public static IObservable<Frame> CloseWindow(this IObservable<Frame> source, Frame previous) 
+            => source.If(frame => frame is not Window,frame => Observable.Throw<Frame>(new InvalidCastException($"{frame.View}")),frame => frame.Observe())
+                .Cast<Window>().DelayOnContext()
+                .SelectMany(frame => {
+                    var acceptAction = frame.GetController<DialogController>()?.AcceptAction;
+                    if (acceptAction != null)
+                        return acceptAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe());
+                    if (frame.IsMain)
+                        return frame.Application.NavigateBack();
+                    return frame.Actions("Close").Cast<SimpleAction>()
+                        .Where(a => a.Controller.Name.StartsWith("DevExpress"))
+                        .ToNowObservable().SelectMany(a => a.Trigger().To(previous));
+
+                })
+                .DelayOnContext();
+
+        public static IObservable<Frame> WhenDialogAccept(this Frame frame, Frame parentFrame)
+            => frame.Defer(_ => {
+                var dialogController = frame.GetController<DialogController>();
+                return dialogController != null ? dialogController.AcceptAction.Trigger(parentFrame.Observe()).Select(frame2 => frame2) : frame.Observe();
+            });
+        public static IObservable<Frame> WhenAggregatedSave(this Frame frame,Frame parentFrame) 
+            => frame.Observe()
+                .If(_ => frame is NestedFrame{ ViewItem: PropertyEditor editor } && editor.MemberInfo.IsAggregated,
+                    _ => parentFrame.Actions("Save").Cast<SimpleAction>().ToNowObservable().WhenAvailable()
+                        .SelectMany(a => a.Trigger().To(frame)),
+                    _ => frame.Observe());
         
         public static IObservable<Unit> WhenAcceptTriggered(this IObservable<DialogController> source) 
             => source.SelectMany(controller => controller.AcceptAction.Trigger().Take(1));
@@ -66,9 +91,14 @@ namespace XAF.Testing.XAF{
         public static IObservable<DashboardViewItem> DashboardViewItem(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector) 
             => source.SelectMany(frame => frame.DashboardViewItem(itemSelector));
 
-        public static IObservable<DashboardViewItem> DashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> itemSelector=null) 
-            => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable()
-                .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).Where(item => item.MasterViewItem(itemSelector)).ToNowObservable());
+        public static IObservable<(Frame frame, Frame parent)> MasterFrame(this IObservable<(Frame frame, Frame parent)> source, Func<DashboardViewItem, bool> itemSelector = null)
+            => source.Select(t => (t.frame.MasterFrame(itemSelector),t.parent));
+        public static Frame MasterFrame(this Frame frame, Func<DashboardViewItem, bool> itemSelector = null)
+            => frame.View is DashboardView? frame.DashboardViewItem( itemSelector).ToFrame().First():frame;
+        
+        public static IEnumerable<DashboardViewItem> DashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> itemSelector=null) 
+            => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(itemSelector))
+                .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).Where(item => item.MasterViewItem(itemSelector)));
 
         public static IObservable<Frame> DashboardListViewEditFrame(this Frame frame) 
             => frame.DashboardViewItems(ViewType.ListView).Where(item =>item.MasterViewItem()).ToNowObservable()
@@ -169,17 +199,17 @@ namespace XAF.Testing.XAF{
             => source.SelectMany(window => window.ProcessSelectedObject());
         
         public static NestedFrame ToNestedFrame(this Frame frame) => (NestedFrame)frame;
-        public static IObservable<Unit> SelectDashboardListViewObject(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector=null) 
-            => source.SelectDashboardColumnViewObject(itemSelector)
+        public static IObservable<Frame> SelectDashboardListViewObject(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector=null) 
+            => source.SelectDashboardColumnViewObject(itemSelector??(item =>item.MasterViewItem()) )
                 .SwitchIfEmpty(Observable.Defer(() => source.SelectMany(window => window.DashboardViewItems(ViewType.ListView).ToNowObservable()
                     .Where(itemSelector??(_ =>true) ).Select(item => item.InnerView.ToListView())
-                    .SelectMany(listView => listView.SelectObject()).ToUnit())));
+                    .SelectMany(listView => listView.SelectObject()).To(window))));
         
-        private static IObservable<Unit> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
+        private static IObservable<Frame> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
             => source.SelectMany(frame => frame.SelectDashboardColumnViewObject(itemSelector));
 
-        public static IObservable<Unit> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector) 
-            => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>().SelectDashboardColumnViewObject(frame, itemSelector);
+        public static IObservable<Frame> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector) 
+            => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>().SelectDashboardColumnViewObject(frame, itemSelector).To(frame);
 
         public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToListView());
@@ -207,7 +237,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> CreateNewObject(this IObservable<Frame> source)
             => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
                 .SelectMany(action => action.Trigger(action.Application
-                    .WhenRootFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)
+                    .WhenFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)
                     .Merge(action.Controller.Frame.View.AsListView().Observe().WhenNotDefault().Select(view => view.EditView).WhenNotDefault()
                         .SelectMany(view => view.WhenCurrentObjectChanged().Where(detailView => detailView.IsNewObject()))
                         .To(action.Controller.Frame))

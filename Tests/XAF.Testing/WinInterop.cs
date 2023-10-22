@@ -9,7 +9,14 @@ namespace XAF.Testing{
         public const uint SwpNozorder = 0x0004;
         public const uint WmPaint = 0x000F;
         public const int SwMaximize = 3;
+        private static readonly IntPtr HwndTopmost = new(-1);
+        private static readonly IntPtr HwndNoTopMost = new(-2);
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoSize = 0x0001;
         
+        public static void AlwaysOnTop(this IntPtr hWnd, bool enable=true) 
+            => SetWindowPos(hWnd, enable ? HwndTopmost : HwndNoTopMost, 0, 0, 0, 0, SwpNoMove | SwpNoSize);
+
         [DllImport("user32.dll")]
         public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, MonitorEnumProc lpfnEnum, IntPtr dwData);
 

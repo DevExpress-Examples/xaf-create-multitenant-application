@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using DevExpress.EntityFrameworkCore.Security.MiddleTier.ClientServer;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Security;
@@ -200,12 +199,11 @@ namespace OutlookInspired.Module.Services.Internal{
                 defaultRole.AddTypePermissionsRecursively<ModelDifferenceAspect>(Create, Allow);
                 defaultRole.AddTypePermissionsRecursively<ViewFilter>(CRUDAccess, Allow);
             });
-
-
-        [Obsolete("Notes #16")]
-        public static ApplicationUser EnsureUser(this IObjectSpace objectSpace,string userName) 
+        
+        public static ApplicationUser EnsureUser(this IObjectSpace objectSpace,string userName,Action<ApplicationUser> configure=null) 
             => objectSpace.EnsureObject<ApplicationUser>(u => u.UserName == userName, user => {
                 user.UserName = userName;
+                configure?.Invoke(user);
                 objectSpace.CommitChanges();
                 ((ISecurityUserWithLoginInfo)user).CreateUserLoginInfo(SecurityDefaults.PasswordAuthentication,
                     objectSpace.GetKeyValueAsString(user));

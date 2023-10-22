@@ -1,10 +1,11 @@
-﻿@inherits MapComponent<DxMapModel,DxMap>
+﻿@using OutlookInspired.Blazor.Server.Services
+@inherits MapComponent<DxMapModel,DxMap>
 
 <div @ref=@Element ></div>
 
 @code {
     static DxMap() => ExtractResource<DxMap>();
-    
+    private DotNetObjectReference<JsInterop> _itemSelected;
     protected override async Task OnAfterRenderClientModuleAsync(){
         ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitDxMap", Element, ComponentModel);
         var routeMode = ComponentModel.RouteMode;

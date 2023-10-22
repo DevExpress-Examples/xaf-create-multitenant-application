@@ -28,7 +28,7 @@ namespace XAF.Testing.Win.XAF{
                     .SelectManySequential(item => action.Trigger(action.Frame().GetController<RichTextServiceController>()
                         .WhenEvent<CustomRichTextRibbonFormEventArgs>(nameof(RichTextServiceController.CustomCreateRichTextRibbonForm)).Take(1)
                         .Do(e => e.RichTextRibbonForm.WindowState=FormWindowState.Maximized)
-                        .SelectMany(e => e.RichTextRibbonForm.RichEditControl.Observe().AssertRichEditControl(caller:$"{nameof(AssertDashboardViewShowInDocumentAction)} {item}")
+                        .SelectMany(e => e.RichTextRibbonForm.RichEditControl.Observe().AssertRichEditControl(caller:$"{nameof(AssertShowInDocumentAction)} {item}")
                             .Buffer(e.RichTextRibbonForm.WhenEvent(nameof(e.RichTextRibbonForm.Activated)).DelayOnContext()).SelectMany().Take(1)
                             .Do(richEditControl => richEditControl.FindForm()?.Close())
                             .DelayOnContext()).Take(1).To<Frame>(),() => item)))
@@ -81,12 +81,12 @@ namespace XAF.Testing.Win.XAF{
                 .If(_ => assertMailMerge, control => control.WhenEvent(nameof(control.MailMergeFinished)).To(control)
                     .Assert($"{caller} {nameof(RichEditControl.MailMergeFinished)}"),control => control.Observe());
 
-        public static IObservable<Frame> AssertDashboardViewShowInDocumentAction(this SingleChoiceAction action, ChoiceActionItem item) 
+        public static IObservable<Frame> AssertShowInDocumentAction(this SingleChoiceAction action, ChoiceActionItem item) 
             => action.Frame().GetController<RichTextServiceController>()
                 .WhenEvent<CustomRichTextRibbonFormEventArgs>(nameof(RichTextServiceController.CustomCreateRichTextRibbonForm)).Take(1)
                 .Do(e => e.RichTextRibbonForm.WindowState = FormWindowState.Maximized)
                 .SelectMany(e => e.RichTextRibbonForm.RichEditControl.Observe()
-                    .AssertRichEditControl(caller: $"{nameof(AssertDashboardViewShowInDocumentAction)} {item}")
+                    .AssertRichEditControl(caller: $"{nameof(AssertShowInDocumentAction)} {item}")
                     .Buffer(e.RichTextRibbonForm.WhenEvent(nameof(e.RichTextRibbonForm.Activated)).DelayOnContext()).SelectMany().Take(1)
                     .Do(richEditControl => richEditControl.FindForm()?.Close())
                     .DelayOnContext()).Take(1).To<Frame>();
@@ -95,7 +95,7 @@ namespace XAF.Testing.Win.XAF{
             => detailView.WhenControlViewItemControl().OfType<MapControl>().WhenNotDefault(control => control.Layers.Count)
                 .SelectMany(control => control.Layers.OfType<ImageLayer>().ToNowObservable()
                     .SelectMany(layer => Observable.FromEventPattern(layer, nameof(layer.Error),EventExtensions.ImmediateScheduler)
-                        .SelectMany(pattern => ((MapErrorEventArgs)pattern.EventArgs).Exception.Throw<MapControl>())
+                        .SelectMany(pattern => ((MapErrorEventArgs)pattern.EventArgs).Exception.ThrowTestException().To<MapControl>())
                         .Merge(Observable.FromEventPattern(layer, nameof(layer.DataLoaded),EventExtensions.ImmediateScheduler).To(control)).Take(1)))
                 .Assert();
         
@@ -114,8 +114,8 @@ namespace XAF.Testing.Win.XAF{
             Type objectType = null, int tabPagesCount = 0,Func<DetailView,bool> match=null,[CallerMemberName]string caller="")
             => application.AssertTabControl<TabbedGroup>(objectType,match)
                 .If(group => tabPagesCount > 0 && group.TabPages.Count != tabPagesCount,group => group.Observe().DelayOnContext()
-                    .SelectMany(_ => new AssertException(
-                        $"{nameof(AssertTabbedGroup)} {objectType?.Name} expected {tabPagesCount} but was {group.TabPages.Count}").Throw<TabbedGroup>(caller)),
+                    .SelectMany(_ => new Exception(
+                        $"{nameof(AssertTabbedGroup)} {objectType?.Name} expected {tabPagesCount} but was {group.TabPages.Count}").ThrowTestException().To<TabbedGroup>()),
                     group => group.Observe());
         
 

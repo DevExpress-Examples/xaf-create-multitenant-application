@@ -1,12 +1,18 @@
 ﻿using System.Diagnostics;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using DevExpress.ExpressApp.Blazor.Components.Models;
+using Microsoft.AspNetCore.Components;
 using XAF.Testing.RX;
 
 namespace XAF.Testing.Blazor;
+
 public static class Class1{
-    public static IObservable<Process> MoveToInactiveMonitor(this IObservable<Process> source) 
-        => source.Do(process => process.MainWindowHandle.UseInactiveMonitorBounds(rect =>
-            process.MainWindowHandle.Move(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top)));
+    public static IObservable<TArgs> WhenCallback<TArgs>(this object source, string callbackName) 
+        => new Subject<TArgs>().Use(subject => {
+            source.SetPropertyValue(callbackName, EventCallback.Factory.Create<TArgs>(source, args => subject.OnNext(args)));
+            return subject.AsObservable().Finally(subject.Dispose);
+        });
 
     public static IObservable<Process> Start(this Uri uri) 
         => new ProcessStartInfo{

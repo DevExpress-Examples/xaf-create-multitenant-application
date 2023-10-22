@@ -10,14 +10,14 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Assert{
     static class QuoteExtensions{
         public static IObservable<Frame> AssertOpportunitiesView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), action => action.AssertOpportunitiesView(navigationView, viewVariant));
 
         private static IObservable<Frame> AssertOpportunitiesView(this SingleChoiceAction action, string navigationView, string viewVariant){
             return action.Application.AssertDashboardListView(navigationView, viewVariant, listViewFrameSelector: item => item.MasterViewItem())
                 .AssertMapItAction(typeof(Quote))
-                .AssertFilterAction(filtersCount:5)
-                .CloseWindow()
+                .AssertFilterAction(action.Application,filtersCount:5)
+                .CloseWindow(null)
                 .ConcatDefer(() => action.Application.AssertDashboardListView(navigationView, viewVariant,
                     listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject))
                 .FilterListViews(action.Application).DelayOnContext().Select(frame => frame);

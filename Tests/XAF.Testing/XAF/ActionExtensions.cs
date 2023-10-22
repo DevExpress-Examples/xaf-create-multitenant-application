@@ -9,6 +9,8 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
     public static class ActionExtensions{
+        public static IObservable<T> WhenAvailable<T>(this IObservable<T> source) where T:ActionBase 
+            => source.Where(action => action.Available());
         public static bool Available(this ChoiceActionItem item)
             => item.Active && item.Enabled;
         public static IEnumerable<ChoiceActionItem> Available(this IEnumerable<ChoiceActionItem> source) 
@@ -32,7 +34,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterExecuted,params object[] selection)
             => afterExecuted.Trigger(() => action.DoExecute(selection));
         public static IObservable<Unit> Trigger(this SimpleAction action, params object[] selection)
-            => action.Trigger(action.WhenExecuteCompleted().Select(args => args).ToUnit(),selection);
+            => action.Trigger(action.WhenExecuteCompleted().Take(1).ToUnit(),selection);
         
         public static void DoExecute(this SimpleAction action, params object[] selection) 
             => action.DoExecute(() => action.DoExecute(),selection);

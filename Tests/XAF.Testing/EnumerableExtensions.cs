@@ -1,5 +1,16 @@
 namespace XAF.Testing{
-    public static class EnumerableExtensions{
+    public static class EnumerableExtensions {
+        public static IEnumerable<T> SwitchIfEmpty<T>(this IEnumerable<T> src, IEnumerable<T> alt){
+            using var e = src.GetEnumerator();
+            if (e.MoveNext())
+                do{
+                    yield return e.Current;
+                } while (e.MoveNext());
+            else
+                foreach (var i in alt)
+                    yield return i;
+        }
+    
         public static IEnumerable<TSource> WhereNotDefault<TSource>(this IEnumerable<TSource> source) {
             var type = typeof(TSource);
             if (type.IsClass || type.IsInterface){

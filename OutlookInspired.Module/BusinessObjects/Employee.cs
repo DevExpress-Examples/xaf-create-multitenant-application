@@ -68,7 +68,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 		
 		[FontSizeDelta(16)]
 		public virtual string FullName { get; set; }
-		
+
+		public override void OnSaving(){
+			base.OnSaving();
+			FullName ??= $"{FirstName} {LastName}";
+		}
+
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual PersonPrefix Prefix { get; set; }
 
@@ -128,8 +133,12 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[FontSizeDelta(2)]
 		public virtual string RouteResult{ get; set; }
 
-		[Browsable(false)][RuleRequiredField]
+		[RuleRequiredField]
+		
 		public virtual ApplicationUser User{ get; set; }
+
+		[Browsable(false)]
+		public virtual Guid? UserId{ get; set; }
 	}
 
 	public enum EmployeeDepartment {

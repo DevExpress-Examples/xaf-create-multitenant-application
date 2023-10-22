@@ -48,8 +48,8 @@ namespace XAF.Testing.RX{
         
         private static (EventInfo info,MethodInfo add,MethodInfo remove) EventInfo(this object source,string eventName) 
             => Events.GetOrAdd((source as Type ?? source.GetType(), eventName), t => {
-                var eventInfo = (EventInfo)t.type.GetMembers(MemberTypes.Event).OrderByDescending(info => info.IsPublic())
-                    .First(info => info.Name == eventName || info.Name.EndsWith($".{eventName}"));
+                var eventInfo = (EventInfo)t.type.GetMembers(MemberTypes.Event,BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.FlattenHierarchy)
+                    .OrderByDescending(info => info.IsPublic()).First(info => info.Name == eventName || info.Name.EndsWith($".{eventName}"));
                 return (eventInfo, eventInfo.AddMethod,eventInfo.RemoveMethod)!;
             });
 

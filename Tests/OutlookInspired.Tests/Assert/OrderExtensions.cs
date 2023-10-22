@@ -12,7 +12,7 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Assert{
     static class OrderExtensions{
         public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), action => action.AsserOrderListView( navigationView, viewVariant));
 
         private static IObservable<Frame> AsserOrderListView(this SingleChoiceAction action, string navigationView, string viewVariant){
@@ -28,7 +28,7 @@ namespace OutlookInspired.Tests.Assert{
                 
                 
                 .Select(frame => frame)
-                .AssertFilterAction(filtersCount: 7)
+                .AssertFilterAction(action.Application,filtersCount: 7)
                 .FilterListViews(action.Application);
         }
 
@@ -42,7 +42,7 @@ namespace OutlookInspired.Tests.Assert{
             => source.SelectMany(action => action.Items.SelectManyRecursive(item => item.Items).Where(item => item.ParentItem==null&&!item.Items.Any()).ToNowObservable()
                 .SelectManySequential(item => action.Trigger(action.Application.WhenFrame(typeof(Order),ViewType.DetailView).Take(1)
                     .SelectUntilViewClosed(frame => ((DetailView)frame.View).AssertRichEditControl().To(frame)
-                        .CloseWindow().To(action.Frame())),() => item)));
+                        .CloseWindow(null).To(action.Frame())),() => item)));
         
         // internal static IObservable<Unit> AssertOrderDetailView(this Frame frame) 
             // => frame.AssertNestedOrderItems( ).ReplayFirstTake();

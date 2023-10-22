@@ -1,4 +1,5 @@
-﻿using System.Reactive.Concurrency;
+﻿using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
@@ -6,6 +7,35 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.RX{
     public static class TransformExtension{
+        public static IObservable<TResult> SelectAndOmit<T, TResult>(this IObservable<T> source,
+            Func<T,int, IObservable<TResult>> process, SemaphoreSlim semaphoreSlim = null, Action<T> noProcess = null, int maximumConcurrencyCount = 1) {
+            var dispose = false;
+            if (semaphoreSlim == null){
+                semaphoreSlim = new SemaphoreSlim(maximumConcurrencyCount, maximumConcurrencyCount);
+                dispose = true;
+            }
+
+            return source.SelectMany((item, i) => {
+                    if (semaphoreSlim.Wait(0)){
+                        return Observable.Return(process(item,i)
+                            .FinallySafe(() => semaphoreSlim.Release()));
+                    }
+
+                    noProcess?.Invoke(item);
+                    return Observable.Empty<IObservable<TResult>>();
+
+                })
+                .Merge(maximumConcurrencyCount)
+                .FinallySafe(() => {
+                    if (dispose) {
+                        semaphoreSlim.Dispose();
+                    }
+                });
+        }
+
+        public static IObservable<TResult> SelectAndOmit<T, TResult>(this IObservable<T> source,
+            Func<T, IObservable<TResult>> process,SemaphoreSlim semaphoreSlim=null, Action<T> noProcess=null, int maximumConcurrencyCount = 1) 
+            => source.SelectAndOmit((item, _) => process(item), semaphoreSlim, noProcess, maximumConcurrencyCount);
         public static IObservable<TSource> TakeWhileInclusive<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate) 
             => source.TakeUntil(source.SkipWhile(predicate).Skip(1));
         public static IObservable<TTarget> ConcatIgnoredValue<TSource,TTarget>(this IObservable<TSource> source, TTarget value) 
@@ -40,8 +70,17 @@ namespace XAF.Testing.RX{
         
         public static IObservable<Unit> ConcatToUnit<T,T1>(this IObservable<T> source, IObservable<T1> target)
             => source.ToUnit().Concat(Observable.Defer(target.ToUnit));
+        
         public static IObservable<T[]> WhenCompleted<T>(this IObservable<T> source) 
-            => source.IgnoreElements().Select(_ => Array.Empty<T>()).Concat(Array.Empty<T>().Observe(Scheduler.CurrentThread));
+            => source.When(NotificationKind.OnCompleted).Select(_ => Array.Empty<T>());
+        public static IObservable<Exception> WhenError<T>(this IObservable<T> source) 
+            => source.When(NotificationKind.OnError).Select(_ => _.Exception);
+        public static IObservable<T[]> WhenFinished<T>(this IObservable<T> source) 
+            => source.Publish(obs => obs.WhenCompleted().Merge(obs.WhenError().Select(_ => Array.Empty<T>())).Take(1));
+        
+        public static IObservable<Notification<T>> When<T>(this IObservable<T> source,NotificationKind notificationKind) 
+            => source.Materialize().Where(notification => notification.Kind==notificationKind);
+
         public static IObservable<T> Observe<T>(this T self, IScheduler scheduler = null) 
             => Observable.Return(self, scheduler??ImmediateScheduler.Instance);
 

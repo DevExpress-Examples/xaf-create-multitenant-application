@@ -1,5 +1,4 @@
 ﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;

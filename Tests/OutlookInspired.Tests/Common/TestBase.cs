@@ -34,22 +34,27 @@ namespace OutlookInspired.Tests.Common{
             // yield return new TestCaseData("Opportunities",null,user,AssertOpportunitiesView);
         }
 
+        protected virtual LogContext LogContext{
+            get{
+#if TEST
+                return null;
+#else
+                return LogContext.None;
+#endif
+            }
+        }
+
         private static IEnumerable<string> Users(){
             var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
             return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
                 roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
         }
 
-
-        protected void DeleteModelDiffs(XafApplication application) 
-            => application.DeleteModelDiffs(ConnectionString, nameof(OutlookInspiredEFCoreDbContext.ModelDifferences),
-                nameof(OutlookInspiredEFCoreDbContext.ModelDifferenceAspects));
-
         public IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){
             throw new NotImplementedException();
         }
         static IObservable<Frame> AssertEvaluation(XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), _ => application.AssertListView(navigationView, viewVariant));
         
         static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 

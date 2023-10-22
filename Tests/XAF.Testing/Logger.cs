@@ -7,8 +7,8 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing{
     public class Logger:Process{
-        public static async Task<StreamWriter> Writer(LogContext context=default) 
-            => await new Logger().ConnectClient(context).Writer().Replay(1).AutoConnect();
+        public static async Task<StreamWriter> Writer(LogContext context=default,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
+            => await new Logger().ConnectClient(context,inactiveMonitorLocation,alwaysOnTop).Writer().ReplayFirstTake();
 
         public const string ExitSignal = "exit";
         public string PipeName{ get; set; } = nameof(Logger);
@@ -17,8 +17,10 @@ namespace XAF.Testing{
         public string PowerShellName{ get; set; } = "pwsh.exe";
     }
     public static class LoggerExtensions{
-        public static IObservable<NamedPipeClientStream> ConnectClient(this Logger logger,LogContext context=default) 
-            => logger.StartServer(context).Connect();
+        public static IObservable<NamedPipeClientStream> ConnectClient(this Logger logger,LogContext context=default,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false){
+            var startServer = logger.StartServer(context);
+            return startServer.Connect().Do(_ => startServer.MoveToInactiveMonitor(inactiveMonitorLocation,alwaysOnTop));
+        }
 
         private static Logger StartServer(this Logger logger,string condition=".*"){
             var script = $@"function Monitor-Pipe($condition) {{
@@ -77,17 +79,24 @@ namespace XAF.Testing{
                     .Catch<Unit,TimeoutException>(_ => Observable.Empty<Unit>()).To(clientStream))
                 .Timeout(logger.ConnectionTimeout).WhenNotDefault(stream => stream.IsConnected).Take(1);
 
-        public static async Task WriteAsync(this LogContext context) 
-            => Console.SetOut(await Logger.Writer(context));
+        [Obsolete]
+        public static IObservable<T> Write<T>(this LogContext logContext, IObservable<T> source,
+            WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false){
+            logContext.Write(inactiveMonitorLocation,alwaysOnTop);
+            return source;
+        } 
+        public static IObservable<T> Log<T>(this IObservable<T> source,LogContext logContext,
+            WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false){
+            logContext.Write(inactiveMonitorLocation,alwaysOnTop);
+            return source.DoOnError(exception => Console.WriteLine(Logger.ExitSignal)).Finally(() => Console.WriteLine(Logger.ExitSignal));
+        } 
+        public static void Write(this LogContext logContext,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
+            => logContext.Await(async () => Console.SetOut(await Logger.Writer(logContext,inactiveMonitorLocation,alwaysOnTop)));
     }
 
     public readonly struct LogContext : IEquatable<LogContext>{
-        public override bool Equals(object obj){
-            return obj is LogContext other && Equals(other);
-        }
-
+        public override bool Equals(object obj) => obj is LogContext other && Equals(other);
         
-
         public override int GetHashCode() => CustomValue != null ? CustomValue.GetHashCode() : 0;
 
         private LogContext(string customValue) => CustomValue = customValue;
@@ -95,9 +104,7 @@ namespace XAF.Testing{
         public static LogContext All => new("All");
         public static LogContext None => new("None");
 
-        public bool Equals(LogContext other){
-            return CustomValue == other.CustomValue;
-        }
+        public bool Equals(LogContext other) => CustomValue == other.CustomValue;
 
         public static bool operator ==(LogContext x, LogContext y){
             return x.Equals(y);
@@ -118,6 +125,7 @@ namespace XAF.Testing{
             nameof(None) => Guid.NewGuid().ToString(),
             _ => context.CustomValue
         };
+
         
     }
 

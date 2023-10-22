@@ -1,12 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Reactive;
-using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Runtime.CompilerServices;
 
 namespace XAF.Testing.RX{
     public static class UtilityExtensions{
+        public static void OnNext<T>(this ISubject<T> subject) => subject.OnNext(default);
+
         public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,int seconds=1,bool delayOnEmpty=false) 
             => source.DelayOnContext(seconds.Seconds(),delayOnEmpty);
         public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,TimeSpan? timeSpan,bool delayOnEmpty=false) 
@@ -16,9 +19,7 @@ namespace XAF.Testing.RX{
 
         private static IObservable<T> DelayOnContext<T>(this T arg,TimeSpan timeSpan) 
             => arg.Observe()
-                .SelectManySequential( arg1 => {
-                return Observable.Return(arg1).Delay(timeSpan).ObserveOnContext();
-                })
+                .SelectManySequential( arg1 => Observable.Return(arg1).Delay(timeSpan).ObserveOnContext())
                 // .Delay(timeSpan, new SynchronizationContextScheduler(SynchronizationContext.Current!))
         ;
 
@@ -87,6 +88,16 @@ namespace XAF.Testing.RX{
                 return disposable;
             });
         
+        public static IObservable<TSource> DoOnFirst<TSource>(this IObservable<TSource> source, Action<TSource> action)
+            => source.DoWhen((i, _) => i == 0, action);
+        public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<int,TSource, bool> predicate, Action<TSource> action)
+            => source.Select((source1, i) => {
+                if (predicate(i,source1)) {
+                    action(source1);
+                }
+                return source1;
+            });
+
         public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action,Action<TSource> actionElse=null)
             => source.Do(source1 => {
                 if (predicate(source1)) {
@@ -116,7 +127,7 @@ namespace XAF.Testing.RX{
         public static IObservable<T> DoOnError<T>(this IObservable<T> source, Action<Exception> onError) 
             => source.Do(_ => { }, onError);
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 45).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 15).Seconds();
         public static IObservable<TSource> Timeout<TSource>(
             this IObservable<TSource> source,string message) 
             => source.Timeout(TimeoutInterval, Observable.Throw<TSource>(new TimeoutException(message)));
@@ -133,12 +144,38 @@ namespace XAF.Testing.RX{
         public static IObservable<TSource> Assert<TSource>(this IObservable<TSource> source,Func<TSource,string> messageFactory,TimeSpan? timeout=null,[CallerMemberName]string caller=""){
             var timeoutMessage = messageFactory.MessageFactory(caller);
             return source.Log(messageFactory, caller).ThrowIfEmpty(timeoutMessage).Timeout(timeout ?? TimeoutInterval, timeoutMessage)
-                .ReplayFirstTake().DelayOnContext(DelayOnContextInterval);
+                .DelayOnContext(DelayOnContextInterval)
+                .ReplayFirstTake();
         }
+        
+        public static IObservable<T> FinallySafe<T>(this IObservable<T> source, Action finallyAction,[CallerMemberName]string caller="" ) 
+            => Observable.Create<T>(observer => {
+                var finallyOnce = Disposable.Create(finallyAction);
+                var subscription = source.Subscribe(observer.OnNext, error => {
+                    try {
+                        finallyOnce.Dispose();
+                    }
+                    catch (Exception ex) {
+                        observer.OnError(ex);
+                        return;
+                    }
 
-        public static IObservable<T> Throw<T>(this Exception exception,[CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "",
-            [CallerLineNumber] int lineNumber = 0) 
-            => Observable.Throw<T>(new Exception($"{exception.Message} (Caller: {memberName} in {filePath} at line {lineNumber})", exception));
+                    observer.OnError(error);
+                }, () => {
+                    try {
+                        finallyOnce.Dispose();
+                    }
+                    catch (Exception ex) {
+                        ex.Source = caller;
+                        observer.OnError(ex);
+                        return;
+                    }
+
+                    observer.OnCompleted();
+                });
+                return new CompositeDisposable(subscription, finallyOnce);
+            });
+        
 
         public static string MessageFactory<TSource>(this Func<TSource, string> messageFactory, string caller) => $"{caller}: {messageFactory(default)}";
 

@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
-  <NavigationItems NavigationStyle="Accordion" />
+  <NavigationItems NavigationStyle="Accordion">
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="Event_ListView" Removed="True" />
+        </Items>
+      </Item>
+      <Item Id="Reports">
+        <Items>
+          <Item Id="Analysis_ListView" Removed="True" />
+          <Item Id="Dashboards" Removed="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
@@ -112,7 +126,6 @@
                         <LayoutGroup Id="Auto91810e2e-eac6-4ed3-beeb-11433e0aac12">
                           <LayoutGroup Id="Auto808932a7-d806-4c01-ae49-9d6c50324de3" RelativeSize="72.64957264957265">
                             <LayoutGroup Id="Auto63a2d27b-2a2a-4b52-b2b2-ebb3d46475bf" RelativeSize="76.8375241779497">
-                              <LayoutItem Id="User" RelativeSize="2.9411764705882355" />
                               <LayoutItem Id="FirstName" RelativeSize="12.941176470588236" />
                               <LayoutItem Id="LastName" RelativeSize="12.941176470588236" />
                               <LayoutItem Id="FullName" RelativeSize="12.941176470588236" />
@@ -667,5 +680,10 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <ListView Id="ViewFilter_ListView" AllowEdit="False">
+      <Columns>
+        <ColumnInfo Id="Name" AllowEdit="True" />
+      </Columns>
+    </ListView>
   </Views>
 </Application>

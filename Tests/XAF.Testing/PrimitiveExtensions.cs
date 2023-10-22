@@ -1,8 +1,46 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reactive.Linq;
 using System.Text;
+using Aqua.EnumerableExtensions;
+using static XAF.Testing.WinInterop;
 
 namespace XAF.Testing{
+
     public static class PrimitiveExtensions{
+        public static string ReverseStackTrace(this Exception exception) => $"{exception.FromHierarchy(exception1 => exception1.InnerException).Select(exception1 =>$"{exception1.StackTrace}" ).Reverse().StringJoin(Environment.NewLine)}";
+
+        public static IEnumerable<TSource> FromHierarchy<TSource>(this TSource source, Func<TSource, TSource> nextItem) where TSource : class 
+            => source.FromHierarchy( nextItem, s => s != null);
+
+        public static IEnumerable<TSource> FromHierarchy<TSource>(this TSource source, Func<TSource, TSource> nextItem, Func<TSource, bool> canContinue){
+            for (var current = source; canContinue(current); current = nextItem(current)) yield return current;
+        }
+        public static IObservable<T> MoveToInactiveMonitor<T>(this IObservable<T> source,WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T:Process 
+            => source.Select(process => process.MoveToInactiveMonitor(position,alwaysOnTop));
+
+
+        public static T MoveToInactiveMonitor<T>(this T process, WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T : Process{
+            if (position != WindowPosition.None){
+                process.MainWindowHandle.UseInactiveMonitorBounds(rect => {
+                    for (var i = 0; i < 2; i++){
+                        GetWindowRect(process.MainWindowHandle, out var currentRect);
+                        var currentWidth = currentRect.Right - currentRect.Left;
+                        var currentHeight = currentRect.Bottom - currentRect.Top;
+                        var (x, y, width, height) = position switch{
+                            WindowPosition.FullScreen => (rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top),
+                            WindowPosition.BottomRight => (rect.Right - currentWidth, rect.Bottom - currentHeight, currentWidth, currentHeight),
+                            WindowPosition.BottomLeft => (rect.Left, rect.Bottom - currentHeight, currentWidth, currentHeight),
+                            _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
+                        };
+                        process.MainWindowHandle.Move(x, y, width, height);
+                    }
+                });    
+            }
+            process.MainWindowHandle.AlwaysOnTop(alwaysOnTop);
+            return process;
+        }
+        
         public static byte[] Bytes(this string s, Encoding encoding = null) 
             => s == null ? Array.Empty<byte>() : (encoding ?? Encoding.UTF8).GetBytes(s);
         
@@ -33,4 +71,11 @@ namespace XAF.Testing{
         }
 
     }
+    public enum WindowPosition{
+        None,
+        FullScreen,
+        BottomRight,
+        BottomLeft
+    }
+
 }

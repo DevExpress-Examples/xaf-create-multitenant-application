@@ -5,8 +5,12 @@ export function SetRouteMode(dxMapInstance, newMode) {
     dxMapInstance.option('routes', routes);
 }
 
-export async function InitDxMap(element,model) {
-    return new DevExpress.ui.dxMap(element, { ...model.options });
+export async function InitDxMap(element, model) {
+    return new DevExpress.ui.dxMap(element, {
+        ...model.options,
+        onReady: e=>model.readyReference.invokeMethodAsync('Invoke',null),
+        onDisposing: () => model.readyReference.dispose()
+    });
 }
 
 

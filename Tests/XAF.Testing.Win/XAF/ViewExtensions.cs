@@ -30,6 +30,10 @@ namespace XAF.Testing.Win.XAF{
 
         public static void ClearFilter(this ListView listView) => ((GridListEditor)listView.Editor).GridView.ActiveFilterCriteria = null;
 
+        public static IObservable<(IModelViewLayoutElement model,object control,ViewItem viewItem)> WhenItemCreated(this WinLayoutManager layoutManager) 
+            => layoutManager.WhenEvent(nameof(WinLayoutManager.ItemCreated)).Select(p => p.EventArgs).Cast<ItemCreatedEventArgs>()
+                .Select(e => (e.ModelLayoutElement,(object)e.Item, e.ViewItem));
+        
         public static IObservable<ITabControlProvider> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element) 
             => ((WinLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
                 .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup))

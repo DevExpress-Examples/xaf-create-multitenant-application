@@ -10,7 +10,7 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Assert{
     static class ProductExtensions{
         public static IObservable<Frame> AssertProductListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.AssertNavigationItems(item))
+            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), action => action.AssertProductListView( navigationView, viewVariant));
 
         private static IObservable<Frame> AssertProductListView(this SingleChoiceAction action, string navigationView, string viewVariant){
@@ -20,7 +20,7 @@ namespace OutlookInspired.Tests.Assert{
                 .Merge(productTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
                 .AssertMapItAction(typeof(Product), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .AssertFilterAction(filtersCount:9)
+                .AssertFilterAction(action.Application,filtersCount:9)
                 .FilterListViews(action.Application);
         }
 

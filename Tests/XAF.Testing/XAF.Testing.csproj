@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Configurations>Debug;Release;Test</Configurations>
-        <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
-        <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.1-alpha-23255" />
-        <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.1-alpha-23255" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="System.Reactive" Version="6.0.0" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;Test</Configurations>
+    <Platforms>AnyCPU</Platforms>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+  </ItemGroup>
 </Project>

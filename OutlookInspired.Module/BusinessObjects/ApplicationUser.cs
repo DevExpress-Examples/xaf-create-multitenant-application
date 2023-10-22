@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.ConditionalAppearance;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 
@@ -20,4 +22,8 @@ public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo 
         result.User = this;
         return result;
     }
+    [Browsable(false)]
+    public bool IsAdmin => Roles.Any(role => role.IsAdministrative);
+    [Appearance("Hide for Admin",AppearanceItemType.ViewItem, nameof(IsAdmin),Visibility = ViewItemVisibility.Hide)]
+    public virtual Employee Employee { get; set; }
 }
