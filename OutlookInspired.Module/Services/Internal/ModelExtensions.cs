@@ -1,10 +1,17 @@
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
+using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ModelExtensions{
+        public static IModelNavigationItem NewNavigationItem(this IModelApplication modelApplication, string defaultGroup, string viewId,string imageName=null){
+            var item = ShowNavigationItemController.GenerateNavigationItem(modelApplication, defaultGroup, viewId, null, viewId, null);
+            item.ImageName = imageName;
+            return item;
+        }
+
         public static IEnumerable<IModelMemberViewItem> MemberViewItems(this IModelView modelObjectView, Type propertyEditorType=null)
             => !(modelObjectView is IModelObjectView) ? Enumerable.Empty<IModelMemberViewItem>()
                 : (modelObjectView is IModelListView modelListView ? modelListView.Columns : ((IModelDetailView) modelObjectView).Items.OfType<IModelMemberViewItem>())

@@ -3,17 +3,19 @@ using System.Linq.Expressions;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.Models{
+    
     public abstract class UserControlComponentModel:ComponentModelBase,IComponentContentHolder,IUserControl{
         private IList _selectedObjects = new List<object>();
 
         public CriteriaOperator Criteria{ get; private set; }
 
+        public event AsyncEventHandler<SelectObjectEventArgs> CurrentObjectSelected; 
+        public void SelectObject(object value) => OnCurrentObjectSelected(new SelectObjectEventArgs(value));
         public IObjectSpace ObjectSpace{ get; private set; }
 
         public abstract RenderFragment ComponentContent{ get; }
@@ -69,5 +71,14 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
         public virtual void ProcessSelectedObject()
             => ProcessObject?.Invoke(this, EventArgs.Empty);
+
+
+        protected virtual void OnCurrentObjectSelected(SelectObjectEventArgs e) => CurrentObjectSelected?.Invoke(this, e);
+    }
+
+    public class SelectObjectEventArgs:EventArgs{
+        public object Value{ get; }
+
+        public SelectObjectEventArgs(object value) => Value = value;
     }
 }

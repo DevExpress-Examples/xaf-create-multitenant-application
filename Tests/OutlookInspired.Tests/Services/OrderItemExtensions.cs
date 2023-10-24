@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.Services;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 

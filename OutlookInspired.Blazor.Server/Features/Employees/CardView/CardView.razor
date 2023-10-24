@@ -1,7 +1,7 @@
 ﻿
 @using OutlookInspired.Blazor.Server.Components.CardView
 @using OutlookInspired.Module.Services.Internal
-<StackedCardView>
+<StackedCardView >
     <Content>
         @foreach (var employee in ComponentModel.Objects){
             <SideBySideInfoCard CurrentObject="employee" Model="@ComponentModel" Image="@employee.Picture?.Data?.ToBase64Image()" HeaderText="@employee.FullName" 

@@ -1,6 +1,7 @@
 ﻿@using OutlookInspired.Module.BusinessObjects
 @using OutlookInspired.Module.Services.Internal
 @using OutlookInspired.Blazor.Server.Components.CardView
+@using OutlookInspired.Blazor.Server.Features.Customers.CardView
 
 <SideBySideCardView>
     <Content>
@@ -8,7 +9,7 @@
             @foreach (var employee in CustomerEmployees){
                 <SideBySideInfoCard HeaderText="@employee.FullName" Image="@employee.Picture.Data.ToBase64Image()"
                               InfoItems="@(new Dictionary<string, string>{{ "EMAIL", $"<a href='mailto:{employee.Email}'>{employee.Email}</a>" }, 
-                                             { "PHONE", employee.MobilePhone } })"/>
+                                             { "PHONE", employee.MobilePhone } })" TComponent="SideBySideCardView" TObject="Employee" TComponentModel=""/>
             }
         } else {
             <p>No Employees Found</p>
@@ -20,4 +21,6 @@
 @code {
     [Parameter]
     public List<CustomerEmployee> CustomerEmployees { get; set; }
+    [Parameter]
+    public Model ComponentModel { get; set; }
 }

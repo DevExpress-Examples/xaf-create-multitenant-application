@@ -1,11 +1,14 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Reactive;
+using System.Reactive.Linq;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
+using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using NotImplementedException = System.NotImplementedException;
 
-namespace OutlookInspired.Tests.Assert{
+namespace OutlookInspired.Tests.Services{
     public static class SecurityExtensions{
 
         public static int AssertDashboardViewShowInDocumentActionItems(this SingleChoiceAction action)
@@ -48,22 +51,51 @@ namespace OutlookInspired.Tests.Assert{
 
         public static bool AssertMapItAction(this SimpleAction action)
             => action.UseCurrentEmployee(employee => employee?.Department switch{
-                null =>false , EmployeeDepartment.Engineering or EmployeeDepartment.Management => true,
-                _ => throw new NotImplementedException($"{action.View()} department:{employee.Department}")
+                _ => true
             });
 
-        public static bool CanNavigate(this SingleChoiceAction action,string viewId) 
-            => action.UseCurrentUser(user => user.IsAdmin() || !(viewId switch{
-                "EmployeeListView" => new[]{
-                    EmployeeDepartment.Support, EmployeeDepartment.Shipping, EmployeeDepartment.IT
-                },
-                "CustomerListView" => new[]{ EmployeeDepartment.HumanResources },
-                "ProductListView" => new[]{ EmployeeDepartment.HumanResources,EmployeeDepartment.Support,EmployeeDepartment.Shipping,EmployeeDepartment.Engineering,EmployeeDepartment.IT,EmployeeDepartment.Management  },
-                "OrderListView" => new[]{ EmployeeDepartment.HumanResources,EmployeeDepartment.Support, EmployeeDepartment.Engineering,EmployeeDepartment.Management,  },
-                "Evaluation_ListView" => new[]{ EmployeeDepartment.Sales,EmployeeDepartment.Support,EmployeeDepartment.Shipping,EmployeeDepartment.Engineering,EmployeeDepartment.IT,  },
-                "Opportunities"=>new[]{EmployeeDepartment.HumanResources,EmployeeDepartment.Shipping,EmployeeDepartment.Engineering,EmployeeDepartment.Management, EmployeeDepartment.IT  },
-                _ => throw new NotImplementedException(viewId)
-            }).Contains(user.Employee().Department));
+
+        public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert) 
+            => application.AssertNavigation(view,window => window.Application.CanNavigate(view)
+                .SwitchIfEmpty(Observable.Throw<XafApplication>(new AssertException())).ToUnit())
+                .SelectMany(window => assert(window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
+                    .AssertChangeViewVariant(viewVariant)
+                    ,window1 => window1.Observe()))
+                )
+                .FirstOrDefaultAsync();
+
+        public static IObservable<XafApplication> CanNavigate(this XafApplication application, string viewId) 
+            => application.Defer(() => application.NewObjectSpace()
+                .Use(space => space.CurrentUser<ApplicationUser>().NavigationViews().Contains(viewId).Observe()).WhenNotDefault()
+                .SwitchIfEmpty(Observable.Throw<bool>(new AssertException()))
+                .To(application));
+
+        public static bool CanNavigate(this SingleChoiceAction action,string viewId){
+            return action.UseCurrentUser(user => user.NavigationViews().Contains(viewId));
+            // return action.UseCurrentUser(user => user.IsAdmin() || !(viewId switch{
+            //     "EmployeeListView" => new[]{
+            //         EmployeeDepartment.Support, EmployeeDepartment.Shipping, EmployeeDepartment.IT
+            //     },
+            //     "CustomerListView" => new[]{ EmployeeDepartment.HumanResources },
+            //     "ProductListView" => new[]{
+            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Support, EmployeeDepartment.Shipping,
+            //         EmployeeDepartment.Engineering, EmployeeDepartment.IT, EmployeeDepartment.Management
+            //     },
+            //     "OrderListView" => new[]{
+            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Support, EmployeeDepartment.Engineering,
+            //         EmployeeDepartment.Management,
+            //     },
+            //     "Evaluation_ListView" => new[]{
+            //         EmployeeDepartment.Sales, EmployeeDepartment.Support, EmployeeDepartment.Shipping,
+            //         EmployeeDepartment.Engineering, EmployeeDepartment.IT,
+            //     },
+            //     "Opportunities" => new[]{
+            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Shipping, EmployeeDepartment.Engineering,
+            //         EmployeeDepartment.Management, EmployeeDepartment.IT
+            //     },
+            //     _ => throw new NotImplementedException(viewId)
+            // }).Contains(user.Employee().Department));
+        }
 
         public static int NavigationItems(this SingleChoiceAction action, ChoiceActionItem item=null) 
             => action.UseCurrentUser(user => user.IsAdmin() ? item.AdminNavigationItems() : item.EmployeeNavigationItems( user));

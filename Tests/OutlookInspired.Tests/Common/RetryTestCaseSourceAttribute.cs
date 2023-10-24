@@ -23,7 +23,7 @@ namespace OutlookInspired.Tests.Common{
             sourceType, sourceName, methodParams){
         }
 
-        public int MaxTries{ get; set; }
+        public int MaxTries{ get; set; } = 3;
 
         TestCommand ICommandWrapper.Wrap(TestCommand command) => new RetryCommand(command, MaxTries);
     }

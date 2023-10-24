@@ -1,6 +1,8 @@
+@implements IDisposable
 @using System.ComponentModel
 @using OutlookInspired.Module.Services.Internal
 @inject IJSRuntime JsRuntime
+
 <style>
     .store-card-container {
         display: flex;
@@ -41,35 +43,39 @@
 @code {
     protected override void OnInitialized(){
         base.OnInitialized();
-        SelectedCards.ListChanged += (_, e) =>{
-            if (e.ListChangedType != ListChangedType.ItemAdded) return;
-            var selectedCard = SelectedCards[e.NewIndex];
-            SelectedCards.Where(card => card != selectedCard).ToArray()
-                .Do(card =>{
-                    card.IsSelected = false;
-                    SelectedCards.Remove(card);
-                }).Finally(StateHasChanged).Enumerate();
-        };
+        SelectedCards.ListChanged+=SelectedCardsOnListChanged;;
+    }
+
+    private void SelectedCardsOnListChanged(object sender, ListChangedEventArgs e){
+        if (e.ListChangedType != ListChangedType.ItemAdded) return;
+        var selectedCard = SelectedCards[e.NewIndex];
+        SelectedCards.Where(card => card != selectedCard).ToArray()
+            .Do(card =>{
+                card.IsSelected = false;
+                SelectedCards.Remove(card);
+            }).Finally(StateHasChanged).Enumerate();
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender){
         if (!firstRender)return;
-        await JsRuntime.InvokeVoidAsync("eval", @"
-                setTimeout(function() {
-                    const targetDiv = document.querySelector('div[data-item-name=""Customer_DetailView_Child""]');
-                    if (targetDiv) {
-                      const parentDiv = targetDiv.closest('div.dxbl-fl-ctrl.dxbl-fl-ctrl-nc');
-                      if (parentDiv) {
-                        parentDiv.className = null;
-                      }
-                    }
-                }, 1000);"
-            );
+        // await JsRuntime.InvokeVoidAsync("eval", @"
+        //         setTimeout(function() {
+        //             const targetDiv = document.querySelector('div[data-item-name=""Customer_DetailView_Child""]');
+        //             if (targetDiv) {
+        //               const parentDiv = targetDiv.closest('div.dxbl-fl-ctrl.dxbl-fl-ctrl-nc');
+        //               if (parentDiv) {
+        //                 parentDiv.className = null;
+        //               }
+        //             }
+        //         }, 1000);"
+        //     );
     }
     
     [Parameter]
     public RenderFragment Content { get; set; }
 
     public BindingList<ISelectedCard> SelectedCards { get; } = new(){RaiseListChangedEvents = true};
+    public void Dispose() => SelectedCards.ListChanged-=SelectedCardsOnListChanged;
 
 }

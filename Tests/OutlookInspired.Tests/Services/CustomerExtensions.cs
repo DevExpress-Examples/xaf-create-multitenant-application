@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Customers;
 using OutlookInspired.Tests.Common;
+using OutlookInspired.Tests.Services;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 

@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
-using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Blazor.Tests.Common;
-using XAF.Testing;
 using XAF.Testing.RX;
 
 
@@ -21,12 +19,7 @@ namespace OutlookInspired.Blazor.Tests{
         [TestCaseSource(nameof(BlazorTestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
-            // UtilityExtensions.DelayOnContextInterval = 2.Seconds();
-            UtilityExtensions.TimeoutInterval = 15.Seconds();
-            
-            await StartBlazorTest(user, application => assert(application, navigationView, viewVariant).ToUnit(),
-                    browser:Environment.GetEnvironmentVariable("XAFTESTBrowser"),inactiveMonitorLocation:WindowPosition.FullScreen)
-                .Log(LogContext, inactiveMonitorLocation:WindowPosition.BottomRight,alwaysOnTop:true);
+            await StartBlazorTest(user, application => assert(application, navigationView, viewVariant).ToUnit());
         }
 
 

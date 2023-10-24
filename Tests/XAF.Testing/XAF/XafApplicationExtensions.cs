@@ -54,8 +54,8 @@ namespace XAF.Testing.XAF{
         [Obsolete]
         public static IObservable<Window> Navigate(this XafApplication application,string viewId) 
             => application.Navigate(viewId,application.WhenFrame(viewId).Take(1)).Cast<Window>();
-        public static IObservable<Window> Navigate2(this XafApplication application,string viewId) 
-            => application.Navigate(viewId,(frame =>frame.WhenFrame(viewId))).Take(1).Cast<Window>();
+        public static IObservable<Window> Navigate2(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
+            => application.Navigate(viewId,frame =>frame.WhenFrame(viewId),navigate).Take(1).Cast<Window>();
         
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
             => application.WhenFrameCreated()
@@ -117,10 +117,10 @@ namespace XAF.Testing.XAF{
             => afterNavigation.Publish(source => application.MainWindow == null ? application.WhenWindowCreated(true)
                     .SelectMany(window => window.Navigate(viewId, source))
                 : application.MainWindow.Navigate(viewId, source));
-        public static IObservable<Frame> Navigate(this XafApplication application,string viewId, Func<Frame,IObservable<Frame>> afterNavigation) 
+        public static IObservable<Frame> Navigate(this XafApplication application,string viewId, Func<Frame,IObservable<Frame>> afterNavigation,Func<Window,IObservable<Unit>> navigate=null) 
             => application.Defer(() => application.MainWindow == null ? application.WhenWindowCreated(true)
-                    .SelectMany(window => window.Navigate(viewId,afterNavigation(window)))
-                : application.MainWindow.Navigate(viewId, afterNavigation(application.MainWindow)));
+                    .SelectMany(window => window.Navigate(viewId,afterNavigation(window),navigate))
+                : application.MainWindow.Navigate(viewId, afterNavigation(application.MainWindow),navigate));
         
         public static bool DbExist(this XafApplication application,string connectionString=null) {
             var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
@@ -167,6 +167,10 @@ namespace XAF.Testing.XAF{
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application) 
             => application.WhenEvent<DetailViewCreatedEventArgs>(nameof(XafApplication.DetailViewCreated)).InversePair(application);
 
+
+        public static IObservable<Window> WhenMainWindowCreated(this XafApplication application,  bool emitIfMainExists = true) 
+            => application.WhenWindowCreated(true, emitIfMainExists);
+
         public static IObservable<Window> WhenWindowCreated(this XafApplication application,bool isMain=false,bool emitIfMainExists=true) {
             var windowCreated = application.WhenFrameCreated().Select(frame => frame).OfType<Window>();
             return isMain ? emitIfMainExists && application.MainWindow != null ? application.MainWindow.Observe().ObserveOn(SynchronizationContext.Current!)
@@ -177,11 +181,22 @@ namespace XAF.Testing.XAF{
             => windowCreated.When(TemplateContext.ApplicationWindow).Select(window => window).TemplateChanged().Cast<Window>().Take(1)
                 .Select(window => window);
 
-        public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation){
-            var controller = window.GetController<ShowNavigationItemController>();
-            return controller.ShowNavigationItemAction.Trigger(afterNavigation,
+        public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation,Func<Window,IObservable<Unit>> navigate=null){
+            navigate ??= _ => Unit.Default.Observe();
+            return navigate(window).SelectMany(_ => {
+                var controller = window.GetController<ShowNavigationItemController>();
+                return controller.ShowNavigationItemAction.Trigger(afterNavigation,
                     () => controller.FindNavigationItemByViewShortcut(new ViewShortcut(viewId, null)));
+            });
         }
+
+        public static IObservable<string[]> NavigationViews(this XafApplication application) 
+            => application.WhenWindowCreated(true)
+                .ToController<ShowNavigationItemController>().Take(1)
+                .Select(controller => controller.ShowNavigationItemAction.Items.SelectManyRecursive(item => item.Items)
+                    .Where(item => item.Active).Select(item => item.Data).OfType<ViewShortcut>()
+                    .Select(item => item.ViewId).ToArray());
+
 
         public static IObservable<Unit> WhenLoggedOn<TParams>(
             this XafApplication application, string userName, string pass=null) where TParams:IAuthenticationStandardLogonParameters

@@ -5,6 +5,7 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent][ForbidCRUD][ForbidNavigation]
+    [ImageName("About")]
     public class Welcome{
         public Welcome(){
             About = GetType().Assembly.GetManifestResourceStream(s => s.EndsWith("Welcome.docx")).Bytes();

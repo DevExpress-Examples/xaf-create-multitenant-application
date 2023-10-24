@@ -82,7 +82,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
     
     public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters) {
 	    base.AddGeneratorUpdaters(updaters);
-	    updaters.Add(new CloneViewUpdater(),  new DataAccessModeUpdater());
+	    updaters.Add(new CloneViewUpdater(),  new DataAccessModeUpdater(),new NavigationItemsModelUpdater(),new DashboardViewsModelUpdater());
     }
 }
 

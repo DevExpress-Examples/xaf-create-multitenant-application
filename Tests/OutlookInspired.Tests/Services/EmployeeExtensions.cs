@@ -4,17 +4,18 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Common;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
+using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
-namespace OutlookInspired.Tests.Assert{
-    static class EmployeeExtensions{
+namespace OutlookInspired.Tests.Services{
+    public static class EmployeeExtensions{
         public static IObservable<Frame> AssertEmployeeListView(this XafApplication application, string navigationView, string viewVariant) 
             => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
-                .If(action => action.CanNavigate(navigationView), action => action.AssertEmployeeListView( navigationView, viewVariant))
-                .Select(frame => frame)
-                .Finally(() => {});
+                .If(action => action.CanNavigate(navigationView), action => action.AssertEmployeeListView( navigationView, viewVariant));
 
 
         private static IObservable<Frame> AssertEmployeeListView(this SingleChoiceAction action,string navigationView, string viewVariant){
@@ -116,5 +117,17 @@ namespace OutlookInspired.Tests.Assert{
             return nestedFrame.AssertNestedListView(typeof(Evaluation), _ => Observable.Empty<Unit>(), assert: frame
                 => frame.AssertAction(nestedFrame));
         }
+        
+        public static string[] NavigationViews(this ApplicationUser user) 
+            => (user.Employee?.Department switch{
+                EmployeeDepartment.Sales => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,WelcomeDetailView, ApplicationUserDetailView },
+                EmployeeDepartment.HumanResources => new[]{ WelcomeDetailView, EmployeeListView, EvaluationListView, ApplicationUserDetailView },
+                EmployeeDepartment.Support => new[]{ WelcomeDetailView, CustomerListView, Opportunities, ApplicationUserDetailView },
+                EmployeeDepartment.Shipping or EmployeeDepartment.IT => new[]{ WelcomeDetailView, CustomerListView, OrderListView, ApplicationUserDetailView },
+                EmployeeDepartment.Engineering => new[]{ WelcomeDetailView, EmployeeListView, CustomerListView, ApplicationUserDetailView },
+                EmployeeDepartment.Management => new[]{ WelcomeDetailView, EmployeeListView,EvaluationListView, CustomerListView, ApplicationUserDetailView },
+                _ => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,
+                    WelcomeDetailView, ApplicationUserDetailView, EvaluationListView,RoleListView,UserListView,ModelDifferenceListView,ReportDataV2ListView,RichTextMailMergeDataListView}
+            }).OrderBy(view => view).ToArray();
     }
 }

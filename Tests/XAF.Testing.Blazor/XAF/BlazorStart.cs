@@ -15,14 +15,15 @@ using Uri = System.Uri;
 
 namespace XAF.Testing.Blazor.XAF{
     public static class BlazorStart{
+        static BlazorStart() => CurrentDomain.Await(async () => await Tracing.Use());
+
         public static IObservable<Unit> Run(this IHostBuilder builder,string address,string contentRoot, Action<IWebHostBuilder, ISubject<Unit>> config,string browser) 
-            => Tracing.Use().IgnoreElements().ToUnit()
-                .ConcatDefer(() => Tracing.WhenError().ThrowTestException()
-                    .MergeToUnit(Subject.Synchronize(new Subject<Unit>()).Observe().Do(_ => builder.Initialize( address, browser))
-                        .SelectMany(subject => builder.ConfigureWebHostDefaults( address, contentRoot, config, subject)
-                            .Build().Use(host => host.RunAsync().ToObservable())
-                            .TakeUntil(subject.Select(unit => unit)).FirstOrDefaultAsync()
-                        )).FirstOrDefaultAsync())
+            => Tracing.WhenError().ThrowTestException()
+                .MergeToUnit(Subject.Synchronize(new Subject<Unit>()).Observe().Do(_ => builder.Initialize( address, browser))
+                    .SelectMany(subject => builder.ConfigureWebHostDefaults( address, contentRoot, config, subject)
+                        .Build().Use(host => host.RunAsync().ToObservable())
+                        .TakeUntil(subject.Select(unit => unit)).FirstOrDefaultAsync()
+                    )).FirstOrDefaultAsync()
                 ;
 
         private static IHostBuilder ConfigureWebHostDefaults(this IHostBuilder builder, string address, string contentRoot, Action<IWebHostBuilder, ISubject<Unit>> config, ISubject<Unit> innerCompleted) 
@@ -51,6 +52,8 @@ namespace XAF.Testing.Blazor.XAF{
                         application.ConnectionString= application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");
                         application.DeleteModelDiffs<TDBContext>();
                     })
+                    .Select(application => application.WhenLoggedOn().To(application)).Switch()
+                    .Select(application => application)
                     .TakeUntil(process.WhenExited().Select(process1 => process1))
                     // .Select(application => 5000.Milliseconds().Delay().ToObservable()
                     //     .SelectMany(unit => Observable.Throw<Unit>(new Exception())).TakeUntil(application.WhenDisposed())
@@ -61,8 +64,16 @@ namespace XAF.Testing.Blazor.XAF{
                         //     return Observable.Throw<Unit>(exception);
                         // })
                         .LogError()
-                        .Do(_ => process.CloseMainWindow(),exception => process.CloseMainWindow(),
-                            () => process.CloseMainWindow()))
+                        .Do(unit => application.LogOff())
+                        .Do(_ => {
+                                process.CloseMainWindow();
+                            }
+                            ,_ => {
+                                process.CloseMainWindow();
+                            },
+                            () => {
+                                process.CloseMainWindow();
+                            }))
                     .Switch()
                     .ToUnit()
                     .DoOnComplete(() => whenCompleted.OnNext()) 

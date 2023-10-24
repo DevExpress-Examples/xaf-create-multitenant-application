@@ -27,6 +27,7 @@ namespace OutlookInspired.Blazor.Tests.Common{
             builder.Services.AddPlatformServices();
             builder.Services.AddSingleton<IMapsControlAssertion,MapControlAssertion>();
             builder.Services.AddSingleton<IFilterViewAssertion,FilterViewAssertion>();
+            builder.Services.AddSingleton<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
         }
     }
 

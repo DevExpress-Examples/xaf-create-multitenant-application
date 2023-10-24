@@ -1,7 +1,10 @@
-﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+﻿@typeparam TObject
+@implements IDisposable
+@implements ISelectedCard
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using OutlookInspired.Blazor.Server.Components.Models
 @using OutlookInspired.Module.Services.Internal
-@implements ISelectedCard
+
 <style>
 .ellipsis3Lines {
     display: -webkit-box;
@@ -80,12 +83,22 @@
   [Parameter]
   public EventCallback<bool> IsSelectedChanged { get; set; }
   [Parameter]
-  public UserControlComponentModel Model { get; set; }
+  public UserControlComponentModel<TObject> Model { get; set; }
   [Parameter]
   public object CurrentObject { get; set; }
 
   [CascadingParameter]
   public StackedCardView StackedCardView { get; set; }
+
+  protected override void OnInitialized(){
+    base.OnInitialized();
+    Model.CurrentObjectSelected+=ModelOnCurrentObjectSelected;
+  }
+
+  private async Task ModelOnCurrentObjectSelected(object sender, SelectObjectEventArgs e){
+    if (e.Value != CurrentObject) return;
+    await HandleClickAsync(null);
+  }
 
   private void HandleDoubleClickAsync(MouseEventArgs e) 
     => Model.ProcessSelectedObject();
@@ -104,5 +117,6 @@
   }
 
 
+  public void Dispose() => Model.CurrentObjectSelected-=ModelOnCurrentObjectSelected;
 
 }

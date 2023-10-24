@@ -1,11 +1,12 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
+using System.Security;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.SystemModule;
+using DevExpress.ExpressApp.Security;
 using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
@@ -252,7 +253,13 @@ namespace XAF.Testing.XAF{
         public static IObservable<SingleChoiceAction> AssertNavigationItems(this XafApplication application,
             Func<SingleChoiceAction, ChoiceActionItem, int> itemsCount)
             => application.WhenWindowCreated(true).AssertSingleChoiceAction("ShowNavigationItem",itemsCount);
-        
+
+        public static IObservable<string[]> AssertNavigationViews<TUser>(this XafApplication application,Func<TUser,string[]> viewSelector) where TUser:ISecurityUser 
+            => application.NavigationViews()
+                .SelectMany(views => application.CreateObjectSpace().Use(space => viewSelector(space.CurrentUser<TUser>()).Observe())
+                    .Where(departmentViews => departmentViews.SequenceEqual(views.OrderBy(view => view)))
+                    .Assert());
+
         public static IObservable<SingleChoiceAction> AssertSingleChoiceAction(this IObservable<Frame> source,
             string actionId, Func<SingleChoiceAction,int> itemsCount = null) 
             => source.AssertSingleChoiceAction(actionId,(action, item) => item==null? itemsCount?.Invoke(action) ?? -1:-1);
@@ -308,8 +315,9 @@ namespace XAF.Testing.XAF{
                 .Assert(item => $"{item?.Id}")
                 .ReplayFirstTake();
 
-        public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId)
-            => application.Navigate2(viewId).Assert($"{viewId}");
+        public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
+            => application.Navigate2(viewId,window => (navigate?.Invoke(window)?? Observable.Empty<Unit>()).SwitchIfEmpty(Unit.Default.Observe()))
+                .Assert($"{viewId}").Catch<Window,AssertException>(_ => Observable.Empty<Window>());
 
         public static IObservable<Frame> AssertDashboardListViewEditViewHasObject(this IObservable<Frame> source,Func<Frame,IObservable<Frame>> detailView=null)
             =>source.SelectMany(frame => frame.DashboardViewItems<ListView>().ToNowObservable()
@@ -455,6 +463,10 @@ namespace XAF.Testing.XAF{
         }
 
         public AssertException(string message, Exception innerException) : base(message, innerException){
+        }
+
+        public AssertException(){
+            
         }
     }
 

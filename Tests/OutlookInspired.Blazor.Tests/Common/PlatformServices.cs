@@ -2,10 +2,14 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Editors;
+using DevExpress.ExpressApp.Layout;
 using OutlookInspired.Blazor.Server;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
+using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Assert;
+using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
@@ -22,4 +26,12 @@ namespace OutlookInspired.Blazor.Tests.Common{
             => source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.AllButProcess)
                 .ToSecond().IgnoreElements();
     }
+    
+    public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
+        public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
+            => item.InnerView.ToDetailView().GetItems<ControlViewItem>().Select(viewItem => viewItem.Control)
+                .Cast<UserControlComponentModel<Employee>>().Do(model => model.SelectObject(model.Objects.First())).ToNowObservable()
+                .ToUnit();
+    }
+
 }

@@ -40,8 +40,8 @@ namespace XAF.Testing.Win.XAF{
         IObservable<EventPattern<object>> IDataSourceChanged.WhenDatasourceChanged(object editor) => editor.WhenEvent("DataSourceChanged");
     }
     public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
-        public IObservable<Unit> SelectDashboardColumnViewObject(Frame frame, Func<DashboardViewItem, bool> itemSelector = null) 
-            => frame.DashboardViewItems(ViewType.DetailView).Where(itemSelector ?? (_ => true)).ToNowObservable().SelectDashboardColumnViewObject().ToUnit();
+        public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
+            => item.Observe().SelectDashboardColumnViewObject().ToUnit();
     }
 
     public class NewObjectController : INewObjectController{

@@ -23,7 +23,7 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
             // serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
             serviceCollection.AddSingleton<IObjectCountAsserter, ObjectCountAsserter>();
-            serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
+            // serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
@@ -44,10 +44,10 @@ namespace XAF.Testing.Blazor.XAF{
         }
     }
 
-    public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
-        public IObservable<Unit> SelectDashboardColumnViewObject(Frame frame, Func<DashboardViewItem, bool> itemSelector = null) 
-            => frame.DashboardViewItems(ViewType.DetailView).Where(itemSelector ?? (_ => true)).ToNowObservable().SelectDashboardColumnViewObject().ToUnit();
-    }
+    // public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
+    //     public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
+    //         => item.Observe().SelectDashboardColumnViewObject().ToUnit();
+    // }
 
     
     public class NewObjectController : INewObjectController{

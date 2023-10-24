@@ -6,10 +6,16 @@ using XAF.Testing.Blazor.XAF;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
+        
         public IObservable<Unit> StartBlazorTest(string user, Func<BlazorApplication, IObservable<Unit>> test,
             string browser, WindowPosition inactiveMonitorLocation = WindowPosition.None) 
             => Host.CreateDefaultBuilder().Run("http://localhost:5010", "../../../../../OutlookInspired.Blazor.Server",
                 (builder, whenCompleted) => builder.UseStartup(context 
                     => context.Use<Startup,OutlookInspiredEFCoreDbContext>(test, user, whenCompleted, inactiveMonitorLocation)), browser);
+        public IObservable<Unit> StartBlazorTest(string user, Func<BlazorApplication, IObservable<Unit>> test) 
+            => StartBlazorTest(user, application => test(application),
+                    browser:Environment.GetEnvironmentVariable("XAFTESTBrowser"),inactiveMonitorLocation:WindowPosition.FullScreen)
+                // .Log(LogContext, inactiveMonitorLocation:WindowPosition.BottomRight,alwaysOnTop:true)
+            ;
     }
 }

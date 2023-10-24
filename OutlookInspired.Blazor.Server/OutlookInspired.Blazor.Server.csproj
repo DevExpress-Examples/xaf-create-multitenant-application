@@ -65,7 +65,6 @@
   <ItemGroup>
     <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />
     <AdditionalFiles Include="Features\Customers\GridView\Employees.razor" />
-    <AdditionalFiles Include="Features\Customers\GridView\GridView.razor" />
     <AdditionalFiles Include="Features\Customers\GridView\RecentOrders.razor" />
     <AdditionalFiles Include="Features\Customers\Stores\StoresCardView.razor" />
     <AdditionalFiles Include="Features\Employees\Tasks\ColumnTemplate.razor" />

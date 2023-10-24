@@ -185,9 +185,16 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<Frame> ChangeViewVariant(this IObservable<Frame> source,string id) 
             => source.ToController<ChangeVariantController>()
-                .Do(controller => controller.ChangeVariantAction.DoExecute(
-                    controller.ChangeVariantAction.Items.First(item => item.Id == id)))
-                .Select(controller => controller.Frame);
+                .SelectMany(controller => {
+                    var choiceActionItem = controller.ChangeVariantAction.Items.First(item => item.Id == id);
+                    var variantInfo = ((VariantInfo)choiceActionItem.Data);
+                    if (variantInfo.ViewID != controller.Frame.View.Id){
+                        return controller.ChangeVariantAction.Trigger(controller.Application.WhenFrame(variantInfo.ViewID),() => choiceActionItem);    
+                    }
+
+                    return controller.Frame.Observe();
+
+                });
 
         public static IObservable<(Frame frame, object o)> WhenObjects(this IObservable<Frame> source,int count=0) 
             => source.SelectMany(frame => frame.WhenObjects(count)).Select(t => t);
@@ -208,8 +215,11 @@ namespace XAF.Testing.XAF{
         private static IObservable<Frame> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
             => source.SelectMany(frame => frame.SelectDashboardColumnViewObject(itemSelector));
 
-        public static IObservable<Frame> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector) 
-            => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>().SelectDashboardColumnViewObject(frame, itemSelector).To(frame);
+        public static IObservable<Frame> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector){
+            return frame.DashboardViewItems(ViewType.DetailView).Where(itemSelector ?? (_ => true)).ToNowObservable()
+                .SelectMany(item => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>()
+                    .SelectDashboardColumnViewObject(item).To(frame));
+        }
 
         public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToListView());

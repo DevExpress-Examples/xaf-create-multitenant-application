@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <NavigationItems NavigationStyle="Accordion">
-    <Items>
-      <Item Id="Default">
-        <Items>
-          <Item Id="Event_ListView" Removed="True" />
-        </Items>
-      </Item>
-      <Item Id="Reports">
-        <Items>
-          <Item Id="Analysis_ListView" Removed="True" />
-          <Item Id="Dashboards" Removed="True" />
-        </Items>
-      </Item>
-    </Items>
+<!--    <Items>-->
+<!--      <Item Id="Default">-->
+<!--        <Items>-->
+<!--          <Item Id="Event_ListView" Removed="True" />-->
+<!--        </Items>-->
+<!--      </Item>-->
+<!--      <Item Id="Reports">-->
+<!--        <Items>-->
+<!--          <Item Id="Analysis_ListView" Removed="True" />-->
+<!--          <Item Id="Dashboards" Removed="True" />-->
+<!--        </Items>-->
+<!--      </Item>-->
+<!--    </Items>-->
   </NavigationItems>
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />

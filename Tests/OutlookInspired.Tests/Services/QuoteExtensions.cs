@@ -3,11 +3,12 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Common;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.Assert{
+namespace OutlookInspired.Tests.Services{
     static class QuoteExtensions{
         public static IObservable<Frame> AssertOpportunitiesView(this XafApplication application, string navigationView, string viewVariant) 
             => application.AssertNavigationItems((action, item) => action.NavigationItems(item))

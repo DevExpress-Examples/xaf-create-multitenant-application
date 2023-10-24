@@ -9,6 +9,8 @@ using OutlookInspired.Module.BusinessObjects;
 using static DevExpress.ExpressApp.Security.SecurityOperations;
 using static DevExpress.ExpressApp.SystemModule.CurrentUserIdOperator;
 using static DevExpress.Persistent.Base.SecurityPermissionState;
+using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
+using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 using static OutlookInspired.Module.Services.Internal.MailMergeExtensions;
 using static OutlookInspired.Module.Services.Internal.ReportsExtensions;
 
@@ -86,7 +88,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddSalesPermissions(this PermissionPolicyRole role) 
             => new[]{ typeof(Product) }.Concat(OrderTypes).Concat(QuoteTypes).Concat(CustomerTypes).AddCRUDAccess(role)
                 .Concat(EmployeeTypes.AddReadAccess(role)).To<string>()
-                .Concat(new[]{ "Order", "CustomerListView", "Product","Opportunities","EmployeeListView"}.AddNavigationAccess(role))
+                .Concat(new[]{ OrderListView, CustomerListView, ProductListView,Opportunities,EmployeeListView}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, FollowUp, MonthAward, ServiceExcellence, ThankYouNote }.Contains(data.Name));
                     role.AddReportPermission(data => new[]{ RevenueAnalysis, RevenueReport, Sales, Contacts, LocationsReport, OrdersReport, ProductProfile, TopSalesPerson }.Contains(data.DisplayName));
@@ -98,7 +100,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddHRPermissions(this PermissionPolicyRole role) 
             => EmployeeTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.Prepend(typeof(ApplicationUser)).AddReadAccess(role)).To<string>()
-                .Concat(new[]{ "EmployeeListView","Evaluation_ListView"}.AddNavigationAccess(role))
+                .Concat(new[]{ EmployeeListView,EvaluationListView}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, ProbationNotice,WelcomeToDevAV }.Contains(data.Name));
                     role.AddReportPermission(data => new[]{ Contacts, LocationsReport }.Contains(data.DisplayName));
@@ -109,7 +111,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddManagementPermissions(this PermissionPolicyRole role) 
             => EmployeeTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.Prepend(typeof(ApplicationUser)).AddReadAccess(role)).To<string>()
-                .Concat(new[]{ "EmployeeListView","Evaluation_ListView","CustomerListView"}.AddNavigationAccess(role))
+                .Concat(new[]{ EmployeeListView,EvaluationListView,CustomerListView}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, ServiceExcellence }.Contains(data.Name));
                     role.AddReportPermission(data => new[]{ RevenueReport, Contacts, LocationsReport, TopSalesPerson }.Contains(data.DisplayName));
@@ -119,7 +121,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddSupportPermissions(this PermissionPolicyRole role) 
             => QuoteTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.Concat(OrderTypes).AddReadAccess(role)).To<string>()
-                .Concat(new[]{"CustomerListView", "Opportunities"}.AddNavigationAccess(role))
+                .Concat(new[]{CustomerListView, Opportunities}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.ReadCurrentEmployee();
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, FollowUp, MonthAward, ServiceExcellence, ThankYouNote }.Contains(data.Name));
@@ -130,7 +132,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddITPermissions(this PermissionPolicyRole role) 
             => OrderTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.AddReadAccess(role)).To<string>()
-                .Concat(new[]{"Order","CustomerListView"}.AddNavigationAccess(role))
+                .Concat(new[]{OrderListView,CustomerListView}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.ReadCurrentEmployee();
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, FollowUp, MonthAward, ServiceExcellence }.Contains(data.Name));
@@ -141,7 +143,7 @@ namespace OutlookInspired.Module.Services.Internal{
         private static void AddEngineeringPermissions(this PermissionPolicyRole role) 
             => EmployeeTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.Prepend(typeof(ApplicationUser)).AddReadAccess(role)).To<string>()
-                .Concat(new[]{ "EmployeeListView","CustomerListView"}.AddNavigationAccess(role))
+                .Concat(new[]{ EmployeeListView,CustomerListView}.AddNavigationAccess(role))
                 .Finally(() => {
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem,  ServiceExcellence, ProbationNotice,WelcomeToDevAV }.Contains(data.Name));
                     role.AddReportPermission(data => new[]{ ProductProfile }.Contains(data.DisplayName));
@@ -152,7 +154,7 @@ namespace OutlookInspired.Module.Services.Internal{
             => OrderTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.AddReadAccess(role))
                 .To<string>()
-                .Concat(new[]{ "Order", "CustomerListView" }.AddNavigationAccess(role))
+                .Concat(new[]{ OrderListView, CustomerListView }.AddNavigationAccess(role))
                 .Finally(() => {
                     role.ReadCurrentEmployee();
                     role.AddMailMergePermission(data => new[]{ MailMergeOrder, MailMergeOrderItem, FollowUp, MonthAward, ServiceExcellence }.Contains(data.Name));
@@ -188,8 +190,8 @@ namespace OutlookInspired.Module.Services.Internal{
         public static PermissionPolicyRole EnsureDefaultRole(this IObjectSpace objectSpace) 
             => objectSpace.EnsureRole(DefaultRoleName, defaultRole => {
                 defaultRole.AddObjectPermissionFromLambda<ApplicationUser>(Read, cm => cm.ID == (Guid)CurrentUserId(), Allow);
-                defaultRole.AddNavigationPermission(@"Application/NavigationItems/Items/Default/Items/MyDetails", Allow);
-                defaultRole.AddNavigationPermission(@"Application/NavigationItems/Items/Default/Items/Welcome", Allow);
+                defaultRole.AddNavigationPermission($@"Application/NavigationItems/Items/Default/Items/{ApplicationUserDetailView}", Allow);
+                defaultRole.AddNavigationPermission($@"Application/NavigationItems/Items/Default/Items/{WelcomeDetailView}", Allow);
                 defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(Write, "ChangePasswordOnFirstLogon", cm => cm.ID == (Guid)CurrentUserId(), Allow);
                 defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(Write, "StoredPassword", cm => cm.ID == (Guid)CurrentUserId(), Allow);
                 defaultRole.AddTypePermissionsRecursively<PermissionPolicyRole>(Read, Deny);

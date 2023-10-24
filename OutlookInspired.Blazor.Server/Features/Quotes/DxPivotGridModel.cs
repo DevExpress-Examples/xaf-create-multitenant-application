@@ -1,5 +1,4 @@
-﻿using OutlookInspired.Blazor.Server.Components.DevExtreme;
-using OutlookInspired.Blazor.Server.Components.DevExtreme.Pivot;
+﻿using OutlookInspired.Blazor.Server.Components.DevExtreme.Pivot;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;

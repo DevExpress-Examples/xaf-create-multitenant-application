@@ -1,19 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
-  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated">
-    <Items>
-      <Item Id="Default">
-        <Items>
-          <Item Id="Event_ListView" Removed="True" />
-        </Items>
-      </Item>
-      <Item Id="Reports">
-        <Items>
-          <Item Id="Analysis_ListView" Removed="True" />
-          <Item Id="Dashboards" Removed="True" />
-        </Items>
-      </Item>
-    </Items>
+  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" >
   </NavigationItems>
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
@@ -70,15 +57,6 @@
         <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.Features.Customers.CustomerLayoutView" />
       </Items>
     </DetailView>
-    <DashboardView Id="CustomerListView">
-      <Layout>
-        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren">
-          <LayoutItem Id="CustomerGridView_DetailView" RelativeSize="64.58616010854817" />
-          <SplitterItem Id="SplitterItem1" Index="1" RelativeSize="1.2211668928086838" IsNewNode="True" />
-          <LayoutItem Id="Customer_DetailView_Child" Index="2" RelativeSize="34.19267299864315" />
-        </LayoutGroup>
-      </Layout>
-    </DashboardView>
     <ListView Id="Employee_AssignedTasks_ListView_Child">
       <Columns>
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />

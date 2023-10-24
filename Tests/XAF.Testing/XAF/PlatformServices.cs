@@ -44,7 +44,7 @@ namespace XAF.Testing.XAF{
         IObservable<EventPattern<object>> WhenDatasourceChanged(object editor);
     }
     public interface IDashboardColumnViewObjectSelector{
-        IObservable<Unit> SelectDashboardColumnViewObject(Frame frame, Func<DashboardViewItem, bool> itemSelector = null);
+        IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem frame);
     }
 
     public interface IObjectSelector<T> where T : class{
