@@ -1,7 +1,5 @@
-﻿using DevExpress.ExpressApp.Blazor.Components.Models;
-
-namespace OutlookInspired.Blazor.Server.Components{
-    public class PdfModel : ComponentModelBase{
+﻿namespace OutlookInspired.Blazor.Server.Components{
+    public class PdfModel : ComponentModelBase<PdfViewer>{
         public byte[] Bytes{
             get => GetPropertyValue<byte[]>();
             set => SetPropertyValue( value);

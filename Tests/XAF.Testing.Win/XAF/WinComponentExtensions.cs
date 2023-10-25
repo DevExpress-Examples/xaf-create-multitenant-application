@@ -89,13 +89,14 @@ namespace XAF.Testing.Win.XAF{
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
-                    .SelectMany(_ => columnView.DataSource.YieldItems(2)
+                    .SelectMany(_ => columnView.DataSource.YieldItems(1)
                         .SelectMany(o => {
                             var row = columnView.FindRow(o);
+                            columnView.ClearSelection();
                             columnView.Focus();
                             columnView.SelectRow(row);
-                            columnView.SelectRow(2);
-                            columnView.FocusedRowHandle = 2;
+                            // columnView.SelectRow(2);
+                            columnView.FocusedRowHandle = row;
                             return Observable.Empty<ColumnView>();
                         })));
 

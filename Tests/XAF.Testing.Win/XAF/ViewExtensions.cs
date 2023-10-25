@@ -45,9 +45,9 @@ namespace XAF.Testing.Win.XAF{
 
         public static IObservable<(TItem item, Control control)> WhenWinControl<TItem>(this IEnumerable<TItem> source,Type controlType) where TItem:ViewItem 
             => source.ToNowObservable()
-                .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>()
-                .SelectMany(control => control.Controls.Cast<Control>().Prepend(control))
-                .WhenNotDefault().Where(controlType.IsInstanceOfType)
+                .SelectMany(item => item.WhenControlCreated().Select(_ => item.Control).StartWith(item.Control).WhenNotDefault().Cast<Control>().Take(1)
+                    .SelectMany(control => control.Controls.Cast<Control>().Prepend(control).ToNowObservable().WhenNotDefault().Where(controlType.IsInstanceOfType).Take(1))
+               
                 .Select(control => (item,control)));
         
         public static IObservable<T> WhenControlViewItemWinControl<T>(this DetailView detailView) where T:Control 

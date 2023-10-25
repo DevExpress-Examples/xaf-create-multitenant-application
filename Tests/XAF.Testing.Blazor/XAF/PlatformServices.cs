@@ -1,5 +1,6 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using DevExpress.Blazor;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
@@ -7,6 +8,10 @@ using DevExpress.ExpressApp.Blazor.Components.Models;
 using DevExpress.ExpressApp.Blazor.Editors;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
+using DevExpress.XtraReports.Services;
+using DevExpress.XtraReports.UI;
+using DevExpress.XtraReports.Web.Extensions;
+using DevExpress.XtraReports.Web.WebDocumentViewer;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
@@ -15,8 +20,11 @@ using View = DevExpress.ExpressApp.View;
 namespace XAF.Testing.Blazor.XAF{
     public static class PlatformImplementations{
         public static void AddPlatformServices(this IServiceCollection serviceCollection){
+            serviceCollection.AddScoped<DefaultWebDocumentViewerReportResolver>();
+            serviceCollection.AddScoped<IWebDocumentViewerReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
+            serviceCollection.AddScoped<IReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
+
             serviceCollection.AddSingleton<IRichEditControlAsserter, RichEditControlAsserter>();
-            serviceCollection.AddSingleton<IPdfViewerAsserter, PdfViewerAsserter>();
             serviceCollection.AddSingleton<IDashboardViewGridControlDetailViewObjectsAsserter, DashboardViewGridControlDetailViewObjectsAsserter>();
             serviceCollection.AddSingleton<IFilterClearer, FilterClearer>();
             serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
@@ -27,13 +35,30 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
-            serviceCollection.AddSingleton<IReportAsserter, ReportAsserter>();
+            serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
             serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
     }
+
+    
+    public interface IReportResolver{
+        IObservable<XtraReport> WhenResolved(Frame frame);
+    }
+    class DefaultWebDocumentViewerReportResolver:DevExpress.XtraReports.Web.WebDocumentViewer.Native.Services.DefaultWebDocumentViewerReportResolver, IReportResolver{
+        public DefaultWebDocumentViewerReportResolver(ReportStorageWebExtension reportStorageWebExtension, IReportProvider reportProvider) : base(reportStorageWebExtension, reportProvider){
+        }
+
+        private readonly Subject<XtraReport> _resolvedSubject = new();
+
+        public IObservable<XtraReport> WhenResolved(Frame frame) => _resolvedSubject.AsObservable();
+
+        public override XtraReport Resolve(string reportEntry) 
+            => _resolvedSubject.PushNext(base.Resolve(reportEntry));
+    }
+
     
     public class DataSourceChanged:IDataSourceChanged{
         IObservable<EventPattern<object>> IDataSourceChanged.WhenDatasourceChanged(object editor){
@@ -74,10 +99,9 @@ namespace XAF.Testing.Blazor.XAF{
                 .Select(obj => (frame, o: obj));
     }
 
-    public class ReportAsserter : IReportAsserter{
-        public IObservable<Unit> AssertReport(Frame frame, string item){
-            throw new NotImplementedException();
-            // return frame.AssertReport(item).ToUnit();
+    public class ReportAssertion : IReportAssertion{
+        public IObservable<Unit> Assert(Frame frame, string item){
+            return frame.AssertReport(item).ToUnit();
         }
     }
 
@@ -99,10 +123,6 @@ namespace XAF.Testing.Blazor.XAF{
     class RichEditControlAsserter:IRichEditControlAsserter{
         public IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge) 
             => detailView.AssertRichEditControl(assertMailMerge).ToUnit();
-    }
-    class PdfViewerAsserter:IPdfViewerAsserter{
-        public IObservable<Unit> Assert(DetailView detailView) 
-            => detailView.AssertPdfViewer().ToUnit();
     }
     class DashboardViewGridControlDetailViewObjectsAsserter:IDashboardViewGridControlDetailViewObjectsAsserter{
         public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames){

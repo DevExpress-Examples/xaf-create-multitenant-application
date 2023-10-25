@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
-  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" >
-  </NavigationItems>
+  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" />
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
@@ -56,6 +55,9 @@
       <Items>
         <ControlDetailItem Id="CustomerLayoutView" ControlTypeName="OutlookInspired.Win.Features.Customers.CustomerLayoutView" />
       </Items>
+      <Layout>
+        <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" />
+      </Layout>
     </DetailView>
     <ListView Id="Employee_AssignedTasks_ListView_Child">
       <Columns>

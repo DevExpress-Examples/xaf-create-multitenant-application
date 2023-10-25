@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -10,6 +11,8 @@ namespace XAF.Testing.RX{
     public static class EventExtensions{
         private static readonly ConcurrentDictionary<(Type type, string eventName),(EventInfo info,MethodInfo add,MethodInfo remove)> Events = new();
         public static readonly IScheduler ImmediateScheduler=Scheduler.Immediate;
+        
+        
         public static IObservable<EventPattern<object>> WhenEvent(this object source,string eventName,[CallerMemberName]string caller="") 
             => source.FromEventPattern<EventArgs>(eventName,caller)
                 .Select(pattern => new EventPattern<object>(pattern.Sender, pattern.EventArgs));

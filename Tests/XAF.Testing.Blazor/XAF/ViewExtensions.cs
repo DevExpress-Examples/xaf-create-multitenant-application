@@ -36,7 +36,8 @@ namespace XAF.Testing.Blazor.XAF{
         public static IObservable<ITabControlProvider> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element) 
             => ((BlazorLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element).Take(1)
                 .Select(t => new TabControlProvider((DxFormLayoutTabPagesModel)t.control, ((IModelTabbedGroup)t.model).Count));
-
+        
+        
         public static IObservable<T> SelectObject<T>(this ListView view, params T[] objects) where T : class{
             var viewEditor = (view.Editor as DxGridListEditor);
             if (viewEditor == null)

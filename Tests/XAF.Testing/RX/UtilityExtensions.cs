@@ -9,6 +9,10 @@ using System.Runtime.CompilerServices;
 namespace XAF.Testing.RX{
     public static class UtilityExtensions{
         public static void OnNext<T>(this ISubject<T> subject) => subject.OnNext(default);
+        public static T PushNext<T>(this ISubject<T> subject,T value){
+            subject.OnNext(value);
+            return value;
+        }
 
         public static IObservable<T> DelayOnContext<T>(this IObservable<T> source,int seconds=1,bool delayOnEmpty=false) 
             => source.DelayOnContext(seconds.Seconds(),delayOnEmpty);

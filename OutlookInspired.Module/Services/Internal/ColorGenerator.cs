@@ -8,18 +8,22 @@ namespace OutlookInspired.Module.Services.Internal{
             while (colors.Count < i){
                 var color = Color.FromArgb(GetRGB(index));
                 if (!IsInvalidColor(color) && !color.IsSimilarToExistingColors( colors))
-                    colors.Add(color.DarkenColor());
+                    colors.Add(color.LightenColor());
                 index++;
             }
             return colors.Select(c => c.ToHex()).ToArray();
         }
 
+        static Color LightenColor(this Color color, float lighteningFactor = 1.3f) 
+            => Color.FromArgb(
+                Math.Min(255, (int)(color.R * lighteningFactor)),
+                Math.Min(255, (int)(color.G * lighteningFactor)),
+                Math.Min(255, (int)(color.B * lighteningFactor))
+            );
+
         static bool IsSimilarToExistingColors(this Color newColor, List<Color> existingColors) 
             => existingColors.Select(color 
                 => Math.Sqrt(Math.Pow(newColor.R - color.R, 2) + Math.Pow(newColor.G - color.G, 2) + Math.Pow(newColor.B - color.B, 2))).Any(distance => distance < 10);
-
-        static Color DarkenColor(this Color color,float darkeningFactor=0.3f) 
-            => Color.FromArgb((int)(color.R * darkeningFactor), (int)(color.G * darkeningFactor), (int)(color.B * darkeningFactor));
 
         static bool IsInvalidColor(Color color){
             var luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;

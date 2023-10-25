@@ -49,7 +49,7 @@ namespace XAF.Testing.XAF{
             throw new NotImplementedException();
         }
         public static IObservable<Unit> AssertPdfViewer(this DetailView detailView) 
-            => detailView.ObjectSpace.GetRequiredService<IPdfViewerAsserter>().Assert(detailView);
+            => detailView.ObjectSpace.GetRequiredService<IPdfViewerAssertion>().Assert(detailView);
 
         public static IObservable<Unit> AssertRichEditControl(this DetailView detailView, bool assertMailMerge = false) 
             => detailView.ObjectSpace.GetRequiredService<IRichEditControlAsserter>().Assert(detailView, assertMailMerge);
@@ -297,7 +297,7 @@ namespace XAF.Testing.XAF{
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
         public static IObservable<Unit> AssertReport(this XafApplication application, SingleChoiceAction action, ChoiceActionItem item) 
-            => application.GetRequiredService<IReportAsserter>().AssertReport(action.Controller.Frame, item.ToString());
+            => application.GetRequiredService<IReportAssertion>().Assert(action.Controller.Frame, (item.Data ??item).ToString());
 
         public static IObservable<Frame> AssertReports(this XafApplication application, string navigationView, string viewVariant,int reportsCount){
             // return application.AssertListView(navigationView, viewVariant, assert: _ => AssertAction.HasObject)

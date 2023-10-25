@@ -33,10 +33,11 @@ namespace OutlookInspired.Win.Editors
         }
         
         public virtual void Refresh(object currentObject) => Refresh();
-
+        
         public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
             _objectSpace = (EFCoreObjectSpace)objectSpace;
             ColumnView = this.ColumnView();
+            
             ColumnView.SelectionChanged += (_, _) => {
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 CurrentObjectChanged?.Invoke(this, EventArgs.Empty);
@@ -51,15 +52,13 @@ namespace OutlookInspired.Win.Editors
             application.ProtectDetailViews(ColumnView.GridControl,ObjectType);
         }
 
-        public override void Refresh(){
-            ColumnView.GridControl.DataSource =
+        public override void Refresh()
+            => ColumnView.GridControl.DataSource =
                 (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
-        }
 
         public virtual Type ObjectType => throw new NotImplementedException();
 
         public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,ObjectType);
-        // public object CurrentObject => SelectedObjects.Cast<object>().FirstOrDefault();
 
         public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();
         public SelectionType SelectionType => SelectionType.Full;

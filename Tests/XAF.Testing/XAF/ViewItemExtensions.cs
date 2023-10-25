@@ -21,6 +21,7 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<T> ControlCreated<T>(this IObservable<T> source) where T:ViewItem
             => source.SelectMany(item => item.WhenEvent(nameof(ViewItem.ControlCreated))
+                .StartWith(item.Control).WhenNotDefault()
                 .Select(_ => item)).TakeUntilDisposed();
         
         public static IObservable<T> TakeUntilDisposed<T>(this IObservable<T> source) where T : ViewItem

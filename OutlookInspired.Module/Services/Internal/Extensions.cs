@@ -130,21 +130,22 @@ namespace OutlookInspired.Module.Services.Internal{
         
         public static Task DelayAndExit(this XafApplication application,TimeSpan delay) => Task.Delay(delay).ContinueWith(_ => application.Exit());
 
-        public static CancellationToken AsCancelable(this Task task){
+        public static CancellationToken AsCancelable(this Task task) {
             var cts = new CancellationTokenSource();
-            task.ContinueWith(_ => cts.Cancel(), TaskScheduler.Default);
+            task.ContinueWith(_ => {
+                cts.Cancel();
+                cts.Dispose();
+            }, TaskScheduler.Default);
             return cts.Token;
         }
     
-        public static string MemberExpressionName<TObject>(this Expression<Func<TObject, object>> memberName) 
-            => memberName.Body is UnaryExpression unaryExpression
-                ? ((MemberExpression) unaryExpression.Operand).Member.Name
-                : ((MemberExpression) memberName.Body).Member.Name;
-        
-        public static string MemberExpressionName<TObject,TMemberValue>(this Expression<Func<TObject, TMemberValue>> memberName) 
-            => memberName.Body is UnaryExpression unaryExpression
-                ? ((MemberExpression) unaryExpression.Operand).Member.Name
-                : ((MemberExpression) memberName.Body).Member.Name;
+        public static string MemberExpressionName<TObject, TMemberValue>(this Expression<Func<TObject, TMemberValue>> memberName) 
+            => memberName.Body switch{
+                MemberExpression memberExpression => memberExpression.Member.Name,
+                UnaryExpression{ Operand: MemberExpression operand } => operand.Member.Name,
+                _ => throw new ArgumentException("Invalid expression type", nameof(memberName))
+            };
+
     }
     
     public struct EditorAliases {

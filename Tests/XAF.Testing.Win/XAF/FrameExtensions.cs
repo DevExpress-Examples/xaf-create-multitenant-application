@@ -61,7 +61,8 @@ namespace XAF.Testing.Win.XAF{
         public static IObservable<ColumnView> SelectDashboardColumnViewObject(this IObservable<DashboardViewItem> source)
             => source.SelectMany(item => item.InnerView.ToDetailView().WhenControlViewItemGridControl()
                 .Select(gridControl => gridControl.MainView).Cast<ColumnView>()
-                .SelectMany(gridView => gridView.ProcessEvent(EventType.Click)));
+                .SelectMany(gridView => gridView.ProcessEvent(EventType.Click))
+                .Select(view => view));
 
         internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame)
             => frame.WhenGridControl().Select(t => t.frame).CreateNewObject();

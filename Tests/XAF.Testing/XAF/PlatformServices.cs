@@ -22,7 +22,7 @@ namespace XAF.Testing.XAF{
     public interface IRichEditControlAsserter{
         IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge);    
     }
-    public interface IPdfViewerAsserter{
+    public interface IPdfViewerAssertion{
         IObservable<Unit> Assert(DetailView detailView);
     }
     public interface IDashboardViewGridControlDetailViewObjectsAsserter{
@@ -63,8 +63,9 @@ namespace XAF.Testing.XAF{
         void AddNewRowAndCloneMembers(Frame frame, object existingObject);
     }
     
-    public interface IReportAsserter{
-        IObservable<Unit> AssertReport(Frame frame, string item);
+    
+    public interface IReportAssertion{
+        IObservable<Unit> Assert(Frame frame, string item);
     }
 
     public interface ISelectedObjectProcessor{

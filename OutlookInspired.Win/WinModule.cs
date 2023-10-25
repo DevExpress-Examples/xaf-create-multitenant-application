@@ -4,9 +4,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module;
-using OutlookInspired.Module.Features.Quotes;
 using OutlookInspired.Win.Controllers;
-using OutlookInspired.Win.Features;
 using OutlookInspired.Win.Features.Customers;
 using OutlookInspired.Win.Features.Employees;
 using OutlookInspired.Win.Features.Evaluations;
@@ -35,7 +33,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),typeof(MapsViewController),
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),
-            typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),typeof(MyClass),
+            typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
         };
 

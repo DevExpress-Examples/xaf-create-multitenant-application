@@ -128,7 +128,7 @@
             colDescription.AppearanceCell.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
             colDescription.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             colDescription.ColumnEdit = repositoryItemMemoEdit1;
-            colDescription.FieldName = "Description";
+            colDescription.FieldName = "DescriptionString";
             colDescription.LayoutViewField = layoutViewField_colDescription;
             colDescription.Name = "colDescription";
             colDescription.OptionsColumn.AllowEdit = false;

@@ -2,6 +2,14 @@
 
 namespace XAF.Testing;
 public static class ExpressionExtensions{
+    public static string MemberExpressionName<TObject, TMemberValue>(this Expression<Func<TObject, TMemberValue>> memberName) 
+        => memberName.Body switch{
+            MemberExpression memberExpression => memberExpression.Member.Name,
+            UnaryExpression{ Operand: MemberExpression operand } => operand.Member.Name,
+            _ => throw new ArgumentException("Invalid expression type", nameof(memberName))
+        };
+
+    
     public static LambdaExpression Filter(this LambdaExpression  expr,Func<Type,bool> match){
         var body = expr.Body.FilterExpression(match);
         return body == null ? null : Expression.Lambda(body, expr.Parameters);

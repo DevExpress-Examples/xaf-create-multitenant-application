@@ -61,15 +61,14 @@ namespace XAF.Testing.XAF{
             => source.If(frame => frame is not Window,frame => Observable.Throw<Frame>(new InvalidCastException($"{frame.View}")),frame => frame.Observe())
                 .Cast<Window>().DelayOnContext()
                 .SelectMany(frame => {
-                    var acceptAction = frame.GetController<DialogController>()?.AcceptAction;
-                    if (acceptAction != null)
-                        return acceptAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe());
-                    if (frame.IsMain)
-                        return frame.Application.NavigateBack();
-                    return frame.Actions("Close").Cast<SimpleAction>()
-                        .Where(a => a.Controller.Name.StartsWith("DevExpress"))
-                        .ToNowObservable().SelectMany(a => a.Trigger().To(previous));
-
+                    var dialogController = frame.GetController<DialogController>();
+                    return dialogController switch {
+                        { AcceptAction.Active.ResultValue: true } => dialogController.AcceptAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe()),
+                        { CloseAction.Active.ResultValue: true } => dialogController.CloseAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe()),
+                        null => frame.IsMain ? frame.Application.NavigateBack() : frame.Actions("Close").Cast<SimpleAction>().Where(a => a.Controller.Name.StartsWith("DevExpress"))
+                            .ToNowObservable().SelectMany(a => a.Trigger().To(previous)),
+                        _ => throw new NotImplementedException()
+                    };
                 })
                 .DelayOnContext();
 
@@ -215,11 +214,10 @@ namespace XAF.Testing.XAF{
         private static IObservable<Frame> SelectDashboardColumnViewObject(this IObservable<Frame> source,Func<DashboardViewItem,bool> itemSelector=null) 
             => source.SelectMany(frame => frame.SelectDashboardColumnViewObject(itemSelector));
 
-        public static IObservable<Frame> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector){
-            return frame.DashboardViewItems(ViewType.DetailView).Where(itemSelector ?? (_ => true)).ToNowObservable()
+        public static IObservable<Frame> SelectDashboardColumnViewObject(this Frame frame,Func<DashboardViewItem, bool> itemSelector) 
+            => frame.DashboardViewItems(ViewType.DetailView).Where(itemSelector ?? (_ => true)).ToNowObservable()
                 .SelectMany(item => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>()
                     .SelectDashboardColumnViewObject(item).To(frame));
-        }
 
         public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
             => source.Select(frame => frame.View.ToListView());

@@ -9,7 +9,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
             var printMap = ComponentModel.PrintMap;
             if (printMap){
                 ComponentModel.PrintMap = false;
-                await DevExtremeModule.InvokeVoidAsync("printElement", Element);
+                await ScriptLoader.InvokeVoidAsync("printElement", Element);
             }
         }
     }

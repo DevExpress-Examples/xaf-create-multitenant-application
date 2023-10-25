@@ -14,6 +14,7 @@
     }
     
     protected override async Task OnAfterRenderClientModuleAsync(){
+        await base.OnAfterRenderClientModuleAsync();
         if (ComponentModel.Redraw){
             ComponentModel.Redraw = false;
             await ClientObject.DisposeAsync();

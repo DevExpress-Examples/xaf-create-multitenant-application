@@ -7,6 +7,7 @@
     static DxMap() => ExtractResource<DxMap>();
     private DotNetObjectReference<JsInterop> _itemSelected;
     protected override async Task OnAfterRenderClientModuleAsync(){
+        await base.OnAfterRenderClientModuleAsync();
         ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitDxMap", Element, ComponentModel);
         var routeMode = ComponentModel.RouteMode;
         if (routeMode!=null){

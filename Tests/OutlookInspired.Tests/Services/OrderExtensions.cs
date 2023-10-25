@@ -4,13 +4,13 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Orders;
+using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Common;
-using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.Assert{
+namespace OutlookInspired.Tests.Services{
     static class OrderExtensions{
         public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant) 
             => application.AssertNavigationItems((action, item) => action.NavigationItems(item))

@@ -35,7 +35,7 @@ namespace OutlookInspired.Tests.Services{
                     .Finally(() => {})
                     .SelectMany(action => action.Trigger(action.Application.WhenFrame(objectType, ViewType.DetailView).Cast<Window>().Take(1)
                         .WhenMaximized()
-                        .SelectMany(frame1 => ((DetailView)frame1.View).AssertMapsControl()
+                        .SelectMany(frame1 => ((DetailView)frame1.View).AssertMapsControl().Select(unit => unit)
                             .Zip(assert?.Invoke(frame1) ?? default(Frame).Observe()).Take(1)
                             .Select(_ => frame1))))
                     .CloseWindow(frame).To(frame)

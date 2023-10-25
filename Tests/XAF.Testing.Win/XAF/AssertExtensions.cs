@@ -5,6 +5,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Office.Win;
+using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.ExpressApp.ReportsV2.Win;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
@@ -34,23 +35,15 @@ namespace XAF.Testing.Win.XAF{
                             .DelayOnContext()).Take(1).To<Frame>(),() => item)))
                 .IgnoreElements().Concat(source).ReplayFirstTake();
 
-        
-        
-        
         public static IObservable<Frame> AssertReport(this Frame frame, [CallerMemberName]string caller="") 
             => frame.GetController<WinReportServiceController>()
                 .WhenEvent<WinReportServiceController.CustomizePrintToolEventArgs>(
                     nameof(WinReportServiceController.CustomizePrintTool)).Take(1)
-                .SelectMany(e => e.PrintTool.PrintingSystem
-                    .WhenEvent(nameof(e.PrintTool.PrintingSystem.CreateDocumentException))
-                    .Select(pattern => ((ExceptionEventArgs)pattern.EventArgs).Exception)
-                    .Buffer(((XtraReport)e.PrintTool.Report).WhenEvent(nameof(XtraReport.AfterPrint))).Take(1)
-                    .Select(exceptions => (exceptions: exceptions.Count, pages: ((XtraReport)e.PrintTool.Report).Pages.Count))
+                .SelectMany(e => ((XtraReport)e.PrintTool.Report).WhenReady()
                     .DelayOnContext()
                     .Do(_ => e.PrintTool.PreviewRibbonForm.Close())
-                    .WhenDefault(t => t.exceptions)
-                    .WhenNotDefault(t => t.pages).Select(_ => default(Frame))
-                    .DelayOnContext()).Assert($"{nameof(AssertReport)}",caller:caller);
+                    .DelayOnContext()).Assert($"{nameof(AssertReport)}",caller:caller)
+                .To(frame);
 
         public static IObservable<Frame> AssertExistingObjectDetailView(this XafApplication application,Type objectType=null) 
             => application.AssertExistingObjectDetailView(_ => Observable.Empty<Unit>(),objectType);

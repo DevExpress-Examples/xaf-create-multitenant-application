@@ -52,7 +52,7 @@ namespace XAF.Testing.Blazor.XAF{
                         application.ConnectionString= application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");
                         application.DeleteModelDiffs<TDBContext>();
                     })
-                    .Select(application => application.WhenLoggedOn().To(application)).Switch()
+                    // .Select(application => application.WhenLoggedOn().To(application)).Switch()
                     .Select(application => application)
                     .TakeUntil(process.WhenExited().Select(process1 => process1))
                     // .Select(application => 5000.Milliseconds().Delay().ToObservable()

@@ -2,7 +2,10 @@
 @using System.ComponentModel
 @using OutlookInspired.Module.Services.Internal
 @inject IJSRuntime JsRuntime
-
+<!--suppress CssInvalidHtmlTagReference, CssUnusedSymbol -->
+<style>
+    dxbl-form-layout-item > div:has(.nested-frame) {    margin-top: 0 !important;}
+</style>
 <style>
     .store-card-container {
         display: flex;
@@ -43,7 +46,7 @@
 @code {
     protected override void OnInitialized(){
         base.OnInitialized();
-        SelectedCards.ListChanged+=SelectedCardsOnListChanged;;
+        SelectedCards.ListChanged+=SelectedCardsOnListChanged;
     }
 
     private void SelectedCardsOnListChanged(object sender, ListChangedEventArgs e){
@@ -57,20 +60,6 @@
 
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender){
-        if (!firstRender)return;
-        // await JsRuntime.InvokeVoidAsync("eval", @"
-        //         setTimeout(function() {
-        //             const targetDiv = document.querySelector('div[data-item-name=""Customer_DetailView_Child""]');
-        //             if (targetDiv) {
-        //               const parentDiv = targetDiv.closest('div.dxbl-fl-ctrl.dxbl-fl-ctrl-nc');
-        //               if (parentDiv) {
-        //                 parentDiv.className = null;
-        //               }
-        //             }
-        //         }, 1000);"
-        //     );
-    }
     
     [Parameter]
     public RenderFragment Content { get; set; }

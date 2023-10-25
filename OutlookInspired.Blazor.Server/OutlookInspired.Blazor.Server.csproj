@@ -17,6 +17,7 @@
     
     <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
+    <None Remove="Components\PdfViewer.razor.js" />
     <None Remove="Model.xafml" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +62,13 @@
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeComponent.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremeMap.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DevExtreme\DevExtremePivotGrid.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\ComponentBase\ComponentBase.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\ComponentBase\DxMap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\MyClass\DxFunnel.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\MyClass\DxMap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\MyClass\DxPivotGrid.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\MyClass\MyClass.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\MyClass\PdfViewer.js" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Features\Customers\CardView\CardView.razor" />
@@ -76,6 +84,8 @@
     <EmbeddedResource Include="Components\DevExtreme\Maps\DxVectorMap.razor.js" />
     
     <EmbeddedResource Include="Components\DevExtreme\Pivot\DxPivotGrid.razor.js" />
+    
+    <EmbeddedResource Include="Components\PdfViewer.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
     

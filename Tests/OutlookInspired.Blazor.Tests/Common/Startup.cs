@@ -25,10 +25,13 @@ namespace OutlookInspired.Blazor.Tests.Common{
                 _whenApplicationSubject.OnNext(application);
             });
             builder.Services.AddPlatformServices();
+            builder.Services.AddSingleton<IPdfViewerAssertion,PdfViewerAssertion>();
             builder.Services.AddSingleton<IMapsControlAssertion,MapControlAssertion>();
             builder.Services.AddSingleton<IFilterViewAssertion,FilterViewAssertion>();
             builder.Services.AddSingleton<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
+            
         }
     }
+    
 
 }

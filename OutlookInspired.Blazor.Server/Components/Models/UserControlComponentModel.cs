@@ -8,14 +8,30 @@ using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.Models{
-    
+
+    public interface ISelectableModel{
+        IList Objects { get; }
+        void SelectObject(object value);
+    }
+    public abstract class UserControlComponentModel<T>:UserControlComponentModel,ISelectableModel{
+        IList ISelectableModel.Objects => Objects;
+        void ISelectableModel.SelectObject(object value) => SelectObject((T)value);
+
+        public List<T> Objects{
+            get => GetPropertyValue<List<T>>();
+            set => SetPropertyValue(value);
+        }
+        public void SelectObject(T value) => OnObjectSelected(new SelectObjectEventArgs(value));
+        public override void Refresh() => Objects = ObjectSpace.GetObjects<T>(Criteria).ToList();
+        public override Type ObjectType => typeof(T);
+    }
     public abstract class UserControlComponentModel:ComponentModelBase,IComponentContentHolder,IUserControl{
         private IList _selectedObjects = new List<object>();
 
         public CriteriaOperator Criteria{ get; private set; }
 
-        public event AsyncEventHandler<SelectObjectEventArgs> CurrentObjectSelected; 
-        public void SelectObject(object value) => OnCurrentObjectSelected(new SelectObjectEventArgs(value));
+        public event AsyncEventHandler<SelectObjectEventArgs> ObjectSelected; 
+        
         public IObjectSpace ObjectSpace{ get; private set; }
 
         public abstract RenderFragment ComponentContent{ get; }
@@ -73,7 +89,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
             => ProcessObject?.Invoke(this, EventArgs.Empty);
 
 
-        protected virtual void OnCurrentObjectSelected(SelectObjectEventArgs e) => CurrentObjectSelected?.Invoke(this, e);
+        protected virtual void OnObjectSelected(SelectObjectEventArgs e) => ObjectSelected?.Invoke(this, e);
     }
 
     public class SelectObjectEventArgs:EventArgs{

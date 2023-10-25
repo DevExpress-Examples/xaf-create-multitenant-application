@@ -1,10 +1,8 @@
 ﻿using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Blazor.Templates.Navigation.ActionControls;
 using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.SystemModule;
-using DevExpress.Printing.ExportHelpers;
+using DevExpress.ExpressApp.ReportsV2;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
@@ -32,6 +30,16 @@ namespace XAF.Testing.Blazor.XAF{
             // return frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
             return Observable.Empty<Frame>();
         }
+
+
+        public static IObservable<Frame> AssertReport(this Frame frame,[CallerMemberName]string caller="") 
+            => frame.Application.WhenFrame("ReportViewer_DetailView")
+                .Where(frame1 => ((IReportDataV2)frame1.View.CurrentObject).DisplayName==caller).To<Frame>()
+                .SelectUntilViewClosed(frame1 => frame.Application.GetRequiredService<IReportResolver>().WhenResolved(frame1)
+                    .SelectMany(report => report.WhenReady()).To(frame1).CloseWindow(frame))
+                .Assert($"{nameof(AssertReport)}", caller: caller)
+                .Select(frame1 => frame1)
+                .To<Frame>();
 
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame){

@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.XtraLayout;
-using DevExpress.XtraMap;
 using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
@@ -15,8 +14,9 @@ using View = DevExpress.ExpressApp.View;
 namespace XAF.Testing.Win.XAF{
     public static class PlatformImplementations{
         public static void AddPlatformServices(this IServiceCollection serviceCollection){
+            
             serviceCollection.AddSingleton<IRichEditControlAsserter, RichEditControlAsserter>();
-            serviceCollection.AddSingleton<IPdfViewerAsserter, PdfViewerAsserter>();
+            serviceCollection.AddSingleton<IPdfViewerAssertion, PdfViewerAssertion>();
             serviceCollection.AddSingleton<IDashboardViewGridControlDetailViewObjectsAsserter, DashboardViewGridControlDetailViewObjectsAsserter>();
             serviceCollection.AddSingleton<IFilterClearer, FilterClearer>();
             serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
@@ -27,7 +27,7 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
-            serviceCollection.AddSingleton<IReportAsserter, ReportAsserter>();
+            serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
             serviceCollection.AddSingleton<IMapsControlAssertion, MapControlAsserter>();
@@ -67,8 +67,8 @@ namespace XAF.Testing.Win.XAF{
     }
 
     
-    public class ReportAsserter : IReportAsserter{
-        public IObservable<Unit> AssertReport(Frame frame, string item) 
+    public class ReportAssertion : IReportAssertion{
+        public IObservable<Unit> Assert(Frame frame, string item) 
             => frame.AssertReport(item).ToUnit();
     }
 
@@ -104,7 +104,7 @@ namespace XAF.Testing.Win.XAF{
         public IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge) 
             => detailView.AssertRichEditControl(assertMailMerge).ToUnit();
     }
-    class PdfViewerAsserter:IPdfViewerAsserter{
+    class PdfViewerAssertion:IPdfViewerAssertion{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertPdfViewer().ToUnit();
     }
