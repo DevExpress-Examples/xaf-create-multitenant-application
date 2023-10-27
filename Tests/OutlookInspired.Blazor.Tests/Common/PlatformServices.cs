@@ -8,7 +8,6 @@ using OutlookInspired.Blazor.Server;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;

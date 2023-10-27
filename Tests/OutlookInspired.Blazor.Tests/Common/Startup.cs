@@ -2,7 +2,6 @@
 using System.Reactive.Subjects;
 using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
-using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Services;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.XAF;

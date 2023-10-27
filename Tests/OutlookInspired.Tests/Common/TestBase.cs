@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
+using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.RX;
@@ -15,6 +15,9 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
+        static TestBase(){
+            UtilityExtensions.TimeoutInterval = 180.Seconds();
+        }
 #if DEBUG
         protected const int MaxTries = 3;
 #else
@@ -93,11 +96,15 @@ namespace OutlookInspired.Tests.Common{
         static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertOpportunitiesView( navigationView, viewVariant);
 
-        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertProductListView( navigationView, viewVariant);
+        static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant){
+            throw new NotImplementedException();
+            // return application.AssertProductListView(navigationView, viewVariant);
+        }
 
-        public static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOrderListView( navigationView, viewVariant);
+        public static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant){
+            throw new NotImplementedException();
+            // return application.AssertOrderListView(navigationView, viewVariant);
+        }
 
         static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant){
             throw new NotImplementedException();

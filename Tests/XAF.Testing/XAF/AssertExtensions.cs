@@ -122,13 +122,14 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> AssertDashboardListView(this XafApplication application, string navigationId,
             string viewVariant, Func<Frame, IObservable<Unit>> existingObjectDetailview = null,Func<DashboardViewItem, bool> listViewFrameSelector=null, Func<Frame,AssertAction> assert = null)
             => application.AssertNavigation(navigationId).AssertDashboardListView(viewVariant, existingObjectDetailview,listViewFrameSelector,assert );
+
+        public static IObservable<Frame> AssertDashboardListView(this IObservable<Frame> source, Func<Frame, IObservable<Unit>> existingObjectDetailview = null
+            , Func<DashboardViewItem, bool> listViewFrameSelector = null, Func<Frame, AssertAction> assert = null)
+            => source.AssertDashboardListView(listViewFrameSelector, existingObjectDetailview, assert).IgnoreElements().Concat(source).ReplayFirstTake();
         
-        public static IObservable<Frame> AssertDashboardListView(this IObservable<Frame> source, 
-            string viewVariant, Func<Frame, IObservable<Unit>> existingObjectDetailview = null,Func<DashboardViewItem, bool> listViewFrameSelector=null,
-            Func<Frame,AssertAction> assert = null)
-            => source.AssertChangeViewVariant(viewVariant)
-                .AssertDashboardListView(listViewFrameSelector, existingObjectDetailview, assert).IgnoreElements()
-                .Concat(source).ReplayFirstTake();
+        public static IObservable<Frame> AssertDashboardListView(this IObservable<Frame> source, string viewVariant, Func<Frame, IObservable<Unit>> existingObjectDetailview = null,
+            Func<DashboardViewItem, bool> listViewFrameSelector=null, Func<Frame,AssertAction> assert = null)
+            => source.AssertChangeViewVariant(viewVariant).AssertDashboardListView( existingObjectDetailview,listViewFrameSelector, assert);
         
         public static IObservable<Frame> AssertDashboardDetailView(this XafApplication application,string navigationId,string viewVariant) 
             => application.AssertNavigation(navigationId).AssertChangeViewVariant(viewVariant).AssertDashboardDetailView(null);
@@ -420,12 +421,15 @@ namespace XAF.Testing.XAF{
                 .SelectMany(t => t.frame.Observe().AssertCreateNewObject(assert, inlineEdit)
                     .AssertSaveNewObject(assert,t.frame).Select(t1 => (t1.typeInfo,t1.keyValue,t1.frame.MasterFrame(listViewFrameSelector),t.parent))
                     .AssertDeleteObject(assert,inlineEdit,t.frame,caller)
-                    .SwitchIfEmpty(Observable.Defer(() => t.frame.Assert(assert).HasFlag(AssertAction.ListViewDeleteOnly).Observe().WhenNotDefault().Select(_ => t.frame.View)
-                        .SelectMany(view => view.WhenObjectViewObjects(1).Take(1)
-                            .SelectMany(o => (view.ObjectTypeInfo, view.ObjectSpace.GetKeyValue(o), t.frame, t.parent).Observe()
-                            .AssertDeleteObject(assert, inlineEdit, t.frame, caller))))))
+                    .SwitchIfEmpty(t.AssertListViewDeleteOnly(assert, inlineEdit, caller)))
                 .SwitchIfEmpty(source.ToFirst())
                 .ReplayFirstTake();
+
+        private static IObservable<Frame> AssertListViewDeleteOnly(this (Frame frame, Frame parent) source,Func<Frame, AssertAction> assert, bool inlineEdit, string caller) 
+            => Observable.Defer(() => source.frame.Assert(assert).HasFlag(AssertAction.ListViewDeleteOnly).Observe().WhenNotDefault().Select(_ => source.frame.View)
+                .SelectMany(view => view.WhenObjectViewObjects(1).Take(1)
+                    .SelectMany(o => (view.ObjectTypeInfo, view.ObjectSpace.GetKeyValue(o), source.frame, source.parent).Observe()
+                        .AssertDeleteObject(assert, inlineEdit, source.frame, caller))));
 
         private static IObservable<(Frame frame, Frame parent)> AssertCreateNewObject(this IObservable<Frame> source, 
             Func<Frame,AssertAction> assert, bool inlineEdit) 

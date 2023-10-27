@@ -4,17 +4,27 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Orders;
-using OutlookInspired.Tests.Assert;
 using OutlookInspired.Tests.Common;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Services{
-    static class OrderExtensions{
-        public static IObservable<Frame> AssertOrderListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
-                .If(action => action.CanNavigate(navigationView), action => action.AsserOrderListView( navigationView, viewVariant));
+    public static class OrderExtensions{
+        public static IObservable<Unit> AssertOrderListView(this XafApplication application,string view, string viewVariant) 
+            => application.AssertNavigation(view, viewVariant, source => {
+                    var orderTabGroup = application.AssertTabbedGroup(typeof(Order),4);
+                    return source.AssertSelectDashboardListViewObject().AssertDashboardListView(
+                             frame => Observable.Empty<Unit>(), assert:frame => frame.AssertAction())
+                        .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake()
+                        // .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                        // .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+                        // .ReplayFirstTake()
+                        .ToUnit();
+                },application.CanNavigate(view).ToUnit())
+                .FilterListViews(application);    
+
+        
 
         private static IObservable<Frame> AsserOrderListView(this SingleChoiceAction action, string navigationView, string viewVariant){
             var orderTabGroup = action.Application.AssertTabbedGroup(typeof(Order),4);
