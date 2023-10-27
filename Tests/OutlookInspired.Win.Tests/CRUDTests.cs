@@ -8,11 +8,10 @@ namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
     public class CRUDTests:TestBase{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
+        [Category(WindowsTest)]
         public async Task Employee(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertEmployeeCRUD(view, viewVariant));
         }
-
-        
 
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
         public async Task Customer(string user,string view,string viewVariant){

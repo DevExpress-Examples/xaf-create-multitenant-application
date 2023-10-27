@@ -189,12 +189,7 @@ namespace XAF.Testing.XAF{
                 .SelectMany(controller => {
                     var choiceActionItem = controller.ChangeVariantAction.Items.First(item => item.Id == id);
                     var variantInfo = ((VariantInfo)choiceActionItem.Data);
-                    if (variantInfo.ViewID != controller.Frame.View.Id){
-                        return controller.ChangeVariantAction.Trigger(controller.Application.WhenFrame(variantInfo.ViewID),() => choiceActionItem);    
-                    }
-
-                    return controller.Frame.Observe();
-
+                    return variantInfo.ViewID != controller.Frame.View.Id ? controller.ChangeVariantAction.Trigger(controller.Application.WhenFrame(variantInfo.ViewID),() => choiceActionItem) : controller.Frame.Observe();
                 });
 
         public static IObservable<(Frame frame, object o)> WhenObjects(this IObservable<Frame> source,int count=0) 

@@ -175,6 +175,13 @@ namespace XAF.Testing.XAF{
             => source.If(_ => variantId!=null,frame => frame.Observe().ChangeViewVariant(variantId),frame => frame.Observe()).Assert($"{variantId}")
                 .ReplayFirstTake();
         
+        public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
+            => application.AssertNavigation(view,_ => canNavigate.SwitchIfEmpty(Observable.Throw<Unit>(new AssertException())).ToUnit())
+                .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
+                        .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
+                    .SelectMany(frame => assert(frame.Observe())))
+                .FirstOrDefaultAsync();
+        
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this IObservable<Frame> source)
             => source.SelectMany(window => window.AssertProcessSelectedObject()).TakeAndReplay(1).RefCount();
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this Frame frame) 

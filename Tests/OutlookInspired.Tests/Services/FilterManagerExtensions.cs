@@ -22,7 +22,8 @@ namespace OutlookInspired.Tests.Services{
             => application.AssertFilters(view, viewVariant,5);
         static IObservable<Unit> AssertFilters(this XafApplication application,string view, string viewVariant,int filterCount) 
             => application.AssertNavigation(view, viewVariant,source => source
-                .AssertFilterAction(filtersCount: filterCount,action: frame => frame.ClearFilter()).ToUnit());
+                .AssertFilterAction(filtersCount: filterCount,action: frame => frame.ClearFilter()).ToUnit(),
+                application.CanNavigate(view).ToUnit());
         
         internal static IObservable<Frame> AssertFilterAction(this IObservable<Frame> source, int filtersCount, Action<NestedFrame> action = null)
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()

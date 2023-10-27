@@ -17,6 +17,7 @@ namespace OutlookInspired.Tests.Services{
 
         private static IObservable<Unit> AssertReports(this XafApplication application, string view, string viewVariant, string reportActionId,Func<SingleChoiceAction,ChoiceActionItem, bool> itemSelector = null) 
             => application.AssertNavigation(view, viewVariant, source => source.AssertSelectDashboardListViewObject()
-                .AssertDashboardViewReportsAction(reportActionId,itemSelector, singleChoiceAction => singleChoiceAction.AssertReportActionItems()).ToUnit());
+                .AssertDashboardViewReportsAction(reportActionId,itemSelector, singleChoiceAction => singleChoiceAction.AssertReportActionItems()).ToUnit(),
+                application.CanNavigate(view).ToUnit());
     }
 }

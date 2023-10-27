@@ -55,12 +55,6 @@ namespace OutlookInspired.Tests.Services{
             });
 
 
-        public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert) 
-            => application.AssertNavigation(view,window => window.Application.CanNavigate(view)
-                .SwitchIfEmpty(Observable.Throw<XafApplication>(new AssertException())).ToUnit())
-                .SelectMany(window => assert(window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
-                    .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())))
-                .FirstOrDefaultAsync();
 
         public static IObservable<XafApplication> CanNavigate(this XafApplication application, string viewId) 
             => application.Defer(() => application.NewObjectSpace()

@@ -13,9 +13,10 @@ namespace OutlookInspired.Tests.Common{
             => application.FilterListViews((view, expression) => view.FilterUserControl(expression).ToObservable(), Expressions())
                 .IgnoreElements().TakeUntilDisposed(application).To<XafApplication>().Merge(application.Observe());
         
-        internal static IObservable<Frame> FilterListViews(this IObservable<Frame> source, XafApplication application)
-            => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
-                .IgnoreElements().TakeUntilFinished(source).To<Frame>();
+        internal static IObservable<T> FilterListViews<T>(this IObservable<T> source, XafApplication application)
+            => application.WhenLoggedOn().Take(1).SelectMany(_ => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
+                .IgnoreElements().TakeUntilFinished(source).To<T>())
+                .Concat(source);
         
 
         public static LambdaExpression[] Expressions()

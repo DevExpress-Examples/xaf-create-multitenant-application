@@ -30,11 +30,12 @@ namespace XAF.Testing.Win.XAF{
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
             => frame.View.Observe().OfType<DetailView>()
                 .SelectMany(detailView => detailView.WhenGridControl()
-                    .SelectMany(gridControl => frame.Application.WhenFrame(((NestedFrame)frame)
-                            .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
-                        .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-                            .Equals(((ColumnView)gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace)))
-                        .Merge(Observable.Defer(() => gridControl.ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements()))))
+                    .SelectMany(gridControl => {
+                        var focusedRowObjectKey = ((ColumnView)gridControl.MainView).FocusedRowObjectKey(detailView.ObjectSpace);
+                        return frame.Application.WhenFrame(((NestedFrame)frame).DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
+                            .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject).Equals(focusedRowObjectKey))
+                            .Merge(Observable.Defer(() => gridControl.ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements()));
+                    }))
                 .SwitchIfEmpty(frame.ProcessListViewSelectedItem())
                 .Select(detailViewFrame => (frame,detailViewFrame));
 
