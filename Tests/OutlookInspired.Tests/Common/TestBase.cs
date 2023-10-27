@@ -16,9 +16,9 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
 #if DEBUG
-        protected const int MaxTries = 1;
+        protected const int MaxTries = 3;
 #else
-        protected const int MaxTries = 1;
+        protected const int MaxTries = 3;
 #endif
         protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
         protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);

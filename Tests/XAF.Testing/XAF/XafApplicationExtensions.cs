@@ -154,12 +154,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<Unit> FilterListViews(this XafApplication application, Func<DetailView, System.Linq.Expressions.LambdaExpression, IObservable<object>> userControlSelector, 
             params System.Linq.Expressions.LambdaExpression[] expressions) 
             => application.FuseAny(expressions)
-                .Select(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
+                .SelectMany(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
                     .SelectMany(view => view.WhenControlsCreated())
                     .SelectMany(view => userControlSelector(view, expression))
                     .MergeToUnit(application.WhenListViewCreating(expression.Parameters.First().Type)
-                        .Select(t => t.e.CollectionSource).Do(collectionSourceBase => collectionSourceBase.SetCriteria(expression))))
-                .Merge();
+                        .Select(t => t.e.CollectionSource).Do(collectionSourceBase => collectionSourceBase.SetCriteria(expression))));
         
         public static IObservable<(XafApplication application, DetailViewCreatedEventArgs e)> WhenDetailViewCreated(this XafApplication application,Type objectType) 
             => application.WhenDetailViewCreated().Where(t =>objectType?.IsAssignableFrom(t.e.View.ObjectTypeInfo.Type)??true);

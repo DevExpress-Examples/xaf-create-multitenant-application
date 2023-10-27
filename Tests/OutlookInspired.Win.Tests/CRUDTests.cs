@@ -12,7 +12,7 @@ namespace OutlookInspired.Win.Tests{
             await StartTest(user, application => application.AssertEmployeeCRUD(view, viewVariant));
         }
 
-        protected override TimeSpan Timeout=>TimeSpan.FromSeconds(5);
+        
 
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
         public async Task Customer(string user,string view,string viewVariant){

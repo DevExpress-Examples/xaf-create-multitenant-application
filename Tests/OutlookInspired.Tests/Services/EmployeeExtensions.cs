@@ -19,9 +19,9 @@ namespace OutlookInspired.Tests.Services{
                     .Merge(application.ConfigureNewEmployee().To<Window>().Merge(employeeTab.To<Window>().IgnoreElements()))
                     .ReplayFirstTake()
                     .AssertEmployeeDashboardChildView(application, viewVariant)
-                    .FilterListViews(application)
                     .ToUnit();
-            });    
+            })
+                .MergeToUnit(application.WhenLoggedOn().To(application).SelectMany(xafApplication => application.FilterListViews()));    
         
         internal static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame){
             return detailViewFrame.AssertNestedEmployeeTask().IgnoreElements()
