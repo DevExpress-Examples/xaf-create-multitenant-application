@@ -5,13 +5,11 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Office.Win;
-using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.ExpressApp.ReportsV2.Win;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraMap;
 using DevExpress.XtraPdfViewer;
-using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraRichEdit;
 using XAF.Testing.RX;
@@ -113,7 +111,7 @@ namespace XAF.Testing.Win.XAF{
         
 
         public static IObservable<object> AssertWindowHasObjects(this IObservable<Frame> source)
-            => source.If(window => window.DashboardViewItems<DetailView>().Any(),window => window.Observe().WhenObjects().ToSecond()
+            => source.If(window => window.DashboardViewItems<DetailView>().Any(),window => window.Observe().WhenObjects()
                     .Assert($"{nameof(AssertWindowHasObjects)} {window.View.Id}"),
                 window => window.DashboardViewItems<ListView>().ToNowObservable().BufferUntilCompleted()
                     .SelectMany(listViews => listViews.ToNowObservable().SelectMany(listView => listView.WhenObjects().Take(1))

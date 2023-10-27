@@ -98,6 +98,7 @@ namespace XAF.Testing.XAF{
 
         public static IEnumerable<Unit> CloneExistingObjectMembers(this DetailView compositeView, object existingObject = null){
             existingObject ??= compositeView.ObjectSpace.FindObject(compositeView.ObjectTypeInfo.Type);
+            existingObject = compositeView.ObjectSpace.GetObject(existingObject);
             return compositeView.ObjectSpace.CloneableOwnMembers(compositeView.ObjectTypeInfo.Type)
                 .Do(memberInfo => compositeView.ObjectSpace.SetValue(compositeView.CurrentObject,memberInfo,  existingObject))
                 .ToArray().IgnoreElements().ToUnit();

@@ -36,7 +36,7 @@ namespace XAF.Testing.Blazor.XAF{
             
             // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
-            serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
+            serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
             serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
@@ -101,13 +101,12 @@ namespace XAF.Testing.Blazor.XAF{
     //     }
     // }
     public class FrameObjectObserver : IFrameObjectObserver{
-        IObservable<(Frame frame, object o)> IFrameObjectObserver.WhenObjects(Frame frame, int count ) 
+        IObservable<object> IFrameObjectObserver.WhenObjects(Frame frame, int count) 
             => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
-                    frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))))
-                .Select(obj => (frame, o: obj));
+                    frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))));
     }
 
-    public class ReportAssertion : IReportAssertion{
+    public class AssertReport : IAssertReport{
         public IObservable<Unit> Assert(Frame frame, string item){
             return frame.AssertReport(item).ToUnit();
         }

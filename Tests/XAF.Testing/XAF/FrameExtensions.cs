@@ -192,10 +192,10 @@ namespace XAF.Testing.XAF{
                     return variantInfo.ViewID != controller.Frame.View.Id ? controller.ChangeVariantAction.Trigger(controller.Application.WhenFrame(variantInfo.ViewID),() => choiceActionItem) : controller.Frame.Observe();
                 });
 
-        public static IObservable<(Frame frame, object o)> WhenObjects(this IObservable<Frame> source,int count=0) 
+        public static IObservable<object> WhenObjects(this IObservable<Frame> source,int count=0) 
             => source.SelectMany(frame => frame.WhenObjects(count)).Select(t => t);
 
-        public static IObservable<(Frame frame, object o)> WhenObjects(this Frame frame,int count=0) 
+        public static IObservable<object> WhenObjects(this Frame frame,int count=0) 
             => frame.Application.GetRequiredService<IFrameObjectObserver>().WhenObjects(frame,count);
 
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> ProcessSelectedObject(this IObservable<Window> source)
@@ -237,9 +237,10 @@ namespace XAF.Testing.XAF{
 
         [Obsolete("remove the take(1)")]
         public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-            => frame.View.WhenObjectViewObjects(1).Take(1)
-                .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
+            => frame.WhenObjects(1).Take(1).SelectMany(selectedObject => frame.ColumnViewCreateNewObject()
+                    .SwitchIfEmpty(frame.ListViewCreateNewObject())
+                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView()
+                        .CloneExistingObjectMembers(false, selectedObject)
                         .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
 
         internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame) 
@@ -277,7 +278,7 @@ namespace XAF.Testing.XAF{
             => ((DashboardView)listViewFrame.ViewItem.View).Views<DetailView>().First(detailView => detailView!=listViewFrame.View);
 
         public static IObservable<Frame> ProcessListViewSelectedItem(this Frame frame) 
-            => frame.View is not DashboardView ? frame.WhenObjects(1).ToSecond().Take(1).SelectMany(o => frame.ListViewProcessSelectedItem(() => o))
+            => frame.View is not DashboardView ? frame.WhenObjects(1).Take(1).SelectMany(o => frame.ListViewProcessSelectedItem(() => o))
                 : frame.DashboardViewItems(ViewType.ListView).ToNowObservable().ToFrame()
                     .SelectMany(frame1 => frame1.View.ToListView().WhenObjectViewObjects(1).Take(1)
                         .SelectMany(o => frame1.ListViewProcessSelectedItem(() => o)));

@@ -50,7 +50,7 @@ namespace XAF.Testing.XAF{
     }
 
     public interface IFrameObjectObserver{
-        IObservable<(Frame frame, object o)> WhenObjects(Frame frame, int count = 0);
+        IObservable<object> WhenObjects(Frame frame, int count = 0);
     }
 
     public interface IUserControlProvider{
@@ -66,7 +66,7 @@ namespace XAF.Testing.XAF{
     }
     
     
-    public interface IReportAssertion{
+    public interface IAssertReport{
         IObservable<Unit> Assert(Frame frame, string item);
     }
 
@@ -75,7 +75,7 @@ namespace XAF.Testing.XAF{
     }
 
 
-    public interface IMapsControlAssertion:IViewItemControlAssertion{
+    public interface IAssertMapControl:IViewItemControlAssertion{
         
     }
     public interface IViewItemControlAssertion{

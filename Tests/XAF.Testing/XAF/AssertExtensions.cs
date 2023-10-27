@@ -288,7 +288,7 @@ namespace XAF.Testing.XAF{
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
         public static IObservable<Unit> AssertReport(this XafApplication application, SingleChoiceAction action, ChoiceActionItem item) 
-            => application.GetRequiredService<IReportAssertion>().Assert(action.Controller.Frame, (item.Data ??item).ToString());
+            => application.GetRequiredService<IAssertReport>().Assert(action.Controller.Frame, (item.Data ??item).ToString());
 
         public static IObservable<Frame> AssertReports(this XafApplication application, string navigationView, string viewVariant,int reportsCount){
             // return application.AssertListView(navigationView, viewVariant, assert: _ => AssertAction.HasObject)
@@ -359,11 +359,11 @@ namespace XAF.Testing.XAF{
                 .AssertCreateSaveAndDeleteObject( assert, inlineEdit,listViewFrameSelector,caller)
                 .ReplayFirstTake();
 
-        public static IObservable<(Frame frame, object o)> AssertListViewHasObjects(this IObservable<Frame> source,[CallerMemberName]string caller="")
+        public static IObservable<object> AssertListViewHasObjects(this IObservable<Frame> source,[CallerMemberName]string caller="")
             => source.AssertObjectViewHasObjects(caller);
             
-        public static IObservable<(Frame frame, object o)> AssertObjectViewHasObjects(this IObservable<Frame> source,[CallerMemberName]string caller="")
-            => source.SelectMany(frame => frame.Observe().WhenObjects(1).Take(1).Select(t => (msg:$"{t.frame.View.Id} {t.o}", t)).Assert(t => t.msg,caller:caller)).ToSecond();
+        public static IObservable<object> AssertObjectViewHasObjects(this IObservable<Frame> source,[CallerMemberName]string caller="")
+            => source.SelectMany(frame => frame.Observe().WhenObjects(1).Take(1).Select(instance => (msg:$"{frame.View.Id} {instance}", t: instance)).Assert(t => t.msg,caller:caller)).ToSecond();
 
         public static IObservable<Frame> AssertNestedListView(this Frame detailViewFrame, Type objectType,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false, [CallerMemberName] string caller = "") 
@@ -373,7 +373,7 @@ namespace XAF.Testing.XAF{
                 .AssertListView(existingObjectDetailview, assert,inlineEdit,caller:caller);
 
 
-        public static IObservable<(Frame frame, object o)> AssertListViewHasObjects(this XafApplication application,Type objectType) 
+        public static IObservable<object> AssertListViewHasObjects(this XafApplication application,Type objectType) 
             => application.WhenFrame(objectType,ViewType.ListView).AssertListViewHasObjects()
                 .Assert($"{nameof(AssertListViewHasObjects)} {objectType.Name}");
 
@@ -384,7 +384,7 @@ namespace XAF.Testing.XAF{
                         var hasFlag = assertAction.HasFlag(AssertAction.HasObject);
                         return hasFlag;
                     },
-                frame => frame.Observe().AssertListViewHasObjects(caller)).IgnoreElements().ToFirst().To<(Frame frame, Frame parent)>()
+                frame => frame.Observe().AssertListViewHasObjects(caller)).IgnoreElements().To<(Frame frame, Frame parent)>()
                 .Concat(source).ReplayFirstTake();
         
         static AssertAction Assert(this Frame frame,Func<Frame, AssertAction> assert,AssertAction assertAction=AssertAction.All) 
@@ -410,7 +410,7 @@ namespace XAF.Testing.XAF{
                         var hasFlag = assertAction.HasFlag(AssertAction.NotHasObject);
                         return hasFlag;
                     },
-                    t => t.frame.WhenObjects().Assert(timeout: 5.Seconds()).SelectMany(t1 => new Exception($"{t1.frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>())
+                    t => t.frame.WhenObjects().Assert(timeout: 5.Seconds()).SelectMany(_ => new Exception($"{t.frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>())
                         .Catch<(Frame frame, Frame parent), TimeoutException>(_ => t.Observe()).ObserveOnContext())
                 .ReplayFirstTake();
 
@@ -462,7 +462,7 @@ namespace XAF.Testing.XAF{
                 t => t.frame.Observe().CloseWindow(t.parent).Select(frame1 => ((ITypeInfo)null,(object)null,frame1)));
 
         public static IObservable<Unit> AssertMapsControl(this DetailView detailView)
-            => detailView.ObjectSpace.GetRequiredService<IMapsControlAssertion>().Assert(detailView);
+            => detailView.ObjectSpace.GetRequiredService<IAssertMapControl>().Assert(detailView);
     }
 
     

@@ -16,7 +16,7 @@ using XAF.Testing.XAF;
 using IDataSourceChanged = XAF.Testing.XAF.IDataSourceChanged;
 
 namespace OutlookInspired.Blazor.Tests.Common{
-    public class MapControlAssertion : IMapsControlAssertion{
+    public class AssertMapControl : IAssertMapControl{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertViewItemControl<ComponentModelBase>(
                 model => model.WhenEvent(nameof(ComponentModelBase.ClientReady))

@@ -15,10 +15,10 @@ namespace OutlookInspired.Tests.Services{
             => application.AssertNavigation(view, viewVariant, source => {
                     var orderTabGroup = application.AssertTabbedGroup(typeof(Order),4);
                     return source.AssertSelectDashboardListViewObject().AssertDashboardListView(
-                             frame => Observable.Empty<Unit>(), assert:frame => frame.AssertAction())
+                             frame => orderTabGroup.AssertRootOrder(frame), assert:frame => frame.AssertAction())
                         .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake()
-                        // .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                        // .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+                        .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+                        .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
                         // .ReplayFirstTake()
                         .ToUnit();
                 },application.CanNavigate(view).ToUnit())

@@ -28,10 +28,10 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
-            serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
+            serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
-            serviceCollection.AddSingleton<IMapsControlAssertion, MapControlAsserter>();
+            serviceCollection.AddSingleton<IAssertMapControl, AssertMapControl>();
             serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
@@ -68,19 +68,18 @@ namespace XAF.Testing.Win.XAF{
             => detailView.WhenGridControl();
     }
     public class FrameObjectObserver : IFrameObjectObserver{
-        IObservable<(Frame frame, object o)> IFrameObjectObserver.WhenObjects(Frame frame, int count ) 
+        IObservable<object> IFrameObjectObserver.WhenObjects(Frame frame, int count) 
             => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
-                    frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))))
-                .Select(obj => (frame, o: obj));
+                    frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))));
     }
 
     
-    public class ReportAssertion : IReportAssertion{
+    public class AssertReport : IAssertReport{
         public IObservable<Unit> Assert(Frame frame, string item) 
             => frame.AssertReport(item).ToUnit();
     }
 
-    public class MapControlAsserter : IMapsControlAssertion{
+    public class AssertMapControl : IAssertMapControl{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertMapsControl().ToUnit();
     }

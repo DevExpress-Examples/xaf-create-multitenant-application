@@ -26,7 +26,7 @@ namespace OutlookInspired.Blazor.Tests.Common{
             });
             builder.Services.AddPlatformServices();
             builder.Services.AddSingleton<IPdfViewerAssertion,PdfViewerAssertion>();
-            builder.Services.AddSingleton<IMapsControlAssertion,MapControlAssertion>();
+            builder.Services.AddSingleton<IAssertMapControl,AssertMapControl>();
             builder.Services.AddSingleton<IAssertFilterView,AssertAssertFilterView>();
             builder.Services.AddSingleton<IFilterViewManager,FilterViewManager>();
             builder.Services.AddSingleton<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
