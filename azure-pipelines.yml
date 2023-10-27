@@ -6,14 +6,14 @@ jobs:
       dxFeedVar: '$(DXFeed)'
     strategy:
       matrix:
-        # Sales: {}
+        Sales: {}
         HumanResources: {}
-        # Support: {}
-        # Shipping: {}
-        # Engineering: {}
-        # Management: {}
-        # IT: {}
-        # Admin: {}
+        Support: {}
+        Shipping: {}
+        Engineering: {}
+        Management: {}
+        IT: {}
+        Admin: {}
     timeoutInMinutes: 30
     pool:
       vmImage: 'windows-latest'
@@ -41,7 +41,7 @@ jobs:
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
-          **\*Win*\*.Tests.dll
+          **\OutlookInspired.Win.Tests.dll
           !**\obj\**
         testFiltercriteria: TestCategory=ImportData
         diagnosticsEnabled: true
@@ -60,7 +60,7 @@ jobs:
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
-          **\*Win*\*.Tests.dll
+          **\OutlookInspired.Win.Tests.dll
           !**\obj\**
         testFiltercriteria: TestCategory=WindowsTest
         diagnosticsEnabled: true

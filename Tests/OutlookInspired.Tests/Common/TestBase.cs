@@ -75,7 +75,7 @@ namespace OutlookInspired.Tests.Common{
         protected virtual LogContext LogContext{
             get{
 #if TEST
-                return null;
+                return default;
 #else
                 return LogContext.None;
 #endif
@@ -99,10 +99,14 @@ namespace OutlookInspired.Tests.Common{
         public static IObservable<Frame> AssertOrderListView(XafApplication application,string navigationView,string viewVariant) 
             => application.AssertOrderListView( navigationView, viewVariant);
 
-        static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertEmployeeListView(navigationView, viewVariant);
+        static IObservable<Frame> AssertEmployeeListView(XafApplication application,string navigationView,string viewVariant){
+            throw new NotImplementedException();
+            // return application.AssertEmployeeListView(navigationView, viewVariant);
+        }
 
-        static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertCustomerListView(navigationView, viewVariant);
+        static IObservable<Frame> AssertCustomerListView(XafApplication application,string navigationView,string viewVariant){
+            throw new NotImplementedException();
+            // return application.AssertCustomerListView(navigationView, viewVariant);
+        }
     }
 }

@@ -10,12 +10,13 @@ namespace OutlookInspired.Win.Tests{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(WindowsTest)]
         public async Task Employee(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertEmployeeCRUD(view, viewVariant));
+            await StartTest(user, application => application.AssertEmployeeListView(view, viewVariant));
         }
 
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
+        [Category(WindowsTest)]
         public async Task Customer(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertCustomerFilters(view, viewVariant));
+            await StartTest(user, application => application.AssertCustomerListView(view, viewVariant));
         }
 
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]

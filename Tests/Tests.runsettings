@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- File name extension must be .runsettings -->
 <RunSettings>
+  <NUnit>
+    <TraceLevel>Verbose</TraceLevel>
+  </NUnit>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -33,8 +36,6 @@
             <ScreenCaptureVideo bitRate="512" frameRate="2" quality="20" />
           </MediaRecorder>
         </Configuration>
-      </DataCollector>
-      <DataCollector uri="datacollector://microsoft/SystemInfo/1.0" assemblyQualifiedName="Microsoft.VisualStudio.TestTools.DataCollection.SystemInfo.SystemInfoDataCollector, Microsoft.VisualStudio.TestTools.DataCollection.SystemInfo, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" friendlyName="System Information">
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>

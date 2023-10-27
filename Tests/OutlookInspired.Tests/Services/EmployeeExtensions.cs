@@ -1,7 +1,6 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Common;
@@ -12,7 +11,7 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
 namespace OutlookInspired.Tests.Services{
     public static class EmployeeExtensions{
-        public static IObservable<Unit> AssertEmployeeCRUD(this XafApplication application,string view, string viewVariant) 
+        public static IObservable<Unit> AssertEmployeeListView(this XafApplication application,string view, string viewVariant) 
             => application.AssertNavigation(view, viewVariant, source => {
                 var employeeTab = application.AssertTabbedGroup(typeof(Employee),2,detailView => detailView.Model.IsDefault());
                 return source.AssertDashboardMasterDetail(frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
@@ -23,14 +22,12 @@ namespace OutlookInspired.Tests.Services{
             },application.CanNavigate(view).ToUnit())
             .FilterListViews(application);    
         
-        internal static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame){
-            return Observable.Empty<Frame>();
-            return detailViewFrame.AssertNestedEmployeeTask().IgnoreElements()
+        internal static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame) 
+            => detailViewFrame.AssertNestedEmployeeTask().IgnoreElements()
                 .ConcatDefer(() => source.AssertNestedListView(detailViewFrame, typeof(Evaluation), 1, _ => Observable.Empty<Unit>(),
                     assert: frame => frame.AssertAction(detailViewFrame)))
                 .ReplayFirstTake()
                 .Select(frame => frame);
-        }
 
         static IObservable<Frame> AssertNestedEmployeeTask(this Frame detailViewFrame){
             var tabControl = detailViewFrame.Application.AssertTabbedGroup(typeof(EmployeeTask),3);
@@ -84,44 +81,44 @@ namespace OutlookInspired.Tests.Services{
                 .TakeUntil(source.DashboardViewItem(item => !item.MasterViewItem())
                     .ToFrame().ToDetailView().SelectMany(view => view.NestedListViews(typeof(EmployeeTask))).Take(1));
 
-        public static IObservable<Frame> AssertEmployeeListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
-                .If(action => action.CanNavigate(navigationView), action => action.AssertEmployeeListView( navigationView, viewVariant));
+        // public static IObservable<Frame> AssertEmployeeListView(this XafApplication application, string navigationView, string viewVariant) 
+        //     => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
+        //         .If(action => action.CanNavigate(navigationView), action => action.AssertEmployeeListView( navigationView, viewVariant));
 
-        private static IObservable<Frame> AssertEmployeeListView(this SingleChoiceAction action,string navigationView, string viewVariant){
-            var employeeTab = action.Application.AssertTabbedGroup(typeof(Employee),2,view => view.Model.IsDefault());
-            // return action.Application.AssertNavigation("test")
-                // .Catch<Frame,Exception>(exception => Observable.Throw<Frame>(exception));
-                //     .AssertSelectDashboardListViewObject()
-                //     .AssertEmployeeDashboardChildView(action.Application, viewVariant).Select(frame => frame)
-                //     .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
-                //     .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
-                // .AssertFilterAction(action.Application, filtersCount: 7, frame => frame.ClearFilter());
-            //     .FilterListViews(action.Application)
-            //     ;
-            
-            // .AssertFilterAction(action.Application,filtersCount: 7,frame => frame.ClearFilter())
-            // .Select(frame => frame);
-            // return action.Application.FilterListViews().SelectMany(application =>
-            //     application.AssertDashboardMasterDetail(navigationView, viewVariant,
-            //             existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
-            //         .Merge(action.Application.ConfigureNewEmployee().Merge(employeeTab.To<Frame>().IgnoreElements()))
-            //         .ReplayFirstTake().Select(frame => frame)
-            //         .AssertEmployeeDashboardChildView(action.Application, viewVariant).Select(frame => frame)
-            //         .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
-            //         .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
-            //         .AssertFilterAction(action.Application,filtersCount: 8,frame => frame.ClearFilter()));
-            return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
-                .Merge(action.Application.ConfigureNewEmployee().Merge(employeeTab.To<Frame>().IgnoreElements()))
-                .ReplayFirstTake()
-                .AssertEmployeeDashboardChildView(action.Application, viewVariant)
-                .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
-                .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
-                .AssertFilterAction(filtersCount: 7,action: frame => frame.ClearFilter())
-                .FilterListViews(action.Application)
-                ;
-        }
+        // private static IObservable<Frame> AssertEmployeeListView(this SingleChoiceAction action,string navigationView, string viewVariant){
+        //     var employeeTab = action.Application.AssertTabbedGroup(typeof(Employee),2,view => view.Model.IsDefault());
+        //     // return action.Application.AssertNavigation("test")
+        //         // .Catch<Frame,Exception>(exception => Observable.Throw<Frame>(exception));
+        //         //     .AssertSelectDashboardListViewObject()
+        //         //     .AssertEmployeeDashboardChildView(action.Application, viewVariant).Select(frame => frame)
+        //         //     .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
+        //         //     .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
+        //         // .AssertFilterAction(action.Application, filtersCount: 7, frame => frame.ClearFilter());
+        //     //     .FilterListViews(action.Application)
+        //     //     ;
+        //     
+        //     // .AssertFilterAction(action.Application,filtersCount: 7,frame => frame.ClearFilter())
+        //     // .Select(frame => frame);
+        //     // return action.Application.FilterListViews().SelectMany(application =>
+        //     //     application.AssertDashboardMasterDetail(navigationView, viewVariant,
+        //     //             existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
+        //     //         .Merge(action.Application.ConfigureNewEmployee().Merge(employeeTab.To<Frame>().IgnoreElements()))
+        //     //         .ReplayFirstTake().Select(frame => frame)
+        //     //         .AssertEmployeeDashboardChildView(action.Application, viewVariant).Select(frame => frame)
+        //     //         .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
+        //     //         .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
+        //     //         .AssertFilterAction(action.Application,filtersCount: 8,frame => frame.ClearFilter()));
+        //     return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
+        //             existingObjectDetailview: frame => employeeTab.AssertEmployeeDetailView(frame).ToUnit(), assert: frame => frame.AssertAction())
+        //         .Merge(action.Application.ConfigureNewEmployee().Merge(employeeTab.To<Frame>().IgnoreElements()))
+        //         .ReplayFirstTake()
+        //         .AssertEmployeeDashboardChildView(action.Application, viewVariant)
+        //         .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
+        //         .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
+        //         .AssertFilterAction(filtersCount: 7,action: frame => frame.ClearFilter())
+        //         .FilterListViews(action.Application)
+        //         ;
+        // }
 
         // private static IObservable<Frame> ConfigureNewEmployee(this XafApplication application) 
         //     => application.WhenFrame(typeof(Employee), ViewType.DetailView).Where(frame => frame.View.IsNewObject())

@@ -3,29 +3,24 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Features.Customers;
 using OutlookInspired.Tests.Common;
-using OutlookInspired.Tests.Services;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
-namespace OutlookInspired.Tests.Assert{
-    static class CustomerExtensions{
-        public static IObservable<Frame> AssertCustomerListView(this XafApplication application, string navigationView, string viewVariant) 
-            => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
-                .If(action => action.CanNavigate(navigationView), action => action.AssertCustomerListView(navigationView, viewVariant));
-
-        private static IObservable<Frame> AssertCustomerListView(this SingleChoiceAction action, string navigationView, string viewVariant){
-            var customerTabControl = action.Application.AssertTabbedGroup(typeof(Customer),5);
-            return action.Application.AssertDashboardMasterDetail(navigationView, viewVariant,
-                    existingObjectDetailview: frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
-                .Merge(customerTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
-                .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
-                .If(_ => viewVariant=="CustomerListView",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
-                .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .AssertFilterAction(filtersCount: 7)
-                .FilterListViews(action.Application);
-        }
+namespace OutlookInspired.Tests.Services{
+    public static class CustomerExtensions{
+        public static IObservable<Unit> AssertCustomerListView(this XafApplication application,string view, string viewVariant) 
+            => application.AssertNavigation(view, viewVariant, source => {
+                    var customerTabControl = application.AssertTabbedGroup(typeof(Customer),5);
+                    return source.AssertDashboardMasterDetail(
+                             frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
+                        .Merge(customerTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
+                        .If(_ => viewVariant == "CustomerListView", frame => frame.AssertDashboardViewGridControlDetailViewObjects(
+                                nameof(Customer.RecentOrders), nameof(Customer.Employees)), frame => frame.Observe())
+                        .ToUnit();
+                },application.CanNavigate(view).ToUnit())
+                .FilterListViews(application);    
+        
 
         internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,Frame frame) 
             => frame.Defer(() => source.AssertNestedCustomerEmployee(frame,1).IgnoreElements()

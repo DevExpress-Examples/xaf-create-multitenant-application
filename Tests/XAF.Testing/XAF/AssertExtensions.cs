@@ -180,7 +180,7 @@ namespace XAF.Testing.XAF{
                 .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
                         .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
                     .SelectMany(frame => assert(frame.Observe())))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync().ReplayFirstTake();
         
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this IObservable<Frame> source)
             => source.SelectMany(window => window.AssertProcessSelectedObject()).TakeAndReplay(1).RefCount();

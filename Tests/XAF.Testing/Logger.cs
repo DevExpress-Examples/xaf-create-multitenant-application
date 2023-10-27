@@ -87,8 +87,11 @@ namespace XAF.Testing{
         } 
         public static IObservable<T> Log<T>(this IObservable<T> source,LogContext logContext,
             WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false){
+            if (logContext == default){
+                return source;
+            }
             logContext.Write(inactiveMonitorLocation,alwaysOnTop);
-            return source.DoOnError(exception => Console.WriteLine(Logger.ExitSignal)).Finally(() => Console.WriteLine(Logger.ExitSignal));
+            return source.DoOnError(_ => Console.WriteLine(Logger.ExitSignal)).Finally(() => Console.WriteLine(Logger.ExitSignal));
         } 
         public static void Write(this LogContext logContext,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
             => logContext.Await(async () => Console.SetOut(await Logger.Writer(logContext,inactiveMonitorLocation,alwaysOnTop)));

@@ -153,7 +153,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<Unit> FilterListViews(this XafApplication application, Func<DetailView, System.Linq.Expressions.LambdaExpression, IObservable<object>> userControlSelector, 
             params System.Linq.Expressions.LambdaExpression[] expressions) 
-            => application.FuseAny(expressions).Where(expression => expression.Parameters.First().Type.Name=="EmployeeTask")
+            => application.FuseAny(expressions)
                 .SelectMany(expression => application.WhenDetailViewCreated(expression.Parameters.First().Type).ToDetailView()
                     .SelectMany(view => view.WhenControlsCreated())
                     .SelectMany(view => userControlSelector(view, expression))

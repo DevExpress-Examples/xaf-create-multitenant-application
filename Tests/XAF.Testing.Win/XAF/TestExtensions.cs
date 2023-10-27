@@ -9,8 +9,9 @@ using Point = System.Drawing.Point;
 
 namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
-        public static IObservable<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user,LogContext logContext) 
-            => application.Start( test, new WindowsFormsSynchronizationContext(),user);
+        public static IObservable<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user,LogContext logContext=default) 
+            => application.Start( test.Log(logContext)
+                , new WindowsFormsSynchronizationContext(),user);
 
         private static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context,string user =null) 
             => context.Observe().Do(SynchronizationContext.SetSynchronizationContext)
