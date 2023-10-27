@@ -157,6 +157,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<ListPropertyEditor> NestedListViews(this Frame frame, params Type[] objectTypes ) 
             => frame.View.ToDetailView().NestedListViews(objectTypes);
 
+        public static DetailView AsDetailView(this View view) => view as DetailView;
         public static DetailView ToDetailView(this View view) => (DetailView)view;
 
         public static IObservable<Frame> DashboardDetailViewFrame(this Frame frame) 
@@ -239,8 +240,18 @@ namespace XAF.Testing.XAF{
             => frame.Application.GetRequiredService<INewRowAdder>().AddNewRowAndCloneMembers(frame,existingObject);
 
         [Obsolete("remove the take(1)")]
-        private static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-            => frame.Application.GetRequiredService<INewObjectController>().CreateNewObjectController(frame);
+        public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
+            => frame.View.WhenObjectViewObjects(1).Take(1)
+                .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
+                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
+                        .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
+
+        internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame) 
+            => frame.View.Observe().OfType<DetailView>()
+                .SelectMany(view => view.WhenGridControl().To(frame).CreateNewObject());
+
+        public static IObservable<object> WhenGridControl(this DetailView detailView) 
+            => detailView.ObjectSpace.GetRequiredService<IUserControlProvider>().WhenGridControl(detailView);
 
         public static IObservable<Frame> CreateNewObject(this IObservable<Frame> source)
             => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
@@ -256,6 +267,8 @@ namespace XAF.Testing.XAF{
                 : frame.DashboardViewItems(ViewType.ListView).Where(item => item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide)
                     .ToFrame().ToNowObservable())
                 .CreateNewObject();
+        
+        
 
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
             => frame.Application.GetRequiredService<ISelectedObjectProcessor>().ProcessSelectedObject(frame);

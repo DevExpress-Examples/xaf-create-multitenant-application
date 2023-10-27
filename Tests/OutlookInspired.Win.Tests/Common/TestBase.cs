@@ -4,7 +4,7 @@ using DevExpress.ExpressApp.Win;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Assert;
+using OutlookInspired.Tests.Services;
 using OutlookInspired.Win.Extensions;
 using XAF.Testing;
 using XAF.Testing.RX;
@@ -16,28 +16,27 @@ namespace OutlookInspired.Win.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
-        public IObservable<Unit> StartWinTest(string user, Func<WinApplication, IObservable<Unit>> test) 
-            => Observable.FromAsync(async () => await SetupWinApplication())
+        public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test) 
+            => SetupWinApplication()
                 .SelectMany(application => application.Use(winApplication => winApplication.StartWinTest(test(winApplication),user,LogContext)));
         
-        public Task<WinApplication> SetupWinApplication() 
-            => SetupWinApplication(null,UseServer, RunInMainMonitor, UseSecuredProvider);
+        public IObservable<WinApplication> SetupWinApplication() 
+            => WinApplication().Do(application => {
+                application.Setup();
+                application.ChangeStartupState(FormWindowState.Maximized, moveToInactiveMonitor: !RunInMainMonitor);
+            });
 
-        public async Task<WinApplication> SetupWinApplication(Func<WinApplication, Task> beforeSetup = null,bool useServer=true,bool runInMainMonitor=false,bool useSecuredProvider=true){
-            var application = WinApplication(useServer, useSecuredProvider, ConnectionString);
-            application.ConnectionString = ConnectionString;
-            application.DeleteModelDiffs<OutlookInspiredEFCoreDbContext>();
-            application.SplashScreen = null;  
-            if (beforeSetup != null){
-                await beforeSetup(application);
-            }
-            application.Setup();
-            application.ChangeStartupState(FormWindowState.Maximized,moveToInactiveMonitor:!runInMainMonitor);
-            return application;
-        }
+        public IObservable<WinApplication> WinApplication() 
+            => Observable.Defer(() => {
+                var application = WinApplication(UseServer, UseSecuredProvider, ConnectionString);
+                application.ConnectionString = ConnectionString;
+                application.DeleteModelDiffs<OutlookInspiredEFCoreDbContext>();
+                application.SplashScreen = null;
+                return application.Observe();
+            });
 
         protected virtual bool RunInMainMonitor => false;
-        protected virtual bool UseSecuredProvider => false;
+        protected virtual bool UseSecuredProvider => true;
         protected virtual bool UseServer => false;
         
         private static WinApplication WinApplication(bool useServer, bool useSecuredProvider, string connectionString){
@@ -58,7 +57,7 @@ namespace OutlookInspired.Win.Tests.Common{
         [OneTimeSetUp]
         public void OneTimeSetup(){
             StopServer();
-            this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => output.Contains("Now listening on")));
+            this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => $"{output}".Contains("Now listening on")));
 #if TEST
             XAF.Testing.RX.UtilityExtensions.TimeoutInterval=TimeSpan.FromSeconds(120);
 #else

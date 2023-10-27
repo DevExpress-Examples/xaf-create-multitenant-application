@@ -9,32 +9,45 @@ using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Assert;
+using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+using IDataSourceChanged = XAF.Testing.XAF.IDataSourceChanged;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public class MapControlAssertion : IMapsControlAssertion{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertViewItemControl<ComponentModelBase>(
-                model => model.WhenEvent(nameof(ComponentModelBase.Ready))
+                model => model.WhenEvent(nameof(ComponentModelBase.ClientReady))
                 .Select(pattern => pattern).ToUnit()).ToUnit();
     }
     
     class PdfViewerAssertion:IPdfViewerAssertion{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.GetItems<PdfViewerEditor>().ToNowObservable().ControlCreated()
-                .SelectMany(editor => ((PdfModelAdapter)editor.Control).Model.WhenEvent(nameof(ComponentModelBase.Ready)).Take(1))
+                .SelectMany(editor => ((PdfModelAdapter)editor.Control).Model.WhenEvent(nameof(ComponentModelBase.ClientReady)).Take(1))
                 .Select(pattern => pattern)
                 .Assert().ToUnit();
     }
 
 
     public class FilterViewAssertion:IFilterViewAssertion{
-        public IObservable<Frame> Assert(IObservable<SingleChoiceAction> source) 
-            => source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.AllButProcess)
-                .ToSecond().IgnoreElements();
+        public IObservable<Unit> AssertCreateNew(SingleChoiceAction action){
+            // return source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.AllButProcess)
+                // .ToSecond().IgnoreElements();
+                throw new NotImplementedException();
+        }
+    }
+    class UserControlProperties:IUserControlProperties{
+        public int ObjectsCount(object control) => ((IUserControlDataSource)control).Objects.Count;
+    }
+
+    class UserControlProvider:IUserControlProvider{
+        public IObservable<object> WhenGridControl(DetailView detailView) 
+            => detailView.WhenControlViewItemControl().OfType<IUserControlDataSource>()
+                .SelectMany(source => source.WhenEvent(nameof(IUserControlDataSource.DataSourceChanged)).To(source).StartWith(source));
     }
     
     public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{

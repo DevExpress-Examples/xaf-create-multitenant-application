@@ -10,9 +10,7 @@ namespace XAF.Testing.XAF{
         int TabPages{ get; }
         void SelectTab(int pageIndex);
     }
-    public interface IObjectCountAsserter{
-        IObservable<object> AssertObjectsCount(View view, int objectsCount);
-    }
+    
 
     [Obsolete("check EmployeeExtensions not use this")]
     public interface ITabControlAsserter{
@@ -55,10 +53,14 @@ namespace XAF.Testing.XAF{
         IObservable<(Frame frame, object o)> WhenObjects(Frame frame, int count = 0);
     }
 
-    public interface INewObjectController{
-        IObservable<Frame> CreateNewObjectController(Frame frame);
+    public interface IUserControlProvider{
+        IObservable<object> WhenGridControl(DetailView detailView);
     }
 
+    public interface IUserControlProperties{
+        int ObjectsCount(object control);
+    }
+    
     public interface INewRowAdder{
         void AddNewRowAndCloneMembers(Frame frame, object existingObject);
     }

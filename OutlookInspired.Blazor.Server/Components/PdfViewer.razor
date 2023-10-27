@@ -7,7 +7,7 @@
 }
 
 @code {
-    static PdfViewer() => ExtractResource<PdfViewer>();
+    // static PdfViewer() => ExtractResource<PdfViewer>();
 
     
 
@@ -16,7 +16,7 @@
     // }
 
 
-    protected override async Task OnAfterRenderClientModuleAsync(){
+    protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
         if (ComponentModel.Bytes==null)return;
         await ClientModule.InvokeVoidAsync("addPdfLoadListener",Element, ComponentModel, ComponentModel.Bytes.ToBase64String(), ComponentModel.ToolBar ? 1 : 0);
         // await ClientModule.InvokeVoidAsync("addPdfLoadListener",ComponentModel);

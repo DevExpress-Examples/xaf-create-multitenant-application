@@ -23,7 +23,7 @@ namespace OutlookInspired.Tests.Assert{
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
                 .If(_ => viewVariant=="CustomerListView",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)),frame => frame.Observe())
                 .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .AssertFilterAction(action.Application,filtersCount:7)
+                .AssertFilterAction(filtersCount: 7)
                 .FilterListViews(action.Application);
         }
 

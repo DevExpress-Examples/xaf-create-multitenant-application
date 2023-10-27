@@ -1,12 +1,11 @@
 ﻿using System.Text.Json;
 using Aqua.EnumerableExtensions;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
-    public abstract class DevExtremeModel<TComponent>:ComponentModelBase<TComponent> where TComponent:ComponentBase{
+    public abstract class DevExtremeModel<TComponent>:ComponentModelBase<TComponent> where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
         public override void ShowMessage(JsonElement element){
             if (!element.EnumerateArray().Select(e => e.GetString()).StringJoin(", ").Contains("js.devexpress.com")) return;
             base.ShowMessage(element);
@@ -15,26 +14,42 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
 
     public abstract class DevExtremeComponent<TModel,TComponent>:ComponentBase<TModel,TComponent> where TModel:DevExtremeModel<TComponent>
         where TComponent:DevExtremeComponent<TModel,TComponent>{
+        private  const string ComponentName = "DevExtremeComponent";
         
-        
-        private  const string WwwRootPath = $"wwwroot/{JsPath}";
-        private  const string JsPath = $"js/{ComponentName}";
-        private  const string ComponentName = $"DevExtremeComponent";
-        
-        static DevExtremeComponent(){
-            using var memoryStream = new MemoryStream(Script.Bytes());
-            memoryStream.SaveToFile($"{WwwRootPath}/{ComponentName}.js");
+        protected override async Task OneTimeInitializeAsync(){
+            await base.OneTimeInitializeAsync();
+            using var memoryStream = new MemoryStream(_script.Bytes());
+            await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentName}.js");
         }
-        
+
+        protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
+            // await base.OnAfterImportClientModuleAsync(firstRender);
+            if (firstRender){
+                var devExtremeModule = await ImportResource($"{ComponentName}.js");
+                await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
+                DevExtremeModule = devExtremeModule;
+                await OnAfterImportDevExtremeModuleAsync(true);
+            }
+            else{
+                if (DevExtremeModule != null){
+                    await OnAfterImportDevExtremeModuleAsync(false);    
+                }    
+            }
+        }
+
+        protected virtual Task OnAfterImportDevExtremeModuleAsync(bool firstRender) => Task.CompletedTask;
+
         protected override async Task OnInitializedAsync(){
-            await JS.Console(ComponentModel.ShowMessage);
             await base.OnInitializedAsync();
-            var devExtremeModule = await ImportResource(JsPath,$"{ComponentName}.js");
-            await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
-            
+            await JS.Console(ComponentModel.ShowMessage);
+            // var devExtremeModule = await ImportResource($"{ComponentName}.js");
+            // await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
+            // DevExtremeModule = devExtremeModule;
         }
         
-        private const string Script = $@"
+        public IJSObjectReference DevExtremeModule { get; set; }
+
+        private readonly string _script = $@"
 
 let devExtremeInitPromise = null;
 export async function ensureDevExtremeAsync() {{
@@ -55,5 +70,7 @@ function loadDevExtreme(scriptLoader) {{
 }}
 
 ";
+
+        private bool _devExtremeModuleInit;
     }
 }

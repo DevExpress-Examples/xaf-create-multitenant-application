@@ -15,7 +15,7 @@
         public ApiKey ApiKey{ get; set; } = new();
         public string Provider{ get; set; } = "bing";
         public int Zoom{ get; set; } = 16;
-        public string Height{ get; set; } = "100%";
+        public string Height{ get; set; } = "100vh";
         public string Width{ get; set; } = "100%";
         public string Type{ get; set; } = "roadmap";
         

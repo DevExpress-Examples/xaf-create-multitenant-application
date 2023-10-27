@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components;
+using ComponentBase = Microsoft.AspNetCore.Components.ComponentBase;
 
 namespace OutlookInspired.Blazor.Server.Editors {
     public abstract class ChartListEditor<TObject,TArgument,TValue,TName,TComponent> : ListEditor where TComponent : ComponentBase{

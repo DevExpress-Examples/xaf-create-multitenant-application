@@ -30,10 +30,11 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
             serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
             // serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
-            serviceCollection.AddSingleton<IObjectCountAsserter, ObjectCountAsserter>();
+            
             // serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
-            serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
+            
+            // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
@@ -75,10 +76,10 @@ namespace XAF.Testing.Blazor.XAF{
     // }
 
     
-    public class NewObjectController : INewObjectController{
-        public IObservable<Frame> CreateNewObjectController(Frame frame) 
-            => frame.CreateNewObjectController();
-    }
+    // public class NewObjectController : INewObjectController{
+    //     public IObservable<Frame> CreateNewObjectController(Frame frame) 
+    //         => frame.CreateNewObjectController();
+    // }
     
     public class NewRowAdder : INewRowAdder{
         public void AddNewRowAndCloneMembers(Frame frame, object existingObject){
@@ -91,7 +92,14 @@ namespace XAF.Testing.Blazor.XAF{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 
             => view.SelectObject(objects);
     }
+
     
+
+    // class ControlPropertiesProperties:IControlProperties{
+    //     public int ObjectsCount(object control){
+    //         
+    //     }
+    // }
     public class FrameObjectObserver : IFrameObjectObserver{
         IObservable<(Frame frame, object o)> IFrameObjectObserver.WhenObjects(Frame frame, int count ) 
             => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
@@ -148,10 +156,6 @@ namespace XAF.Testing.Blazor.XAF{
     public class TabControlObserver:ITabControlObserver{
         public IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element) 
             => detailView.WhenTabControl(element);
-    }
-    public class ObjectCountAsserter : IObjectCountAsserter{
-        public IObservable<object> AssertObjectsCount(View view, int objectsCount) 
-            => view.AssertObjectsCount(objectsCount);
     }
 
     class TabControlAsserter:ITabControlAsserter{

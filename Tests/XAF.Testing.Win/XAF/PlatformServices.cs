@@ -4,12 +4,12 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
+using DevExpress.XtraGrid;
 using DevExpress.XtraLayout;
 using Microsoft.Extensions.DependencyInjection;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
-using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.Win.XAF{
     public static class PlatformImplementations{
@@ -22,10 +22,11 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
             serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
             serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
-            serviceCollection.AddSingleton<IObjectCountAsserter, ObjectCountAsserter>();
             serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
+            serviceCollection.AddSingleton<IUserControlProvider, UserControlProvider>();
+            serviceCollection.AddSingleton<IUserControlProperties, UserControlProperties>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
-            serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
+            // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IReportAssertion, ReportAssertion>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
@@ -44,10 +45,10 @@ namespace XAF.Testing.Win.XAF{
             => item.Observe().SelectDashboardColumnViewObject().ToUnit();
     }
 
-    public class NewObjectController : INewObjectController{
-        public IObservable<Frame> CreateNewObjectController(Frame frame) 
-            => frame.CreateNewObjectController();
-    }
+    // public class NewObjectController : INewObjectController{
+    //     public IObservable<Frame> CreateNewObjectController(Frame frame) 
+    //         => frame.CreateNewObjectController();
+    // }
     
     public class NewRowAdder : INewRowAdder{
         public void AddNewRowAndCloneMembers(Frame frame, object existingObject) 
@@ -58,7 +59,14 @@ namespace XAF.Testing.Win.XAF{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 
             => view.SelectObject(objects);
     }
-    
+    class UserControlProperties:IUserControlProperties{
+        public int ObjectsCount(object control) => ((GridControl)control).MainView.DataRowCount;
+    }
+
+    class UserControlProvider:IUserControlProvider{
+        public IObservable<object> WhenGridControl(DetailView detailView) 
+            => detailView.WhenGridControl();
+    }
     public class FrameObjectObserver : IFrameObjectObserver{
         IObservable<(Frame frame, object o)> IFrameObjectObserver.WhenObjects(Frame frame, int count ) 
             => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
@@ -119,10 +127,6 @@ namespace XAF.Testing.Win.XAF{
     public class TabControlObserver:ITabControlObserver{
         public IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element) 
             => detailView.WhenTabControl(element);
-    }
-    public class ObjectCountAsserter : IObjectCountAsserter{
-        public IObservable<object> AssertObjectsCount(View view, int objectsCount) 
-            => view.AssertObjectsCount(objectsCount);
     }
 
     class TabControlAsserter:ITabControlAsserter{

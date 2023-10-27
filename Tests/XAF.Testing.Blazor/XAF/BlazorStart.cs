@@ -41,10 +41,10 @@ namespace XAF.Testing.Blazor.XAF{
         }
 
         public static TStartup Use<TStartup,TDBContext>(this WebHostBuilderContext context,
-            Func<BlazorApplication, IObservable<Unit>> test,string user, ISubject<Unit> whenCompleted,WindowPosition inactiveMonitorLocation=WindowPosition.None) where TStartup:IApplicationStartup where TDBContext:DbContext{
+            Func<BlazorApplication, IObservable<Unit>> test,string user, ISubject<Unit> whenCompleted,string browser,WindowPosition inactiveMonitorLocation=WindowPosition.None) where TStartup:IApplicationStartup where TDBContext:DbContext{
             var startup = (IApplicationStartup)typeof(TStartup).CreateInstance(context.Configuration);
             startup.User=user;
-            new Uri(context.Configuration["Urls"]).Start()
+            new Uri(context.Configuration["Urls"]).Start(browser)
                 .MergeIgnored(process => whenCompleted.Catch<Unit,Exception>(_ => Unit.Default.Observe().Do(_ => process.Kill())))
                 .Do(process => process.MoveToInactiveMonitor(inactiveMonitorLocation))
                 .SelectMany(process => startup.WhenApplication

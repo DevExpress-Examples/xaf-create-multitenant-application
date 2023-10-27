@@ -19,17 +19,18 @@ namespace XAF.Testing.Blazor.XAF{
             return Observable.Empty<object>();
             // return frame.WhenGridControl().ToFirst().WhenObjects(count).Take(1);
         }
+        //
         
-        public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-            => frame.View.WhenObjectViewObjects(1).Take(1)
-                .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-                    .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
-                        .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
+        // public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
+        //     => frame.View.WhenObjectViewObjects(1).Take(1)
+        //         .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
+        //             .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
+        //                 .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
 
-        internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame){
-            // return frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
-            return Observable.Empty<Frame>();
-        }
+        // internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame){
+        //     // return frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
+        //     return Observable.Empty<Frame>();
+        // }
 
 
         public static IObservable<Frame> AssertReport(this Frame frame,[CallerMemberName]string caller="") 

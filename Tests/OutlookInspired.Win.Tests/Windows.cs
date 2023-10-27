@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using NUnit.Framework;
+using XAF.Testing.RX;
 using XAF.Testing.Win.XAF;
 using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
@@ -17,11 +18,11 @@ namespace OutlookInspired.Win.Tests{
         [TestCaseSource(nameof(TestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
-            using var application = await SetupWinApplication(useServer:false,runInMainMonitor:false);
-            
-            await application.StartWinTest(assert(application,navigationView, viewVariant),user,LogContext);
+            await SetupWinApplication().SelectMany(winApplication => winApplication.Use(_ =>
+                winApplication.StartWinTest(assert(winApplication, navigationView, viewVariant), user, LogContext)));
         }
 
-        
+        protected override bool UseServer => false;
+        protected override bool UseSecuredProvider => false;
     }
 }

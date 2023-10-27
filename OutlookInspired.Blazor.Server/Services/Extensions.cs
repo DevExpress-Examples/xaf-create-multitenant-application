@@ -15,11 +15,26 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services{
     internal static class Extensions{
-        public static async Task<string> ModalBodyHeight(this IJSRuntime js){
+        public static async Task<string> ModalBodyHeight(this IJSRuntime js)
+        {
             await js.EvalAsync(@"window.getClientHeight = (element) => {
-    return document.querySelector(element).closest('.dxbl-modal-body').clientHeight;
-};");
-            return $"{await js.InvokeAsync<double>("getClientHeight", ".dxbl-modal-body")}";
+        const startTime = new Date().getTime();
+        let elem = null;
+        let clientHeight = null;
+
+        while (new Date().getTime() - startTime < 1000) {
+            elem = document.querySelector(element);
+            if (elem) {
+                clientHeight = elem.closest('.dxbl-modal-body')?.clientHeight;
+                if (clientHeight) break;
+            }
+        }
+
+        return clientHeight;
+    };");
+
+            var result = await js.InvokeAsync<object>("getClientHeight", ".dxbl-modal-body");
+            return result?.ToString();
         }
 
         public static Task MaybeInvokeAsync<T>(this EventCallback<T> eventCallback, T value) 

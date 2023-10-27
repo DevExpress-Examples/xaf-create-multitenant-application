@@ -12,6 +12,7 @@ namespace OutlookInspired.Tests.Services{
             => application.AssertNavigation(view, viewVariant,source => source.AssertSelectDashboardListViewObject()
                 .Select(frame => frame)
                 .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject)).ToUnit());
+        
 
         public static IObservable<Unit> AssertCustomerMaps(this XafApplication application,string view, string viewVariant) 
             => application.AssertNavigation(view, viewVariant,source => source.AssertSelectDashboardListViewObject()

@@ -29,7 +29,7 @@ namespace OutlookInspired.Tests.Services{
                 
                 
                 .Select(frame => frame)
-                .AssertFilterAction(action.Application,filtersCount: 7)
+                .AssertFilterAction(filtersCount: 7)
                 .FilterListViews(action.Application);
         }
 

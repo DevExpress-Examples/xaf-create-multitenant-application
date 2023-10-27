@@ -4,6 +4,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
+using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.ExpressApp.Win.Layout;
 using DevExpress.XtraGrid;
@@ -15,6 +16,9 @@ using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.Win.XAF{
     public static class ViewExtensions{
+        public static IObservable<GridControl> WhenGridControl(this DetailView detailView) 
+            => detailView.WhenControlViewItemGridControl().SelectMany(control => control.WhenDataSourceChanged().To(control).StartWith(control));
+
         public static IObservable<T> SelectObject<T>(this ListView view, params T[] objects) where T : class => view.Defer(() => {
                 var gridView = (view.Editor as GridListEditor)?.GridView;
                 if (gridView == null)

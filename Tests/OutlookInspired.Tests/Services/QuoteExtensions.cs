@@ -17,7 +17,7 @@ namespace OutlookInspired.Tests.Services{
         private static IObservable<Frame> AssertOpportunitiesView(this SingleChoiceAction action, string navigationView, string viewVariant){
             return action.Application.AssertDashboardListView(navigationView, viewVariant, listViewFrameSelector: item => item.MasterViewItem())
                 .AssertMapItAction(typeof(Quote))
-                .AssertFilterAction(action.Application,filtersCount:5)
+                .AssertFilterAction(filtersCount: 5)
                 .CloseWindow(null)
                 .ConcatDefer(() => action.Application.AssertDashboardListView(navigationView, viewVariant,
                     listViewFrameSelector: item => !item.MasterViewItem(), assert: _ => AssertAction.HasObject))

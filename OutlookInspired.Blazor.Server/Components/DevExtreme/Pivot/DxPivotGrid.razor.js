@@ -23,6 +23,9 @@ function PivotCellProgressBar(model) {
     };
 }
 
+export async function SetPivotGridSource(dxPivot, model) {
+    dxPivot.option("dataSource",model.options.dataSource)
+}
 export async function PivotGridInit(element, model) {
     PivotCellProgressBar(model);
     return new DevExpress.ui.dxPivotGrid(element, model.options);

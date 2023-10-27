@@ -1,9 +1,16 @@
 ﻿@inherits DevExtremeComponent<DxPivotGridModel,DxPivotGrid>
     <div @ref=@Element ></div>
 @code {
-    static DxPivotGrid() => ExtractResource<DxPivotGrid>();
-    
-    protected override async Task OnAfterRenderClientModuleAsync() 
-        => ClientObject = await ClientModule.InvokeAsync<IJSObjectReference>("PivotGridInit", Element, ComponentModel);
+    // static DxPivotGrid() => ExtractResource<DxPivotGrid>();
+
+    protected override async Task OnAfterImportDevExtremeModuleAsync(bool firstRender){
+        if (firstRender){
+            ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("PivotGridInit", Element, ComponentModel);
+        }
+        
+        if (ClientObject != null){
+            await ClientModule.InvokeAsync<IJSObjectReference>("SetPivotGridSource", ClientObject, ComponentModel);
+        }
+    }
 
 }

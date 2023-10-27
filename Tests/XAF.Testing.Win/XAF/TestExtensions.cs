@@ -1,6 +1,5 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Map.Kml.Model;
@@ -11,39 +10,17 @@ using Point = System.Drawing.Point;
 namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
         public static IObservable<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user,LogContext logContext) 
-            => application.Start( test.Log(logContext,WindowPosition.BottomRight,true), new WindowsFormsSynchronizationContext(),user);
+            => application.Start( test, new WindowsFormsSynchronizationContext(),user);
 
         private static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context,string user =null) 
-            => application.Start(Tracing.WhenError().ThrowTestException()
-                .DoOnError(_ => application.Terminate(context)).To<T>()
-                .Merge(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
-                    .Merge(application.WhenFrameCreated().Take(1)
-                        .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
-                        .IgnoreElements().To<T>())
-                    .Merge(test.BufferUntilCompleted().Do(_ => application.Terminate(context)).SelectMany())
-                    .Merge(application.ThrowWhenHandledExceptions().To<T>())
-                    .LogError()
-                )
-            );
-        // private static TestObserver<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context,string user =null) 
-        //     => application.Start(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
-        //         .Merge(application.WhenFrameCreated().Take(1)
-        //             .Do(_ => SynchronizationContext.SetSynchronizationContext(context))
-        //             .IgnoreElements().To<T>())
-        //         .Merge(test.BufferUntilCompleted().Do(_ => application.Terminate()).SelectMany())
-        //         .Merge(application.ThrowWhenHandledExceptions().To<T>())
-        //         .Catch<T, Exception>(exception => {
-        //             MoveActiveWindowToMainMonitor();
-        //             exception=exception.ToTestException();
-        //             context.Send(_ => application.Terminate(),null);
-        //             return Observable.Throw<T>(exception);
-        //         })
-        //     );
+            => context.Observe().Do(SynchronizationContext.SetSynchronizationContext)
+                .SelectMany(_ => application.Start(Tracing.WhenError().ThrowTestException().DoOnError(_ => application.Terminate(context)).To<T>()
+                    .Merge(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
+                        .Merge(test.DoOnComplete(() => application.Terminate(context)))
+                        .Merge(application.ThrowWhenHandledExceptions().To<T>()).LogError())));
 
-        private static void Terminate(this XafApplication application, SynchronizationContext context){
-            // Console.WriteLine(Logger.ExitSignal);
-            context.Post(_ => application.Exit(),null);
-        }
+        private static void Terminate(this XafApplication application, SynchronizationContext context) 
+            => context.Post(_ => application.Exit(),null);
 
         public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 
             => source.Do( form => form.Handle.UseInactiveMonitorBounds(bounds => {
@@ -61,14 +38,14 @@ namespace XAF.Testing.Win.XAF{
         
         public static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test){
             var exitSignal = new Subject<Unit>();
-            return test.Merge(application.Observe().Do(winApplication => winApplication.Start()).Do(_ => exitSignal.OnNext())
+            return test.Merge(application.Defer(() => application.Observe().Do(winApplication => winApplication.Start()).Do(_ => exitSignal.OnNext())
                     .Select(winApplication => winApplication)
                     .Finally(() => { })
                     .Catch<XafApplication, Exception>(exception => {
                         DevExpress.Persistent.Base.Tracing.Tracer.LogError(exception);
                         return Observable.Empty<XafApplication>();
                     }).IgnoreElements()
-                    .To<T>())
+                    .To<T>()))
                 .TakeUntil(exitSignal);
         }
     }

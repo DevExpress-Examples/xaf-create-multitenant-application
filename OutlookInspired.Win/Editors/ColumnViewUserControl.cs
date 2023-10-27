@@ -38,13 +38,13 @@ namespace OutlookInspired.Win.Editors
             _objectSpace = (EFCoreObjectSpace)objectSpace;
             ColumnView = this.ColumnView();
             
-            ColumnView.SelectionChanged += (_, _) => {
+            ColumnView.FocusedRowObjectChanged += (_, _) => {
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 CurrentObjectChanged?.Invoke(this, EventArgs.Empty);
             };
             ColumnView.DoubleClick += (_, _) => {
-                if (ColumnView.IsNotGroupedRow())
-                    ProcessObject?.Invoke(this, EventArgs.Empty);
+                if (!ColumnView.IsNotGroupedRow()) return;
+                ProcessObject?.Invoke(this, EventArgs.Empty);
             };
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();
@@ -52,9 +52,10 @@ namespace OutlookInspired.Win.Editors
             application.ProtectDetailViews(ColumnView.GridControl,ObjectType);
         }
 
-        public override void Refresh()
-            => ColumnView.GridControl.DataSource =
+        public override void Refresh(){
+            ColumnView.GridControl.DataSource =
                 (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
+        }
 
         public virtual Type ObjectType => throw new NotImplementedException();
 

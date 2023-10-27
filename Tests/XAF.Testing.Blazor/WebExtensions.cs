@@ -17,10 +17,10 @@ public static class WebExtensions{
         => source.WhenCallback<TMemberValue>(callbackName.MemberExpressionName());
     
 
-    public static IObservable<Process> Start(this Uri uri) 
+    public static IObservable<Process> Start(this Uri uri,string browser) 
         => new ProcessStartInfo{
-            FileName = "chrome",
-            Arguments = $"--user-data-dir={CreateTempProfilePath("chrome")} {uri}",
+            FileName = browser,
+            Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} {uri}",
             UseShellExecute = true
         }.Start().Observe().Delay(TimeSpan.FromSeconds(1));
 

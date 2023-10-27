@@ -21,8 +21,9 @@ namespace XAF.Testing.XAF{
         
         public static T View<T>(this ActionBase actionBase) where T : View => actionBase.Controller.Frame?.View as T;
         public static View View(this ActionBase actionBase) => actionBase.View<View>();
-        public static IObservable<ItemsChangedEventArgs> WhenItemsChanged(this SingleChoiceAction action) 
-            => action.WhenEvent<ItemsChangedEventArgs>(nameof(SingleChoiceAction.ItemsChanged)).TakeUntil(action.WhenDisposed());
+        public static IObservable<ItemsChangedEventArgs> WhenItemsChanged(this SingleChoiceAction action,ChoiceActionItemChangesType? changesType=null) 
+            => action.WhenEvent<ItemsChangedEventArgs>(nameof(SingleChoiceAction.ItemsChanged))
+                .Where(e =>changesType==null||e.ChangedItemsInfo.Any(pair => pair.Value==changesType) ).TakeUntil(action.WhenDisposed());
 
         public static Frame Frame(this ActionBase action) => action.Controller?.Frame;
         public static IEnumerable<ChoiceActionItem> Items<T>(this SingleChoiceAction action)

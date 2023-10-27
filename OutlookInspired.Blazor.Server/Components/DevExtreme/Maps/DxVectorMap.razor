@@ -6,21 +6,21 @@
 <div @ref=@Element ></div>
 
 @code {
-    static DxVectorMap() => ExtractResource<DxVectorMap>();
+    // static DxVectorMap() => ExtractResource<DxVectorMap>();
     private DotNetObjectReference<JsInterop> _itemSelected;
     protected override async Task OnInitializedAsync(){
         await base.OnInitializedAsync();
         _itemSelected = new JsInterop(element =>ComponentModel.SelectMapItem(element)).DotNetReference();
     }
     
-    protected override async Task OnAfterRenderClientModuleAsync(){
-        await base.OnAfterRenderClientModuleAsync();
+    protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
+        if (firstRender){
+            ClientObject ??= await CreateClient();
+        }
         if (ComponentModel.Redraw){
             ComponentModel.Redraw = false;
-            await ClientObject.DisposeAsync();
-            ClientObject = null;
+            ClientObject = await CreateClient();
         }
-        ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("InitVectorMap", Element, ComponentModel,_itemSelected);
         var layer = ComponentModel.LayerDatasource;
         if (layer!=null){
             ComponentModel.LayerDatasource = null;
@@ -28,5 +28,8 @@
         }
         
     }
+
+    private async Task<IJSObjectReference> CreateClient() 
+        => await ClientModule.InvokeAsync<IJSObjectReference>("InitVectorMap", Element, ComponentModel, _itemSelected);
 
 }

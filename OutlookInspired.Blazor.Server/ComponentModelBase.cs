@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor;
@@ -14,30 +15,36 @@ namespace OutlookInspired.Blazor.Server{
     }
 
     public abstract class ComponentModelBase:DevExpress.ExpressApp.Blazor.Components.Models.ComponentModelBase,IComplexControl{
-        private XafApplication _application;
-        public void Setup(IObjectSpace objectSpace, XafApplication application) => _application=application;
+        protected XafApplication Application;
+        protected IObjectSpace ObjectSpace;
+        [JsonIgnore]
+        public Action Update { get; set; } 
+        public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
+            Application = application;
+            ObjectSpace = objectSpace;
+        }
+
         public virtual void ShowMessage(JsonElement element){
             var text = element.EnumerateArray().Select(e => e.GetString()).StringJoin(", ");
             if (text.StartsWith("W")){
-                _application.ShowViewStrategy.ShowMessage(text,InformationType.Warning,10000);
+                Application.ShowViewStrategy.ShowMessage(text,InformationType.Warning,10000);
                 Tracing.Tracer.LogWarning(text);
             }
             else{
-                _application.ShowViewStrategy.ShowMessage(text,InformationType.Error,60000);
+                Application.ShowViewStrategy.ShowMessage(text,InformationType.Error,60000);
                 Tracing.Tracer.LogError(text);
             }
         }
         
+        public virtual void Refresh(){ }
+        public event EventHandler ClientReady;
+        
+        protected ComponentModelBase() => ReadyReference = new JsInterop(OnClientReady).DotNetReference();
 
-        public void Refresh(){ }
-        public event EventHandler Ready;
-
-        protected ComponentModelBase() => ReadyReference = new JsInterop(OnReady).DotNetReference();
-
-        protected virtual void OnReady() => Ready?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnClientReady() => ClientReady?.Invoke(this, EventArgs.Empty);
 
         public DotNetObjectReference<JsInterop> ReadyReference{ get;  } 
 
-        private void OnReady(JsonElement obj) => OnReady();
+        private void OnClientReady(JsonElement obj) => OnClientReady();
     }
 }

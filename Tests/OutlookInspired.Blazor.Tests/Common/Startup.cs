@@ -3,6 +3,7 @@ using System.Reactive.Subjects;
 using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
 using OutlookInspired.Tests.Assert;
+using OutlookInspired.Tests.Services;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.XAF;
 
@@ -29,6 +30,8 @@ namespace OutlookInspired.Blazor.Tests.Common{
             builder.Services.AddSingleton<IMapsControlAssertion,MapControlAssertion>();
             builder.Services.AddSingleton<IFilterViewAssertion,FilterViewAssertion>();
             builder.Services.AddSingleton<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
+            builder.Services.AddSingleton<IUserControlProvider, UserControlProvider>();
+            builder.Services.AddSingleton<IUserControlProperties, UserControlProperties>();
             
         }
     }

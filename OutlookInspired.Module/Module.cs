@@ -62,7 +62,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
 	    => new []{
-		    typeof(MailMergeController),typeof(ReportController),typeof(ChildViewCriteriaController),typeof(HideToolBarController),
+		    typeof(MailMergeController),typeof(ReportController),typeof(QuoteMapItemController),typeof(HideToolBarController),
 		    typeof(CommunicationController),typeof(RoutePointController), typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),

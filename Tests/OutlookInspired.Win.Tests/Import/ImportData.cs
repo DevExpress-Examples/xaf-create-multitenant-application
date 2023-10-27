@@ -13,11 +13,9 @@ namespace OutlookInspired.Win.Tests.Import{
         [Test]
         public async Task Test(){
             
-            using var application = await SetupWinApplication(application => {
-                application.Security = null;
-                return application.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
-            },useServer:false,useSecuredProvider:false);
-            
+            using var application = await WinApplication();
+            await application.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
+            application.Setup();
             
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
             await objectSpace.ImportFromSqlLite();
@@ -45,6 +43,7 @@ namespace OutlookInspired.Win.Tests.Import{
             // objectSpace.GenerateOrders();
         }
 
-        
+        protected override bool UseServer => false;
+        protected override bool UseSecuredProvider => false;
     }
 }

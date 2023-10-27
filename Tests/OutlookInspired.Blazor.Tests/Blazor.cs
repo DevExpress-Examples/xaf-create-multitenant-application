@@ -19,7 +19,7 @@ namespace OutlookInspired.Blazor.Tests{
         [TestCaseSource(nameof(BlazorTestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
-            await StartBlazorTest(user, application => assert(application, navigationView, viewVariant).ToUnit());
+            await StartTest(user, application => assert(application, navigationView, viewVariant).ToUnit());
         }
 
 

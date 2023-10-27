@@ -6,8 +6,13 @@
     [Parameter]
     public DxMapModel ComponentModel { get; set; }
 
-    private async Task UpdateHeight() 
-        => ComponentModel.Options.Height = await JS.ModalBodyHeight();
+    private async Task UpdateHeight(){
+        
+    }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender){
+        if (!firstRender)return;
+        ComponentModel.Options.Height = await JS.ModalBodyHeight();
+    }
 
 }

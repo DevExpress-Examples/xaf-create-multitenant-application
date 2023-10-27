@@ -85,17 +85,18 @@ namespace OutlookInspired.Module.Services.Internal{
         public static string ImageName(this Enum @enum) 
             => ImageLoader.Instance.GetEnumValueImageName(@enum);
         
-        public static void SaveToFile(this Stream stream, string filePath,bool append=false) {
+        public static async Task SaveToFileAsync(this Stream stream, string filePath,bool append=false) {
             var directory = Path.GetDirectoryName(filePath) + "";
             if (!Directory.Exists(directory)) {
                 Directory.CreateDirectory(directory);
             }
-            using var fileStream = File.OpenWrite(filePath);
+
+            await using var fileStream = File.OpenWrite(filePath);
             if (!append){
                 fileStream.SetLength(0);    
             }
             
-            stream.CopyTo(fileStream);
+            await stream.CopyToAsync(fileStream);
         }
         public static async Task Execute(this object component, 
             Func<Task<bool>> condition, Func<Task> logic){

@@ -21,7 +21,7 @@ namespace OutlookInspired.Tests.Assert{
                 .Merge(productTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
                 .AssertDashboardViewReportsAction(ReportController.ReportActionId, reportsCount: singleChoiceAction => singleChoiceAction.AssertReportActionItems())
                 .AssertMapItAction(typeof(Product), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject))
-                .AssertFilterAction(action.Application,filtersCount:9)
+                .AssertFilterAction(filtersCount: 9)
                 .FilterListViews(action.Application);
         }
 

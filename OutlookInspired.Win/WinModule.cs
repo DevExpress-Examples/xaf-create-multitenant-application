@@ -32,7 +32,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
         => new[]{
             typeof(RemoveMenuItemController), typeof(SchedulerResourceDeletingController),typeof(MapsViewController),
             typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
-            typeof(WinMapsController),typeof(PaletteEntriesController),
+            typeof(WinMapsController),typeof(PaletteEntriesController),typeof(QuoteMapItemController),
             typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
         };

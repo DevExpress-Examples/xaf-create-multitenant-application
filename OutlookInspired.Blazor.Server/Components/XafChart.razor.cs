@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
 
 namespace OutlookInspired.Blazor.Server.Components {
-    public class ChartModel<TObject,TArgument,TValue,TName,TComponent>:ComponentModelBase,IComponentContentHolder where TComponent:ComponentBase{
+    public class ChartModel<TObject,TArgument,TValue,TName,TComponent>:ComponentModelBase,IComponentContentHolder where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
         public IEnumerable<TObject> Data{
             get => GetPropertyValue<IEnumerable<TObject>>();
             set => SetPropertyValue(value);

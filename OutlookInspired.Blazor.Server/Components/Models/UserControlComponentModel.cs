@@ -13,31 +13,41 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
         IList Objects { get; }
         void SelectObject(object value);
     }
-    public abstract class UserControlComponentModel<T>:UserControlComponentModel,ISelectableModel{
+
+    public interface IUserControlDataSource{
+        event EventHandler DataSourceChanged;
+        IList Objects { get; }
+    }
+
+    public abstract class UserControlComponentModel<T>:UserControlComponentModel,ISelectableModel, IUserControlDataSource{
         IList ISelectableModel.Objects => Objects;
+        IList IUserControlDataSource.Objects => Objects;
         void ISelectableModel.SelectObject(object value) => SelectObject((T)value);
 
         public List<T> Objects{
             get => GetPropertyValue<List<T>>();
-            set => SetPropertyValue(value);
+            set{
+                SetPropertyValue(value);
+                OnDataSourceChanged();
+            }
         }
+
+        public event EventHandler DataSourceChanged;
+
         public void SelectObject(T value) => OnObjectSelected(new SelectObjectEventArgs(value));
         public override void Refresh() => Objects = ObjectSpace.GetObjects<T>(Criteria).ToList();
         public override Type ObjectType => typeof(T);
+
+        protected virtual void OnDataSourceChanged() => DataSourceChanged?.Invoke(this, EventArgs.Empty);
     }
     public abstract class UserControlComponentModel:ComponentModelBase,IComponentContentHolder,IUserControl{
         private IList _selectedObjects = new List<object>();
-
         public CriteriaOperator Criteria{ get; private set; }
-
         public event AsyncEventHandler<SelectObjectEventArgs> ObjectSelected; 
-        
-        public IObjectSpace ObjectSpace{ get; private set; }
-
         public abstract RenderFragment ComponentContent{ get; }
         public virtual object CurrentObject => SelectedObjects.Cast<object>().FirstOrDefault();
-        public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
-            ObjectSpace = objectSpace;
+        public override void Setup(IObjectSpace objectSpace, XafApplication application){
+            base.Setup(objectSpace, application);
             Refresh();
         }
 
@@ -56,16 +66,16 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionTypeChanged;
 
-        public virtual void Refresh(){ }
-
-        public virtual void Refresh(object currentObject) => throw new NotImplementedException();
+        public virtual void Refresh(object currentObject) => Refresh();
 
         public event EventHandler ProcessObject;
+        public event EventHandler CriteriaChanged;
         public void SetCriteria<T>(Expression<Func<T, bool>> lambda) 
             => SetCriteria((LambdaExpression)lambda);
 
         public virtual void SetCriteria(string criteria){
             Criteria = CriteriaOperator.Parse(criteria);
+            OnCriteriaChanged();
             Refresh();
         }
 
@@ -90,6 +100,8 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
 
         protected virtual void OnObjectSelected(SelectObjectEventArgs e) => ObjectSelected?.Invoke(this, e);
+
+        protected virtual void OnCriteriaChanged() => CriteriaChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public class SelectObjectEventArgs:EventArgs{

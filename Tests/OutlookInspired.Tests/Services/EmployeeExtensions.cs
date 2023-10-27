@@ -48,7 +48,7 @@ namespace OutlookInspired.Tests.Services{
                 .AssertEmployeeDashboardChildView(action.Application, viewVariant)
                 .AssertMapItAction(typeof(Employee), frame => frame.AssertNestedListView(typeof(RoutePoint), assert: _ => AssertAction.HasObject))
                 .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems())
-                .AssertFilterAction(action.Application,filtersCount: 7,frame => frame.ClearFilter())
+                .AssertFilterAction(filtersCount: 7,action: frame => frame.ClearFilter())
                 .FilterListViews(action.Application)
                 ;
         }

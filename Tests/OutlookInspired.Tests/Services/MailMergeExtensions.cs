@@ -1,0 +1,13 @@
+﻿using System.Reactive;
+using DevExpress.ExpressApp;
+using OutlookInspired.Module.Features.Customers;
+using XAF.Testing.RX;
+using XAF.Testing.XAF;
+
+namespace OutlookInspired.Tests.Services{
+    public static class MailMergeExtensions{
+        public static IObservable<Unit> AssertEmployeeMailMerge(this XafApplication application,string view, string viewVariant) 
+            => application.AssertNavigation(view, viewVariant, source => source.AssertSelectDashboardListViewObject()
+                .AssertDashboardViewShowInDocumentAction(choiceAction => choiceAction.AssertDashboardViewShowInDocumentActionItems()).ToUnit());
+    }
+}

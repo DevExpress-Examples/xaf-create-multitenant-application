@@ -10,7 +10,10 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
             var dataSource = Objects.Select(item => new{item.Value,item.Name}).Cast<object>().ToArray();
             ComponentModel.Options.DataSource = dataSource;
             ComponentModel.Options.PaletteData = dataSource.Length.DistinctColors().Select((color, i) => ( color,stage:(Stage)i)).ToArray();
+            ComponentModel.Update?.Invoke();
         }
+
+        public override void Refresh(object currentObject){ }
 
         public override Components.DevExtreme.Charts.DxFunnelModel ComponentModel{ get; } = new(){
             Options ={

@@ -1,8 +1,9 @@
-﻿using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
+﻿using DevExpress.ExpressApp.Actions;
+using DevExpress.Map.Kml.Model;
+using Unit = System.Reactive.Unit;
 
-namespace OutlookInspired.Tests.Assert{
+namespace OutlookInspired.Tests.Services{
     public interface IFilterViewAssertion{
-        IObservable<Frame> Assert(IObservable<SingleChoiceAction> source);
+        IObservable<Unit> AssertCreateNew(SingleChoiceAction action);
     }
 }

@@ -3,6 +3,7 @@
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Charts{
     public class DxFunnelModel : DevExtremeModel<DxFunnel>{
         public FunnelChartOptions Options{ get; } = new();
+        
     }
 
     public class FunnelChartOptions{

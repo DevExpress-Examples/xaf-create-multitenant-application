@@ -60,7 +60,7 @@ namespace XAF.Testing{
 
             process.StartWithEvents();
 
-            await process.WhenOutputDataReceived().TakeFirst(outputReceived);
+            await process.WhenOutputDataReceived().Where(outputReceived).Take(1).FirstOrDefaultAsync();
         }
 
     }
