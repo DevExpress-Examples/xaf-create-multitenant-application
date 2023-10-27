@@ -1,7 +1,9 @@
 ﻿using System.Reactive.Linq;
+using Humanizer;
 using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
+using XAF.Testing.RX;
 using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{

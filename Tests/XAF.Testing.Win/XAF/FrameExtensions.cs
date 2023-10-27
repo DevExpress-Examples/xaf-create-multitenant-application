@@ -36,7 +36,7 @@ namespace XAF.Testing.Win.XAF{
                             .Equals(((ColumnView)gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace)))
                         .Merge(Observable.Defer(() => gridControl.ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements()))))
                 .SwitchIfEmpty(frame.ProcessListViewSelectedItem())
-                .Select(detailViewFrame => (detailViewFrame,frame));
+                .Select(detailViewFrame => (frame,detailViewFrame));
 
         public static IObservable<object> WhenColumnViewObjects(this Frame frame,int count=0) 
             => frame.View.Observe().OfType<DetailView>().SelectMany(detailView => detailView.WhenGridControl().WhenObjects(count).Take(1));

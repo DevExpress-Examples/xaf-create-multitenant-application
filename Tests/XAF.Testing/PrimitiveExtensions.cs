@@ -40,6 +40,13 @@ namespace XAF.Testing{
             process.MainWindowHandle.AlwaysOnTop(alwaysOnTop);
             return process;
         }
+        public static void WriteSection(this string text){
+            var dashCount = text.Length + 12; 
+            var dashes = new string('-', dashCount);
+            Console.WriteLine(dashes);
+            Console.WriteLine($"##[section]{text}");
+            Console.WriteLine(dashes);
+        }
         
         public static byte[] Bytes(this string s, Encoding encoding = null) 
             => s == null ? Array.Empty<byte>() : (encoding ?? Encoding.UTF8).GetBytes(s);

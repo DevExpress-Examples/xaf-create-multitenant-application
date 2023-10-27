@@ -44,7 +44,8 @@ namespace XAF.Testing.XAF{
             var action = frame.GetController<ListViewProcessCurrentObjectController>().ProcessCurrentObjectAction;
             return action.Trigger(action.WhenExecuted()
                 .SelectMany(e => frame.Application.WhenFrame(e.ShowViewParameters.CreatedView.ObjectTypeInfo.Type,ViewType.DetailView))
-                .Take(1).Select(frame1 => frame1),selectedObject().YieldItem().Cast<object>().ToArray());
+                .Take(1).Select(frame1 => frame1),selectedObject().YieldItem().Cast<object>().ToArray())
+                .Select(frame1 => frame1);
         }
 
         

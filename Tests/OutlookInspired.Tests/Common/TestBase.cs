@@ -17,6 +17,8 @@ namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const int MaxTries = 3;
         protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
+        protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
+
         public static IEnumerable<object> EmployeeVariants 
             => ViewVariants(EmployeeListView, EmployeeListView, EmployeeCardListView);
         public static IEnumerable<object> CustomerVariants 

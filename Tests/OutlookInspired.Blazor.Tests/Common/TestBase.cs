@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using System.Reactive.Linq;
 using DevExpress.ExpressApp.Blazor;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
@@ -11,7 +12,9 @@ namespace OutlookInspired.Blazor.Tests.Common{
             string browser, WindowPosition inactiveMonitorLocation = WindowPosition.None) 
             => Host.CreateDefaultBuilder().Run("http://localhost:5000", "../../../../../OutlookInspired.Blazor.Server",
                 (builder, whenCompleted) => builder.UseStartup(context 
-                    => context.Use<Startup,OutlookInspiredEFCoreDbContext>(test, user, whenCompleted,browser, inactiveMonitorLocation)), browser);
+                    => context.Use<Startup,OutlookInspiredEFCoreDbContext>(test, user, whenCompleted,browser, inactiveMonitorLocation)), browser)
+                .Timeout(Timeout);
+        
         public IObservable<Unit> StartTest(string user, Func<BlazorApplication, IObservable<Unit>> test) 
             => StartBlazorTest(user, test,
                     browser:"chrome",inactiveMonitorLocation:WindowPosition.FullScreen)

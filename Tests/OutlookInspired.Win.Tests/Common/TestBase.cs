@@ -23,6 +23,7 @@ namespace OutlookInspired.Win.Tests.Common{
         
         public IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {
+                TestContext.CurrentContext.Test.FullName.WriteSection();
                 application.Setup();
                 application.ChangeStartupState(FormWindowState.Maximized, moveToInactiveMonitor: !RunInMainMonitor);
             });
@@ -39,7 +40,7 @@ namespace OutlookInspired.Win.Tests.Common{
         protected virtual bool RunInMainMonitor => false;
         protected virtual bool UseSecuredProvider => true;
         protected virtual bool UseServer => false;
-        protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
+        
         
         private static WinApplication WinApplication(bool useServer, bool useSecuredProvider, string connectionString){
             var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
