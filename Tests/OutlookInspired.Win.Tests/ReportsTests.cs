@@ -6,6 +6,7 @@ using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
+    [Category(WindowsTest)]
     public class ReportsTests : TestBase{
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
         public async Task Customer(string user,string view,string viewVariant){

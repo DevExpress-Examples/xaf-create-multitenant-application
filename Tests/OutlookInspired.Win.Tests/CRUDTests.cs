@@ -6,8 +6,7 @@ using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
-    [Category(WindowsTest)]
-    public class FilterManagerTests:TestBase{
+    public class CRUDTests:TestBase{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=1)]
         public async Task Employee(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertEmployeeFilters(view, viewVariant));

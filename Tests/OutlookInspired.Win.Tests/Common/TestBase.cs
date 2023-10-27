@@ -14,6 +14,7 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Win.Tests.Common{
     
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
+        protected const string WindowsTest = nameof(WindowsTest);
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
         public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test) 

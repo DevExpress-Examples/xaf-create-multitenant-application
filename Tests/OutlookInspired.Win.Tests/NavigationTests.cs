@@ -6,6 +6,7 @@ using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
+    [Category(WindowsTest)]
     public class NavigationTests:TestBase{
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
         public async Task Items_Count(string user){

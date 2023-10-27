@@ -87,13 +87,21 @@ namespace XAF.Testing.XAF{
             => application.AssertNavigation(navigationView)
                 .AssertDashboardMasterDetail(viewVariant, detailViewFrameSelector, listViewFrameSelector, existingObjectDetailview,assert);
 
-        public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Window> source,string viewVariant=null, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null,
+        public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Frame> source,
+            Func<Frame, IObservable<Frame>> detailViewFrameSelector = null, Func<DashboardViewItem, bool> listViewFrameSelector = null,
+            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame, AssertAction> assert = null) 
+            => source.AssertDashboardMasterDetail(existingObjectDetailview,assert,detailViewFrameSelector,listViewFrameSelector);
+        
+        public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Frame> source, Func<Frame, IObservable<Unit>> existingObjectDetailview = null
+            , Func<Frame, AssertAction> assert = null, Func<Frame, IObservable<Frame>> detailViewFrameSelector = null, Func<DashboardViewItem, bool> listViewFrameSelector = null) 
+            => source.AssertDashboardDetailView(detailViewFrameSelector, listViewFrameSelector).IgnoreElements()
+                .Concat(source.AssertDashboardListView(listViewFrameSelector, existingObjectDetailview, assert))
+                .IgnoreElements().Concat(source).ReplayFirstTake();
+
+        public static IObservable<Frame> AssertDashboardMasterDetail(this IObservable<Frame> source,string viewVariant=null, Func<Frame, IObservable<Frame>> detailViewFrameSelector=null,
             Func<DashboardViewItem, bool> listViewFrameSelector=null, Func<Frame, IObservable<Unit>> existingObjectDetailview=null,Func<Frame,AssertAction> assert=null) 
             => source.AssertChangeViewVariant(viewVariant)
-                .AssertDashboardDetailView(detailViewFrameSelector, listViewFrameSelector).IgnoreElements()
-                .Concat( source.AssertDashboardListView(listViewFrameSelector, existingObjectDetailview,assert)).IgnoreElements()
-                .Concat(source)
-                .ReplayFirstTake();
+                .AssertDashboardMasterDetail(detailViewFrameSelector,listViewFrameSelector,existingObjectDetailview,assert);
 
         public static IObservable<Frame> AssertDialogControllerListView(this IObservable<SingleChoiceAction> source,Type objectType,Func<Frame,AssertAction> assert=null,bool inlineEdit=false) 
             => source.SelectMany(choiceAction => choiceAction.AssertDialogControllerListView(objectType, assert, inlineEdit));

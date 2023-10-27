@@ -12,10 +12,10 @@ namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
     public class Windows:TestBase{
 #if TEST
-        [OutlookInspired.Tests.Common.RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
-        [Category("WindowsTest")]
+        // [OutlookInspired.Tests.Common.RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+        // [Category("WindowsTest")]
 #else
-        [TestCaseSource(nameof(TestCases))]
+        // [TestCaseSource(nameof(TestCases))]
 #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
             await SetupWinApplication().SelectMany(winApplication => winApplication.Use(_ =>
