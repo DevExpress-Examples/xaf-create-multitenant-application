@@ -44,7 +44,8 @@ namespace OutlookInspired.Win.Tests.Common{
         private static WinApplication WinApplication(bool useServer, bool useSecuredProvider, string connectionString){
             var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
                 options.Services.AddPlatformServices();
-                options.Services.AddSingleton<IFilterViewAssertion, FilterViewAssertion>();
+                options.Services.AddSingleton<IAssertFilterView, AssertFilterView>();
+                options.Services.AddSingleton<IFilterViewManager, FilterViewManager>();
             });
 #if TEST
             var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");

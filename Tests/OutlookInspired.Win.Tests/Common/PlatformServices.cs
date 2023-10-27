@@ -7,7 +7,11 @@ using XAF.Testing.XAF;
 using Unit = System.Reactive.Unit;
 
 namespace OutlookInspired.Win.Tests.Common{
-    public class FilterViewAssertion:IFilterViewAssertion{
+    class FilterViewManager:IFilterViewManager{
+        public bool InlineEdit => true;
+    }
+
+    public class AssertFilterView:IAssertFilterView{
         public IObservable<Unit> AssertCreateNew(SingleChoiceAction action) 
             => action.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewSave, true)
                 .IgnoreElements().ToUnit();

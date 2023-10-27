@@ -32,8 +32,10 @@ namespace OutlookInspired.Blazor.Tests.Common{
                 .Assert().ToUnit();
     }
 
-
-    public class FilterViewAssertion:IFilterViewAssertion{
+    class FilterViewManager:IFilterViewManager{
+        public bool InlineEdit => false;
+    }
+    public class AssertAssertFilterView:IAssertFilterView{
         public IObservable<Unit> AssertCreateNew(SingleChoiceAction action){
             // return source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.AllButProcess)
                 // .ToSecond().IgnoreElements();

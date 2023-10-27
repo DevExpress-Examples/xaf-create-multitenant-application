@@ -55,7 +55,7 @@ namespace OutlookInspired.Tests.Services{
                 .SelectMany(action => action.Application.WhenCommitted<ViewFilter>(ObjectModification.New).ToObjects().Take(1)
                     .CombineLatest(action.WhenItemsChanged(ChoiceActionItemChangesType.ItemsAdd), (filter, _) => filter)
                     .SelectMany(filter => action.Items.Select(item => item.Data).OfType<ViewFilter>().Where(itemFilter => itemFilter.ID == filter.ID)).Take(1)
-                    .Merge(action.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewSave, false)
+                    .Merge(action.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.DetailViewSave, action.Application.GetRequiredService<IFilterViewManager>().InlineEdit)
                         .IgnoreElements().IgnoreElements().To<ViewFilter>())
                     .Select(filter => (filter,action)))
                 .Assert();
@@ -67,4 +67,6 @@ namespace OutlookInspired.Tests.Services{
                         .Assert($"{nameof(AssertFilters)} {item}")).To(filterAction.Frame()))
                 .IgnoreElements().To<Frame>().Concat(source.Select(action => action.Frame())).ReplayFirstTake();
     }
+
+    
 }

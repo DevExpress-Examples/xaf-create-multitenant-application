@@ -1,9 +1,12 @@
 ﻿using DevExpress.ExpressApp.Actions;
-using DevExpress.Map.Kml.Model;
 using Unit = System.Reactive.Unit;
 
 namespace OutlookInspired.Tests.Services{
-    public interface IFilterViewAssertion{
+    public interface IAssertFilterView{
         IObservable<Unit> AssertCreateNew(SingleChoiceAction action);
+    }
+
+    public interface IFilterViewManager{
+        bool InlineEdit{ get; }
     }
 }
