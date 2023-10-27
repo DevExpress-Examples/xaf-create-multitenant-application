@@ -2,4 +2,4 @@
 
 
 1. Where we write bussiness logic, controllers extensions, internal, public,Folder structure
-sss
+2. ForbodDelete 

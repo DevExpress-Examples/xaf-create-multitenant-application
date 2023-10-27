@@ -390,7 +390,7 @@ namespace XAF.Testing.XAF{
                         return hasFlag;
                     },
                     t => t.frame.AssertProcessSelectedObject().ToSecond().Select(frame => frame)
-                        .ConcatIgnored(frame1 => assertDetailview(frame1)??Observable.Empty<Unit>() )
+                        .ConcatIgnored(frame1 => assertDetailview?.Invoke(frame1)??Observable.Empty<Unit>() )
                         .CloseWindow(t.frame).Select(frame => (frame,t.parent)),t => t.Observe())
                 
                 .ReplayFirstTake();

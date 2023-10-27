@@ -18,8 +18,8 @@ namespace OutlookInspired.Win.Tests.Common{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
         public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test) 
-            => SetupWinApplication()
-                .SelectMany(application => application.Use(winApplication => winApplication.StartWinTest(test(winApplication),user,LogContext)));
+            => SetupWinApplication().SelectMany(application => application.Use(winApplication => winApplication.StartWinTest(test(winApplication),user,LogContext)))
+                .Timeout(Timeout);
         
         public IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {
@@ -39,6 +39,7 @@ namespace OutlookInspired.Win.Tests.Common{
         protected virtual bool RunInMainMonitor => false;
         protected virtual bool UseSecuredProvider => true;
         protected virtual bool UseServer => false;
+        protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
         
         private static WinApplication WinApplication(bool useServer, bool useSecuredProvider, string connectionString){
             var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {

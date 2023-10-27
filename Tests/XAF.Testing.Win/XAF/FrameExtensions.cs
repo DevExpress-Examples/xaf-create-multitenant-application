@@ -27,15 +27,16 @@ namespace XAF.Testing.Win.XAF{
                 .DelayOnContext();
         public static IObservable<Window> CloseWindow(this IObservable<Frame> source) 
             => source.Cast<Window>().DelayOnContext().Do(frame => frame.Close()).DelayOnContext().IgnoreElements();
-        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame)
-            => frame.View.ToDetailView().WhenGridControl()
-                .Publish(source => source.SelectMany(gridControl => frame.Application.WhenFrame(((NestedFrame)frame)
+        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
+            => frame.View.Observe().OfType<DetailView>()
+                .SelectMany(detailView => detailView.WhenGridControl()
+                    .SelectMany(gridControl => frame.Application.WhenFrame(((NestedFrame)frame)
                             .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
                         .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-                            .Equals(((ColumnView)gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
-                    .Merge(Observable.Defer(() => source.ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
+                            .Equals(((ColumnView)gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace)))
+                        .Merge(Observable.Defer(() => gridControl.ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements()))))
                 .SwitchIfEmpty(frame.ProcessListViewSelectedItem())
-                .Select(detailViewFrame => (frame, detailViewFrame));
+                .Select(detailViewFrame => (detailViewFrame,frame));
 
         public static IObservable<object> WhenColumnViewObjects(this Frame frame,int count=0) 
             => frame.View.Observe().OfType<DetailView>().SelectMany(detailView => detailView.WhenGridControl().WhenObjects(count).Take(1));
