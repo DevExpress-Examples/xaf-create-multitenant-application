@@ -4,7 +4,6 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.ExpressApp.Win.Layout;
 using DevExpress.XtraGrid;
@@ -12,7 +11,6 @@ using DevExpress.XtraLayout;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
-using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.Win.XAF{
     public static class ViewExtensions{
@@ -32,7 +30,9 @@ namespace XAF.Testing.Win.XAF{
 
         
 
-        public static void ClearFilter(this ListView listView) => ((GridListEditor)listView.Editor).GridView.ActiveFilterCriteria = null;
+        public static void ClearFilter(this ListView listView){
+            if ((listView.Editor) is GridListEditor listViewEditor) listViewEditor.GridView.ActiveFilterCriteria = null;
+        }
 
         public static IObservable<(IModelViewLayoutElement model,object control,ViewItem viewItem)> WhenItemCreated(this WinLayoutManager layoutManager) 
             => layoutManager.WhenEvent(nameof(WinLayoutManager.ItemCreated)).Select(p => p.EventArgs).Cast<ItemCreatedEventArgs>()

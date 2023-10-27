@@ -26,7 +26,10 @@
           <Item Id="ModelDifference_ListView" Index="7" ImageName="BO_Security_Permission_Model" />
           <Item Id="ApplicationUser_DetailView" ImageName="BO_MyDetails" ObjectKey="@CurrentUserID" Caption="My Details" />
           <Item Id="ApplicationUser_ListView" ImageName="BO_User" />
+          <Item Id="CustomerCardListView" Removed="True" />
+          <Item Id="OrderGridView" Removed="True" />
           <Item Id="PermissionPolicyRole_ListView" ImageName="BO_Role" />
+          <Item Id="ProductCardView" Removed="True" />
         </Items>
       </Item>
       <Item Id="Reports">

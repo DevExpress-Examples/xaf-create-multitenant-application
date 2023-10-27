@@ -37,7 +37,6 @@ namespace OutlookInspired.Win.Editors
         public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
             _objectSpace = (EFCoreObjectSpace)objectSpace;
             ColumnView = this.ColumnView();
-            
             ColumnView.FocusedRowObjectChanged += (_, _) => {
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 CurrentObjectChanged?.Invoke(this, EventArgs.Empty);
@@ -61,7 +60,9 @@ namespace OutlookInspired.Win.Editors
 
         public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,ObjectType);
 
-        public IList SelectedObjects => ColumnView.GetSelectedRows().Select(i => ColumnView.GetRow(i)).ToArray();
+        public IList SelectedObjects => ColumnView.GetSelectedRows()
+            .Concat(ColumnView.FocusedRowHandle.YieldItem()).Distinct()
+            .Select(i => ColumnView.GetRow(i)).ToArray();
         public SelectionType SelectionType => SelectionType.Full;
         public bool IsRoot => false;
 
