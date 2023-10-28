@@ -410,7 +410,7 @@ namespace XAF.Testing.XAF{
                         var hasFlag = assertAction.HasFlag(AssertAction.NotHasObject);
                         return hasFlag;
                     },
-                    t => t.frame.WhenObjects().Assert(timeout: 5.Seconds()).SelectMany(_ => new Exception($"{t.frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>())
+                    t => t.frame.WhenObjects().Assert().SelectMany(_ => new Exception($"{t.frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>())
                         .Catch<(Frame frame, Frame parent), TimeoutException>(_ => t.Observe()).ObserveOnContext())
                 .ReplayFirstTake();
 
