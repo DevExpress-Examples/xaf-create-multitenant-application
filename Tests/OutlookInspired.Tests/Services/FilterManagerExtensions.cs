@@ -30,11 +30,12 @@ namespace OutlookInspired.Tests.Services{
                 .Do(frame => action?.Invoke(frame))
                 .AssertSingleChoiceAction(ViewFilterController.FilterViewActionId,_ => filtersCount)
                 .AssertFilterAction().IgnoreElements().Concat(source)
-                .ReplayFirstTake();
+                .ReplayFirstTake().Select(frame => frame);
 
         private static IObservable<Frame> AssertFilterAction(this IObservable<SingleChoiceAction> source) 
             => source.AssertFilters().IgnoreElements()
-                .Concat(source.AssertNewFilter().AssertDeleteFilter()
+                .Concat(source.AssertNewFilter().Select(frame => frame)
+                    .AssertDeleteFilter().Select(frame => frame)
                 )
                 .ReplayFirstTake();
 
@@ -44,10 +45,10 @@ namespace OutlookInspired.Tests.Services{
                 .SelectMany(t => t.action.Application.WhenFrame(typeof(ViewFilter),ViewType.ListView).Take(1)
                     .Do(frame => frame.View.ToListView().CollectionSource.SetCriteria<ViewFilter>(filter => filter.ID==t.filter.ID)).IgnoreElements()
                     .Merge(t.action.Application.WhenCommitted<ViewFilter>(ObjectModification.All).ToObjects().Take(1).Select(filter => filter)
-                        .CombineLatest(t.action.WhenItemsChanged(ChoiceActionItemChangesType.ItemsRemove), (filter, _) => filter)
+                        .CombineLatest(t.action.WhenItemsChanged(ChoiceActionItemChangesType.ItemsRemove).Select(args => args), (filter, _) => filter)
                         .Where(filter => t.action.Items.Select(item => item.Data).OfType<ViewFilter>().All(itemFilter => itemFilter.ID == filter.ID))
                         .Select(_ => t.action.Frame()))
-                        .Merge(t.action.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.ListViewDeleteOnly).IgnoreElements())
+                        .Merge(t.action.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.ListViewDeleteOnly).Select(frame => frame).IgnoreElements())
                     .Select(frame => frame))
                 .Assert();
         

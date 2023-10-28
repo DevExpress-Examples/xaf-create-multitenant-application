@@ -6,7 +6,7 @@ using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 namespace OutlookInspired.Blazor.Tests{
     
     public class FilterManagerTests:TestBase{
-        [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=1)]
+        [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         public async Task Employee(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertEmployeeFilters(view, viewVariant));
         }

@@ -6,6 +6,7 @@ using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
+    [Order(30)]
     public class MailMergeTests : TestBase{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(WindowsTest)]

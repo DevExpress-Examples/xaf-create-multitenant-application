@@ -4,16 +4,17 @@ jobs:
       runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
       testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
       dxFeedVar: '$(DXFeed)'
+      NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
     strategy:
       matrix:
-        Sales: {}
-        HumanResources: {}
-        Support: {}
-        Shipping: {}
-        Engineering: {}
-        Management: {}
-        IT: {}
         Admin: {}
+        Sales: {}
+        Support: {}
+        Management: {}
+        Engineering: {}
+        IT: {}
+        Shipping: {}
+        HumanResources: {}
     timeoutInMinutes: 60
     pool:
       vmImage: 'windows-latest'

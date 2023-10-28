@@ -401,3 +401,4 @@ FodyWeavers.xsd
 **/UnusableNodes*.xml
 
 /OutlookInspired.Blazor.Server/wwwroot/js/DevExtremeComponent/
+/OutlookInspired.Blazor.Server/wwwroot/js/

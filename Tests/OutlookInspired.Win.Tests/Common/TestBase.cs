@@ -17,9 +17,10 @@ namespace OutlookInspired.Win.Tests.Common{
         protected const string WindowsTest = nameof(WindowsTest);
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
-        public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test) 
-            => SetupWinApplication().SelectMany(application => application.Use(winApplication => winApplication.StartWinTest(test(winApplication)
-                .Timeout(Timeout),user,LogContext)));
+        public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
+            => SetupWinApplication().SelectMany(application => application.Use(winApplication =>
+                winApplication.StartWinTest(test(winApplication)
+                    .Timeout(Timeout).DoOnError(exception => { }), user, LogContext)));
         
         public IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {

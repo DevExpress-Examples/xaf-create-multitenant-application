@@ -106,11 +106,11 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> AssertDialogControllerListView(this IObservable<SingleChoiceAction> source,Type objectType,Func<Frame,AssertAction> assert=null,bool inlineEdit=false) 
             => source.SelectMany(choiceAction => choiceAction.AssertDialogControllerListView(objectType, assert, inlineEdit));
 
-        public static IObservable<Frame> AssertDialogControllerListView(this SingleChoiceAction choiceAction,Type objectType, Func<Frame, AssertAction> assert, bool inlineEdit=false) 
+        public static IObservable<Frame> AssertDialogControllerListView(this SingleChoiceAction choiceAction,Type objectType, Func<Frame, AssertAction> assert, bool inlineEdit=false,[CallerMemberName]string caller="") 
             => choiceAction.Trigger(choiceAction.Application.AssertFrame(objectType,ViewType.ListView)
                     .Select(frame => (frame, source: choiceAction.Controller.Frame)))
                 .DelayOnContext()
-                .SelectMany(t => t.frame.Observe().AssertListView(assert:assert,inlineEdit:inlineEdit).To(t)
+                .SelectMany(t => t.frame.Observe().AssertListView(assert:assert,inlineEdit:inlineEdit,caller:caller).To(t)
                     .If(_ => !inlineEdit,t1 => t1.frame.Observe().CloseWindow(choiceAction.Frame()),t1 => t1.Observe().ToFirst()));
 
         private static IObservable<Frame> AssertDashboardListView(this IObservable<Frame> changeViewVariant, Func<DashboardViewItem, bool> listViewFrameSelector,
@@ -176,13 +176,11 @@ namespace XAF.Testing.XAF{
             => source.If(_ => variantId!=null,frame => frame.Observe().ChangeViewVariant(variantId),frame => frame.Observe()).Assert($"{variantId}")
                 .ReplayFirstTake();
 
-        public static IObservable<Unit> AssertNavigation(this XafApplication application, string view,
-            string viewVariant, Func<IObservable<Frame>, IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
-            => application.AssertNavigation(view,_ => canNavigate
-                    .Select(unit => unit)
-                    .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<Unit>(new CannotNavigateException()))).ToUnit())
-                .ReplayFirstTake()
-                .AssertChangeViewVariant(viewVariant).SelectMany(frame => assert(frame.Observe()))
+        public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
+            => application.AssertNavigation(view,_ => canNavigate.SwitchIfEmpty(Observable.Throw<Unit>(new CannotNavigateException())).ToUnit())
+                .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
+                        .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
+                    .SelectMany(frame => assert(frame.Observe())))
                 .FirstOrDefaultAsync().ReplayFirstTake();
         
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this IObservable<Frame> source)
@@ -455,8 +453,8 @@ namespace XAF.Testing.XAF{
             bool inlineEdit,Frame parentFrame, [CallerMemberName] string caller = "") 
             => source.SelectMany(t => {
                     var assertAction = t.frame.Assert(assert);
-                    if (assertAction.HasFlag(AssertAction.ListViewDelete) ){
-                        // || assertAction == AssertAction.ListViewDeleteOnly
+                    if (assertAction.HasFlag(AssertAction.ListViewDelete) || assertAction == AssertAction.ListViewDeleteOnly){
+                        
                         return t.Observe().AssertDeleteObject(parentFrame, caller);
                     }
                     return t.Observe().WhenDefault(_ => inlineEdit).Select(t1 => t1.frame);

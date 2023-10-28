@@ -61,7 +61,8 @@ namespace OutlookInspired.Tests.Services{
                 .Use(space => {
                     var applicationUser = space.CurrentUser<ApplicationUser>();
                     var navigationViews = applicationUser.NavigationViews();
-                    return navigationViews.Contains(viewId).Observe();
+                    var contains = navigationViews.Contains(viewId);
+                    return contains.Observe();
                 }).WhenNotDefault()
                 // .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<bool>(new AssertException())))
                 .To(application));
