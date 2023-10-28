@@ -1,10 +1,11 @@
 ﻿using System.Reactive.Linq;
+using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{
-    
+    [Order(10)]
     public class ReportsTests : TestBase{
         
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]

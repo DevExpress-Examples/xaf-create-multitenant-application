@@ -1,10 +1,11 @@
 ﻿using System.Reactive.Linq;
+using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{
-    
+    [Order(40)]
     public class FilterManagerTests:TestBase{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         public async Task Employee(string user,string view,string viewVariant){

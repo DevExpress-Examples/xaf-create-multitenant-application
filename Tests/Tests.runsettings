@@ -13,6 +13,7 @@
               <Include>
                 <ModulePath>.*outlookinspired.module.dll</ModulePath>
                 <ModulePath>.*outlookinspired.win.dll</ModulePath>
+                <ModulePath>.*outlookinspired.blazor.server.dll</ModulePath>
               </Include>
               <Exclude>
                 

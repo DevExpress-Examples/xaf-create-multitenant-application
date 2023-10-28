@@ -14,13 +14,13 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Win.Tests.Common{
     
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
-        protected const string WindowsTest = nameof(WindowsTest);
+        
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
         public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
             => SetupWinApplication().SelectMany(application => application.Use(winApplication =>
                 winApplication.StartWinTest(test(winApplication)
-                    .Timeout(Timeout).DoOnError(exception => { }), user, LogContext)));
+                    .Timeout(Timeout), user, LogContext)));
         
         public IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {
@@ -63,12 +63,7 @@ namespace OutlookInspired.Win.Tests.Common{
         public void OneTimeSetup(){
             StopServer();
             this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => $"{output}".Contains("Now listening on")));
-#if TEST
-            XAF.Testing.RX.UtilityExtensions.TimeoutInterval=TimeSpan.FromSeconds(120);
-#else
-            // this.Await(async () => await LogContext.None.WriteAsync());
-            // throw new NotImplementedException();
-#endif
+
         }
         
         private static void StopServer() 

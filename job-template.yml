@@ -1,0 +1,67 @@
+parameters:
+  testAssembly: ''
+  displayName: ''
+
+jobs:
+- job: ${{ parameters.displayName }}
+  variables:
+    runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
+    testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
+    dxFeedVar: '$(DXFeed)'
+    NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  strategy:
+    matrix:
+      Admin: {}
+      Sales: {}
+      Support: {}
+      Management: {}
+      Engineering: {}
+      IT: {}
+      Shipping: {}
+      HumanResources: {}
+  timeoutInMinutes: 90
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: PowerShell@2
+    displayName: Build
+    continueOnError: false
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Output "${{ parameters.testAssembly }}"
+        & sqllocaldb start mssqllocaldb
+        dotnet nuget add source $(dxFeedVar) --name DX
+        cd $env:BUILD_SOURCESDIRECTORY
+        dotnet build --configuration TEST
+        Get-ChildItem -Path "$(System.DefaultWorkingDirectory)\Tests" -Recurse -Directory -Include "ref", "refint", "obj" | 
+        ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
+      pwsh: true      
+  - task: VSTest@2
+    displayName: 'ImportData.Test'
+    continueOnError: false
+    enabled: true
+    inputs:
+      minimumExpectedTests: "1"
+      failOnMinTestsNotRun: true
+      searchFolder: $(testsFolderPath)
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: '**\OutlookInspired.Win.Tests.dll'
+      testFiltercriteria: TestCategory=ImportData
+      diagnosticsEnabled: true
+      codeCoverageEnabled: true
+      runSettingsFile: $(runSettingsPath)
+  - task: VSTest@2
+    displayName: ${{ parameters.displayName }}
+    continueOnError: false
+    enabled: true
+    inputs:
+      minimumExpectedTests: "1"
+      failOnMinTestsNotRun: true
+      searchFolder: $(testsFolderPath)
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: ${{ parameters.testAssembly }}
+      testFiltercriteria: TestCategory=Tests
+      diagnosticsEnabled: true
+      codeCoverageEnabled: true
+      runSettingsFile: $(runSettingsPath)

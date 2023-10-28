@@ -8,13 +8,13 @@ namespace OutlookInspired.Blazor.Tests{
     [Order(0)]
     public class NavigationTests:TestBase{
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
-        [Category(BlazorTest)]
+        [Category(Tests)]
         public async Task Items_Count(string user){
             await StartTest(user, blazorApplication => blazorApplication.AssertNavigationItemsCount());
         }
         
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
-        [Category(BlazorTest)]
+        [Category(Tests)]
         public async Task Active_Items(string user){
             await StartTest(user, blazorApplication => blazorApplication.AssertNavigationViews());
         }
