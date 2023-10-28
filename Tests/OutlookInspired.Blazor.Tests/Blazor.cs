@@ -12,12 +12,12 @@ namespace OutlookInspired.Blazor.Tests{
     public class Blazor:TestBase{
         
 
-#if TEST
-        [OutlookInspired.Tests.Common.RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
-        [Category("BlazorTest")]
-#else
-        [TestCaseSource(nameof(BlazorTestCases))]
-#endif
+// #if TEST
+//         [OutlookInspired.Tests.Common.RetryTestCaseSource(nameof(TestCases),MaxTries = 3)]
+//         [Category("BlazorTest")]
+// #else
+//         [TestCaseSource(nameof(BlazorTestCases))]
+// #endif
         public async Task Test(string navigationView, string viewVariant,string user,Func<XafApplication,string,string,IObservable<Frame>> assert){
             await StartTest(user, application => assert(application, navigationView, viewVariant).ToUnit());
         }

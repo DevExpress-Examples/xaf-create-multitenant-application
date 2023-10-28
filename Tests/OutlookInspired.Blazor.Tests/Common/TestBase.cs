@@ -7,7 +7,7 @@ using XAF.Testing.Blazor.XAF;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
-        
+        protected const string BlazorTest = nameof(BlazorTest);
         public IObservable<Unit> StartBlazorTest(string user, Func<BlazorApplication, IObservable<Unit>> test,
             string browser, WindowPosition inactiveMonitorLocation = WindowPosition.None) 
             => Host.CreateDefaultBuilder().Run("http://localhost:5000", "../../../../../OutlookInspired.Blazor.Server",

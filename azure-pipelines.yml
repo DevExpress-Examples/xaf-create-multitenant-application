@@ -37,8 +37,6 @@ jobs:
       inputs:
         minimumExpectedTests: "1"
         failOnMinTestsNotRun: true
-        # rerunFailedTests: true
-        # rerunFailedTestCasesMaxLimit: "2"
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
@@ -56,14 +54,29 @@ jobs:
       inputs:
         minimumExpectedTests: "1"
         failOnMinTestsNotRun: true
-        # rerunFailedTests: true
-        # rerunFailedTestCasesMaxLimit: "2"
         searchFolder: $(testsFolderPath)
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
           **\OutlookInspired.Win.Tests.dll
           !**\obj\**
         testFiltercriteria: TestCategory=WindowsTest
+        diagnosticsEnabled: true
+        codeCoverageEnabled: true
+        runSettingsFile: $(runSettingsPath)
+    - task: VSTest@2
+      displayName: 'Blazor.Test'
+      continueOnError: false
+      env:
+        TEST_ROLE: $(Agent.JobName)
+      inputs:
+        minimumExpectedTests: "1"
+        failOnMinTestsNotRun: true
+        searchFolder: $(testsFolderPath)
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          **\OutlookInspired.Blazor.Tests.dll
+          !**\obj\**
+        testFiltercriteria: TestCategory=BlazorTest
         diagnosticsEnabled: true
         codeCoverageEnabled: true
         runSettingsFile: $(runSettingsPath)
