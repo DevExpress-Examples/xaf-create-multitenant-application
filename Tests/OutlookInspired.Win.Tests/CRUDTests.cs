@@ -26,19 +26,19 @@ namespace OutlookInspired.Win.Tests{
         }
 
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]
-        [Category(WindowsTest)]
+        //[Category(WindowsTest)]
         public async Task Product(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertProductListView(view, viewVariant));
         }
 
         [RetryTestCaseSource(nameof(OrderVariants),MaxTries=MaxTries)]
-        [Category(WindowsTest)]
+        //[Category(WindowsTest)]
         public async Task Order(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
         }
 
         [RetryTestCaseSource(nameof(OpportunityVariants),MaxTries=MaxTries)]
-        [Category(WindowsTest)]
+        //[Category(WindowsTest)]
         public async Task Opportunity(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertOpportunitiesView(view, viewVariant));
         }
