@@ -31,9 +31,6 @@ namespace XAF.Testing.XAF{
             Notify(exception);
         }
             
-        private void Notify(Exception exception){
-            _errorSubject.OnNext(exception);
-            _errorSubject.OnCompleted();
-        }
+        private void Notify(Exception exception) => _errorSubject.OnNext(exception);
     }
 }

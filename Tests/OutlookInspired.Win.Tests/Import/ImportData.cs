@@ -4,6 +4,7 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Import;
 using OutlookInspired.Win.Tests.Common;
 using Shouldly;
+using XAF.Testing;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Win.Tests.Import{
@@ -39,7 +40,11 @@ namespace OutlookInspired.Win.Tests.Import{
             objectSpace.Count<OrderItem>().ShouldBe(14440);
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
-            
+            1.Range(10).Do(user => {
+                var applicationUser = objectSpace.CreateObject<ApplicationUser>();
+                applicationUser.UserName = $"Test{user}";
+            }).Finally(objectSpace.CommitChanges).Enumerate();
+              
             // objectSpace.GenerateOrders();
         }
 

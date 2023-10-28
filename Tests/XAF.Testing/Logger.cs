@@ -3,6 +3,7 @@ using System.IO.Pipes;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Text;
 using XAF.Testing.RX;
 
 namespace XAF.Testing{
@@ -10,7 +11,8 @@ namespace XAF.Testing{
         public static async Task<StreamWriter> Writer(LogContext context=default,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
             => await new Logger().ConnectClient(context,inactiveMonitorLocation,alwaysOnTop).Writer().ReplayFirstTake();
 
-        public const string ExitSignal = "exit";
+        public  static void Exit() => Console.WriteLine(ExitSignal);
+        internal const string ExitSignal = "exit";
         public string PipeName{ get; set; } = nameof(Logger);
         public string ServerName{ get; set; } = ".";
         public TimeSpan ConnectionTimeout{ get; set; } = 5.Seconds();
@@ -51,7 +53,7 @@ namespace XAF.Testing{
             logger.StartInfo.FileName = logger.PowerShellName;
             logger.StartInfo.Arguments = $"-NoExit -Command {script}";
             logger.StartInfo.UseShellExecute = true;
-            Process.GetProcessesByName(Path.GetFileNameWithoutExtension(logger.PowerShellName)).ToArray().Do(process => process.Kill()).Enumerate();
+            AppDomain.CurrentDomain.KillAll(Path.GetFileNameWithoutExtension(logger.PowerShellName));
             logger.Start();
             return logger;
         }
@@ -85,14 +87,43 @@ namespace XAF.Testing{
             logContext.Write(inactiveMonitorLocation,alwaysOnTop);
             return source;
         } 
-        public static IObservable<T> Log<T>(this IObservable<T> source,LogContext logContext,
-            WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false){
-            if (logContext == default){
-                return source;
+        public static IObservable<T> Log<T>(this IObservable<T> source, LogContext logContext,
+            WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false) 
+            => source.Publish(obs => {
+                var cachedMessages = new List<string>();
+                var originalOut = Console.Out;
+                return logContext.Observe().If(context => context == default, _ => obs,
+                    context => Logger.Writer(context, inactiveMonitorLocation, alwaysOnTop).ToObservable()
+                        .Do(writer => Console.SetOut(new InterceptingTextWriter(writer, cachedMessages)))
+                        .IgnoreElements().DoNotComplete().To<T>()
+                        .TakeUntilCompleted(obs)
+                        .Merge(obs.DoOnError(_ => FlushAndExit())
+                            .DoOnComplete(FlushAndExit)));
+                void FlushAndExit(){
+                    Console.SetOut(originalOut);
+                    cachedMessages.Do(message => originalOut.WriteLine(message)).Enumerate();
+                    Logger.Exit();
+                }
+            });
+
+        class InterceptingTextWriter : TextWriter{
+            private readonly TextWriter _originalWriter;
+            private readonly List<string> _cachedMessages;
+
+            public InterceptingTextWriter(TextWriter originalWriter, List<string> cachedMessages){
+                _originalWriter = originalWriter;
+                _cachedMessages = cachedMessages;
             }
-            logContext.Write(inactiveMonitorLocation,alwaysOnTop);
-            return source.DoOnError(_ => Console.WriteLine(Logger.ExitSignal)).Finally(() => Console.WriteLine(Logger.ExitSignal));
-        } 
+
+            public override void WriteLine(string value){
+                _cachedMessages.Add(value);
+                _originalWriter.WriteLine(value);
+            }
+            
+            public override Encoding Encoding => _originalWriter.Encoding;
+        }
+
+        [Obsolete("remove")]
         public static void Write(this LogContext logContext,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
             => logContext.Await(async () => Console.SetOut(await Logger.Writer(logContext,inactiveMonitorLocation,alwaysOnTop)));
     }

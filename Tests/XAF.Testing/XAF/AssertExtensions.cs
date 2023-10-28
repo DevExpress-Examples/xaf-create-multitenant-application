@@ -175,12 +175,12 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> AssertChangeViewVariant(this IObservable<Frame> source,string variantId) 
             => source.If(_ => variantId!=null,frame => frame.Observe().ChangeViewVariant(variantId),frame => frame.Observe()).Assert($"{variantId}")
                 .ReplayFirstTake();
-        
-        public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
-            => application.AssertNavigation(view,_ => canNavigate.SwitchIfEmpty(Observable.Throw<Unit>(new AssertException())).ToUnit())
-                .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
-                        .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
-                    .SelectMany(frame => assert(frame.Observe())))
+
+        public static IObservable<Unit> AssertNavigation(this XafApplication application, string view,
+            string viewVariant, Func<IObservable<Frame>, IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
+            => application.AssertNavigation(view,_ => canNavigate
+                    .Select(unit => unit).SwitchIfEmpty(Observable.Defer(() => Observable.Throw<Unit>(new CannotNavigateException()))).ToUnit())
+                .AssertChangeViewVariant(viewVariant).SelectMany(frame => assert(frame.Observe()))
                 .FirstOrDefaultAsync().ReplayFirstTake();
         
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this IObservable<Frame> source)
@@ -308,7 +308,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
             => application.Navigate2(viewId,window => (navigate?.Invoke(window)?? Observable.Empty<Unit>()).SwitchIfEmpty(Unit.Default.Observe()))
-                .Assert($"{viewId}").Catch<Window,AssertException>(_ => Observable.Empty<Window>());
+                .Assert($"{viewId}").Catch<Window,CannotNavigateException>(_ => Observable.Empty<Window>());
 
         public static IObservable<Frame> AssertDashboardListViewEditViewHasObject(this IObservable<Frame> source,Func<Frame,IObservable<Frame>> detailView=null)
             =>source.SelectMany(frame => frame.DashboardViewItems<ListView>().ToNowObservable()
@@ -354,7 +354,10 @@ namespace XAF.Testing.XAF{
 
         private static IObservable<Frame> AssertListView(this IObservable<(Frame frame, Frame parent)> source,
             Func<Frame, IObservable<Unit>> assertExistingObjectDetailview = null, Func<Frame,AssertAction> assert = null, bool inlineEdit = false,Func<DashboardViewItem, bool> listViewFrameSelector=null,[CallerMemberName]string caller="") 
-            => source.AssertListViewHasObjects( assert,listViewFrameSelector,caller).Finally(() => {}).SwitchIfEmpty(source.AssertListViewNotHasObjects(assert))
+            => source.AssertListViewHasObjects( assert,listViewFrameSelector,caller).Finally(() => {})
+                .SwitchIfEmpty(Observable.Defer(() => source.AssertListViewNotHasObjects(assert,listViewFrameSelector)))
+                .ReplayFirstTake()
+                .Select(t => t)
                 .AssertProcessSelectedObject(assertExistingObjectDetailview, assert,listViewFrameSelector)
                 .AssertCreateSaveAndDeleteObject( assert, inlineEdit,listViewFrameSelector,caller)
                 .ReplayFirstTake();
@@ -379,39 +382,41 @@ namespace XAF.Testing.XAF{
 
         private static IObservable<(Frame frame, Frame parent)> AssertListViewHasObjects(
             this IObservable<(Frame frame, Frame parent)> source, Func<Frame, AssertAction> assert,Func<DashboardViewItem, bool> listViewFrameSelector=null, [CallerMemberName] string caller = "") 
-            => source.MasterFrame(listViewFrameSelector).ToFirst().If(frame => {
-                        var assertAction = frame.Assert(assert);
-                        var hasFlag = assertAction.HasFlag(AssertAction.HasObject);
-                        return hasFlag;
-                    },
-                frame => frame.Observe().AssertListViewHasObjects(caller)).IgnoreElements().To<(Frame frame, Frame parent)>()
-                .Concat(source).ReplayFirstTake();
+            => source.MasterFrame(listViewFrameSelector).ToFirst().SelectMany(frame => {
+
+                        if (frame.Assert(assert).HasFlag(AssertAction.HasObject)){
+                            return frame.Observe().AssertListViewHasObjects(caller).SelectMany(o => source);
+                        }
+
+                        return source;
+                    }).ReplayFirstTake().Select(t => t);
         
         static AssertAction Assert(this Frame frame,Func<Frame, AssertAction> assert,AssertAction assertAction=AssertAction.All) 
             => assert?.Invoke(frame)??assertAction;
 
         private static IObservable<(Frame frame, Frame parent)> AssertProcessSelectedObject(this IObservable<(Frame frame, Frame parent)> source,
             Func<Frame, IObservable<Unit>> assertDetailview, Func<Frame,AssertAction> assertActionSelector,Func<DashboardViewItem, bool> listViewFrameSelector=null) 
-            => source.MasterFrame(listViewFrameSelector).If(t => {
-                        var assertAction = t.frame.Assert(assertActionSelector);
-                        var hasFlag = assertAction.HasFlag(AssertAction.Process);
-                        return hasFlag;
-                    },
-                    t => t.frame.AssertProcessSelectedObject().ToSecond().Select(frame => frame)
-                        .ConcatIgnored(frame1 => assertDetailview?.Invoke(frame1)??Observable.Empty<Unit>() )
-                        .CloseWindow(t.frame).Select(frame => (frame,t.parent)),t => t.Observe())
-                
+            => source.MasterFrame(listViewFrameSelector).SelectMany(t => {
+
+                        if (t.frame.Assert(assertActionSelector).HasFlag(AssertAction.Process)){
+                            return t.frame.AssertProcessSelectedObject().ToSecond()
+                                .ConcatIgnored(frame1 => assertDetailview?.Invoke(frame1) ?? Observable.Empty<Unit>())
+                                .CloseWindow(t.frame).Select(frame => (frame, t.parent));
+                        }
+                        return t.Observe();
+                    })
                 .ReplayFirstTake();
         
         
-        private static IObservable<(Frame frame, Frame parent)> AssertListViewNotHasObjects(this IObservable<(Frame frame, Frame parent)> source, Func<Frame,AssertAction> assert) 
-            => source.If(t => {
-                        var assertAction = t.frame.Assert(assert, AssertAction.NotHasObject);
-                        var hasFlag = assertAction.HasFlag(AssertAction.NotHasObject);
-                        return hasFlag;
-                    },
-                    t => t.frame.WhenObjects().Assert().SelectMany(_ => new Exception($"{t.frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>())
-                        .Catch<(Frame frame, Frame parent), TimeoutException>(_ => t.Observe()).ObserveOnContext())
+        private static IObservable<(Frame frame, Frame parent)> AssertListViewNotHasObjects(this IObservable<(Frame frame, Frame parent)> source, Func<Frame,AssertAction> assert,Func<DashboardViewItem, bool> listViewFrameSelector=null) 
+            => source.MasterFrame(listViewFrameSelector).ToFirst().SelectMany(frame => {
+
+                        if (frame.Assert(assert, AssertAction.NotHasObject).HasFlag(AssertAction.NotHasObject)){
+                            return  frame.WhenObjects().Assert()
+                                .SelectMany(_ => new Exception($"{frame.View} has objects").ThrowTestException().To<(Frame frame, Frame parent)>());
+                        }
+                        return source;
+                    })
                 .ReplayFirstTake();
 
         private static IObservable<Frame> AssertCreateSaveAndDeleteObject(
@@ -419,9 +424,11 @@ namespace XAF.Testing.XAF{
             Func<DashboardViewItem, bool> listViewFrameSelector = null,[CallerMemberName]string caller="") 
             => source.MasterFrame(listViewFrameSelector)
                 .SelectMany(t => t.frame.Observe().AssertCreateNewObject(assert, inlineEdit)
+                    .Select(t => t)
                     .AssertSaveNewObject(assert,t.frame).Select(t1 => (t1.typeInfo,t1.keyValue,t1.frame.MasterFrame(listViewFrameSelector),t.parent))
                     .AssertDeleteObject(assert,inlineEdit,t.frame,caller)
-                    .SwitchIfEmpty(t.AssertListViewDeleteOnly(assert, inlineEdit, caller)))
+                    .SwitchIfEmpty(t.AssertListViewDeleteOnly(assert, inlineEdit, caller))
+                    .ReplayFirstTake())
                 .SwitchIfEmpty(source.ToFirst())
                 .ReplayFirstTake();
 
@@ -433,40 +440,47 @@ namespace XAF.Testing.XAF{
 
         private static IObservable<(Frame frame, Frame parent)> AssertCreateNewObject(this IObservable<Frame> source, 
             Func<Frame,AssertAction> assert, bool inlineEdit) 
-            => source.If(frame => {
-                    var assertAction = frame.Assert(assert);
-                    var hasFlag = assertAction.HasFlag(AssertAction.ListViewNew);
-                    return hasFlag;
-                },
-                frame => frame.Observe().AssertCreateNewObject(inlineEdit).Select(frame1 => (frame: frame1,parent:frame)));
+            => source.SelectMany(frame => {
+
+                    if (frame.Assert(assert).HasFlag(AssertAction.ListViewNew)){
+                        return frame.Observe().AssertCreateNewObject(inlineEdit).Select(frame1 => (frame: frame1,parent:frame));
+                    }
+                    return Observable.Empty<(Frame frame, Frame parent)>();
+                }).ReplayFirstTake();
         
         
         private static IObservable<Frame> AssertDeleteObject(this IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame, Frame parent)> source, Func<Frame, AssertAction> assert,
             bool inlineEdit,Frame parentFrame, [CallerMemberName] string caller = "") 
-            => source.If(t => {
+            => source.SelectMany(t => {
                     var assertAction = t.frame.Assert(assert);
-                    var hasFlag = assertAction.HasFlag(AssertAction.ListViewDelete)||assertAction==AssertAction.ListViewDeleteOnly;
-                    return hasFlag;
-                },
-                t => t.Observe().AssertDeleteObject(parentFrame,caller).Select(frame => frame),
-                t => t.Observe().WhenDefault(_ => inlineEdit).Select(t1 => t1.frame));
+                    if (assertAction.HasFlag(AssertAction.ListViewDelete) ){
+                        // || assertAction == AssertAction.ListViewDeleteOnly
+                        return t.Observe().AssertDeleteObject(parentFrame, caller);
+                    }
+                    return t.Observe().WhenDefault(_ => inlineEdit).Select(t1 => t1.frame);
+                })
+                .ReplayFirstTake();
 
         private static IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame)> AssertSaveNewObject(
-            this IObservable<(Frame frame, Frame parent)> source, Func<Frame,AssertAction> assert,Frame parentFrame) 
-            => source.If(t => {
-                    var assertAction = t.frame.Assert(assert);
-                    var hasFlag = assertAction.HasFlag(AssertAction.DetailViewSave)||assertAction==AssertAction.ListViewDeleteOnly;
-                    return hasFlag;
-                },
-                t => t.frame.Observe().AssertSaveNewObject(parentFrame),
-                t => t.frame.Observe().CloseWindow(t.parent).Select(frame1 => ((ITypeInfo)null,(object)null,frame1)));
+            this IObservable<(Frame frame, Frame parent)> source, Func<Frame, AssertAction> assert, Frame parentFrame)
+            => source.SelectMany(t => {
+                var assertAction = t.frame.Assert(assert);
+                if (assertAction.HasFlag(AssertAction.DetailViewSave) ){
+                    // || assertAction == AssertAction.ListViewDeleteOnly
+                    return t.frame.Observe().AssertSaveNewObject(parentFrame);
+                }
+
+                return t.frame.Observe().CloseWindow(t.parent).Select(frame1 => ((ITypeInfo)null, (object)null, frame1));
+            }).ReplayFirstTake();
 
         public static IObservable<Unit> AssertMapsControl(this DetailView detailView)
             => detailView.ObjectSpace.GetRequiredService<IAssertMapControl>().Assert(detailView);
     }
 
-    
 
+    public class CannotNavigateException:Exception{
+        
+    }
     public class AssertException:Exception{
         public AssertException(string message) : base(message){
         }

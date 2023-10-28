@@ -5,14 +5,12 @@ using System.Reactive.Subjects;
 
 namespace XAF.Testing.RX{
     public static class CombineExtensions{
-        public static IObservable<T> SwitchIfEmpty<T>(this IObservable<T> source, IObservable<T> switchTo) {
-            var signal = new AsyncSubject<Unit>();
-            return source.Do(_ => {
+        public static IObservable<T> SwitchIfEmpty<T>(this IObservable<T> source, IObservable<T> switchTo) 
+            => new AsyncSubject<Unit>().Use(signal => source.Do(_ => {
                 signal.OnNext(Unit.Default); 
                 signal.OnCompleted();
-            }).Concat(switchTo.TakeUntil(signal)); 
-        }
-        
+            }).Concat(switchTo.TakeUntil(signal)));
+
         public static IObservable<T> MergeIgnored<T,T2>(this IObservable<T> source,Func<T,IObservable<T2>> secondSelector,Func<T,bool> merge=null)
             => source.Publish(obs => obs.SelectMany(arg => {
                 merge ??= _ => true;

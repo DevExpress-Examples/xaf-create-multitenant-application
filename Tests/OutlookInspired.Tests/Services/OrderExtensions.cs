@@ -26,22 +26,22 @@ namespace OutlookInspired.Tests.Services{
 
         
 
-        private static IObservable<Frame> AsserOrderListView(this SingleChoiceAction action, string navigationView, string viewVariant){
-            var orderTabGroup = action.Application.AssertTabbedGroup(typeof(Order),4);
-            return action.Application.AssertDashboardListView(navigationView, viewVariant,
-                    existingObjectDetailview: frame => orderTabGroup.AssertRootOrder(frame),assert:frame => frame.AssertAction())
-                .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake()
-                .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
-                .ReplayFirstTake()
-                .AssertOrderReportsAction()
-                .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
-                
-                
-                .Select(frame => frame)
-                .AssertFilterAction(filtersCount: 7)
-                .FilterListViews(action.Application);
-        }
+        // private static IObservable<Frame> AsserOrderListView(this SingleChoiceAction action, string navigationView, string viewVariant){
+        //     var orderTabGroup = action.Application.AssertTabbedGroup(typeof(Order),4);
+        //     return action.Application.AssertDashboardListView(navigationView, viewVariant,
+        //             existingObjectDetailview: frame => orderTabGroup.AssertRootOrder(frame),assert:frame => frame.AssertAction())
+        //         .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake()
+        //         .AssertDashboardListViewEditView(frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+        //         .If(_ => viewVariant=="Detail",frame => frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Order.OrderItems)),frame => frame.Observe())
+        //         .ReplayFirstTake()
+        //         .AssertOrderReportsAction()
+        //         .AssertMapItAction(typeof(Order), frame => ((DetailView)frame.View).AssertPdfViewer().To(frame))
+        //         
+        //         
+        //         .Select(frame => frame)
+        //         .AssertFilterAction(filtersCount: 7)
+        //         .FilterListViews(action.Application);
+        // }
 
         internal static IObservable<Frame> AssertOrderReportsAction(this IObservable<Frame> source) 
             => source.DashboardViewItem(item => item.MasterViewItem()).ToFrame()

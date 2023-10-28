@@ -1,8 +1,16 @@
 ﻿using System.Reflection;
+using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Model;
 
 namespace XAF.Testing.XAF{
     public static class ModelExtensions{
+        public static bool IsOneToOneForeignKey(this IMemberInfo memberInfo) 
+            => memberInfo.Name.Length > 2 && memberInfo.Name.EndsWith("Id") && (memberInfo.Owner
+                .FindMember(memberInfo.Name.Substring(0, memberInfo.Name.Length - 2))?.IsOneToOneRelated() ?? false);
+
+        public static bool IsOneToOneRelated(this IMemberInfo memberInfo) 
+            => (memberInfo.AssociatedMemberInfo?.IsPersistent ?? false) || memberInfo.IsOneToOneForeignKey();
+
         public static bool IsDefault(this IModelObjectView modelObjectView) 
             => modelObjectView is IModelListView modelListView ? modelObjectView.ModelClass.DefaultListView == modelListView
                 : modelObjectView.ModelClass.DefaultDetailView == modelObjectView;

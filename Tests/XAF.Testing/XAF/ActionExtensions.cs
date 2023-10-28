@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -32,6 +33,8 @@ namespace XAF.Testing.XAF{
             => action.WhenEvent<ActionBaseEventArgs>(nameof(ActionBase.ExecuteCompleted)).Cast<SimpleActionExecuteEventArgs>().TakeUntilDisposed(action);
         public static IObservable<SimpleActionExecuteEventArgs> WhenExecuted(this SimpleAction action) 
             => action.WhenEvent<ActionBaseEventArgs>(nameof(SimpleAction.Executed)).Cast<SimpleActionExecuteEventArgs>().TakeUntilDisposed(action);
+        public static IObservable<(TAction action, CancelEventArgs e)> WhenExecuting<TAction>(this TAction action) where TAction : ActionBase 
+            => action.WhenEvent<CancelEventArgs>(nameof(ActionBase.Executing)).InversePair(action).TakeUntilDisposed(action);
         public static IObservable<T> Trigger<T>(this SimpleAction action, IObservable<T> afterExecuted,params object[] selection)
             => afterExecuted.Trigger(() => action.DoExecute(selection));
         public static IObservable<Unit> Trigger(this SimpleAction action, params object[] selection)

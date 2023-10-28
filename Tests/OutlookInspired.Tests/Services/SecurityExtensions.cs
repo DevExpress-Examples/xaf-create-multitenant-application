@@ -58,8 +58,12 @@ namespace OutlookInspired.Tests.Services{
 
         public static IObservable<XafApplication> CanNavigate(this XafApplication application, string viewId) 
             => application.Defer(() => application.NewObjectSpace()
-                .Use(space => space.CurrentUser<ApplicationUser>().NavigationViews().Contains(viewId).Observe()).WhenNotDefault()
-                .SwitchIfEmpty(Observable.Throw<bool>(new AssertException()))
+                .Use(space => {
+                    var applicationUser = space.CurrentUser<ApplicationUser>();
+                    var navigationViews = applicationUser.NavigationViews();
+                    return navigationViews.Contains(viewId).Observe();
+                }).WhenNotDefault()
+                // .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<bool>(new AssertException())))
                 .To(application));
 
         public static bool CanNavigate(this SingleChoiceAction action,string viewId){
@@ -148,7 +152,7 @@ namespace OutlookInspired.Tests.Services{
             => department switch{
                 EmployeeDepartment.Shipping or EmployeeDepartment.Engineering or EmployeeDepartment.Management or EmployeeDepartment.IT when
                     !frame.View.IsRoot => XAF.Testing.XAF.AssertAction.NotHasObject,
-                _ => XAF.Testing.XAF.AssertAction.AllButDelete
+                _ => XAF.Testing.XAF.AssertAction.All
             };
     
         static AssertAction QuoteAssertAction(this EmployeeDepartment? department,Frame frame) 

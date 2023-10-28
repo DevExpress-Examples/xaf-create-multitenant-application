@@ -3,6 +3,7 @@ using System.Reactive.Subjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Map.Kml.Model;
+using DevExpress.Persistent.Validation;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using Point = System.Drawing.Point;
@@ -10,18 +11,25 @@ using Point = System.Drawing.Point;
 namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
         public static IObservable<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user,LogContext logContext=default) 
-            => application.Start( test.Log(logContext)
-                , new WindowsFormsSynchronizationContext(),user);
+            => SynchronizationContext.Current.Observe()
+                .DoWhen(context => context is not WindowsFormsSynchronizationContext,_ => SynchronizationContext.SetSynchronizationContext(new WindowsFormsSynchronizationContext()))
+                .SelectMany(_ => application.Start(test, SynchronizationContext.Current, user,logContext)).FirstOrDefaultAsync();
 
-        private static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test, WindowsFormsSynchronizationContext context,string user =null) 
+        private static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test, SynchronizationContext context,string user =null,LogContext logContext=default) 
             => context.Observe().Do(SynchronizationContext.SetSynchronizationContext)
                 .SelectMany(_ => application.Start(Tracing.WhenError().ThrowTestException().DoOnError(_ => application.Terminate(context)).To<T>()
                     .Merge(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
-                        .Merge(test.DoOnComplete(() => application.Terminate(context)))
-                        .Merge(application.ThrowWhenHandledExceptions().To<T>()).LogError())));
+                        .Merge(application.GetRequiredService<IValidator>().RuleSet.WhenEvent<ValidationCompletedEventArgs>(nameof(RuleSet.ValidationCompleted))
+                            .DoWhen(e => !e.Successful,e => e.Exception.ThrowCaptured()).To<T>()
+                            .TakeUntilFinished(test.Finally(() => application.Terminate(context))))
+                        .LogError())))
+                .Log(logContext)
+            ;
 
-        private static void Terminate(this XafApplication application, SynchronizationContext context) 
-            => context.Post(_ => application.Exit(),null);
+        private static void Terminate(this XafApplication application, SynchronizationContext context){
+            Logger.Exit();
+            context.Post(_ => application.Exit(), null);
+        }
 
         public static IObservable<Form> MoveToInactiveMonitor(this IObservable<Form> source) 
             => source.Do( form => form.Handle.UseInactiveMonitorBounds(bounds => {

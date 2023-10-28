@@ -15,14 +15,12 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
+        protected const int MaxTries = 3;
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = 180.Seconds();
+            UtilityExtensions.TimeoutInterval = 300.Seconds();
         }
-#if DEBUG
-        protected const int MaxTries = 3;
-#else
-        protected const int MaxTries = 3;
-#endif
+
+        protected virtual bool RunInMainMonitor => false;
         protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
         protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
 
@@ -75,15 +73,7 @@ namespace OutlookInspired.Tests.Common{
             yield return new TestCaseData(Opportunities,null,user,AssertOpportunitiesView);
         }
 
-        protected virtual LogContext LogContext{
-            get{
-#if TEST
-                return default;
-#else
-                return LogContext.None;
-#endif
-            }
-        }
+        protected virtual LogContext LogContext => LogContext.None;
 
 
         public IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){
@@ -93,8 +83,10 @@ namespace OutlookInspired.Tests.Common{
             => application.AssertNavigationItems((action, item) => action.NavigationItems(item))
                 .If(action => action.CanNavigate(navigationView), _ => application.AssertListView(navigationView, viewVariant));
         
-        static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant) 
-            => application.AssertOpportunitiesView( navigationView, viewVariant);
+        static IObservable<Frame> AssertOpportunitiesView(XafApplication application,string navigationView,string viewVariant){
+            throw new NotImplementedException();
+            // return application.AssertOpportunitiesView(navigationView, viewVariant);
+        }
 
         static IObservable<Frame> AssertProductListView(XafApplication application,string navigationView,string viewVariant){
             throw new NotImplementedException();

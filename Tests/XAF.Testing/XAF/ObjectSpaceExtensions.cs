@@ -52,8 +52,9 @@ namespace XAF.Testing.XAF{
             => objectSpace.GetObjectByKey<TUser>(objectSpace.GetRequiredService<ISecurityStrategyBase>().UserId);
 
         public static IEnumerable<IMemberInfo> CloneableOwnMembers(this IObjectSpace objectSpace,Type type)
-            => objectSpace.TypesInfo.FindTypeInfo(type).OwnMembers.Where(info => !info.IsList && !info.IsKey);
-        
+            => objectSpace.TypesInfo.FindTypeInfo(type).OwnMembers.Where(info => !info.IsList && !info.IsKey)
+                .Where(info => !info.IsOneToOneRelated());
+
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);
         public static object FindObject(this IObjectSpace objectSpace, Type objectType) 
