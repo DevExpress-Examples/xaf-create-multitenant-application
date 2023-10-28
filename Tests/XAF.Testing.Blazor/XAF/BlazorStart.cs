@@ -84,7 +84,14 @@ namespace XAF.Testing.Blazor.XAF{
         public static void ConfigureXafApplication(this IBlazorApplicationBuilder builder,IApplicationStartup startup, Action<BlazorApplication> whenApplication){
             startup.WhenApplication.SelectMany(application => application.WhenLoggedOn(startup.User).To<Frame>().IgnoreElements()
                 .Merge(application.WhenLoggedOn().ToFirst().To<Frame>())).Subscribe();
-            builder.AddBuildStep(application => whenApplication((BlazorApplication)application));
+            builder.AddBuildStep(application => {
+                application.DatabaseUpdateMode=DatabaseUpdateMode.UpdateDatabaseAlways;
+                application.DatabaseVersionMismatch += (sender, e) => {
+                    e.Updater.Update();
+                    e.Handled = true;
+                };
+                whenApplication((BlazorApplication)application);
+            });
         }
     }
 
