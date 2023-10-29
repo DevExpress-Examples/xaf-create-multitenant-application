@@ -44,7 +44,7 @@ namespace OutlookInspired.Tests.Common{
             get{
                 var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
                 return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
-                    roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
+                    roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values.Where(s => s=="Admin");
             }
         }
 
