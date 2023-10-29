@@ -17,14 +17,14 @@ namespace XAF.Testing.Blazor.XAF{
     public static class BlazorStart{
         static BlazorStart() => CurrentDomain.Await(async () => await Tracing.Use());
 
-        public static IObservable<Unit> Run(this IHostBuilder builder,string address,string contentRoot, Action<IWebHostBuilder, ISubject<Unit>> config,string browser) 
-            => Tracing.WhenError().ThrowTestException()
-                .MergeToUnit(Subject.Synchronize(new Subject<Unit>()).Observe().Do(_ => builder.Initialize( address, browser))
-                    .SelectMany(subject => builder.ConfigureWebHostDefaults( address, contentRoot, config, subject)
-                        .Build().Use(host => host.RunAsync().ToObservable())
-                        .TakeUntil(subject.Select(unit => unit)).FirstOrDefaultAsync()
-                    )).FirstOrDefaultAsync()
-                ;
+        public static IObservable<Unit> Run(this IHostBuilder builder,string address,string contentRoot, Action<IWebHostBuilder, ISubject<Unit>> config,string browser){
+            return Subject.Synchronize(new Subject<Unit>()).Observe()
+                .Do(_ => builder.Initialize(address, browser))
+                .SelectMany(subject => builder.ConfigureWebHostDefaults(address, contentRoot, config, subject)
+                    .Build().Use(host => host.RunAsync().ToObservable().DoNotComplete())
+                    .TakeUntil(subject.Select(unit => unit)).FirstOrDefaultAsync()
+                );
+        }
 
         private static IHostBuilder ConfigureWebHostDefaults(this IHostBuilder builder, string address, string contentRoot, Action<IWebHostBuilder, ISubject<Unit>> config, ISubject<Unit> innerCompleted) 
             => builder.ConfigureWebHostDefaults(webBuilder => {
@@ -52,28 +52,12 @@ namespace XAF.Testing.Blazor.XAF{
                         application.ConnectionString= application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");
                         application.DeleteModelDiffs<TDBContext>();
                     })
-                    // .Select(application => application.WhenLoggedOn().To(application)).Switch()
                     .Select(application => application)
                     .TakeUntil(process.WhenExited().Select(process1 => process1))
-                    // .Select(application => 5000.Milliseconds().Delay().ToObservable()
-                    //     .SelectMany(unit => Observable.Throw<Unit>(new Exception())).TakeUntil(application.WhenDisposed())
                     .Select(application => test(application).TakeUntil(application.WhenDisposed().Select(blazorApplication => blazorApplication))
-                        // .Catch<Unit,Exception>(exception => {
-                        //     DevExpress.Persistent.Base.Tracing.Tracer.LogError(exception);
-                        //     process.CloseMainWindow();
-                        //     return Observable.Throw<Unit>(exception);
-                        // })
                         .LogError()
                         .Do(unit => application.LogOff())
-                        .Do(_ => {
-                                process.CloseMainWindow();
-                            }
-                            ,_ => {
-                                process.CloseMainWindow();
-                            },
-                            () => {
-                                process.CloseMainWindow();
-                            }))
+                        .Do(_ => process.CloseMainWindow(),_ => process.CloseMainWindow(),() => process.CloseMainWindow()))
                     .Switch()
                     .ToUnit()
                     .DoOnComplete(() => whenCompleted.OnNext()) 

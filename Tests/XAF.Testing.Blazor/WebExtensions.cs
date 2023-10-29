@@ -22,7 +22,7 @@ public static class WebExtensions{
             FileName = browser,
             Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} {uri}",
             UseShellExecute = true
-        }.Start().Observe().Delay(TimeSpan.FromSeconds(1));
+        }.Start().Observe();
 
     private static string CreateTempProfilePath(string name){
         var path = $"{Path.GetTempPath()}\\{name}";
