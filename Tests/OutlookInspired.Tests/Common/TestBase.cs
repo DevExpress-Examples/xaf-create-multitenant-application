@@ -16,9 +16,9 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const string Tests = nameof(Tests);
-        protected const int MaxTries = 3;
+        protected const int MaxTries = 1;
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = 3000.Seconds();
+            UtilityExtensions.TimeoutInterval = 30.Seconds();
         }
 
         protected virtual bool RunInMainMonitor => false;

@@ -3,13 +3,19 @@ using System.Linq.Expressions;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor;
+using DevExpress.Utils.Serializing.Helpers;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.Models{
 
-    public interface ISelectableModel{
+    public interface IModelProcessObject{
+        IList Objects { get; }
+        void ProcessObject(object value);
+    }
+
+    public interface IModelSelectObject{
         IList Objects { get; }
         void SelectObject(object value);
     }
@@ -19,10 +25,17 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
         IList Objects { get; }
     }
 
-    public abstract class UserControlComponentModel<T>:UserControlComponentModel,ISelectableModel, IUserControlDataSource{
-        IList ISelectableModel.Objects => Objects;
+    public abstract class UserControlComponentModel<T>:UserControlComponentModel,IModelSelectObject, IUserControlDataSource,IModelProcessObject{
+        IList IModelSelectObject.Objects => Objects;
+
+        void IModelProcessObject.ProcessObject(object value){
+            SelectObject((T)value);
+            ProcessSelectedObject();
+        }
+
+        IList IModelProcessObject.Objects => Objects;
         IList IUserControlDataSource.Objects => Objects;
-        void ISelectableModel.SelectObject(object value) => SelectObject((T)value);
+        void IModelSelectObject.SelectObject(object value) => SelectObject((T)value);
 
         public List<T> Objects{
             get => GetPropertyValue<List<T>>();
@@ -34,7 +47,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
         public event EventHandler DataSourceChanged;
 
-        public void SelectObject(T value) => OnObjectSelected(new SelectObjectEventArgs(value));
+        public void SelectObject(T value) => OnObjectSelected(new ObjectEventArgs(value));
         public override void Refresh() => Objects = ObjectSpace.GetObjects<T>(Criteria).ToList();
         public override Type ObjectType => typeof(T);
 
@@ -43,7 +56,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
     public abstract class UserControlComponentModel:ComponentModelBase,IComponentContentHolder,IUserControl{
         private IList _selectedObjects = new List<object>();
         public CriteriaOperator Criteria{ get; private set; }
-        public event AsyncEventHandler<SelectObjectEventArgs> ObjectSelected; 
+        public event AsyncEventHandler<ObjectEventArgs> ObjectSelected; 
         public abstract RenderFragment ComponentContent{ get; }
         public virtual object CurrentObject => SelectedObjects.Cast<object>().FirstOrDefault();
         public override void Setup(IObjectSpace objectSpace, XafApplication application){
@@ -68,7 +81,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
         public virtual void Refresh(object currentObject) => Refresh();
 
-        public event EventHandler ProcessObject;
+        public event EventHandler<ObjectEventArgs> ProcessObject;
         public event EventHandler CriteriaChanged;
         public void SetCriteria<T>(Expression<Func<T, bool>> lambda) 
             => SetCriteria((LambdaExpression)lambda);
@@ -96,10 +109,10 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
             => SelectionTypeChanged?.Invoke(this, EventArgs.Empty);
 
         public virtual void ProcessSelectedObject()
-            => ProcessObject?.Invoke(this, EventArgs.Empty);
+            => ProcessObject?.Invoke(this, new ObjectEventArgs(_selectedObjects.Cast<object>().First()));
 
 
-        protected virtual void OnObjectSelected(SelectObjectEventArgs e) => ObjectSelected?.Invoke(this, e);
+        protected virtual void OnObjectSelected(ObjectEventArgs e) => ObjectSelected?.Invoke(this, e);
 
         protected virtual void OnCriteriaChanged() => CriteriaChanged?.Invoke(this, EventArgs.Empty);
     }

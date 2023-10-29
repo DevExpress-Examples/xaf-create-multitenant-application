@@ -121,6 +121,10 @@ namespace XAF.Testing.Blazor.XAF{
         public IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(Frame listViewFrame) 
             => listViewFrame.ProcessSelectedObject();
     }
+
+    public interface IUserControlProcessSelectedObject{
+        IObservable<Frame> Process(Frame frame, object gridControl);
+    }
     
     public class DocumentActionAssertion : IDocumentActionAssertion{
         public IObservable<Frame> Assert(SingleChoiceAction action, ChoiceActionItem item) 

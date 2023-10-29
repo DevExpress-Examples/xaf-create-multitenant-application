@@ -40,6 +40,7 @@ namespace OutlookInspired.Tests.Common{
                 }
                 catch (Exception ex){
                     context.CurrentResult ??= context.CurrentTest.MakeTestResult();
+                    Console.WriteLine(ex);
                     context.CurrentResult.RecordException(ex);
                 }
                 if (context.CurrentResult.ResultState != ResultState.Error)

@@ -14,7 +14,7 @@ namespace OutlookInspired.Tests.Common{
                 .IgnoreElements().TakeUntilDisposed(application).To<XafApplication>().Merge(application.Observe());
         
         internal static IObservable<T> FilterListViews<T>(this IObservable<T> source, XafApplication application)
-            => application.WhenLoggedOn().Take(1)
+            => application.WhenLoggedOn()
                 .SelectMany(_ => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
                 .IgnoreElements().TakeUntilFinished(source).To<T>())
                 .Concat(source);

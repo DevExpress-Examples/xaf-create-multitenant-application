@@ -4,6 +4,7 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using OutlookInspired.Blazor.Server.Components.Models
 @using OutlookInspired.Module.Services.Internal
+@using DevExpress.Utils.Serializing.Helpers
 
 <style>
 .ellipsis3Lines {
@@ -93,11 +94,16 @@
   protected override void OnInitialized(){
     base.OnInitialized();
     Model.ObjectSelected+=ModelOnObjectSelected;
+    Model.ProcessObject+=ModelOnObjectProcess;
   }
 
-  private async Task ModelOnObjectSelected(object sender, SelectObjectEventArgs e){
-    if (e.Value != CurrentObject) return;
+  private async Task ModelOnObjectSelected(object sender, ObjectEventArgs e){
+    if (e.Object != CurrentObject) return;
     await HandleClickAsync(null);
+  }
+  private void ModelOnObjectProcess(object sender, ObjectEventArgs e){
+    if (e.Object != CurrentObject) return;
+    HandleDoubleClickAsync(null);
   }
 
   private void HandleDoubleClickAsync(MouseEventArgs e) 
@@ -117,6 +123,9 @@
   }
 
 
-  public void Dispose() => Model.ObjectSelected-=ModelOnObjectSelected;
+  public void Dispose(){
+    Model.ObjectSelected -= ModelOnObjectSelected;
+    Model.ProcessObject -= ModelOnObjectProcess;
+  }
 
 }

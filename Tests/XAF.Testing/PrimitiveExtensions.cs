@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using Aqua.EnumerableExtensions;
@@ -8,6 +9,11 @@ using static XAF.Testing.WinInterop;
 namespace XAF.Testing{
 
     public static class PrimitiveExtensions{
+        private static readonly Random Random = new(DateTime.Now.Millisecond);
+        public static int GetAvailablePort(this IPEndPoint[] endPoints,int startRange = 1024, int endRange = 49151) 
+            => startRange.Range( endRange - startRange).ToArray().OrderBy(_ => Random.Next()).ToArray()
+                .First(port => endPoints.All(endPoint => endPoint.Port != port));
+
         public static string ReverseStackTrace(this Exception exception) => $"{exception.FromHierarchy(exception1 => exception1.InnerException).Select(exception1 =>$"{exception1.StackTrace}" ).Reverse().StringJoin(Environment.NewLine)}";
 
         public static IEnumerable<TSource> FromHierarchy<TSource>(this TSource source, Func<TSource, TSource> nextItem) where TSource : class 

@@ -14,6 +14,12 @@ using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Blazor.Tests.Common{
+    class UserControlProcessSelectedObject:IUserControlProcessSelectedObject{
+        public IObservable<Frame> Process(Frame frame, object gridControl) 
+            => frame.WhenFrame(ViewType.DetailView).Merge(gridControl.Observe().Cast<IModelProcessObject>()
+                    .Do(processObject => processObject.ProcessObject(processObject.Objects.Cast<object>().First()))
+                    .IgnoreElements().To<Frame>());
+    }
     public class AssertMapControl : IAssertMapControl{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertViewItemControl<ComponentModelBase>(
@@ -51,13 +57,8 @@ namespace OutlookInspired.Blazor.Tests.Common{
     
     public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
         public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
-            => item.InnerView.ToDetailView().GetItems<ControlViewItem>().Select(viewItem => viewItem.Control).Cast<ISelectableModel>()
+            => item.InnerView.ToDetailView().GetItems<ControlViewItem>().Select(viewItem => viewItem.Control).Cast<IModelSelectObject>()
                 .Do(model => model.SelectObject(model.Objects.Cast<object>().First()))
-                // .Select(model => model switch{
-                //     UserControlComponentModel<Employee> employeeModel => (Action)(() => employeeModel.SelectObject(employeeModel.Objects.First())),
-                //     UserControlComponentModel<Customer> componentModel => () => componentModel.SelectObject(componentModel.Objects.First()),
-                //     _ => () => {}
-                // }).Do(action => action())
                 .ToNowObservable()
                 .ToUnit();
     }

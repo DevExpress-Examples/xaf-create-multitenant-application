@@ -43,18 +43,12 @@ namespace XAF.Testing.Blazor.XAF{
                 .To<Frame>();
 
 
-        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame){
-            // return frame.WhenGridControl()
-            //     .Publish(source => source
-            //         .SelectMany(t => frame.Application.WhenFrame(((NestedFrame)t.frame)
-            //                 .DashboardChildDetailView().ObjectTypeInfo.Type, ViewType.DetailView)
-            //             .Where(frame1 => frame1.View.ObjectSpace.GetKeyValue(frame1.View.CurrentObject)
-            //                 .Equals(((ColumnView)t.gridControl.MainView).FocusedRowObjectKey(frame1.View.ObjectSpace))))
-            //         .Merge(Observable.Defer(() =>
-            //             source.ToFirst().ProcessEvent(EventType.DoubleClick).To<Frame>().IgnoreElements())))
-            //     .SwitchIfEmpty(frame.ProcessListViewSelectedItem())
-            //     .Select(detailViewFrame => (frame: frame, detailViewFrame));
-            return frame.ProcessListViewSelectedItem().Select(detailViewFrame => (frame, detailViewFrame));
-        }
+        public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
+            => frame.View.Observe().OfType<DetailView>()
+                .SelectMany(detailView => detailView.WhenGridControl()
+                    .SelectMany(gridControl => frame.Application.GetRequiredService<IUserControlProcessSelectedObject>()
+                        .Process(frame, gridControl)))
+                .SwitchIfEmpty(frame.ProcessListViewSelectedItem())
+                .Select(detailViewFrame => (frame,detailViewFrame));
     }
 }

@@ -13,6 +13,11 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
 namespace OutlookInspired.Tests.Services{
     public static class EmployeeExtensions{
+        // public static IObservable<Unit> AssertCustomerMaps(this XafApplication application,string view, string viewVariant) 
+        //     => application.AssertNavigation(view, viewVariant,source => source.AssertSelectDashboardListViewObject()
+        //             .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject)).ToUnit(),
+        //         application.CanNavigate(view).ToUnit());
+
         public static IObservable<Unit> AssertEmployeeListView(this XafApplication application,string view, string viewVariant) 
             => application.AssertNavigation(view, viewVariant, source => {
                 var employeeTab = application.AssertTabbedGroup(typeof(Employee),2,detailView => detailView.Model.IsDefault());
@@ -21,7 +26,8 @@ namespace OutlookInspired.Tests.Services{
                     .ReplayFirstTake()
                     .ToUnit();
             },application.CanNavigate(view).ToUnit())
-            .FilterListViews(application);    
+            .FilterListViews(application)
+            ;    
         
         static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame){
             return Observable.Empty<Frame>();

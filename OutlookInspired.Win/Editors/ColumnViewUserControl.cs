@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
+using DevExpress.Utils.Serializing.Helpers;
 using DevExpress.XtraGrid.Views.Base;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
@@ -19,7 +20,7 @@ namespace OutlookInspired.Win.Editors
         public event EventHandler CurrentObjectChanged;
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionTypeChanged;
-        public event EventHandler ProcessObject;
+        public event EventHandler<ObjectEventArgs> ProcessObject;
         
         public void SetCriteria<T>(Expression<Func<T, bool>> lambda) 
             => SetCriteria((LambdaExpression)lambda);
@@ -43,7 +44,7 @@ namespace OutlookInspired.Win.Editors
             };
             ColumnView.DoubleClick += (_, _) => {
                 if (!ColumnView.IsNotGroupedRow()) return;
-                ProcessObject?.Invoke(this, EventArgs.Empty);
+                ProcessObject?.Invoke(this, new ObjectEventArgs(SelectedObjects.Cast<object>().First()));
             };
             ColumnView.ColumnFilterChanged += (_, _) => OnDataSourceOfFilterChanged();
             ColumnView.DataSourceChanged += (_, _) => OnDataSourceOfFilterChanged();

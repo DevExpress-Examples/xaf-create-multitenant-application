@@ -1,4 +1,5 @@
-﻿using System.Reactive;
+﻿using System.Net.NetworkInformation;
+using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Blazor;
 using NUnit.Framework;
@@ -15,12 +16,15 @@ namespace OutlookInspired.Blazor.Tests.Common{
         
         protected IObservable<Unit> StartTest(string user,Func<BlazorApplication,IObservable<Unit>> test) 
             => Host.CreateDefaultBuilder().Observe().Do(_ => TestContext.CurrentContext.Test.FullName.WriteSection())
-                .StartTest<Startup,OutlookInspiredEFCoreDbContext>("http://localhost:5000", "../../../../../OutlookInspired.Blazor.Server",user, test,
-                    Configure,Environment.GetEnvironmentVariable("XAFTESTBrowser") ,WindowPosition.FullScreen,LogContext,WindowPosition.BottomRight)
+                .StartTest<Startup, OutlookInspiredEFCoreDbContext>(
+                    $"http://localhost:{IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().GetAvailablePort()}",
+                    "../../../../../OutlookInspired.Blazor.Server", user, test, Configure,Environment.GetEnvironmentVariable("XAFTESTBrowser") ,
+                    WindowPosition.FullScreen,LogContext,WindowPosition.BottomRight)
                 .Timeout(Timeout);
 
         private void Configure(IServiceCollection collection){
             collection.AddScoped<IPdfViewerAssertion,PdfViewerAssertion>();
+            collection.AddScoped<IUserControlProcessSelectedObject,UserControlProcessSelectedObject>();
             collection.AddScoped<IAssertMapControl,AssertMapControl>();
             collection.AddScoped<IAssertFilterView,AssertAssertFilterView>();
             collection.AddScoped<IFilterViewManager,FilterViewManager>();

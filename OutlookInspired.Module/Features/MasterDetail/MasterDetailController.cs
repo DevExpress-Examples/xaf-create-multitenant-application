@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.Persistent.Base;
+using DevExpress.Utils.Serializing.Helpers;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.MasterDetail{
@@ -94,7 +95,7 @@ namespace OutlookInspired.Module.Features.MasterDetail{
 
         private void ObjectSpaceOnCommitted(object sender, EventArgs e) => _userControl.Refresh();
 
-        private void UserControlOnProcessObject(object sender, EventArgs e){
+        private void UserControlOnProcessObject(object sender, ObjectEventArgs objectEventArgs){
             var userControl = (IUserControl)sender;
             _processMasterViewSelectedObjectAction.SelectionContext = userControl;
             _processMasterViewSelectedObjectAction.DoExecute();
