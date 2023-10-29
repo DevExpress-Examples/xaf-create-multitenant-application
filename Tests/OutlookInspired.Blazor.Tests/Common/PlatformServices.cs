@@ -7,13 +7,11 @@ using DevExpress.ExpressApp.Layout;
 using OutlookInspired.Blazor.Server;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
-using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
-using IDataSourceChanged = XAF.Testing.XAF.IDataSourceChanged;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public class AssertMapControl : IAssertMapControl{

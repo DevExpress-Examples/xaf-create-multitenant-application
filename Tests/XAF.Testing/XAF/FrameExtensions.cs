@@ -88,6 +88,9 @@ namespace XAF.Testing.XAF{
         public static IObservable<Unit> WhenAcceptTriggered(this IObservable<DialogController> source) 
             => source.SelectMany(controller => controller.AcceptAction.Trigger().Take(1));
         
+        public static IObservable<T> WhenAcceptTriggered<T>(this IObservable<DialogController> source,IObservable<T> afterExecuted,params object[] selection) 
+            => source.SelectMany(controller => controller.AcceptAction.Trigger(afterExecuted,selection).Take(1));
+        
         public static IObservable<DashboardViewItem> DashboardViewItem(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector) 
             => source.SelectMany(frame => frame.DashboardViewItem(itemSelector));
 

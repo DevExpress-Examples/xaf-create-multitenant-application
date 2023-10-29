@@ -10,6 +10,7 @@ using Point = System.Drawing.Point;
 
 namespace XAF.Testing.Win.XAF{
     public static class TestExtensions{
+        static TestExtensions() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
         public static IObservable<T> StartWinTest<T>(this WinApplication application, IObservable<T> test,string user,LogContext logContext=default) 
             => SynchronizationContext.Current.Observe()
                 .DoWhen(context => context is not WindowsFormsSynchronizationContext,_ => SynchronizationContext.SetSynchronizationContext(new WindowsFormsSynchronizationContext()))

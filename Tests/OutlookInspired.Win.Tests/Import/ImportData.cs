@@ -42,7 +42,7 @@ namespace OutlookInspired.Win.Tests.Import{
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
             1.Range(100).Do(user => {
                 var applicationUser = objectSpace.CreateObject<ApplicationUser>();
-                applicationUser.UserName = $"Test{user}";
+                applicationUser.UserName = $"New user {user}";
             }).Finally(objectSpace.CommitChanges).Enumerate();
               
             // objectSpace.GenerateOrders();

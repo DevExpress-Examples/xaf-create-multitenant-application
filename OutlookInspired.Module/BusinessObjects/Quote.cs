@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp.Model;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes;
@@ -20,11 +21,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual CustomerStore CustomerStore { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual DateTime Date { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal SubTotal { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal ShippingAmount { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal Total { get; set; }
         [EditorAlias(EditorAliases.ProgressEditor)]
         [ProgressPropertyEditor(Maximum = 1)]

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes.Appearance;
 using OutlookInspired.Module.Features.CloneView;
@@ -19,11 +20,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         [Browsable(false)]
         public virtual Guid? ProductID { get; set; }
         public virtual  int ProductUnits { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public virtual  decimal ProductPrice { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal Discount { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal Total { get; set; }
     }
 }

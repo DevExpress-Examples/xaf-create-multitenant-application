@@ -9,13 +9,10 @@ using OutlookInspired.Win.Extensions;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.Win.XAF;
-using XAF.Testing.XAF;
 
 namespace OutlookInspired.Win.Tests.Common{
     
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
-        
-        static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
         public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
             => SetupWinApplication().SelectMany(application => application.Use(winApplication =>

@@ -8,7 +8,9 @@ using XAF.Testing.RX;
 namespace XAF.Testing.XAF{
     public static class TracingExtensions{
         public static IObservable<T> LogError<T>(this IObservable<T> source) 
-            => source.DoOnError(exception => DevExpress.Persistent.Base.Tracing.Tracer.LogError(exception));
+            => source.Publish(obs => Tracing.WhenError().ThrowTestException().To<T>().Merge(obs).TakeUntilCompleted(obs))
+                .DoOnError(exception => DevExpress.Persistent.Base.Tracing.Tracer.LogError(exception))
+            ;
     }
     public class Tracing:DevExpress.Persistent.Base.Tracing{
         readonly Subject<Exception> _errorSubject = new();

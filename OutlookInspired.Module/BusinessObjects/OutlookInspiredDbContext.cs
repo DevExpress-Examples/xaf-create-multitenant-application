@@ -72,7 +72,9 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         modelBuilder.Entity<ApplicationUserLoginInfo>(builder => builder.HasIndex(nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.LoginProviderName), nameof(DevExpress.ExpressApp.Security.ISecurityUserLoginInfo.ProviderUserKey)).IsUnique());
         modelBuilder.Entity<ModelDifference>().HasMany(difference => difference.Aspects).WithOne(aspect => aspect.Owner).OnDelete(DeleteBehavior.Cascade);
-        
+        modelBuilder.Entity<Customer>()
+	        .Property(e => e.AnnualRevenue)
+	        .HasColumnType("decimal(18, 2)");
         
         modelBuilder.OnProductImage()
 	        .OnTaskAttachedFile()
@@ -163,6 +165,8 @@ static class ModelCreating{
 	internal static ModelBuilder OnCustomerStore(this ModelBuilder modelBuilder){
 	    var customerStore = modelBuilder.Entity<CustomerStore>();
 	    customerStore.HasOne(store => store.Crest).WithMany(crest => crest.CustomerStores);
+	    customerStore.Property(e => e.AnnualSales).HasPrecision(18, 2);
+
 	    return modelBuilder;
     }
 

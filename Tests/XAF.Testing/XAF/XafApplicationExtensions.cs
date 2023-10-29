@@ -55,7 +55,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<Window> Navigate(this XafApplication application,string viewId) 
             => application.Navigate(viewId,application.WhenFrame(viewId).Take(1)).Cast<Window>();
         public static IObservable<Window> Navigate2(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
-            => application.Navigate(viewId,frame =>frame.WhenFrame(viewId),navigate).Take(1).Cast<Window>();
+            => application.Navigate(viewId,frame =>frame.WhenFrame(viewId).Select(frame1 => frame1),navigate).Take(1).Cast<Window>();
         
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
             => application.WhenFrameCreated()
@@ -198,7 +198,7 @@ namespace XAF.Testing.XAF{
                     .Select(item => item.ViewId).ToArray());
 
 
-        public static IObservable<Unit> WhenLoggedOn<TParams>(
+        public static IObservable<XafApplication> WhenLoggedOn<TParams>(
             this XafApplication application, string userName, string pass=null) where TParams:IAuthenticationStandardLogonParameters
             => application.WhenFrame(typeof(TParams), ViewType.DetailView).Take(1)
                 .Do(frame => {
@@ -206,13 +206,14 @@ namespace XAF.Testing.XAF{
                     logonParameters.UserName = userName;
                     logonParameters.Password = pass;
                 })
-                .ToController<DialogController>().WhenAcceptTriggered();
-        public static IObservable<Unit> WhenLoggedOn(this XafApplication application, string userName, string pass=null) 
+                .ToController<DialogController>().WhenAcceptTriggered(application.WhenLoggedOn().Select(t => t.application));
+        public static IObservable<XafApplication> WhenLoggedOn(this XafApplication application, string userName, string pass=null) 
             => application.WhenLoggedOn<AuthenticationStandardLogonParameters>(userName,pass);
 
         public static IObservable<(XafApplication application, LogonEventArgs e)> WhenLoggedOn(this XafApplication application) 
             => application.WhenEvent<LogonEventArgs>(nameof(XafApplication.LoggedOn)).InversePair(application);
-        
+        public static IObservable<XafApplication> WhenLoggedOff(this XafApplication application) 
+            => application.WhenEvent(nameof(XafApplication.LoggedOff)).To(application);
         
         public static IEnumerable<IObjectSpaceProvider> ObjectSpaceProviders(this XafApplication application, params Type[] objectTypes) 
             => objectTypes.Select(application.GetObjectSpaceProvider).Distinct();

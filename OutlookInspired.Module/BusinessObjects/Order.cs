@@ -36,11 +36,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual string PONumber { get; set; }
         public virtual Employee Employee { get; set; }
         public  virtual DateTime OrderDate { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal SaleAmount { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal ShippingAmount { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal TotalAmount { get; set; }
         public  virtual DateTime? ShipDate { get; set; }
         public  virtual OrderShipMethod ShipMethod { get; set; }
@@ -70,9 +70,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual byte[] InvoiceDocument{ get; set; } = Array.Empty<byte>();
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
         public  virtual byte[] Comments { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal RefundTotal { get; set; }
-        [DataType(DataType.Currency)]
+        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal PaymentTotal { get; set; }
         [EditorAlias(EditorAliases.EnumImageOnlyEditor)]
         public PaymentStatus PaymentStatus 

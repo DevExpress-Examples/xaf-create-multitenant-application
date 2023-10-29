@@ -24,23 +24,23 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddScoped<IWebDocumentViewerReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
             serviceCollection.AddScoped<IReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
 
-            serviceCollection.AddSingleton<IRichEditControlAsserter, RichEditControlAsserter>();
-            serviceCollection.AddSingleton<IDashboardViewGridControlDetailViewObjectsAsserter, DashboardViewGridControlDetailViewObjectsAsserter>();
-            serviceCollection.AddSingleton<IFilterClearer, FilterClearer>();
-            serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
-            serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
+            serviceCollection.AddScoped<IRichEditControlAsserter, RichEditControlAsserter>();
+            serviceCollection.AddScoped<IDashboardViewGridControlDetailViewObjectsAsserter, DashboardViewGridControlDetailViewObjectsAsserter>();
+            serviceCollection.AddScoped<IFilterClearer, FilterClearer>();
+            serviceCollection.AddScoped<IDocumentActionAssertion, DocumentActionAssertion>();
+            serviceCollection.AddScoped<ITabControlObserver, TabControlObserver>();
             // serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
             
             // serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
-            serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
+            serviceCollection.AddScoped<IFrameObjectObserver, FrameObjectObserver>();
             
             // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
-            serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
-            serviceCollection.AddSingleton<IAssertReport, AssertReport>();
-            serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
-            serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
-            serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
-            serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
+            serviceCollection.AddScoped<INewRowAdder, NewRowAdder>();
+            serviceCollection.AddScoped<IAssertReport, AssertReport>();
+            serviceCollection.AddScoped<ISelectedObjectProcessor, SelectedObjectProcessor>();
+            serviceCollection.AddScoped<IWindowMaximizer, WindowMaximizer>();
+            serviceCollection.AddScoped<IDataSourceChanged, DataSourceChanged>();
+            serviceCollection.AddScoped(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
     }
 
