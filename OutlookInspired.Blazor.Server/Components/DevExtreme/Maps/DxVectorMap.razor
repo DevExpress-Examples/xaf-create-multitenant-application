@@ -12,8 +12,8 @@
         await base.OnInitializedAsync();
         _itemSelected = new JsInterop(element =>ComponentModel.SelectMapItem(element)).DotNetReference();
     }
-    
-    protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
+
+    protected override async Task OnAfterImportDevExtremeModuleAsync(bool firstRender){
         if (firstRender){
             ClientObject ??= await CreateClient();
         }
@@ -26,7 +26,6 @@
             ComponentModel.LayerDatasource = null;
             await ClientModule.InvokeVoidAsync("SetLayerDatasource", ClientObject, layer);
         }
-        
     }
 
     private async Task<IJSObjectReference> CreateClient() 

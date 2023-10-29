@@ -47,8 +47,8 @@ namespace XAF.Testing.Blazor.XAF{
                 .Log(logContext,inactiveWindowLogContextPosition,true);
 
         private static void StopTest(this IServiceProvider serviceProvider){
-            Logger.Exit();
             serviceProvider.StopApplication();
+            Logger.Exit();
         }
 
         private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 

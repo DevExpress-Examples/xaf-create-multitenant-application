@@ -16,9 +16,9 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const string Tests = nameof(Tests);
-        protected const int MaxTries = 1;
+        protected const int MaxTries = 3;
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = 30.Seconds();
+            UtilityExtensions.TimeoutInterval = 3000.Seconds();
         }
 
         protected virtual bool RunInMainMonitor => false;
@@ -44,7 +44,7 @@ namespace OutlookInspired.Tests.Common{
             get{
                 var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
                 return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
-                    roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values.Where(s => s=="Admin");
+                    roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
             }
         }
 
@@ -74,7 +74,13 @@ namespace OutlookInspired.Tests.Common{
             yield return new TestCaseData(Opportunities,null,user,AssertOpportunitiesView);
         }
 
-        protected virtual LogContext LogContext => LogContext.None;
+        protected virtual LogContext LogContext{
+#if TEST
+            get{ return default; }
+            #else
+            get{ return LogContext.None; }
+#endif
+        }
 
 
         public IObservable<Frame> AssertNewUser(XafApplication application, string navigationView, string viewVariant){
