@@ -16,8 +16,9 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Blazor.Tests.Common{
     class UserControlProcessSelectedObject:IUserControlProcessSelectedObject{
         public IObservable<Frame> Process(Frame frame, object gridControl) 
-            => frame.WhenFrame(ViewType.DetailView).Merge(gridControl.Observe().Cast<IModelProcessObject>()
-                    .Do(processObject => processObject.ProcessObject(processObject.Objects.Cast<object>().First()))
+            => frame.Application.WhenFrame(ViewType.DetailView).Select(frame1 => frame1)
+                .Merge(gridControl.Observe().Cast<IUserControlProcessObject>()
+                    .Do(processObject => processObject.ProcessSelectedObject())
                     .IgnoreElements().To<Frame>());
     }
     public class AssertMapControl : IAssertMapControl{

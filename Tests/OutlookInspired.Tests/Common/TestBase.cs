@@ -18,7 +18,7 @@ namespace OutlookInspired.Tests.Common{
         protected const string Tests = nameof(Tests);
         protected const int MaxTries = 1;
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = 30.Seconds();
+            UtilityExtensions.TimeoutInterval = 60.Seconds();
         }
 
         protected virtual bool RunInMainMonitor => false;

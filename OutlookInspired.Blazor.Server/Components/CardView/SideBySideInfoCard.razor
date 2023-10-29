@@ -94,16 +94,12 @@
   protected override void OnInitialized(){
     base.OnInitialized();
     Model.ObjectSelected+=ModelOnObjectSelected;
-    Model.ProcessObject+=ModelOnObjectProcess;
+    
   }
 
   private async Task ModelOnObjectSelected(object sender, ObjectEventArgs e){
     if (e.Object != CurrentObject) return;
     await HandleClickAsync(null);
-  }
-  private void ModelOnObjectProcess(object sender, ObjectEventArgs e){
-    if (e.Object != CurrentObject) return;
-    HandleDoubleClickAsync(null);
   }
 
   private void HandleDoubleClickAsync(MouseEventArgs e) 
@@ -123,9 +119,6 @@
   }
 
 
-  public void Dispose(){
-    Model.ObjectSelected -= ModelOnObjectSelected;
-    Model.ProcessObject -= ModelOnObjectProcess;
-  }
+  public void Dispose() => Model.ObjectSelected -= ModelOnObjectSelected;
 
 }

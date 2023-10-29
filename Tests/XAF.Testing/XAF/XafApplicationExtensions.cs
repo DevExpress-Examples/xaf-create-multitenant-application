@@ -273,10 +273,8 @@ namespace XAF.Testing.XAF{
             => frame.GetControllers(typeof(T)).Cast<T>();
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
-            return viewNavigationController.NavigateBackAction
-                .Trigger(application.WhenFrame(Nesting.Root).OfType<Window>()
-                        .SelectMany(window => window.View.WhenControlsCreated(emitExisting:true).Take(1).To(window)),
-                    () => viewNavigationController.NavigateBackAction.Items.First())
+            viewNavigationController.NavigateBackAction.SelectedItem = viewNavigationController.NavigateBackAction.Items.First();
+            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged())
                 .Select(window => window);
         }
 

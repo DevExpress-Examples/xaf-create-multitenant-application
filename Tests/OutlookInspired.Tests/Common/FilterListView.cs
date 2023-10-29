@@ -14,9 +14,10 @@ namespace OutlookInspired.Tests.Common{
                 .IgnoreElements().TakeUntilDisposed(application).To<XafApplication>().Merge(application.Observe());
         
         internal static IObservable<T> FilterListViews<T>(this IObservable<T> source, XafApplication application)
-            => application.WhenLoggedOn()
-                .SelectMany(_ => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
-                .IgnoreElements().TakeUntilFinished(source).To<T>())
+            => application.Security.IsAuthenticated.Observe()
+                .If(b => b,b => application.WhenMainWindowCreated().ToUnit(),b => application.WhenLoggedOn().ToUnit())
+                .SelectMany(result => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
+                    .IgnoreElements().TakeUntilFinished(source).To<T>())
                 .Concat(source);
         
 

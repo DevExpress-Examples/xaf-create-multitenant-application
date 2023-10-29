@@ -10,9 +10,8 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.Models{
 
-    public interface IModelProcessObject{
-        IList Objects { get; }
-        void ProcessObject(object value);
+    public interface IUserControlProcessObject{
+        void ProcessSelectedObject();
     }
 
     public interface IModelSelectObject{
@@ -25,15 +24,8 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
         IList Objects { get; }
     }
 
-    public abstract class UserControlComponentModel<T>:UserControlComponentModel,IModelSelectObject, IUserControlDataSource,IModelProcessObject{
+    public abstract class UserControlComponentModel<T>:UserControlComponentModel,IModelSelectObject, IUserControlDataSource,IUserControlProcessObject{
         IList IModelSelectObject.Objects => Objects;
-
-        void IModelProcessObject.ProcessObject(object value){
-            SelectObject((T)value);
-            ProcessSelectedObject();
-        }
-
-        IList IModelProcessObject.Objects => Objects;
         IList IUserControlDataSource.Objects => Objects;
         void IModelSelectObject.SelectObject(object value) => SelectObject((T)value);
 
