@@ -1,18 +1,23 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Blazor;
+using NUnit.Framework;
 using OutlookInspired.Blazor.Server;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
+using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
+        
         protected IObservable<Unit> StartTest(string user,Func<BlazorApplication,IObservable<Unit>> test) 
-            => Host.CreateDefaultBuilder().StartTest<Startup,OutlookInspiredEFCoreDbContext>("http://localhost:5000", "../../../../../OutlookInspired.Blazor.Server",user, test,
-                    Configure,Environment.GetEnvironmentVariable("XAFTESTBrowser") )
+            => Host.CreateDefaultBuilder().Observe().Do(_ => TestContext.CurrentContext.Test.FullName.WriteSection())
+                .SelectMany(builder => builder.StartTest<Startup,OutlookInspiredEFCoreDbContext>("http://localhost:5000", "../../../../../OutlookInspired.Blazor.Server",user, test,
+                    Configure,Environment.GetEnvironmentVariable("XAFTESTBrowser") ))
+                
                 .Timeout(Timeout);
 
         private void Configure(IServiceCollection collection){

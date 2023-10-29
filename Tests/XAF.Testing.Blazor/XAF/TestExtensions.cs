@@ -30,13 +30,17 @@ namespace XAF.Testing.Blazor.XAF{
                         .Merge(application.WhenMainWindowCreated().To(application))
                         .TakeUntilDisposed(application).Cast<BlazorApplication>()
                         .SelectMany(xafApplication => test(xafApplication).To(xafApplication)))
-                    .Do(application => application.GetRequiredService<IHostApplicationLifetime>().StopApplication()).Take(1)
+                    .Select(application => application.ServiceProvider)
+                    .Do(serviceProvider => serviceProvider.StopApplication())
+                    .DoOnError(_ => host.Services.StopApplication()).Take(1)
                     .MergeToUnit(host.Run(url, browser)))
                 .LogError();
 
+        
+
         private static IObservable<Unit> Run(this IHost host,string url, string browser) 
             => host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
-                    .SelectMany(process => host.Services.WhenApplicationStopped().Do(_ => process.Kill()).Take(1)))
+                    .SelectMany(process => host.Services.WhenApplicationStopping().Do(_ => process.Kill()).Take(1)))
                 .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable()).Merge());
 
         public static IObservable<BlazorApplication> DeleteModelDiffs<T>(this IObservable<BlazorApplication> source) where T : DbContext 

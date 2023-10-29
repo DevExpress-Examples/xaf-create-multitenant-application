@@ -9,6 +9,9 @@ using XAF.Testing.RX;
 namespace XAF.Testing.Blazor;
 
 public static class WebExtensions{
+    public static void StopApplication(this IServiceProvider serviceProvider) 
+        => serviceProvider.GetRequiredService<IHostApplicationLifetime>().StopApplication();
+    
     public static IObservable<Unit> WhenApplicationStarted(this IServiceProvider serviceProvider) 
         => serviceProvider.WhenLifeTimeEvent(lifetime => lifetime.ApplicationStarted);
 
