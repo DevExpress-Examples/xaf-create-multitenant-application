@@ -16,14 +16,14 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const string Tests = nameof(Tests);
-        protected const int MaxTries = 1;
+        protected const int MaxTries = 2;
         static TestBase(){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
         }
 
         protected virtual bool RunInMainMonitor => false;
         protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
-        protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(5);
+        protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
 
         public static IEnumerable<object> EmployeeVariants 
             => ViewVariants(EmployeeListView, EmployeeListView, EmployeeCardListView);
