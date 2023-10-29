@@ -54,6 +54,8 @@ jobs:
   - task: VSTest@2
     displayName: ${{ parameters.displayName }}
     continueOnError: false
+    env:
+        TEST_ROLE: $(Agent.JobName)
     enabled: true
     inputs:
       minimumExpectedTests: "1"

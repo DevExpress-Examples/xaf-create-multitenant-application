@@ -21,8 +21,17 @@ namespace XAF.Testing.Blazor.XAF{
             CurrentDomain.Await(async () => await Tracing.Use());
         }
 
+        public static IObservable<Unit> StartTest<TStartup, TDBContext>(this IObservable<IHostBuilder> source, string url,
+            string contentRoot, string user, Func<BlazorApplication, IObservable<Unit>> test,
+            Action<IServiceCollection> configure = null, string browser = null,WindowPosition inactiveWindowBrowserPosition=WindowPosition.None,
+            LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
+            where TStartup : class where TDBContext : DbContext 
+            => source.SelectMany(builder => builder.StartTest<TStartup, TDBContext>(url, contentRoot, user, test,
+                configure, browser, inactiveWindowBrowserPosition, logContext, inactiveWindowLogContextPosition));
+
         public static IObservable<Unit> StartTest<TStartup, TDBContext>(this IHostBuilder builder, string url,
-            string contentRoot,string user, Func<BlazorApplication, IObservable<Unit>> test,Action<IServiceCollection> configure=null, string browser = null)
+            string contentRoot, string user, Func<BlazorApplication, IObservable<Unit>> test, Action<IServiceCollection> configure = null, string browser = null,
+            WindowPosition inactiveWindowBrowserPosition = WindowPosition.None,LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
                 .Observe().SelectMany(host => Application.DeleteModelDiffs<TDBContext>()
@@ -31,15 +40,20 @@ namespace XAF.Testing.Blazor.XAF{
                         .TakeUntilDisposed(application).Cast<BlazorApplication>()
                         .SelectMany(xafApplication => test(xafApplication).To(xafApplication)))
                     .Select(application => application.ServiceProvider)
-                    .Do(serviceProvider => serviceProvider.StopApplication())
-                    .DoOnError(_ => host.Services.StopApplication()).Take(1)
-                    .MergeToUnit(host.Run(url, browser)))
-                .LogError();
+                    .Do(StopTest)
+                    .DoOnError(_ => host.Services.StopTest()).Take(1)
+                    .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition)))
+                .LogError()
+                .Log(logContext,inactiveWindowLogContextPosition,true);
 
-        
+        private static void StopTest(this IServiceProvider serviceProvider){
+            Logger.Exit();
+            serviceProvider.StopApplication();
+        }
 
-        private static IObservable<Unit> Run(this IHost host,string url, string browser) 
+        private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 
             => host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
+                    .MoveToInactiveMonitor(inactiveWindowPosition)
                     .SelectMany(process => host.Services.WhenApplicationStopping().Do(_ => process.Kill()).Take(1)))
                 .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable()).Merge());
 
