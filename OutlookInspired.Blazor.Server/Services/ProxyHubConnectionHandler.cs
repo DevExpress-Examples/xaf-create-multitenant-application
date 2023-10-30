@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace OutlookInspired.Blazor.Server.Services;
 
 internal class ProxyHubConnectionHandler<THub> : HubConnectionHandler<THub> where THub : Hub {
-    private readonly IValueManagerStorageContainerInitializer storageContainerInitializer;
+    private readonly IValueManagerStorageContainerInitializer _storageContainerInitializer;
     public ProxyHubConnectionHandler(
         HubLifetimeManager<THub> lifetimeManager,
         IHubProtocolResolver protocolResolver,
@@ -17,11 +17,11 @@ internal class ProxyHubConnectionHandler<THub> : HubConnectionHandler<THub> wher
         IServiceScopeFactory serviceScopeFactory,
         IValueManagerStorageContainerInitializer storageContainerAccessor)
         : base(lifetimeManager, protocolResolver, globalHubOptions, hubOptions, loggerFactory, userIdProvider, serviceScopeFactory) {
-        this.storageContainerInitializer = storageContainerAccessor;
+        _storageContainerInitializer = storageContainerAccessor;
     }
 
     public override Task OnConnectedAsync(ConnectionContext connection) {
-        storageContainerInitializer.Initialize();
+        _storageContainerInitializer.Initialize();
         return base.OnConnectedAsync(connection);
     }
 }

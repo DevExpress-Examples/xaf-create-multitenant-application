@@ -1,7 +1,4 @@
-﻿using DevExpress.ExpressApp.Blazor;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using OutlookInspired.Blazor.Server.Services;
+﻿using Microsoft.JSInterop;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     public abstract class MapComponent<TModel,TComponent>:DevExtremeComponent<TModel,TComponent> where TModel : MapModel<TComponent> where TComponent : DevExtremeComponent<TModel, TComponent>{
@@ -14,13 +11,4 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
             }
         }
     }
-    
-    public abstract class MapModel<TComponent>:DevExtremeModel<TComponent>,IComponentContentHolder where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
-        RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<TComponent>());
-        public bool PrintMap{
-            get => GetPropertyValue<bool>();
-            set => SetPropertyValue(value);
-        }
-    }
-
 }

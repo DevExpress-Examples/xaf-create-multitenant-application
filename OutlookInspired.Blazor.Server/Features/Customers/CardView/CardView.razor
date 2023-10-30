@@ -3,7 +3,7 @@
 <StackedCardView>
     <Content>
         @foreach (var customer in ComponentModel.Objects){
-            <SideBySideInfoCard CurrentObject="customer" Model="@ComponentModel" Image="@customer.Logo.ToBase64Image()" HeaderText="@customer.Name" 
+            <SideBySideInfoCard CurrentObject="customer" ComponentModel="@ComponentModel" Image="@customer.Logo.ToBase64Image()" HeaderText="@customer.Name" 
                                 InfoItems="@(new Dictionary<string, string>{{ "HOME OFFICE", customer.HomeOfficeLine },
                                                { "BILLING ADDRESS", customer.BillingAddressLine } })"/>
         }

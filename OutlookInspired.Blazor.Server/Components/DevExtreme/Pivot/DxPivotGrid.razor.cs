@@ -14,7 +14,6 @@
         public PivotGridDataSource DataSource { get;  } = new();
         public PivotGridScrolling Scrolling{ get; set; } = new();
     }
-
     
     public class PivotGridField {
         public string Caption { get; set; }
@@ -28,8 +27,7 @@
         public object Format { get; set; }
         public string SortOrder{ get; set; }
     }
-
-
+    
     public class PivotGridDataSource{
         public List<PivotGridField> Fields{ get; } = new();
         public List<PivotGridField> DataFields=>Fields.Where(field => field.Area=="data").ToList();
@@ -39,8 +37,6 @@
     public class PivotGridScrolling{
         public string Mode{ get; set; } = "standard";
     }
-
-    
 
     public class FieldChooserOptions {
         public bool Enabled { get; set; }

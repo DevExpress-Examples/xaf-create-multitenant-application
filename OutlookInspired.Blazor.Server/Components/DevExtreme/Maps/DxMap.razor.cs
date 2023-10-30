@@ -7,10 +7,12 @@
             set => SetPropertyValue(value);
         }
     }
+    
     public class Location{
         public double Lat{ get; init; }
         public double Lng{ get; init; }
     }
+    
     public class DxMapOptions{
         public ApiKey ApiKey{ get; set; } = new();
         public string Provider{ get; set; } = "bing";
@@ -18,7 +20,6 @@
         public string Height{ get; set; } = "100vh";
         public string Width{ get; set; } = "100%";
         public string Type{ get; set; } = "roadmap";
-        
         public bool Controls{ get; set; }
         public Location Center{ get; set; }
         public List<Marker> Markers{ get; init; } = new();

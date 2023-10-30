@@ -45,6 +45,7 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
         protected virtual void OnDataSourceChanged() => DataSourceChanged?.Invoke(this, EventArgs.Empty);
     }
+    
     public abstract class UserControlComponentModel:ComponentModelBase,IComponentContentHolder,IUserControl{
         private IList _selectedObjects = new List<object>();
         public CriteriaOperator Criteria{ get; private set; }
@@ -102,16 +103,10 @@ namespace OutlookInspired.Blazor.Server.Components.Models{
 
         public virtual void ProcessSelectedObject()
             => ProcessObject?.Invoke(this, new ObjectEventArgs(_selectedObjects.Cast<object>().First()));
-
-
+        
         protected virtual void OnObjectSelected(ObjectEventArgs e) => ObjectSelected?.Invoke(this, e);
 
         protected virtual void OnCriteriaChanged() => CriteriaChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public class SelectObjectEventArgs:EventArgs{
-        public object Value{ get; }
-
-        public SelectObjectEventArgs(object value) => Value = value;
-    }
 }

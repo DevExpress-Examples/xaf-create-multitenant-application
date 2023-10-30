@@ -1,25 +1,15 @@
 ﻿@using OutlookInspired.Module.Services.Internal
 @inherits ComponentBase<PdfModel,PdfViewer>
 
-
 @if (ComponentModel?.Bytes is {Length:> 0 }){
     <embed @ref=@Element type="application/pdf" style="@(ComponentModel.Style??"width:100%; height:100vh;")"/>
 }
 
 @code {
-    // static PdfViewer() => ExtractResource<PdfViewer>();
-
-    
-
-    // protected override async Task OnParametersSetAsync(){
-    //     await ClientModule.InvokeVoidAsync("addPdfLoadListener",ComponentModel);
-    // }
-
 
     protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
         if (ComponentModel.Bytes==null)return;
         await ClientModule.InvokeVoidAsync("addPdfLoadListener",Element, ComponentModel, ComponentModel.Bytes.ToBase64String(), ComponentModel.ToolBar ? 1 : 0);
-        // await ClientModule.InvokeVoidAsync("addPdfLoadListener",ComponentModel);
     }
 
 

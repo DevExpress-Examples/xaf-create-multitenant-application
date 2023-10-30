@@ -1,6 +1,4 @@
 ﻿using DevExpress.ExpressApp.ApplicationBuilder;
-using DevExpress.ExpressApp.AspNetCore.Core;
-using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
 using DevExpress.ExpressApp.Blazor.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -50,22 +48,5 @@ public class Startup {
     }
 }
 
-public class MyClass:XafApplicationFactory<OutlookInspiredBlazorApplication>{
-    public MyClass(Func<OutlookInspiredBlazorApplication> createApplication) : base(createApplication){
-    }
-}
 
-public class XafApplicationFactory<T> : 
-    IXafApplicationFactory,
-    IXafAspNetCoreApplicationFactory<BlazorApplication>
-    where T : BlazorApplication
-{
-    private readonly Func<T> createApplication;
-
-    public XafApplicationFactory(Func<T> createApplication) => this.createApplication = createApplication ?? throw new ArgumentNullException(nameof (createApplication));
-
-    public T CreateApplication() => this.createApplication();
-
-    BlazorApplication IXafAspNetCoreApplicationFactory<BlazorApplication>.CreateApplication() => (BlazorApplication) this.CreateApplication();
-}
 

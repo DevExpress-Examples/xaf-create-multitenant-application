@@ -18,12 +18,11 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
             set => SetPropertyValue(value);
         }
     }
+    
     public class MapItemSelectedArgs : EventArgs{
         public JsonElement Item{ get; }
 
-        public MapItemSelectedArgs(JsonElement item){
-            Item = item;
-        }
+        public MapItemSelectedArgs(JsonElement item) => Item = item;
     }
     
     public class VectorMapOptions{
@@ -45,6 +44,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
     public class BaseLayer{
         public object DataSource{ get; set; }
     }
+    
     public class PredefinedLayer:BaseLayer{
         public bool HoverEnabled{ get; set; }
     }
@@ -75,6 +75,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme.Maps{
         public double[] Coordinates{ get; set; }
         public object Data{ get; set; }
     }
+    
     public class PieLayer:BaseLayer, IPaletteLayer, INamedLayer{
         public string SelectionMode{ get; set; }= "single";
         public string Name{ get; set; } = "pies";

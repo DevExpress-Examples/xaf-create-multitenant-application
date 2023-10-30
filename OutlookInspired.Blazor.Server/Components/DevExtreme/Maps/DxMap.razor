@@ -4,9 +4,6 @@
 <div @ref=@Element ></div>
 
 @code {
-    // static DxMap() => ExtractResource<DxMap>();
-    
-
     private DotNetObjectReference<JsInterop> _itemSelected;
     private bool _initClientObject;
 
@@ -20,12 +17,4 @@
             await ClientModule.InvokeVoidAsync("SetRouteMode", ClientObject, routeMode);
         }
     }
-
-    // protected override async Task OnAfterRenderClientModuleAsync(bool firstRender){
-    //     await base.OnAfterRenderClientModuleAsync(firstRender);
-    //     if (DevExtremeModule==null)return;
-    //     
-    //     
-    // }
-
 }

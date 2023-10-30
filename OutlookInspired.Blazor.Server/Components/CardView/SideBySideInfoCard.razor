@@ -84,7 +84,7 @@
   [Parameter]
   public EventCallback<bool> IsSelectedChanged { get; set; }
   [Parameter]
-  public UserControlComponentModel<TObject> Model { get; set; }
+  public UserControlComponentModel<TObject> ComponentModel { get; set; }
   [Parameter]
   public object CurrentObject { get; set; }
 
@@ -93,8 +93,7 @@
 
   protected override void OnInitialized(){
     base.OnInitialized();
-    Model.ObjectSelected+=ModelOnObjectSelected;
-    
+    if (ComponentModel != null) ComponentModel.ObjectSelected += ModelOnObjectSelected;
   }
 
   private async Task ModelOnObjectSelected(object sender, ObjectEventArgs e){
@@ -103,22 +102,23 @@
   }
 
   private void HandleDoubleClickAsync(MouseEventArgs e) 
-    => Model.ProcessSelectedObject();
+    => ComponentModel.ProcessSelectedObject();
 
   private async Task HandleClickAsync(MouseEventArgs e){
-    if (Model==null)return;
+    if (ComponentModel==null)return;
     IsSelected = !IsSelected;
     if (IsSelected){
-      Model.SelectedObjects = CurrentObject.YieldItem().ToList();
+      ComponentModel.SelectedObjects = CurrentObject.YieldItem().ToList();
       StackedCardView.SelectedCards.Add(this);
     }
     else{
-      Model.SelectedObjects.Remove(this);
+      ComponentModel.SelectedObjects.Remove(this);
     }
     await IsSelectedChanged.InvokeAsync(IsSelected);
   }
-
-
-  public void Dispose() => Model.ObjectSelected -= ModelOnObjectSelected;
+  
+  public void Dispose(){
+    if (ComponentModel != null) ComponentModel.ObjectSelected -= ModelOnObjectSelected;
+  }
 
 }

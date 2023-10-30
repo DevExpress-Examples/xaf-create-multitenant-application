@@ -1,14 +1,10 @@
 ﻿@inject IJSRuntime JS;
 @using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps
 @using OutlookInspired.Blazor.Server.Services
-<DxMap ComponentModel="ComponentModel" CustomizeModel="UpdateHeight"></DxMap>
+<DxMap ComponentModel="ComponentModel" ></DxMap>
 @code {
     [Parameter]
     public DxMapModel ComponentModel { get; set; }
-
-    private async Task UpdateHeight(){
-        
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender){
         if (!firstRender)return;

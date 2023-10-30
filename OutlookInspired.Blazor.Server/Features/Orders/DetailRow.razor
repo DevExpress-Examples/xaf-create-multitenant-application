@@ -1,6 +1,4 @@
 ﻿@using OutlookInspired.Module.BusinessObjects
-@using OutlookInspired.Blazor.Server.Features.Customers.GridView
-@using OutlookInspired.Blazor.Server.Components
 <DxGrid Data="Order.OrderItems" PageSizeSelectorVisible="true" PageSize="Order.OrderItems.Count" AllowSelectRowByClick="true" >
     <Columns>
         <DxGridDataColumn FieldName="@nameof(OrderItem.Product)"/>

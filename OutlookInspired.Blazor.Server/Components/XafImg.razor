@@ -7,7 +7,6 @@
     <img src="@(bytes.ToBase64Image())" width="@Width" height="@Height" alt="@AltText" class="xaf-image-cell"/>    
 }
 else{
-    // ImageUrlService.RenderIconCssOrImage((string)Value, "xaf-image-cell");
     <div @attributes="Attributes" class="xaf-image @CssClass" style="background-color: @(Color ?? "currentColor"); -webkit-mask: url('@_imageUrl'); mask: url('@_imageUrl'); -webkit-mask-position: center; mask-position: center; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; @(Size > 0 ? $"height: {Size}px; width: {Size}px; mask-size: {Size}px; -webkit-mask-size: {Size}px;" : "") @Styles"></div>
 }
 
@@ -42,7 +41,6 @@ else{
     
     public static RenderFragment Create(object value,int width,int height,string altText)
         => @<XafImg Value=@value Width=@width Height=@height AltText="@altText" />;
-
 }
 
 

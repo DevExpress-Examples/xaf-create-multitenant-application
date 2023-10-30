@@ -1,18 +1,9 @@
-﻿using System.Text.Json;
-using Aqua.EnumerableExtensions;
-using DevExpress.Blazor.Popup.Internal;
+﻿using DevExpress.Blazor.Popup.Internal;
 using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
-    public abstract class DevExtremeModel<TComponent>:ComponentModelBase<TComponent> where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
-        public override void ShowMessage(JsonElement element){
-            if (!element.EnumerateArray().Select(e => e.GetString()).StringJoin(", ").Contains("js.devexpress.com")) return;
-            base.ShowMessage(element);
-        }
-    }
-
     public abstract class DevExtremeComponent<TModel,TComponent>:ComponentBase<TModel,TComponent> where TModel:DevExtremeModel<TComponent>
         where TComponent:DevExtremeComponent<TModel,TComponent>{
         private  const string ComponentName = "DevExtremeComponent";
@@ -24,7 +15,6 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         }
 
         protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
-            // await base.OnAfterImportClientModuleAsync(firstRender);
             if (ClientObject.IsDisposed())return;
             if (firstRender){
                 var devExtremeModule = await ImportResource($"{ComponentName}.js");
@@ -44,9 +34,6 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         protected override async Task OnInitializedAsync(){
             await base.OnInitializedAsync();
             await JS.Console(ComponentModel.ShowMessage);
-            // var devExtremeModule = await ImportResource($"{ComponentName}.js");
-            // await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
-            // DevExtremeModule = devExtremeModule;
         }
         
         public IJSObjectReference DevExtremeModule { get; set; }
@@ -72,7 +59,6 @@ function loadDevExtreme(scriptLoader) {{
 }}
 
 ";
-
-        private bool _devExtremeModuleInit;
+        
     }
 }

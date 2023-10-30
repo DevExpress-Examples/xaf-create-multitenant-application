@@ -77,19 +77,8 @@ namespace OutlookInspired.Blazor.Server.Components{
     }
     public abstract class ComponentBase<TModel,TComponent>:ComponentBase,IAsyncDisposable where TModel:ComponentModelBase<TComponent>
         where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
-        private bool _clientModuleInit;
-
-        protected virtual Task OnAfterImportClientModuleAsync(bool firstRender) => Task.CompletedTask;
         
-
-        // protected override async Task OnAfterRenderAsync(bool firstRender){
-        //     
-        //     // if (ClientModule != null&&!_clientModuleInit){
-        //     //     _clientModuleInit = true;
-        //     //     // await CustomizeModel.MaybeInvokeAsync(ComponentModel);
-        //     //     await OnAfterImportClientModuleAsync(_clientModuleInit);
-        //     // }
-        // }
+        protected virtual Task OnAfterImportClientModuleAsync(bool firstRender) => Task.CompletedTask;
         
         async ValueTask IAsyncDisposable.DisposeAsync(){
             try{
@@ -108,9 +97,6 @@ namespace OutlookInspired.Blazor.Server.Components{
         public ElementReference Element { get; set; }
         public IJSObjectReference ClientModule { get; set; }
         protected IJSObjectReference ClientObject { get; set; }
-        [Parameter][Obsolete("remove it")]
-        public EventCallback<TModel> CustomizeModel { get; set; }
-        
         
         [Inject]
         public IJSRuntime JS{ get; set; }
@@ -133,8 +119,6 @@ namespace OutlookInspired.Blazor.Server.Components{
                     
                 }
             }
-
-            
         }
 
         protected ValueTask<IJSObjectReference> ImportResource(string resourceName=null) 
