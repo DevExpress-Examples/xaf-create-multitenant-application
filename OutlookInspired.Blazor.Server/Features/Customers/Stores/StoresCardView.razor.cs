@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Customers.Stores{

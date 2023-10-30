@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Security;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Map.Dashboard;
@@ -40,16 +38,6 @@ namespace OutlookInspired.Win.Extensions.Internal{
         public static bool IsNotInvalidRow(this ColumnView columnView) 
             => columnView.FocusedRowHandle!=GridControl.InvalidRowHandle;
         
-        [DllImport("USER32.dll", CharSet = CharSet.Auto)]  
-        static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
-
-        [SecuritySafeCritical]
-        public static void LockRedraw(this Control control, Action action){
-            SendMessage(control.Handle, 0x000B, 0, IntPtr.Zero);
-            action();
-            SendMessage(control.Handle, 0x000B, 1, IntPtr.Zero);
-        }
-
         public static void To(this IZoomToRegionService zoomService, GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
             if (pointA == null || pointB == null || zoomService == null) return;
             var (latDiff, longDiff) = (pointB.Latitude - pointA.Latitude, pointB.Longitude - pointA.Longitude);

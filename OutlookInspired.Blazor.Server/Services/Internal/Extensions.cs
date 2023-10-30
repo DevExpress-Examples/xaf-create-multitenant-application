@@ -10,7 +10,7 @@ using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Services{
+namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class Extensions{
         public static async Task<string> ModalBodyHeight(this IJSRuntime js){
             await js.EvalAsync(@"window.getClientHeight = (element) => {

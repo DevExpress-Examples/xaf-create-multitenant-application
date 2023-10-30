@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 
-namespace OutlookInspired.Blazor.Server.Services;
+namespace OutlookInspired.Blazor.Server.Services.Internal;
 
 internal class ProxyHubConnectionHandler<THub> : HubConnectionHandler<THub> where THub : Hub {
     private readonly IValueManagerStorageContainerInitializer _storageContainerInitializer;

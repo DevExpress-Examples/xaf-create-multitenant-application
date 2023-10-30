@@ -1,7 +1,7 @@
 ﻿using DevExpress.ExpressApp.Blazor.Services;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 
-namespace OutlookInspired.Blazor.Server.Services;
+namespace OutlookInspired.Blazor.Server.Services.Internal;
 
 internal class CircuitHandlerProxy : CircuitHandler {
     private readonly IScopedCircuitHandler _scopedCircuitHandler;

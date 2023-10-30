@@ -6,7 +6,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
 
 namespace OutlookInspired.Blazor.Server.Services{
-    public static class ApplicationBuilder{
+    internal static class ApplicationBuilder{
         public static IBlazorApplicationBuilder AddBuildStep(this IBlazorApplicationBuilder builder){
             builder.AddBuildStep(application => {
                 application.ApplicationName = "OutlookInspired";

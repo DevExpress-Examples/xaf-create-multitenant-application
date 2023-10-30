@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
     public class ModalDxVectorMapModel:DxVectorMapModel,IComponentContentHolder{

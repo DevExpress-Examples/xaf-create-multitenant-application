@@ -8,10 +8,8 @@ using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
 using OutlookInspired.Win.Extensions.Internal;
 
-namespace OutlookInspired.Win.Editors
-{
-    public partial class ColumnViewUserControl : UserControl, IUserControl
-    {
+namespace OutlookInspired.Win.Editors{
+    public partial class ColumnViewUserControl : UserControl, IUserControl{
         private EFCoreObjectSpace _objectSpace;
         protected ColumnView ColumnView;
         protected IList DataSource;

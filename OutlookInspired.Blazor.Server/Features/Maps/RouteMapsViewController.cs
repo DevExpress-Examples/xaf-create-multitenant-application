@@ -2,6 +2,7 @@
 using DevExpress.Persistent.Base;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 

@@ -24,9 +24,8 @@ namespace OutlookInspired.Win.Editors{
 
         public new HyperLinkEdit Control => _hyperlinkEdit;
 
-        protected override RepositoryItem CreateRepositoryItem() {
-            return new RepositoryItemHyperLinkEdit();
-        }
+        protected override RepositoryItem CreateRepositoryItem() 
+            => new RepositoryItemHyperLinkEdit();
 
         protected override object CreateControlCore() => _hyperlinkEdit = new HyperLinkEdit();
 

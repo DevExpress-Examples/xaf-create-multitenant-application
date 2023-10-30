@@ -11,7 +11,7 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Maps{
     public abstract class MapsViewController:ObjectViewController<ObjectView,IMapsMarker>,IModelExtender{
-        public const string Key = "AgPa0XVf4_HaN5BOPbTUw5KNvYEGOx-EftnjNRnCILfNgobxJC_deESiKqcfEgLd";
+        public static readonly string BindKey = Environment.GetEnvironmentVariable("BingKey");
         public const string MapItActionId = "MapIt";
 
         protected MapsViewController(){

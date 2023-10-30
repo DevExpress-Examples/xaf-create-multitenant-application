@@ -1,6 +1,7 @@
 ﻿using DevExpress.Blazor.Popup.Internal;
 using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components.DevExtreme{

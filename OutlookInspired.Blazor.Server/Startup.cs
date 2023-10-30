@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Blazor.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server;
 

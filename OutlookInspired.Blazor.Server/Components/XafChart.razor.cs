@@ -3,6 +3,7 @@ using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components {
     public class ChartModel<TObject,TArgument,TValue,TName,TComponent>:ComponentModelBase,IComponentContentHolder where TComponent:Microsoft.AspNetCore.Components.ComponentBase{

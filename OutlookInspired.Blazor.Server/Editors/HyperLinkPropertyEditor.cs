@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Model;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Services;
+using OutlookInspired.Blazor.Server.Services.Internal;
 using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors{

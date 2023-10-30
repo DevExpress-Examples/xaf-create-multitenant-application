@@ -4,12 +4,11 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.Map.Dashboard;
 using DevExpress.XtraMap;
-using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Win.Features.Maps{
     public abstract class WinMapsViewController<T>:ObjectViewController<DetailView,T>{
-        readonly BingMapDataProvider _mapDataProvider=new(){ BingKey = MapsViewController.Key,Kind = BingMapKind.Road};
+        readonly BingMapDataProvider _mapDataProvider=new(){ BingKey = Module.Features.Maps.MapsViewController.BindKey,Kind = BingMapKind.Road};
         protected MapControl MapControl;
         protected IZoomToRegionService Zoom;
         protected MapsViewController MapsViewController;
@@ -65,7 +64,5 @@ namespace OutlookInspired.Win.Features.Maps{
                 MapControl.ExportToImage(saveFileDialog.FileName,DXImageFormat.Png);
             }
         }
-
-        
     }
 }

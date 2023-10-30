@@ -1,7 +1,6 @@
 ﻿using System.Configuration;
 using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
-using DevExpress.Persistent.Validation;
 using DevExpress.XtraEditors;
 
 namespace OutlookInspired.Win;

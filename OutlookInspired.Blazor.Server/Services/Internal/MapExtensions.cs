@@ -9,7 +9,7 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 using Route = OutlookInspired.Blazor.Server.Components.DevExtreme.Maps.Route;
 
-namespace OutlookInspired.Blazor.Server.Services{
+namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class MapExtensions{
         private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
         public static MapItem[] Colorize(this MapItem[] mapItems, string[] palette,Type markerType) 

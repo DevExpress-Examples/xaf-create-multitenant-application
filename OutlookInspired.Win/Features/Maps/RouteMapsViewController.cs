@@ -10,9 +10,9 @@ using BingManeuverType = OutlookInspired.Module.BusinessObjects.BingManeuverType
 
 namespace OutlookInspired.Win.Features.Maps{
     public abstract class RouteMapsViewController<T>:WinMapsViewController<T>,IMapsRouteController where T:IRouteMapsMarker{
-        private readonly BingGeocodeDataProvider _geocodeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key};
-        private readonly BingRouteDataProvider _routeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile}};
-        private readonly BingSearchDataProvider _searchDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.Key};
+        private readonly BingGeocodeDataProvider _geocodeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.BindKey};
+        private readonly BingRouteDataProvider _routeDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.BindKey,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile}};
+        private readonly BingSearchDataProvider _searchDataProvider=new(){BingKey = Module.Features.Maps.MapsViewController.BindKey};
         
         private GeoPoint _currentObjectPoint;
 
@@ -62,7 +62,7 @@ namespace OutlookInspired.Win.Features.Maps{
             });
         }
         
-        private static readonly Regex RemoveTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
+        private  readonly Regex _removeTagRegex = new(@"<[^>]*>", RegexOptions.Compiled);
         private void OnRouteCalculated(object sender, BingRouteCalculatedEventArgs e){
             if(e.Error != null || e.Cancelled || e.CalculationResult is not{ ResultCode: RequestResultCode.Success })
                 return;
@@ -70,7 +70,7 @@ namespace OutlookInspired.Win.Features.Maps{
             OnRouteCalculated(new RouteCalculatedArgs(bingRouteResult.Legs.SelectMany(leg => leg.Itinerary)
                 .Select(item => {
                     var point = ObjectSpace.CreateObject<RoutePoint>();
-                    point.ManeuverInstruction = RemoveTagRegex.Replace(item.ManeuverInstruction, string.Empty);
+                    point.ManeuverInstruction = _removeTagRegex.Replace(item.ManeuverInstruction, string.Empty);
                     point.Distance = (item.Distance > 0.9) ? $"{Math.Ceiling(item.Distance):0} mi"
                         : $"{Math.Ceiling(item.Distance * 52.8) * 100:0} ft";
                     point.Maneuver = (BingManeuverType)item.Maneuver;

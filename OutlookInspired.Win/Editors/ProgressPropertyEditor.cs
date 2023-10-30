@@ -22,8 +22,7 @@ namespace OutlookInspired.Win.Editors {
             protected override int ConvertValue(object val) 
                 => val is double doubleValue ? (int)(doubleValue * 100) : base.ConvertValue(val);
         }
-
-
+        
         protected override RepositoryItem CreateRepositoryItem()
             => new RepositoryItemProgressBar(){
                 PercentView = true, ShowTitle = true, DisplayFormat ={ FormatType = FormatType.Numeric, FormatString = "{0}%" },

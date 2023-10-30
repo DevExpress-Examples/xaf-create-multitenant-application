@@ -1,7 +1,6 @@
 using DevExpress.ExpressApp;
 using DevExpress.XtraEditors;
 using OutlookInspired.Module.Controllers;
-using OutlookInspired.Module.Features;
 
 namespace OutlookInspired.Win.Controllers{
     
