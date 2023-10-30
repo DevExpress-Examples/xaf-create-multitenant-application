@@ -37,7 +37,7 @@ jobs:
         Get-ChildItem -Path "$(System.DefaultWorkingDirectory)\Tests" -Recurse -Directory -Include "ref", "refint", "obj" | 
         ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
       pwsh: true      
-  - task: VSTest@2
+  - task: VSTest@3
     displayName: 'ImportData.Test'
     continueOnError: false
     enabled: true
@@ -51,7 +51,7 @@ jobs:
       diagnosticsEnabled: true
       codeCoverageEnabled: true
       runSettingsFile: $(runSettingsPath)
-  - task: VSTest@2
+  - task: VSTest@3
     displayName: ${{ parameters.displayName }}
     continueOnError: false
     env:
@@ -61,12 +61,11 @@ jobs:
       minimumExpectedTests: "1"
       failOnMinTestsNotRun: true
       rerunFailedTests: true
-      rerunFailedTestCasesMaxLimit: "3"
-      rerunFailedThreshold: "0"
       searchFolder: $(testsFolderPath)
       testSelector: 'testAssemblies'
       testAssemblyVer2: ${{ parameters.testAssembly }}
       testFiltercriteria: TestCategory=Tests
       diagnosticsEnabled: true
       codeCoverageEnabled: true
+      uiTests: true
       runSettingsFile: $(runSettingsPath)

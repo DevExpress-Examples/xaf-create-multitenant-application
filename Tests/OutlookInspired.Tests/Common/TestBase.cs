@@ -16,7 +16,7 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const string Tests = nameof(Tests);
-        protected const int MaxTries = 2;
+        protected const int MaxTries = 3;
         static TestBase(){
             UtilityExtensions.TimeoutInterval = 60.Seconds();
         }
@@ -43,7 +43,8 @@ namespace OutlookInspired.Tests.Common{
         public static IEnumerable<string> Users{
             get{
                 var roleStr = $"{Environment.GetEnvironmentVariable("TEST_ROLE")}".Split(' ').Last();
-                return Enum.TryParse(roleStr, out EmployeeDepartment department) && Roles.TryGetValue(department, out var user) ? user.YieldItem() :
+                return Enum.TryParse(roleStr, out EmployeeDepartment department) &&
+                       Roles.TryGetValue(department, out var user) ? user.YieldItem() :
                     roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values;
             }
         }

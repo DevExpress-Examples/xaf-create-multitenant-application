@@ -23,7 +23,7 @@ namespace OutlookInspired.Win.Editors{
         protected override void ReadValueCore(){
             if (PropertyValue is not byte[]{ Length: > 0 } bytes) return;
             using var memoryStream = new MemoryStream(bytes);
-            Control.LoadDocument(memoryStream);
+            Control?.LoadDocument(memoryStream);
         }
     }
 }

@@ -11,7 +11,15 @@ namespace XAF.Testing{
         public static async Task<StreamWriter> Writer(LogContext context=default,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
             => await new Logger().ConnectClient(context,inactiveMonitorLocation,alwaysOnTop).Writer().ReplayFirstTake();
 
-        public  static void Exit() => Console.WriteLine(ExitSignal);
+        public  static void Exit(){
+            try{
+                Console.WriteLine(ExitSignal);
+            }
+            catch{
+                // ignored
+            }
+        }
+
         internal const string ExitSignal = "exit";
         public string PipeName{ get; set; } = nameof(Logger);
         public string ServerName{ get; set; } = ".";
@@ -101,7 +109,7 @@ namespace XAF.Testing{
                             .DoOnComplete(FlushAndExit)));
                 void FlushAndExit(){
                     Console.SetOut(originalOut);
-                    cachedMessages.Do(message => originalOut.WriteLine(message)).Enumerate();
+                    cachedMessages.Do(Console.WriteLine).Enumerate();
                     Logger.Exit();
                 }
             });

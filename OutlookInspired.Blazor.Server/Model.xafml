@@ -1,20 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
-  <NavigationItems NavigationStyle="Accordion">
-<!--    <Items>-->
-<!--      <Item Id="Default">-->
-<!--        <Items>-->
-<!--          <Item Id="Event_ListView" Removed="True" />-->
-<!--        </Items>-->
-<!--      </Item>-->
-<!--      <Item Id="Reports">-->
-<!--        <Items>-->
-<!--          <Item Id="Analysis_ListView" Removed="True" />-->
-<!--          <Item Id="Dashboards" Removed="True" />-->
-<!--        </Items>-->
-<!--      </Item>-->
-<!--    </Items>-->
-  </NavigationItems>
+  <NavigationItems NavigationStyle="Accordion" />
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
@@ -574,6 +560,50 @@
           <LayoutGroup Id="SimpleEditors" RelativeSize="100">
             <LayoutItem Id="Brochure" Index="0" RelativeSize="100" SizeConstraintsType="Custom" MinSize="107, 50" />
           </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="Product_DetailView">
+      <Items>
+        <PropertyEditor Id="Image" ImageSizeMode="AutoSize" />
+      </Items>
+      <Layout>
+        <LayoutGroup Id="Main">
+          <TabbedGroup Id="Tabs">
+            <LayoutGroup Id="Item2">
+              <LayoutGroup Id="Autocd0a0659-2f87-406a-8784-6a93d3cdb960">
+                <LayoutGroup Id="Auto9f19fe96-e04d-4aa5-a1cc-49b0a84033f7" RelativeSize="33.157338965153116">
+                  <LayoutGroup Id="Auto0a0b0b7b-ff0a-407d-b1ad-4f0e713dd818">
+                    <LayoutGroup Id="Autoaef03fad-e6dd-4ba3-9c0b-419b80502b82" ShowCaption="False" Caption="" Index="0" RelativeSize="15.782828282828282" IsNewNode="True">
+                      <LayoutItem Id="PrimaryImage" ShowCaption="False" ViewItem="PrimaryImage" Index="0" RelativeSize="15.92356687898089" IsNewNode="True" />
+                      <LayoutItem Id="Item3" Index="1" RelativeSize="84.07643312101911" IsNewNode="True" />
+                    </LayoutGroup>
+                    <LayoutGroup Id="Autoe84126ce-25be-4c6b-a89e-e7453338480b" Caption="Autoe84126ce-25be-4c6b-a89e-e7453338480b(8)" RelativeSize="43.30808080808081" Index="1">
+                      <LayoutItem Id="Name" RelativeSize="17.8343949044586" />
+                      <LayoutItem Id="Cost" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="CurrentInventory" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Available" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="ProductionStart" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Support" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="ConsumerRating" RelativeSize="15.286624203821656" />
+                    </LayoutGroup>
+                    <LayoutItem Id="Image" ShowCaption="False" ViewItem="Image" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="276, 223" MaxSize="276, 223" Index="1" RelativeSize="17.424242424242426" Removed="True" />
+                    <LayoutGroup Id="Autob64b044d-3393-4a8c-8ac6-92549540c983" Caption="Autob64b044d-3393-4a8c-8ac6-92549540c983(16)" RelativeSize="40.90909090909091" Index="2">
+                      <LayoutItem Id="Category" RelativeSize="17.8343949044586" />
+                      <LayoutItem Id="RetailPrice" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="SalePrice" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Backorder" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Weight" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Engineer" RelativeSize="13.375796178343949" />
+                      <LayoutItem Id="Manufacturing" RelativeSize="15.286624203821656" />
+                    </LayoutGroup>
+                  </LayoutGroup>
+                </LayoutGroup>
+                <LayoutItem Id="Description" RelativeSize="4.435058078141499" Index="1" />
+                <LayoutItem Id="Item1" Index="2" RelativeSize="62.40760295670538" IsNewNode="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </TabbedGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>
