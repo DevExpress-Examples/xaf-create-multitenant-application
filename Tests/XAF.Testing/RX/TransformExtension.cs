@@ -7,6 +7,8 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.RX{
     public static class TransformExtension{
+        public static IObservable<T> Throw<T>(this Exception exception)
+            => Observable.Throw<T>(exception);
         public static IObservable<TResult> SelectAndOmit<T, TResult>(this IObservable<T> source,
             Func<T,int, IObservable<TResult>> process, SemaphoreSlim semaphoreSlim = null, Action<T> noProcess = null, int maximumConcurrencyCount = 1) {
             var dispose = false;

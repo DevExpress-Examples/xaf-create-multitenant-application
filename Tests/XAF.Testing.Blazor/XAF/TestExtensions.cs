@@ -54,7 +54,7 @@ namespace XAF.Testing.Blazor.XAF{
         private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 
             => host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
                     .MoveToInactiveMonitor(inactiveWindowPosition)
-                    .SelectMany(process => host.Services.WhenApplicationStopping().Do(_ => process.Kill()).Take(1)))
+                    .SelectMany(process => host.Services.WhenApplicationStopping().Do(_ => process.Kill()).Take(1).CompleteOnError()))
                 .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable()).Merge());
 
         public static IObservable<BlazorApplication> DeleteModelDiffs<T>(this IObservable<BlazorApplication> source) where T : DbContext 
