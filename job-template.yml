@@ -60,6 +60,9 @@ jobs:
     inputs:
       minimumExpectedTests: "1"
       failOnMinTestsNotRun: true
+      rerunFailedTests: true
+      rerunFailedTestCasesMaxLimit: "2"
+      rerunFailedThreshold: "0.1"
       searchFolder: $(testsFolderPath)
       testSelector: 'testAssemblies'
       testAssemblyVer2: ${{ parameters.testAssembly }}
