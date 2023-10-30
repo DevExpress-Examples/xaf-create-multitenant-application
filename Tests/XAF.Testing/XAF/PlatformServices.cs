@@ -20,8 +20,8 @@ namespace XAF.Testing.XAF{
     public interface IRichEditControlAsserter{
         IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge);    
     }
-    public interface IPdfViewerAssertion{
-        IObservable<Unit> Assert(DetailView detailView);
+    public interface IPdfViewerAssertion:IAssertViewItemClientIsReady{
+        
     }
     public interface IDashboardViewGridControlDetailViewObjectsAsserter{
         IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames);
@@ -57,8 +57,9 @@ namespace XAF.Testing.XAF{
         IObservable<object> WhenGridControl(DetailView detailView);
     }
 
-    public interface IUserControlProperties{
+    public interface IUserControlObjects{
         int ObjectsCount(object control);
+        IObservable<object> WhenObjects(object control, int i);
     }
     
     public interface INewRowAdder{
@@ -75,10 +76,10 @@ namespace XAF.Testing.XAF{
     }
 
 
-    public interface IAssertMapControl:IViewItemControlAssertion{
+    public interface IAssertMapControl:IAssertViewItemClientIsReady{
         
     }
-    public interface IViewItemControlAssertion{
+    public interface IAssertViewItemClientIsReady{
         IObservable<Unit> Assert(DetailView detailView);
     }
 

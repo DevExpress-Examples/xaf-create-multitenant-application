@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Aqua.EnumerableExtensions;
+using DevExpress.Blazor.Popup.Internal;
 using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Module.Services.Internal;
@@ -24,6 +25,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
 
         protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
             // await base.OnAfterImportClientModuleAsync(firstRender);
+            if (ClientObject.IsDisposed())return;
             if (firstRender){
                 var devExtremeModule = await ImportResource($"{ComponentName}.js");
                 await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");
@@ -31,7 +33,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
                 await OnAfterImportDevExtremeModuleAsync(true);
             }
             else{
-                if (DevExtremeModule != null){
+                if (!(DevExtremeModule?.IsDisposed() ?? false)&&!(ClientModule?.IsDisposed() ?? false)){
                     await OnAfterImportDevExtremeModuleAsync(false);    
                 }    
             }

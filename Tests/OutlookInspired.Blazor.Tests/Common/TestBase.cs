@@ -10,6 +10,7 @@ using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
@@ -30,7 +31,7 @@ namespace OutlookInspired.Blazor.Tests.Common{
             collection.AddScoped<IFilterViewManager,FilterViewManager>();
             collection.AddScoped<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
             collection.AddScoped<IUserControlProvider, UserControlProvider>();
-            collection.AddScoped<IUserControlProperties, UserControlProperties>();
+            collection.AddScoped<IUserControlObjects, UserControlProperties>();
         }
         
         public IObservable<Unit> StartBlazorTest(string user, Func<BlazorApplication, IObservable<Unit>> test,

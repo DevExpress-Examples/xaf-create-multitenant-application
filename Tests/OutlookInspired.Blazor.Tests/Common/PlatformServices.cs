@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using OutlookInspired.Blazor.Server;
+using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Tests.Services;
@@ -12,6 +13,7 @@ using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
+using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     class UserControlProcessSelectedObject:IUserControlProcessSelectedObject{
@@ -21,19 +23,21 @@ namespace OutlookInspired.Blazor.Tests.Common{
                     .Do(processObject => processObject.ProcessSelectedObject())
                     .IgnoreElements().To<Frame>());
     }
+    
     public class AssertMapControl : IAssertMapControl{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertViewItemControl<ComponentModelBase>(
-                model => model.WhenEvent(nameof(ComponentModelBase.ClientReady))
-                .Select(pattern => pattern).ToUnit()).ToUnit();
+                model => model.WhenClientIsReady()).ToUnit();
     }
-    
+
     class PdfViewerAssertion:IPdfViewerAssertion{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.GetItems<PdfViewerEditor>().ToNowObservable().ControlCreated()
-                .SelectMany(editor => ((PdfModelAdapter)editor.Control).Model.WhenEvent(nameof(ComponentModelBase.ClientReady)).Take(1))
+                .Select(editor => ((PdfModelAdapter)editor.Control).Model)
+                .SelectMany(model => model.WhenClientIsReady().Take(1))
                 .Select(pattern => pattern)
                 .Assert().ToUnit();
+        
     }
 
     class FilterViewManager:IFilterViewManager{
@@ -46,8 +50,9 @@ namespace OutlookInspired.Blazor.Tests.Common{
                 throw new NotImplementedException();
         }
     }
-    class UserControlProperties:IUserControlProperties{
+    class UserControlProperties:IUserControlObjects{
         public int ObjectsCount(object control) => ((IUserControlDataSource)control).Objects.Count;
+        public IObservable<object> WhenObjects(object control, int i) => ((IUserControlDataSource)control).Objects.Cast<object>().Take(i).ToNowObservable();
     }
 
     class UserControlProvider:IUserControlProvider{

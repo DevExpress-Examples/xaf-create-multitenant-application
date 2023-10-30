@@ -24,14 +24,13 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
             serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
             serviceCollection.AddSingleton<IUserControlProvider, UserControlProvider>();
-            serviceCollection.AddSingleton<IUserControlProperties, UserControlProperties>();
+            serviceCollection.AddSingleton<IUserControlObjects, UserControlProperties>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
             // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
-            serviceCollection.AddSingleton<IAssertMapControl, AssertMapControl>();
             serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
@@ -59,8 +58,9 @@ namespace XAF.Testing.Win.XAF{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 
             => view.SelectObject(objects);
     }
-    class UserControlProperties:IUserControlProperties{
+    class UserControlProperties:IUserControlObjects{
         public int ObjectsCount(object control) => ((GridControl)control).MainView.DataRowCount;
+        public IObservable<object> WhenObjects(object control, int i) => ((GridControl)control).DataSource.YieldItems(1);
     }
 
     class UserControlProvider:IUserControlProvider{

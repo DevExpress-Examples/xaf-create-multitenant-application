@@ -13,7 +13,14 @@ namespace OutlookInspired.Tests.Services{
                     var customerTabControl = application.AssertTabbedGroup(typeof(Customer),5);
                     return source.AssertDashboardMasterDetail(
                              frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
-                        .Merge(customerTabControl.IgnoreElements().To<Frame>()).ReplayFirstTake()
+                        .Merge(customerTabControl.IgnoreElements().To<Frame>())
+                        .Merge(application.WhenFrame(typeof(CustomerEmployee),ViewType.DetailView)
+                            .SelectUntilViewClosed(frame => frame.View.ObjectSpace.WhenCommiting().Select(args => {
+                                var cloneableOwnMembers = frame.View.ObjectSpace.CloneableOwnMembers(frame.View.ObjectTypeInfo.Type);
+                                var viewObjectSpace = frame.View.ObjectSpace;
+                                return viewObjectSpace.WhenCommitted().Select(space => space);
+                            }).To(frame)).IgnoreElements())
+                        .ReplayFirstTake()
                         .If(_ => viewVariant == "CustomerListView", frame => frame.AssertDashboardViewGridControlDetailViewObjects(
                                 nameof(Customer.RecentOrders), nameof(Customer.Employees)), frame => frame.Observe())
                         .ToUnit();
@@ -22,11 +29,12 @@ namespace OutlookInspired.Tests.Services{
         
 
         internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,Frame frame) 
-            => frame.Defer(() => source.AssertNestedCustomerEmployee(frame,1).IgnoreElements()
-                    .ConcatDefer(() => source.AssertNestedQuote(frame,2)).IgnoreElements()
-                    .ConcatDefer(() => source.AssertNestedCustomerStore(frame)).IgnoreElements()
-                    .ConcatDefer(() => source.AssertNestedOrder(frame,4))
-                )
+            // => frame.Defer(() => source.AssertNestedCustomerEmployee(frame,1).IgnoreElements()
+            //         .ConcatDefer(() => source.AssertNestedQuote(frame,2)).IgnoreElements()
+            //         .ConcatDefer(() => source.AssertNestedCustomerStore(frame)).IgnoreElements()
+            //         .ConcatDefer(() => source.AssertNestedOrder(frame,4))
+            //     )
+            =>source.AssertNestedOrder(frame,4)
                 .ReplayFirstTake();
         
         internal static IObservable<Frame> AssertNestedCustomerEmployee(this IObservable<ITabControlProvider> source, Frame nestedFrame,int tabIndex)

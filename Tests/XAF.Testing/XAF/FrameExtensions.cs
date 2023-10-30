@@ -248,13 +248,13 @@ namespace XAF.Testing.XAF{
 
         internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame) 
             => frame.View.Observe().OfType<DetailView>()
-                .SelectMany(view => view.WhenGridControl().To(frame).CreateNewObject());
+                .SelectMany(view => view.WhenGridControl().Take(1).To(frame).CreateNewObject());
 
         public static IObservable<object> WhenGridControl(this DetailView detailView) 
             => detailView.ObjectSpace.GetRequiredService<IUserControlProvider>().WhenGridControl(detailView);
 
         public static IObservable<Frame> CreateNewObject(this IObservable<Frame> source)
-            => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction)
+            => source.ToController<NewObjectViewController>().Select(controller => controller.NewObjectAction).Take(1)
                 .SelectMany(action => action.Trigger(action.Application
                     .WhenFrame(action.Controller.Frame.View.ObjectTypeInfo.Type, ViewType.DetailView)
                     .Merge(action.Controller.Frame.View.AsListView().Observe().WhenNotDefault().Select(view => view.EditView).WhenNotDefault()

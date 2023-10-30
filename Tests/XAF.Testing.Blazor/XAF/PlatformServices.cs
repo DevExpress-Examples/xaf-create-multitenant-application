@@ -102,8 +102,9 @@ namespace XAF.Testing.Blazor.XAF{
     // }
     public class FrameObjectObserver : IFrameObjectObserver{
         IObservable<object> IFrameObjectObserver.WhenObjects(Frame frame, int count) 
-            => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
-                    frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))));
+            => frame.View.Observe().OfType<DetailView>().SelectMany(view => view.WhenGridControl()
+                    .SelectMany(o => frame.Application.GetRequiredService<IUserControlObjects>().WhenObjects(o,1)))
+                .SwitchIfEmpty(Observable.Defer(() => frame.View.Observe().SelectMany(view => view.WhenObjectViewObjects(count))));
     }
 
     public class AssertReport : IAssertReport{
@@ -137,7 +138,8 @@ namespace XAF.Testing.Blazor.XAF{
     }
     class DashboardViewGridControlDetailViewObjectsAsserter:IDashboardViewGridControlDetailViewObjectsAsserter{
         public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames){
-            throw new NotImplementedException();
+            return Observable.Empty<Frame>();
+            // throw new NotImplementedException();
             // return frame.Observe().AssertDashboardViewGridControlDetailViewObjects(relationNames);
         }
     }

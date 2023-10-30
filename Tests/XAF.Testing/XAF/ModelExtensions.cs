@@ -9,7 +9,7 @@ namespace XAF.Testing.XAF{
                 .FindMember(memberInfo.Name.Substring(0, memberInfo.Name.Length - 2))?.IsOneToOneRelated() ?? false);
 
         public static bool IsOneToOneRelated(this IMemberInfo memberInfo) 
-            => (memberInfo.AssociatedMemberInfo?.IsPersistent ?? false) || memberInfo.IsOneToOneForeignKey();
+            => ((memberInfo.AssociatedMemberInfo?.IsPersistent ?? false)&&!memberInfo.AssociatedMemberInfo.IsList) || memberInfo.IsOneToOneForeignKey();
 
         public static bool IsDefault(this IModelObjectView modelObjectView) 
             => modelObjectView is IModelListView modelListView ? modelObjectView.ModelClass.DefaultListView == modelListView

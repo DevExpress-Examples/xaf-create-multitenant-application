@@ -17,6 +17,8 @@ namespace OutlookInspired.Blazor.Server{
     public abstract class ComponentModelBase:DevExpress.ExpressApp.Blazor.Components.Models.ComponentModelBase,IComplexControl{
         protected XafApplication Application;
         protected IObjectSpace ObjectSpace;
+        private bool _clientIsReady;
+
         [JsonIgnore]
         public Action Update { get; set; } 
         public virtual void Setup(IObjectSpace objectSpace, XafApplication application){
@@ -41,7 +43,11 @@ namespace OutlookInspired.Blazor.Server{
         
         protected ComponentModelBase() => ReadyReference = new JsInterop(OnClientReady).DotNetReference();
 
-        protected virtual void OnClientReady() => ClientReady?.Invoke(this, EventArgs.Empty);
+        public bool ClientIsReady => _clientIsReady;
+        protected virtual void OnClientReady(){
+            ClientReady?.Invoke(this, EventArgs.Empty);
+            _clientIsReady = true;
+        }
 
         public DotNetObjectReference<JsInterop> ReadyReference{ get;  } 
 
