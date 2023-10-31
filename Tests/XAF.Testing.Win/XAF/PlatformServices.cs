@@ -30,6 +30,7 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
+            serviceCollection.AddSingleton<IAssertMapControl, AssertMapControl>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
             serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));

@@ -5,7 +5,7 @@ using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
 
-namespace OutlookInspired.Blazor.Server.Services{
+namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class ApplicationBuilder{
         public static IBlazorApplicationBuilder AddBuildStep(this IBlazorApplicationBuilder builder){
             builder.AddBuildStep(application => {

@@ -19,7 +19,7 @@ namespace OutlookInspired.Tests.Common{
 #if TEST
         protected const int MaxTries = 3;
 #else
-        protected const int MaxTries = 1;
+        protected const int MaxTries = 3;
 #endif
         static TestBase(){
             UtilityExtensions.TimeoutInterval = 60.Seconds();

@@ -42,7 +42,8 @@ namespace XAF.Testing.Blazor.XAF{
                     .Select(application => application.ServiceProvider)
                     .Do(StopTest)
                     .DoOnError(_ => host.Services.StopTest()).Take(1)
-                    .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition)))
+                    .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition))
+                    .TakeUntil(host.Services.WhenApplicationStopped().Select(unit => unit)))
                 .LogError()
                 .Log(logContext,inactiveWindowLogContextPosition,true);
 
