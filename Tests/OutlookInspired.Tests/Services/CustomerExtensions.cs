@@ -25,17 +25,18 @@ namespace OutlookInspired.Tests.Services{
                                 nameof(Customer.RecentOrders), nameof(Customer.Employees)), frame => frame.Observe())
                         .ToUnit();
                 },application.CanNavigate(view).ToUnit())
-                .FilterListViews(application);    
-        
+                .FilterListViews(application);
 
-        internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,Frame frame) 
-            // => frame.Defer(() => source.AssertNestedCustomerEmployee(frame,1).IgnoreElements()
-            //         .ConcatDefer(() => source.AssertNestedQuote(frame,2)).IgnoreElements()
-            //         .ConcatDefer(() => source.AssertNestedCustomerStore(frame)).IgnoreElements()
-            //         .ConcatDefer(() => source.AssertNestedOrder(frame,4))
-            //     )
-            =>source.AssertNestedOrder(frame,4)
-                .ReplayFirstTake();
+
+        internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,
+            Frame frame)
+            => frame.Defer(() => source.AssertNestedCustomerEmployee(frame, 1).IgnoreElements()
+                .ConcatDefer(() => source.AssertNestedQuote(frame, 2)).IgnoreElements()
+                .ConcatDefer(() => source.AssertNestedCustomerStore(frame)).IgnoreElements()
+                .ConcatDefer(() => source.AssertNestedOrder(frame, 4))
+            );
+            // =>source.AssertNestedOrder(frame,4)
+                // .ReplayFirstTake();
         
         internal static IObservable<Frame> AssertNestedCustomerEmployee(this IObservable<ITabControlProvider> source, Frame nestedFrame,int tabIndex)
             => source.AssertNestedListView(nestedFrame, typeof(CustomerEmployee),tabIndex, existingObjectDetailViewFrame => 

@@ -17,7 +17,7 @@ namespace OutlookInspired.Win.Tests{
         }
 
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
-        //[Category(Tests)]
+        [Category(Tests)]
         public async Task Customer(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertCustomerListView(view, viewVariant));
         }

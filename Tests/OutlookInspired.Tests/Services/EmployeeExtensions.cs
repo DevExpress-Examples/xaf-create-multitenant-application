@@ -30,7 +30,6 @@ namespace OutlookInspired.Tests.Services{
             ;    
         
         static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame){
-            return Observable.Empty<Frame>();
             return detailViewFrame.AssertNestedEmployeeTask().IgnoreElements()
                 .ConcatDefer(() => source.AssertNestedListView(detailViewFrame, typeof(Evaluation), 1,
                     _ => Observable.Empty<Unit>(),

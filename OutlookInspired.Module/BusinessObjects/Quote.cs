@@ -27,7 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
         public  virtual decimal Total { get; set; }
         [EditorAlias(EditorAliases.ProgressEditor)]
-        [ProgressPropertyEditor(Maximum = 1)]
+        // [ProgressPropertyEditor(Maximum = 1)]
         public virtual  double Opportunity { get; set; }
         [DevExpress.ExpressApp.DC.Aggregated]
         public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
