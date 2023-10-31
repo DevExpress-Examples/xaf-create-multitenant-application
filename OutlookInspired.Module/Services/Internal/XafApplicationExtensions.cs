@@ -4,11 +4,6 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class XafApplicationExtensions{
-        public static DetailView NewDetailView(this XafApplication application, Type objectType){
-            var objectSpace = application.CreateObjectSpace(objectType);
-            return application.CreateDetailView(objectSpace, objectSpace.CreateObject(objectType));
-        }
-        
         public static DetailView NewDetailView(this XafApplication application,object instance, IModelDetailView modelDetailView = null, bool isRoot = true) 
             => application.NewDetailView(space => space.GetObject(instance),modelDetailView,isRoot);
 
@@ -20,9 +15,6 @@ namespace OutlookInspired.Module.Services.Internal{
             detailView.CurrentObject = objectSpace.GetObject(currentObject);
             return detailView;
         }
-        
-        public static void ShowViewInPopupWindow(this XafApplication application, object instance)
-            => application.ShowViewStrategy.ShowViewInPopupWindow(application.NewDetailView(space => space.GetObject(instance)));
         
         public static IModelDetailView FindModelDetailView(this XafApplication application, Type objectType) 
             => (IModelDetailView) application.Model.Views[application.FindDetailViewId(objectType)];

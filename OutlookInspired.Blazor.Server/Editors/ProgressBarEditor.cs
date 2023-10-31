@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Model;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components;
-using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors{
     [PropertyEditor(typeof(int), EditorAliases.ProgressEditor, false)]

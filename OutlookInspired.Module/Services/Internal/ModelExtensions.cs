@@ -2,7 +2,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Utils;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ModelExtensions{
@@ -31,13 +30,9 @@ namespace OutlookInspired.Module.Services.Internal{
             ((IModelListView)cloneNodeFrom).DetailView = source.Application.Views.OfType<IModelDetailView>()
                 .FirstOrDefault(view => view.Id == detailViewId)??throw new NullReferenceException(detailViewId);
         }
-
-        public static byte[] ImageBytes(this IModelApplication modelApplication,Type objectType) 
-            => ImageLoader.Instance.GetImageInfo(modelApplication.BOModel.GetClass(objectType).ImageName).ImageBytes;
-
+        
         public static IEnumerable<T> Attributes<T>(this IModelClass modelClass) where T:Attribute 
             => modelClass.TypeInfo.FindAttributes<T>();
-        
         
         public static void Add(this ModelNodesGeneratorUpdaters updaters, params IModelNodesGeneratorUpdater[] nodeUpdaters)
             => nodeUpdaters.Do(updaters.Add).Enumerate();
@@ -54,9 +49,5 @@ namespace OutlookInspired.Module.Services.Internal{
         public static IEnumerable<IModelViewLayoutElement> Flatten(this IModelViewLayout viewLayout) 
             => viewLayout.OfType<IModelLayoutGroup>()
                 .SelectMany(group => group.SelectManyRecursive(element => element as IEnumerable<IModelViewLayoutElement>));
-
-        public static IModelLayoutViewItem LayoutItem(this IModelViewItem modelViewItem)
-            => modelViewItem.GetParent<IModelDetailView>().Layout.Flatten()
-                .OfType<IModelLayoutViewItem>().FirstOrDefault(element => element.ViewItem.Id == modelViewItem.Id);
     }
 }

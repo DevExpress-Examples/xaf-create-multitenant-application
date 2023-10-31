@@ -39,9 +39,6 @@ namespace OutlookInspired.Module.Services.Internal{
             var target = objectSpace.GetObjectsQuery<T>().FirstOrDefault(expression);
             return target != null && application.CanRead(objectSpace, typeof(T), target);
         }
-
-        public static bool CanRead(this XafApplication application,Type objectType,IObjectSpaceLink targetObject) 
-            => application.CanRead(targetObject.ObjectSpace,objectType,targetObject);
         
         public static bool CanRead(this XafApplication application,IObjectSpace objectSpace,Type objectType,object targetObject) 
             => application.Security.IsGranted(new PermissionRequest(objectSpace, objectType, Read, targetObject));
@@ -94,9 +91,7 @@ namespace OutlookInspired.Module.Services.Internal{
                     role.AddReportPermission(data => new[]{ RevenueAnalysis, RevenueReport, Sales, Contacts, LocationsReport, OrdersReport, ProductProfile, TopSalesPerson }.Contains(data.DisplayName));
                 })
                 .Enumerate();
-
         
-        [Obsolete("add an Updater for navigation items")]
         private static void AddHRPermissions(this PermissionPolicyRole role) 
             => EmployeeTypes.AddCRUDAccess(role)
                 .Concat(CustomerTypes.Prepend(typeof(ApplicationUser)).AddReadAccess(role)).To<string>()

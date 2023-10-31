@@ -6,8 +6,6 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.ModelUpdaters{
-    [Obsolete("set the Product.OrderItems listview instead of this updater")]
-
     public class DataAccessModeUpdater : ModelNodesGeneratorUpdater<ModelViewsNodesGenerator>{
         public static readonly Type[] ClientTypes = {typeof(Evaluation),typeof(TaskAttachedFile)};
 

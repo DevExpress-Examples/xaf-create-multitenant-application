@@ -6,9 +6,6 @@ using DevExpress.XtraEditors;
 namespace OutlookInspired.Win;
 
 static class Program {
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
     [STAThread]
     public static int Main(string[] args){
         

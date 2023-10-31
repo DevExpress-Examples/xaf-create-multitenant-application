@@ -2,14 +2,10 @@ using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
@@ -20,22 +16,11 @@ namespace OutlookInspired.Module.Services.Internal{
         }
         public static byte ToByte(this string value,int fromBase) 
             => Convert.ToByte(value, fromBase);
-
-        public static T DeSerialize<T>(this string value)
-            => JsonSerializer.Deserialize<T>(value);
-        public static T DeSerialize<T>(this JsonElement jsonElement)
-            => jsonElement.GetRawText().DeSerialize<T>();
         
-        public static string Serialize(this object value) 
-            => JsonConvert.SerializeObject(value);
-
         public static IMemberInfo FindDisplayableMember(this IMemberInfo memberInfo) 
             => ReflectionHelper.FindDisplayableMemberDescriptor(memberInfo);
         
-        public static Type GetExpressionType(this LambdaExpression expression) 
-            => expression.Parameters[0].Type;
-        public static CriteriaOperator ToCriteria<T>(this Expression<Func<T, bool>> expression) 
-            => CriteriaOperator.FromLambda(expression);
+        
         public static CriteriaOperator Combine(this CriteriaOperator criteriaOperator,string criteria,GroupOperatorType type=GroupOperatorType.And){
             var @operator = CriteriaOperator.Parse(criteria);
             return !criteriaOperator.ReferenceEquals(null) ? new GroupOperator(type, @operator, criteriaOperator) : @operator;
@@ -43,8 +28,7 @@ namespace OutlookInspired.Module.Services.Internal{
 
         public static string ToBase64String(this byte[] bytes) 
             => Convert.ToBase64String(bytes);
-        public static byte[] ToBase64String(this string base64String) 
-            => Convert.FromBase64String(base64String);
+        
 
         public static string ToBase64Image(this byte[] bytes) 
             => $"data:{bytes.FileType()};base64,{bytes?.ToBase64String()}";
@@ -62,8 +46,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 { Length: > 0 } when value.IsMaskMatch(0, 66, 77) => "bmp",
                 _ => ""
             };
-
-
+        
         public static string GetString(this byte[] bytes, Encoding encoding = null) 
             => bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);
         
@@ -98,12 +81,7 @@ namespace OutlookInspired.Module.Services.Internal{
             
             await stream.CopyToAsync(fileStream);
         }
-        public static async Task Execute(this object component, 
-            Func<Task<bool>> condition, Func<Task> logic){
-            if (await condition()){
-                await logic();
-            }
-        }
+        
         public static string FirstCharacterToLower(this string str) =>
             string.IsNullOrEmpty(str) || char.IsLower(str, 0) ? str : char.ToLowerInvariant(str[0]) + str.Substring(1);
         
@@ -115,31 +93,7 @@ namespace OutlookInspired.Module.Services.Internal{
 
         public static IEnumerable<(TAttribute attribute,IMemberInfo memberInfo)> AttributedMembers<TAttribute>(this ITypeInfo info)  
             => info.Members.SelectMany(memberInfo => memberInfo.FindAttributes<Attribute>().OfType<TAttribute>().Select(attribute => (attribute, memberInfo)));
-        public static Type GetAssemblyType(this AppDomain domain, string fullName,bool ignoreCase=false) 
-            => fullName==null?null:domain.GetAssemblies().Select(assembly => assembly.GetType(fullName,ignoreCase)).WhereNotDefault().FirstOrDefault();
         
-        public static Task AsTask(this CancellationToken cancellationToken){
-            var tcs = new TaskCompletionSource<bool>();
-            cancellationToken.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
-            return tcs.Task;
-        }
-
-        public static IEnumerable<T> ToEnumerable<T>(this T obj){
-            yield return obj;
-        }
-        
-        
-        public static Task DelayAndExit(this XafApplication application,TimeSpan delay) => Task.Delay(delay).ContinueWith(_ => application.Exit());
-
-        public static CancellationToken AsCancelable(this Task task) {
-            var cts = new CancellationTokenSource();
-            task.ContinueWith(_ => {
-                cts.Cancel();
-                cts.Dispose();
-            }, TaskScheduler.Default);
-            return cts.Token;
-        }
-    
         public static string MemberExpressionName<TObject, TMemberValue>(this Expression<Func<TObject, TMemberValue>> memberName) 
             => memberName.Body switch{
                 MemberExpression memberExpression => memberExpression.Member.Name,
@@ -148,17 +102,4 @@ namespace OutlookInspired.Module.Services.Internal{
             };
 
     }
-    
-    public struct EditorAliases {
-        
-        public const string EnumImageOnlyEditor = "EnumImageOnlyEditor";
-        public const string PrintLayoutRichTextEditor = "PrintLayoutRichTextEditor";
-        public const string DocumentEditor = "DocumentEditor";
-        public const string PdfViewerEditor = "PdfViewerEditor";
-        public const string LabelPropertyEditor = "LabelPropertyEditor";
-        public const string HyperLinkPropertyEditor = "HyperLinkPropertyEditor";
-        public const string ProgressEditor = "ProgressEditor";
-        
-    }
-
 }

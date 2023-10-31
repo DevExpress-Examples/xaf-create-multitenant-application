@@ -58,34 +58,12 @@ namespace OutlookInspired.Module.Services.Internal{
         internal static bool Is(this IModelView modelView,ViewType viewType) 
             => viewType == ViewType.Any || (viewType == ViewType.DetailView ? modelView is IModelDetailView :
                 viewType == ViewType.ListView ? modelView is IModelListView : modelView is IModelDashboardView);
-
-        internal static IEnumerable<NestedFrame> NestedFrames(this DashboardView dashboardView,params ViewType[] viewTypes)
-            => dashboardView.Items(viewTypes).ToFrame();
-        internal static IEnumerable<NestedFrame> NestedFrames<TView>(this DashboardView dashboardView,params Type[] objectTypes) where TView:View 
-            => dashboardView.GetItems<DashboardViewItem>()
-                .Where(item => item.InnerView is TView && (!objectTypes.Any()||objectTypes.Contains(item.InnerView.ObjectTypeInfo.Type)))
-                .ToFrame();
-
-        internal static IEnumerable<TControl> Controls<TControl>(this CompositeView compositeView) 
-            => compositeView.GetItems<ControlViewItem>().Select(item => item.Control)
-                .OfType<TControl>();
-
+        
         internal static T SetCurrentObject<T>(this View detailView, T currentObject) where T : class 
             => (T)(detailView.CurrentObject = detailView.ObjectSpace.GetObject(currentObject));
-
-        internal static bool Is(this View view, Type objectType ) 
-            => view.Is(ViewType.Any,Nesting.Any,objectType);
+        
         internal static DetailView ToDetailView(this View view) => (DetailView)view;
         internal static ListView ToListView(this View view) => ((ListView)view);
-        internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
-            => view.FitsCore( viewType) && view.FitsCore( nesting) &&
-               (viewType==ViewType.DashboardView&&view is DashboardView||(objectType ?? typeof(object)).IsAssignableFrom(view.ObjectTypeInfo?.Type));
 
-        private static bool FitsCore(this View view, ViewType viewType) 
-            => view != null && (viewType == ViewType.ListView ? view is ListView : viewType == ViewType.DetailView
-                    ? view is DetailView : viewType != ViewType.DashboardView || view is DashboardView);
-
-        private static bool FitsCore(this View view, Nesting nesting) 
-            => nesting == Nesting.Nested ? !view.IsRoot : nesting != Nesting.Root || view.IsRoot;
     }
 }

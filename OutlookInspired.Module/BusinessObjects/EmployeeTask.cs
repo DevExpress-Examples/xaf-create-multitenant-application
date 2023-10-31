@@ -1,13 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
-using DevExpress.Drawing;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
+using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{

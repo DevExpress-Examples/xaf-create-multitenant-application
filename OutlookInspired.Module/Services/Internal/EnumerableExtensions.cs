@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using Castle.Components.DictionaryAdapter;
-using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class EnumerableExtensions{
@@ -35,9 +33,6 @@ namespace OutlookInspired.Module.Services.Internal{
             }
         }
         
-        public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) 
-            => source.SelectMany(sources => sources);
-
         public static IEnumerable<T> SelectManyRecursive<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childrenSelector){
             foreach (var i in source){
                 yield return i;
@@ -62,31 +57,8 @@ namespace OutlookInspired.Module.Services.Internal{
         public static System.ComponentModel.BindingList<T> ToBindingList<T>(this IEnumerable<T> source) 
             => new((IList<T>) (source as IList ?? source.ToList()));
 
-        public static System.ComponentModel.IBindingList ToBindingList(this IEnumerable<object> source,Type objectType) {
-            var bindingList = (System.ComponentModel.IBindingList) typeof(BindingList<>).MakeGenericType(objectType).CreateInstance();
-            foreach (object o in source) {
-                bindingList.Add(o);
-            }
-            return bindingList;
-        }
 
-        public static IEnumerable<T> IgnoreElements<T>(this IEnumerable<T> source){
-            foreach (var unused in source){
-                yield break;
-            }
-        }
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> source,params T[] values) => source.Concat(values.AsEnumerable());
-
-        public static Dictionary<TKey, TObject> ToDictionary<TObject,TKey>(this IEnumerable<TObject> objects,Func<TObject,TKey> keySelector) where TObject:OutlookInspiredBaseObject 
-            => objects.ToDictionary(keySelector, o => o);
-
-        public static IEnumerable<TValue> To<TSource,TValue>(this IEnumerable<TSource> source,TValue value) 
-            => source.Select(_ => value);
-
-        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> enumerable){
-            foreach (var item in enumerable) yield return item;
-            await Task.CompletedTask;
-        }
         
         public static IEnumerable<T> WhereNotDefault<T,T2>(this IEnumerable<T> source, Func<T,T2> predicate) 
             => source.Where(arg => !predicate(arg).IsDefaultValue());
@@ -103,14 +75,6 @@ namespace OutlookInspired.Module.Services.Internal{
         public static IEnumerable<string> WhereNotNullOrEmpty(this IEnumerable<string> source) 
             => source.Where(s => s.IsNotNullOrEmpty());
         
-        public static IEnumerable<string> WhereNotNull(this IEnumerable<string> source) 
-            => source.Where(s => s!=null);
-        
-        public static IEnumerable<string> WhereNotEmpty(this IEnumerable<string> source) 
-            => source.Where(s => s!=String.Empty);
-        
-        public static bool IsNullOrEmpty(this string strString)
-            => string.IsNullOrEmpty(strString);
         public static bool IsNotNullOrEmpty(this string strString)
             => !string.IsNullOrEmpty(strString);
     }

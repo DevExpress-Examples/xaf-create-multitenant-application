@@ -2,7 +2,6 @@
 using DevExpress.ExpressApp.Data;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent]

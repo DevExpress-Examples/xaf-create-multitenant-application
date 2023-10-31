@@ -7,15 +7,10 @@ using DevExpress.ExpressApp.EFCore.Internal;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.Extensions.DependencyInjection;
-using OutlookInspired.Module.BusinessObjects;
 using Type = System.Type;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ObjectSpaceExtensions{
-        public static List<Employee> Employees(this IObjectSpace objectSpace,DateTime start,DateTime end) 
-            => objectSpace.GetObjectsQuery<Employee>()
-                .Where(employee => employee.Evaluations.Any(evaluation => evaluation.StartOn>=start&&evaluation.StartOn<end)).ToList();
-
         public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
             => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
         
@@ -58,15 +53,10 @@ namespace OutlookInspired.Module.Services.Internal{
             => objectSpace is not CompositeObjectSpace compositeObjectSpace
                 ? objectSpace.YieldItem()
                 : objectSpace.YieldItem().Concat(compositeObjectSpace.AdditionalObjectSpaces);
-
-        
-        public static void DeleteObject(this IObjectSpace objectSpace, object obj)
-            => objectSpace.Delete(objectSpace.GetObject(obj));
         
         public static bool Any<T>(this IObjectSpace objectSpace,Expression<Func<T, bool>> expression=null) 
             => objectSpace.GetObjectsQuery<T>().Any(expression??(arg =>true));
-        public static int Count<T>(this IObjectSpace objectSpace, Expression<Func<T, bool>> expression=null)
-            => objectSpace.GetObjectsQuery<T>().Where(expression??(arg =>true) ).Count();
+        
         public static T FindObject<T>(this IObjectSpace objectSpace, Expression<Func<T,bool>> expression,bool inTransaction=false) 
             => objectSpace.GetObjectsQuery<T>(inTransaction).FirstOrDefault(expression);
 

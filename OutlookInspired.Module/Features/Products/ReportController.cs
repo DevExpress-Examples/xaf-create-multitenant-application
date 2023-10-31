@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 using static OutlookInspired.Module.Services.Internal.ReportsExtensions;
 

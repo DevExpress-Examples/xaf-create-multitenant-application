@@ -35,8 +35,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 			get => Employee?.ID;
 			set => Employee = ObjectSpace.GetObjectByKey<Employee>(value);
 		}
-
-
 		
 		string IEvent.Description{
 			get => Description.ToDocument(server => server.Text);

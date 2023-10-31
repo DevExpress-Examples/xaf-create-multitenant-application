@@ -8,7 +8,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Mask;
 using DevExpress.XtraEditors.Repository;
-using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Win.Editors{
     [PropertyEditor(typeof(String), EditorAliases.HyperLinkPropertyEditor, false)]
@@ -60,9 +60,7 @@ namespace OutlookInspired.Win.Editors{
             return string.Empty;
         }
 
-        static bool IsValidUrl(string url) {
-            return Regex.IsMatch(url, UrlEmailMask);
-        }
+        static bool IsValidUrl(string url) => Regex.IsMatch(url, UrlEmailMask);
 
         public void Setup(IObjectSpace objectSpace, XafApplication application){
             _objectSpace = objectSpace;

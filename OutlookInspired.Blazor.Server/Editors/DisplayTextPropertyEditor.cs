@@ -4,9 +4,10 @@ using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module.Services.Internal;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors {
-    [PropertyEditor(typeof(object), Module.Services.Internal.EditorAliases.LabelPropertyEditor,false)]
+    [PropertyEditor(typeof(object), EditorAliases.LabelPropertyEditor,false)]
     public class LabelPropertyEditor:ComponentPropertyEditor<LabelModel,LabelModelAdapter>{
         public LabelPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }

@@ -20,12 +20,6 @@ namespace OutlookInspired.Module.Features.Employees{
             employee.AAddress = $"{homeOffice.Line}, {homeOffice.City}, {homeOffice.State} {homeOffice.City} {homeOffice.ZipCode}";
             employee.BAddress = $"{employee.Address}, {employee.City}, {employee.State} {employee.City} {employee.ZipCode}";
             _mapsRouteController = Frame.GetControllers<IMapsRouteController>().FirstOrDefault();
-            NewMethod();
-        }
-
-
-        [Obsolete("impl blazor")]
-        private void NewMethod(){
             if (_mapsRouteController != null) _mapsRouteController.RouteCalculated += OnRouteCalculated;
         }
 

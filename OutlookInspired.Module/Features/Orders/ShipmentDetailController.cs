@@ -1,6 +1,5 @@
 ﻿using DevExpress.ExpressApp;
 using OutlookInspired.Module.Resources.Reports;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.Orders{

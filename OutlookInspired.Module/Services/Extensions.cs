@@ -34,10 +34,7 @@ namespace OutlookInspired.Module.Services{
 
         public static Employee Employee(this ApplicationUser applicationUser) 
             => ((IObjectSpaceLink)applicationUser).ObjectSpace.GetObjectsQuery<Employee>().FirstOrDefault(employee => employee.User.ID == applicationUser.ID);
-
-        public static Employee CurrentEmployee(this IObjectSpace objectSpace) 
-            => objectSpace.CurrentUser().Employee();
-
+        
         public static ApplicationUser CurrentUser(this IObjectSpace objectSpace) 
             => objectSpace.CurrentUser<ApplicationUser>();
     }

@@ -6,10 +6,8 @@ using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.DatabaseUpdate;
-// For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater
-public class Updater : ModuleUpdater {
-    
 
+public class Updater : ModuleUpdater {
     public Updater(IObjectSpace objectSpace, Version currentDBVersion) :
         base(objectSpace, currentDBVersion){
     }
@@ -52,17 +50,6 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
                 .Enumerate();
         }
         ObjectSpace.CommitChanges();
-        // NewMethod();
-    }
-
-    [Obsolete("check if it works without it")]
-    private void NewMethod(){
-        // ObjectSpace.GetObjectsQuery<Employee>().Where(employee =>employee.FullName=="Clark Morgan"&& !employee.UserLogins.Any()).ToArray()
-        //     .Do(employee => ((ISecurityUserWithLoginInfo)employee).CreateUserLoginInfo(
-        //         SecurityDefaults.PasswordAuthentication,
-        //         ObjectSpace.GetKeyValueAsString(employee)))
-        //     .Finally(ObjectSpace.CommitChanges)
-        //     .Enumerate();
     }
 
     private void CreateDepartmentRoles() 

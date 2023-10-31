@@ -13,7 +13,7 @@ using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
-using EditorAliases = OutlookInspired.Module.Services.Internal.EditorAliases;
+using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Module.BusinessObjects{
 	

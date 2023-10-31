@@ -1,5 +1,4 @@
-﻿using System.Reactive.Linq;
-using DevExpress.Data.Filtering;
+﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
@@ -30,9 +29,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 e.Action.View().SelectedObjects.Cast<object>().SwitchIfEmpty(e.Action.View().Objects<object>()).First(),
                 (IModelDetailView)e.Application().FindModelView(viewId),isRoot);
         }
-
-        public static IEnumerable<ChoiceActionItem> ChoiceActionItem(this object[] objects) 
-            => objects.Select(o => new ChoiceActionItem(o.ToString(),o));
+        
         public static View View(this ActionBase actionBase) => actionBase.View<View>();
         public static XafApplication Application(this ActionBaseEventArgs actionBase) => actionBase.Action.Application;
         public static View View(this ActionBaseEventArgs actionBase) => actionBase.Action.View();
