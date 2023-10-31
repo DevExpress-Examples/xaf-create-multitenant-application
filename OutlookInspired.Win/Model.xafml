@@ -333,6 +333,9 @@
       </Items>
     </DetailView>
     <DetailView Id="Order_Invoice_DetailView">
+      <HiddenActions>
+        <ActionLink ActionId="MapPrint" IsNewNode="True" />
+      </HiddenActions>
       <Items>
         <PropertyEditor Id="InvoiceDocument" PropertyEditorType="OutlookInspired.Win.Editors.PrintLayoutRichTextEditor" />
       </Items>

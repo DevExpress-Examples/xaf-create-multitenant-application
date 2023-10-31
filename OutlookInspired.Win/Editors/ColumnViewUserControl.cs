@@ -50,9 +50,10 @@ namespace OutlookInspired.Win.Editors{
             application.ProtectDetailViews(ColumnView.GridControl,ObjectType);
         }
 
-        public override void Refresh(){
+        public override void Refresh() {
+            if (ColumnView == null) return;
             ColumnView.GridControl.DataSource =
-                (object)DataSource ?? _objectSpace.NewEntityServerModeSource(ObjectType, _criteria);
+                (object)DataSource ?? _objectSpace?.NewEntityServerModeSource(ObjectType, _criteria);
         }
 
         public virtual Type ObjectType => throw new NotImplementedException();

@@ -26,6 +26,11 @@ namespace OutlookInspired.Module.Services.Internal{
         public static void ShowInDocument(this Frame frame, string template){
             var showInDocumentAction = frame.GetController<RichTextShowInDocumentControllerBase>().ShowInDocumentAction;
             showInDocumentAction.Active.RemoveItem("ByAppearance");
+            void OnDetailViewCreated(object sender, DetailViewCreatedEventArgs e){
+                e.View.Caption = template;
+                frame.Application.DetailViewCreated-=OnDetailViewCreated;
+            }
+            frame.Application.DetailViewCreated += OnDetailViewCreated;
             showInDocumentAction.DoExecute(showInDocumentAction.Items.First(item => ((MailMergeDataInfo)item.Data).DisplayName == template));
             showInDocumentAction.Active["ByAppearance"] = false;
         }

@@ -500,6 +500,14 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <DetailView Id="Order_Invoice_DetailView">
+      <HiddenActions>
+        <ActionLink ActionId="MapPrint" IsNewNode="True" />
+      </HiddenActions>
+      <Items>
+        <PropertyEditor Id="InvoiceDocument" PropertyEditorType="DevExpress.ExpressApp.Office.Blazor.Editors.RichTextPropertyEditor" />
+      </Items>
+    </DetailView>
     <ListView Id="Order_ListView">
       <Columns>
         <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />

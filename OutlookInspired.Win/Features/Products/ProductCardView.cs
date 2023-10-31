@@ -11,7 +11,8 @@ namespace OutlookInspired.Win.Features.Products
             labelControl1.Text = @"RECORDS: 0";
         }
 
-        protected override void OnDataSourceOfFilterChanged(){
+        protected override void OnDataSourceOfFilterChanged()
+        {
             base.OnDataSourceOfFilterChanged();
             labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
         }
