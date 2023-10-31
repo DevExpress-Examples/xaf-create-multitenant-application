@@ -50,8 +50,7 @@ namespace OutlookInspired.Module.Services.Internal{
         }
         
         public static IEnumerable<IObjectSpace> YieldAll(this IObjectSpace objectSpace)
-            => objectSpace is not CompositeObjectSpace compositeObjectSpace
-                ? objectSpace.YieldItem()
+            => objectSpace is not CompositeObjectSpace compositeObjectSpace ? objectSpace.YieldItem()
                 : objectSpace.YieldItem().Concat(compositeObjectSpace.AdditionalObjectSpaces);
         
         public static bool Any<T>(this IObjectSpace objectSpace,Expression<Func<T, bool>> expression=null) 
