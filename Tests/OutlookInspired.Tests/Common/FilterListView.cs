@@ -17,7 +17,8 @@ namespace OutlookInspired.Tests.Common{
             => application.Security.IsAuthenticated.Observe()
                 .If(b => b,b => application.WhenMainWindowCreated().ToUnit(),b => application.WhenLoggedOn().ToUnit())
                 .SelectMany(result => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
-                    .IgnoreElements().TakeUntilFinished(source).To<T>())
+                    .IgnoreElements())
+                .TakeUntilFinished(source).To<T>()
                 .Concat(source);
         
 

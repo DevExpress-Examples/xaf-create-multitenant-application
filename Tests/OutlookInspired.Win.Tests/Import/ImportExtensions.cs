@@ -7,13 +7,14 @@ using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.XtraRichEdit;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Tests.Import;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using State = OutlookInspired.Module.BusinessObjects.State;
 using StateEnum = DevExpress.DevAV.StateEnum;
 
-namespace OutlookInspired.Tests.Import{
+namespace OutlookInspired.Win.Tests.Import{
     public static class ImportExtensions{
         public static IObservable<Unit> ImportFromSqlLite(this IObjectSpace objectSpace) 
             => new DevAvDb($"Data Source={AppDomain.CurrentDomain.DBPath()}").Use(objectSpace.ImportFrom);
@@ -26,11 +27,11 @@ namespace OutlookInspired.Tests.Import{
                 .CommitAndConcat(objectSpace, () => objectSpace.ImportCustomerStore(sqliteContext)
                     .Merge(objectSpace.ImportEmployee(sqliteContext)
                         .CommitAndConcat(objectSpace, () => objectSpace.EmployeeDependent(sqliteContext, objectSpace.ProductDependent(sqliteContext))))
-                    .CommitAndConcat(objectSpace, () => objectSpace.EmployeeStoreDependent(sqliteContext, objectSpace.CustomerEmployeeDependent(sqliteContext))))
+                    .CommitAndConcat(objectSpace, () => objectSpace.CustomerStoreDependent(sqliteContext, objectSpace.CustomerEmployeeDependent(sqliteContext))))
                 .Finally(objectSpace.CommitChanges)
             ;
 
-        private static IObservable<Unit> EmployeeStoreDependent(this IObjectSpace objectSpace, DevAvDb sqliteContext, IObservable<Unit> customerEmployeeDependent)
+        private static IObservable<Unit> CustomerStoreDependent(this IObjectSpace objectSpace, DevAvDb sqliteContext, IObservable<Unit> customerEmployeeDependent)
             => objectSpace.ImportCustomerEmployee(sqliteContext)
                 .CommitAndConcat(objectSpace, () => customerEmployeeDependent);
 
