@@ -46,8 +46,9 @@ namespace OutlookInspired.Blazor.Server{
 
         public bool ClientIsReady => _clientIsReady;
         protected virtual void OnClientReady(){
-            ClientReady?.Invoke(this, EventArgs.Empty);
             _clientIsReady = true;
+            ClientReady?.Invoke(this, EventArgs.Empty);
+            
         }
 
         public DotNetObjectReference<JsInterop> ReadyReference{ get;  } 

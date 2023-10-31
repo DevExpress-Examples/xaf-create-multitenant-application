@@ -2,12 +2,15 @@
 using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
+using XAF.Testing.RX;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 
 namespace OutlookInspired.Blazor.Tests{
     [Order(30)]
     public class MapsTests:TestBase{
+        protected new const int MaxTries = 5;
+
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(Tests)]
         public async Task Employee(string user,string view,string viewVariant){

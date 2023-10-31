@@ -10,19 +10,6 @@ namespace OutlookInspired.Tests.Common{
         public RetryTestCaseSourceAttribute(string sourceName) : base(sourceName){
         }
 
-        public RetryTestCaseSourceAttribute(Type sourceType) : base(sourceType){
-        }
-
-        public RetryTestCaseSourceAttribute(Type sourceType, string sourceName) : base(sourceType, sourceName){
-        }
-
-        public RetryTestCaseSourceAttribute(string sourceName, object[] methodParams) : base(sourceName, methodParams){
-        }
-
-        public RetryTestCaseSourceAttribute(Type sourceType, string sourceName, object[] methodParams) : base(
-            sourceType, sourceName, methodParams){
-        }
-
         public int MaxTries{ get; set; } = 3;
 
         TestCommand ICommandWrapper.Wrap(TestCommand command) => new RetryCommand(command, MaxTries);

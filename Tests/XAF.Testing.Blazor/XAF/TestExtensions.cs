@@ -35,15 +35,15 @@ namespace XAF.Testing.Blazor.XAF{
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
                 .Observe().SelectMany(host => Application.DeleteModelDiffs<TDBContext>()
+                    .TakeUntil(host.Services.WhenApplicationStopping())
                     .SelectMany(application => application.WhenLoggedOn(user).IgnoreElements()
                         .Merge(application.WhenMainWindowCreated().To(application))
                         .TakeUntilDisposed(application).Cast<BlazorApplication>()
                         .SelectMany(xafApplication => test(xafApplication).To(xafApplication)))
                     .Select(application => application.ServiceProvider)
-                    .Do(StopTest)
-                    .DoOnError(_ => host.Services.StopTest()).Take(1)
+                    .DoAlways(() => host.Services.StopTest()).Take(1)
                     .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition))
-                    .TakeUntil(host.Services.WhenApplicationStopped().Select(unit => unit)))
+                    )
                 .LogError()
                 .Log(logContext,inactiveWindowLogContextPosition,true);
 
@@ -53,10 +53,11 @@ namespace XAF.Testing.Blazor.XAF{
         }
 
         private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 
-            => host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
-                    .MoveToInactiveMonitor(inactiveWindowPosition)
-                    .SelectMany(process => host.Services.WhenApplicationStopping().Do(_ => process.Kill()).Take(1).CompleteOnError()))
-                .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable()).Merge());
+            => host.Services.WhenApplicationStopping().Publish(whenHostStop => whenHostStop
+                .Merge(host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
+                        .MoveToInactiveMonitor(inactiveWindowPosition)
+                        .SelectMany(process => whenHostStop.Do(_ => CurrentDomain.KillAll(process.ProcessName))))
+                    .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable().Select(unit => unit)).Merge())));
 
         public static IObservable<BlazorApplication> DeleteModelDiffs<T>(this IObservable<BlazorApplication> source) where T : DbContext 
             => source.Do(application => {

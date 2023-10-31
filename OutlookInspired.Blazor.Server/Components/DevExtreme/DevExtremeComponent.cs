@@ -16,7 +16,6 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         }
 
         protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
-            if (ClientObject.IsDisposed())return;
             if (firstRender){
                 var devExtremeModule = await ImportResource($"{ComponentName}.js");
                 await devExtremeModule.InvokeVoidAsync("ensureDevExtremeAsync");

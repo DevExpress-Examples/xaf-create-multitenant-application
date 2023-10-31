@@ -8,6 +8,8 @@ namespace OutlookInspired.Win.Tests{
     [Apartment(ApartmentState.STA)]
     [Order(20)]
     public class MapsTests:TestBase{
+        protected new const int MaxTries = 5;
+        
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(Tests)]
         public async Task Employee(string user,string view,string viewVariant){

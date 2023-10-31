@@ -27,7 +27,8 @@ namespace OutlookInspired.Blazor.Tests.Common{
     public class AssertMapControl : IAssertMapControl{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.AssertViewItemControl<ComponentModelBase>(
-                model => model.WhenClientIsReady()).ToUnit();
+                model => model.WhenClientIsReady()).ToUnit()
+                .Select(unit => unit);
     }
 
     class PdfViewerAssertion:IPdfViewerAssertion{
