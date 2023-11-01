@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp.SystemModule;
 using DevExpress.XtraGrid.Views.BandedGrid;
-using OutlookInspired.Win.Extensions.Internal;
+using OutlookInspired.Win.Services.Internal;
 
 namespace OutlookInspired.Win.Features.GridListEditor{
     public class FontSizeController:ListViewControllerBase{

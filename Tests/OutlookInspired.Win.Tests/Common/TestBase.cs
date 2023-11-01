@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Services;
-using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Services;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.Win.XAF;

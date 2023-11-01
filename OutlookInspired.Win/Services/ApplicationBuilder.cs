@@ -12,7 +12,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Win.Extensions{
+namespace OutlookInspired.Win.Services{
     public static class ApplicationBuilder{
         public static WinApplication BuildApplication(this IWinApplicationBuilder builder,string connectionString, bool useSecuredProvider, string address=null){
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();

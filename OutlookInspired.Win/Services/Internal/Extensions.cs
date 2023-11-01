@@ -16,7 +16,7 @@ using OutlookInspired.Module.Services.Internal;
 using IColorizer = DevExpress.XtraCharts.IColorizer;
 using KeyColorColorizer = DevExpress.XtraMap.KeyColorColorizer;
 
-namespace OutlookInspired.Win.Extensions.Internal{
+namespace OutlookInspired.Win.Services.Internal{
     internal static class Extensions{
         public static void ProtectDetailViews(this XafApplication application, GridControl gridControl,Type objectType) 
             => gridControl.LevelTree.Nodes.ToArray()

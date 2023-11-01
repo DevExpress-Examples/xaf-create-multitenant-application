@@ -3,7 +3,7 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Security.ClientServer;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
-using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Services;
 
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {

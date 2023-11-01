@@ -27,7 +27,7 @@ namespace OutlookInspired.Blazor.Tests{
         }
 
         [RetryTestCaseSource(nameof(OrderVariants),MaxTries=MaxTries)]
-        // //[Category(Tests)]
+        [Category(Tests)]
         public async Task Order(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
         }
