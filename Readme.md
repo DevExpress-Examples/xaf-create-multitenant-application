@@ -1,6 +1,17 @@
 ![Azure DevOps tests with custom labels](https://img.shields.io/azure-devops/tests/eXpandDevOps/eXpandFramework/96)
  ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/eXpandDevOps/eXpandFramework/96)
-
+## Table of Contents
+  - [Solution Overview](#solution-overview)
+    - [Introduction](#introduction)
+    - [Architecture](#architecture)
+      - [Domain Diagram](#domain-diagram)
+      - [Solution Structure](#solution-structure)
+      - [OutlookInspired.Module project](##-`outlookinspired.module`-project)
+        - [Services Folder](###-`services`-folder)
+        - [Attributes Folder](###-`attributes`-folder)
+        - [Controllers Folder](###-`controllers`-folder)
+        - [Features Folder](###-features-folder)
+      - [OutlookInspired.Win project](##-`outlookinspired.win`-project)
 
 # Solution Overview
 
@@ -19,9 +30,15 @@ The domain architecture is depicted in the diagram below:
 
 ### Solution Structure
 
-The solution is structured into five independent projects.
+The solution consists of five distinct projects.
 
 ![Project Structure Diagram](Images/Solution.png)
+
+- **OutlookInspired.Module**: This is a platform-agnostic module on which all other projects rely.
+- **OutlookInspired.Blazor.Server**: This is the Blazor platform port of the existing `OutlookInspired` WinForms demo.
+- **OutlookInspired.Win**: This represents the Windows port of the original demo.
+- **OutlookInspired.MiddleTier**: This serves as the MiddleTier layer and is exclusively used by the Windows platform.
+
 
 #### `OutlookInspired.Module` project
 
@@ -66,7 +83,7 @@ private static void AddManagementPermissions(this PermissionPolicyRole role)
 
 In the `Attributes` folder, you'll find attribute declarations, the implementations of which reside in another library.
 
-* `FontSizeDeltaAttribute`
+- `FontSizeDeltaAttribute`
   This attribute is applied to properties of `Customer`, `Employee`, `Evaluation`, `EmployeeTask`, `Order`, and `Product` to configure the font size. The implementation is context-dependent; for Windows, it is utilized from the `LabelPropertyEditor`.
 
 
@@ -142,7 +159,7 @@ In the `Attributes` folder, you'll find attribute declarations, the implementati
 ##### `Controllers` Folder
 In this folder we have controllers with no dependecies, they could reside in a different library if we wish.
 * The `HideToolBarController`: extends the XAF IModelListView interface with a HideToolBar attribte so we can hide the nested listviews toolbare. 
-* The `SplitterPositionController`: extends the XAF model withe a `RelativePosition` so we can configure the splitter position.
+* <a name="splitter"></a>The `SplitterPositionController`: extends the XAF model withe a `RelativePosition` so we can configure the splitter position.
 ##### Features Folder
 This folder contains implementations specific to the solution.
 - ##### `CloneView` Subfolder
@@ -249,5 +266,13 @@ This folder contains implementations specific to the solution.
   ![ViewFilterView](Images/ViewFilterView.png)
 
 #### `OutlookInspired.Win` project
-This is the windows fornt end project which uses the previously discussed agnostic `OutlookInspired.Module` and follows the same architectural folder structure.
+This is the Windows frontend project. It utilizes the previously mentioned agnostic `OutlookInspired.Module` and adheres to the same architectural folder structure.
 
+Next, we describe the functionality found in each project folder.
+
+##### `Controllers` Folder
+In this folder, we house controllers that have no dependencies. If desired, they could be relocated to a different library.
+
+- `DisableSkinsController`: This controller disables the XAF default theme-switching action. We strive for consistency in this demo across multiple platforms. Testing our views in each supported skin would require significant resources.
+
+- **`SplitterPositionController`**: This is the Windows implementation of the [SplitterPositionController](#splitter). We discussed its platform agnostic counterpart in the `OutlookInspired.Module`.
