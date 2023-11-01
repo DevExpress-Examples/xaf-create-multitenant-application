@@ -369,3 +369,18 @@ This folder contains implementations specific to the solution.
   - `FunnelFilterController`, `PropertyEditorController`: The first filters the Funnel chart when the FilterManager discussed in the agnostic section is executed. The later assigns a progress to the Pivot cell.
 
     ![](Images/OpportunitiesListView.png)
+
+    
+## OutlookInspired.Blazor.Server Project
+This is the Blazor frontend project that utilizes the agnostic `OutlookInspired.Module`. It adheres to the same architectural folder structure.
+
+### Components Folder
+This folder houses Blazor components necessary for fulfilling the requirements of this solution. These components are independent and could be relocated to another library if needed.
+
+- **ComponentBase, ComponentModelBase**: `ComponentBase` is the base component for client side components like the DxMap, DxFunnel, DXPivot, PdfViewer, responsible for loading component resources like JavaScript files. `ComponentModelBase` serves as the base model for all components, providing common functionalities such as a `ClientReady` event, a hook for displaying browser console messages when necessary and much more.
+
+
+  - `Models` subfolder: Here the `UserControlComponentModel` implements the `IUserControl` we discussed in both the agnostic and the windows project. Therefore all models that derive from it e.g (DxFunnelModel, DxPivotGridModel, CardViewModel) excibit ListView like behaviour, exactly the same way as the windows counter parts.
+  - `HyperLink`, `Label`: Similarly to windows are used to render hyperlinks and labels as shown in the next image.
+     
+     ![](Images/HyperLinkLabel.png)
