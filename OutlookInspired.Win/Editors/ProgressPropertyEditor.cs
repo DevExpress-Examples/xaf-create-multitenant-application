@@ -16,7 +16,7 @@ namespace OutlookInspired.Win.Editors {
             protected override object ConvertCheckValue(object val) => val is double doubleValue ? (int)(doubleValue * 100) : base.ConvertCheckValue(val);
         }
         class RepositoryItemProgressBar:DevExpress.XtraEditors.Repository.RepositoryItemProgressBar,IValueCalculator{
-            [Obsolete("remove it and test")]
+            
             public object Calculate(object value) => Convert.ToDecimal(value) * 100;
 
             protected override int ConvertValue(object val) 

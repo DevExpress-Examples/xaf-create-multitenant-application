@@ -21,7 +21,7 @@ namespace OutlookInspired.Blazor.Tests{
         }
 
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]
-        // //[Category(Tests)]
+        [Category(Tests)]
         public async Task Product(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertProductListView(view, viewVariant));
         }

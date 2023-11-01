@@ -6,12 +6,12 @@
     - [Architecture](#architecture)
       - [Domain Diagram](#domain-diagram)
       - [Solution Structure](#solution-structure)
-      - [OutlookInspired.Module project](##-`outlookinspired.module`-project)
-        - [Services Folder](###-`services`-folder)
-        - [Attributes Folder](###-`attributes`-folder)
-        - [Controllers Folder](###-`controllers`-folder)
-        - [Features Folder](###-features-folder)
-      - [OutlookInspired.Win project](##-`outlookinspired.win`-project)
+      - [OutlookInspired.Module Project](#outlookinspiredmodule-project)
+        - [Services Folder](#services-folder)
+        - [Attributes Folder](#attributes-folder)
+        - [Controllers Folder](#controllers-folder)
+        - [Features Folder](#features-folder)
+
 
 # Solution Overview
 
@@ -276,3 +276,25 @@ In this folder, we house controllers that have no dependencies. If desired, they
 - `DisableSkinsController`: This controller disables the XAF default theme-switching action. We strive for consistency in this demo across multiple platforms. Testing our views in each supported skin would require significant resources.
 
 - **`SplitterPositionController`**: This is the Windows implementation of the [SplitterPositionController](#splitter). We discussed its platform agnostic counterpart in the `OutlookInspired.Module`.
+
+
+##### `Editors` Folder
+In this folder, we house custom user controls and XAF [property editors](https://docs.devexpress.com/eXpressAppFramework/113097/ui-construction/view-items-and-property-editors/property-editors).
+
+- `ColumnViewUserControl`: This is a base user control that implements the [IUserControl](#masterdetailcontroller-iusercontrol) discussed previously and has view-like behavior.
+
+- `EnumPropertyEditor`: This is a subsclass of the build-in EnumPropertyEditor with the difference that displays only the image.
+   
+   ![](Images/EnumPropertyEditorWin.png)
+
+- `HyperLinkPropertyEditor`: This editor displays hyperlinks with mailto support.
+
+   ![](Images/HyperLinkEditorWin.png)
+
+- `LabelControlPropertyEditor`: This is an editor that will render a label.
+
+  ![](Images/LabelWinEditor.png)
+
+- `PdfViewerEditor`: This is a pdf viewer using the [pdfviewer](https://docs.devexpress.com/WindowsForms/15216/controls-and-libraries/pdf-viewer) compoenent.
+
+  ![](Images/PdfViewerWin.png)
