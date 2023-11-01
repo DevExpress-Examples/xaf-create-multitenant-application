@@ -475,7 +475,10 @@ namespace XAF.Testing.XAF{
                     return t.frame.Observe().AssertSaveNewObject(parentFrame);
                 }
 
-                return t.frame.Observe().CloseWindow(t.parent).Select(frame1 => ((ITypeInfo)null, (object)null, frame1));
+                return t.frame.Observe().CloseWindow(t.parent).Select(frame1 => {
+                    var valueTuple = ((ITypeInfo)frame1.View.ObjectTypeInfo, (object)null, frame1);
+                    return valueTuple;
+                });
             }).ReplayFirstTake();
 
         public static IObservable<Unit> AssertMapsControl(this DetailView detailView)
