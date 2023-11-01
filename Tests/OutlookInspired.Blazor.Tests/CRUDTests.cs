@@ -33,7 +33,7 @@ namespace OutlookInspired.Blazor.Tests{
         }
 
         [RetryTestCaseSource(nameof(OpportunityVariants),MaxTries=MaxTries)]
-        // //[Category(Tests)]
+        [Category(Tests)]
         public async Task Opportunity(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertOpportunitiesView(view, viewVariant));
         }
