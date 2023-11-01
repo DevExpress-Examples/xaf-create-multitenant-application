@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Map.Kml.Model;
 using DevExpress.Persistent.Validation;
@@ -19,8 +20,10 @@ namespace XAF.Testing.Win.XAF{
         private static IObservable<T> Start<T>(this WinApplication application, IObservable<T> test, SynchronizationContext context,string user =null,LogContext logContext=default) 
             => context.Observe().Do(SynchronizationContext.SetSynchronizationContext)
                 .SelectMany(_ => application.Start(Tracing.WhenError().ThrowTestException().DoOnError(_ => application.Terminate(context)).To<T>()
-                    .Merge(application.WhenLoggedOn(user).Take(1).IgnoreElements().To<T>()
-                        .Merge(test.DoOnComplete(() => application.Terminate(context))
+                    .Merge(application.WhenFrame(((IModelApplicationNavigationItems)application.Model).NavigationItems.StartupNavigationItem.View.Id)
+                        .MergeToUnit(application.WhenLoggedOn(user).IgnoreElements())
+                        .Take(1)
+                        .SelectMany(arg => test.DoOnComplete(() => application.Terminate(context))
                             .Publish(obs => application.GetRequiredService<IValidator>().RuleSet.WhenEvent<ValidationCompletedEventArgs>(nameof(RuleSet.ValidationCompleted))
                                 .DoWhen(e => !e.Successful,e => e.Exception.ThrowCaptured()).To<T>()
                                 .TakeUntilCompleted(obs)
