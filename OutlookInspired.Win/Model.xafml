@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
-  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" />
+  <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated">
+    <Items>
+      <Item Id="Reports">
+        <Items>
+          <Item Id="ReportDataV2_ListView" Removed="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />

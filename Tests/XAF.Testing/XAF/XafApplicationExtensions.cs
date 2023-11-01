@@ -15,6 +15,13 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{
+        public static IObservable<ITabControlProvider> WhenTabControl(this XafApplication application, Type objectType=null, Func<DetailView, bool> match=null)
+            => application.WhenTabControl<ITabControlProvider>(objectType, match);
+        public static IObservable<TTabbedControl> WhenTabControl<TTabbedControl>(this XafApplication application, Type objectType=null, Func<DetailView, bool> match=null) 
+            => application.WhenDetailViewCreated(objectType).ToDetailView()
+                .Where(view => match?.Invoke(view)??true)
+                .SelectMany(detailView => detailView.WhenTabControl()).Cast<TTabbedControl>();
+
         public static T GetRequiredService<T>(this XafApplication application) where T : notnull 
             => application.ServiceProvider.GetRequiredService<T>();
 

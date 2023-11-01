@@ -11,20 +11,21 @@ using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class AssertExtensions{
+        
+
         public static IObservable<ITabControlProvider> AssertTabbedGroup(this XafApplication application,
             Type objectType = null, int tabPagesCount = 0,Func<DetailView,bool> match=null,[CallerMemberName]string caller="")
-            => application.AssertTabControl<ITabControlProvider>(objectType,match,caller)
+            => application.AssertTabControl<ITabControlProvider>(objectType,match,caller).IgnoreElements()
                 .If(group => tabPagesCount > 0 && group.TabPages != tabPagesCount,group => group.Observe().DelayOnContext()
                         .SelectMany(_ => new Exception(
                             $"{nameof(AssertTabbedGroup)} {objectType?.Name} expected {tabPagesCount} but was {group.TabPages}").ThrowTestException(caller).To<ITabControlProvider>()),
-                    group => group.Observe());
+                    group => group.Observe())
+                .Merge(application.WhenTabControl(objectType,match)).Replay().AutoConnect();
+                
         
         public static IObservable<TTabbedControl> AssertTabControl<TTabbedControl>(this XafApplication application,Type objectType=null,Func<DetailView,bool> match=null,[CallerMemberName]string caller="") 
-            => application.WhenDetailViewCreated(objectType).ToDetailView()
-                .Where(view => match?.Invoke(view)??true)
-                .SelectMany(detailView => detailView.WhenTabControl()).Cast<TTabbedControl>()
-                .Assert(objectType?.Name,caller:caller);
-        
+            => application.WhenTabControl<TTabbedControl>( objectType, match).Assert(objectType?.Name,caller:caller);
+
         public static IObservable<Frame> AssertNestedListView(this IObservable<ITabControlProvider> source, Frame frame, Type objectType, int selectedTabPageIndex,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert=null,bool inlineEdit=false,[CallerMemberName]string caller="")
             => source.AssertNestedListView(frame, objectType, group => group.SelectTab(selectedTabPageIndex),existingObjectDetailview,assert,inlineEdit,caller);
@@ -32,7 +33,8 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> AssertNestedListView(this IObservable<ITabControlProvider> source, Frame frame, Type objectType, Action<ITabControlProvider> tabGroupAction,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false,[CallerMemberName]string caller=""){
             return frame.AssertNestedListView(objectType, existingObjectDetailview, assert, inlineEdit, caller)
-                .Merge(source.DelayOnContext().Do(tabGroupAction).DelayOnContext().IgnoreElements().To<Frame>());
+                .Merge(source.DelayOnContext().Do(tabGroupAction).DelayOnContext().IgnoreElements().To<Frame>())
+                .ReplayFirstTake();
         }
 
         public static void ClearFilter(this Frame frame){

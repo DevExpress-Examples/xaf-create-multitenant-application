@@ -32,7 +32,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
         public  virtual byte[] Description { get; set; }
 
-        [Browsable(false)]
+        
+        [VisibleInDetailView(false)][VisibleInListView(false)][VisibleInLookupListView(false)]
         public virtual string DescriptionString => Description.ToDocument(server => server.Text);
         public  virtual DateTime ProductionStart { get; set; }
         public  virtual bool Available { get; set; }

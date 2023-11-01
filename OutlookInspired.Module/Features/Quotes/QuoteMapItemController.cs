@@ -1,4 +1,4 @@
-﻿using DevExpress.ExpressApp;
+﻿ using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 

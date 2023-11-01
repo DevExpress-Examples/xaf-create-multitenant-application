@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
-  <NavigationItems NavigationStyle="Accordion" />
+  <NavigationItems NavigationStyle="Accordion">
+    <Items>
+      <Item Id="Reports">
+        <Items>
+          <Item Id="ReportDataV2_ListView" Removed="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
   <SchemaModules>
     <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />

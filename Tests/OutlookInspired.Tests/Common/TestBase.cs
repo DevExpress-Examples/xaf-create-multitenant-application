@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using Humanizer;
@@ -22,7 +23,7 @@ namespace OutlookInspired.Tests.Common{
         protected const int MaxTries = 3;
 #endif
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = 60.Seconds();
+            UtilityExtensions.TimeoutInterval = (Debugger.IsAttached ? 500 : 60).Seconds();
         }
 
         protected virtual bool RunInMainMonitor => false;

@@ -34,7 +34,7 @@ namespace XAF.Testing.Blazor.XAF{
                 .Select(e => (e.ModelLayoutElement,(object)e.LayoutControlItem, e.ViewItem));
 
         public static IObservable<ITabControlProvider> WhenTabControl(this DetailView detailView, IModelViewLayoutElement element) 
-            => ((BlazorLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element).Take(1)
+            => ((BlazorLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element)
                 .Select(t => new TabControlProvider((DxFormLayoutTabPagesModel)t.control, ((IModelTabbedGroup)t.model).Count));
         
         

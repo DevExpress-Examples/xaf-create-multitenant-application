@@ -155,7 +155,11 @@ namespace XAF.Testing.Blazor.XAF{
         public object TabControl{ get; }
         public int TabPages{ get; }
 
-        public void SelectTab(int pageIndex) => ((DxFormLayoutTabPagesModel)TabControl).ActiveTabIndex=pageIndex;
+        public void SelectTab(int pageIndex){
+            var tabPagesModel = ((DxFormLayoutTabPagesModel)TabControl);
+            tabPagesModel.ActiveTabIndex = pageIndex;
+            tabPagesModel.ForceRaiseChanged();
+        }
     }
 
     public class TabControlObserver:ITabControlObserver{

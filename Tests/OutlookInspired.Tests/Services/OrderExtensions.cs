@@ -64,7 +64,7 @@ namespace OutlookInspired.Tests.Services{
             var orderTabGroup = nestedFrame.Application.AssertTabbedGroup(typeof(Order),4);
             return source.AssertNestedListView(nestedFrame, typeof(Order), tabIndex, existingObjectDetailView 
                         => orderTabGroup.AssertRootOrder(existingObjectDetailView), frame => frame.AssertAction(nestedFrame))
-                .Merge(orderTabGroup.To<Frame>().IgnoreElements());
+                .Merge(orderTabGroup.To<Frame>().IgnoreElements()).ReplayFirstTake().Select(frame => frame);
         }
         
         
