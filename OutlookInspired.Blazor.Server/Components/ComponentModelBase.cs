@@ -10,8 +10,8 @@ using Microsoft.JSInterop;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server{
-    public abstract class ComponentModelBase<TComponent>:ComponentModelBase,IComponentContentHolder where TComponent:ComponentBase{
+namespace OutlookInspired.Blazor.Server.Components{
+    public abstract class ComponentModelBase<TComponent>:ComponentModelBase,IComponentContentHolder where TComponent:Microsoft.AspNetCore.Components.ComponentBase{
         RenderFragment IComponentContentHolder.ComponentContent => this.Create(@base => @base.Create<TComponent>());
     }
 

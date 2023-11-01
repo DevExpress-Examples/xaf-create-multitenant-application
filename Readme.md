@@ -336,9 +336,36 @@ This folder contains implementations specific to the solution.
 
 - ##### Employees Subfolder
 
-  This subfolder contains functionality related to employess.
+  This subfolder contains functionality related to employees.
 
-  - **EmployeesLayoutView**: This is a `ColumnViewUserControl` descanant hosting a GridCOntrol LayoutView.
+  - **EmployeesLayoutView**: This is a descendant of `ColumnViewUserControl` that hosts a GridControl LayoutView.
 
-     ![Win Master Detail Grid](Images/EmployeeWinLayout.png)
+  ![Win Employee Layout](Images/EmployeeWinLayout.png)
 
+- ##### GridListEditor Subfolder
+
+  This subfolder contains functionality related to default XAF GridListEditor.
+
+  - `FontSizeController`: Uses the `FontSizeDelta` discussed in the agnostic method to increase the font size in a row cell of an AdvancedBanded Grid
+
+  - `NewItemRowHandlingModeController`: Modifies how new object are handled when a dashboard master detailview (discussed in the agnostic module) objects are created.
+
+- ##### Products Subfolder
+
+  This subfolder contains functionality related to employees.
+  
+  - `ProductCardView`: This is a descendant of `ColumnViewUserControl` that hosts a GridControl LayoutView.
+
+    ![](Images/WinProductLayout.png)
+
+- ##### Quotes Subfolder
+
+  This subfolder contains functionality related to opportunities.
+
+  - `WinMapsController`, `PaletteEntriesController`: Configures the opportunities maps view.
+
+     ![](Images/OpportunitiesMap.png) 
+
+  - `FunnelFilterController`, `PropertyEditorController`: The first filters the Funnel chart when the FilterManager discussed in the agnostic section is executed. The later assigns a progress to the Pivot cell.
+
+    ![](Images/OpportunitiesListView.png)

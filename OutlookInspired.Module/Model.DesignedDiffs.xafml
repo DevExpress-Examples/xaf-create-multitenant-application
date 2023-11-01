@@ -1365,6 +1365,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
+    <ListView Id="Quote_ListView" AllowDelete="False" AllowLink="False" AllowNew="False" />
     <ListView Id="Quote_QuoteItems_ListView">
       <Columns>
         <ColumnInfo Id="Product" Width="196" SortIndex="0" SortOrder="Ascending" />
@@ -1449,6 +1450,9 @@
       <SplitLayout RelativePosition="30" />
     </ListView>
     <DetailView Id="Welcome_DetailView">
+      <HiddenActions>
+        <ActionLink ActionId="FullTextSearch" IsNewNode="True" />
+      </HiddenActions>
       <Layout>
         <LayoutGroup Id="Main" RelativeSize="100">
           <LayoutGroup Id="About_Group" ShowCaption="False" Direction="Vertical" RelativeSize="100">

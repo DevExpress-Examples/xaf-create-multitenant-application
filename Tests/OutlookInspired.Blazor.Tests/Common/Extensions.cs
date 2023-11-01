@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using OutlookInspired.Blazor.Server;
+using OutlookInspired.Blazor.Server.Components;
 using XAF.Testing.RX;
 
 namespace OutlookInspired.Blazor.Tests.Common{

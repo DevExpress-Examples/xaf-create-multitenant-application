@@ -22,6 +22,7 @@
     <None Remove="Images\_InProgress.png" />
     <None Remove="Images\_NotStarted.png" />
     <None Remove="Model.DesignedDiffs.xafml" />
+    <None Remove="UnusableNodes16.xml" />
     
   </ItemGroup>
   <ItemGroup>
@@ -103,10 +104,11 @@
     <None Remove="Resources\MailMerge\Welcome to DevAV.docx" />
     <EmbeddedResource Include="Resources\MailMerge\Welcome to DevAV.docx" />
     <None Remove="Resources\Welcome.docx" />
-    <EmbeddedResource Include="Resources\Welcome.docx" />
     <None Remove="Images\Welcome.png" />
-    <EmbeddedResource Include="Images\Welcome.png" />
     <None Remove="Resources\Welcome.pdf" />
+    <Content Include="UnusableNodes16.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </Content>
     <EmbeddedResource Include="Resources\Welcome.pdf" />
   </ItemGroup>
   <ItemGroup>
