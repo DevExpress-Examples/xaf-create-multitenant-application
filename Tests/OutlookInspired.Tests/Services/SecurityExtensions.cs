@@ -113,7 +113,7 @@ namespace OutlookInspired.Tests.Services{
             => item switch{
                 null => 2,
                 { Caption: "Default" } => 11,
-                { Caption: "Reports" } => 2,
+                { Caption: "Reports" } => 1,
                 _ => throw new NotImplementedException(item.Caption)
             };
 
