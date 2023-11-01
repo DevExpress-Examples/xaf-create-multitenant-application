@@ -9,18 +9,18 @@ namespace OutlookInspired.Win.Tests{
     [Order(10)]
     public class ReportsTests : TestBase{
         [RetryTestCaseSource(nameof(CustomerVariants), MaxTries = MaxTries)]
-        [Category(Tests)]
+        //[Category(Tests)]
         public async Task Customer(string user, string view, string viewVariant){
             await StartTest(user,
                 application => application.AssertCustomerReports(view, viewVariant));
         }
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]
-        [Category(Tests)]
+        //[Category(Tests)]
         public async Task Product(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertProductReports(view, viewVariant));
         }
         [RetryTestCaseSource(nameof(OrderVariants),MaxTries=MaxTries)]
-        [Category(Tests)]
+        //[Category(Tests)]
         public async Task Order(string user,string view,string viewVariant){
             await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
         }

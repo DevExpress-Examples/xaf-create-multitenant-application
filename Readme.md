@@ -384,3 +384,6 @@ This folder houses Blazor components necessary for fulfilling the requirements o
   - `HyperLink`, `Label`: Similarly to windows are used to render hyperlinks and labels as shown in the next image.
      
      ![](Images/HyperLinkLabel.png)
+  - `PdfViewer`: Is a `ComponentBase` descendant viewer for pdf files
+
+  ![](Images/PdfViwerBlazor.png)
