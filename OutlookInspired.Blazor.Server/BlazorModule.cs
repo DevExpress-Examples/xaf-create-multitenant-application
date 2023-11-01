@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Blazor.Server.Controllers;
+using OutlookInspired.Blazor.Server.Features;
 using OutlookInspired.Blazor.Server.Features.Customers;
 using OutlookInspired.Blazor.Server.Features.Employees;
 using OutlookInspired.Blazor.Server.Features.Evaluations;
@@ -26,7 +27,7 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(RouteMapsViewController),typeof(RouteMapsViewController),typeof(MapsViewController),typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(Features.Orders.RouteMapsViewController),
             typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController),typeof(ViewFilterController),
-            typeof(QuoteMapItemController)
+            typeof(QuoteMapItemController),typeof(WelcomeController)
         };
 
     public override void Setup(XafApplication application) {

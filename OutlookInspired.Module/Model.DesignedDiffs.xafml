@@ -1448,5 +1448,14 @@
       </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
+    <DetailView Id="Welcome_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="About_Group" ShowCaption="False" Direction="Vertical" RelativeSize="100">
+            <LayoutItem Id="About" RelativeSize="100" CaptionLocation="Top" ShowCaption="False" />
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
   </Views>
 </Application>

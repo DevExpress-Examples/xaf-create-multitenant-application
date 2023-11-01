@@ -1,4 +1,5 @@
 ﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Layout;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Features{

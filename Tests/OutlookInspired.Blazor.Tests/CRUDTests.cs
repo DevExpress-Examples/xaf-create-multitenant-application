@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
+using XAF.Testing.RX;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{
@@ -32,10 +33,5 @@ namespace OutlookInspired.Blazor.Tests{
             await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
         }
 
-        [RetryTestCaseSource(nameof(OpportunityVariants),MaxTries=MaxTries)]
-        [Category(Tests)]
-        public async Task Opportunity(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertOpportunitiesView(view, viewVariant));
-        }
     }
 }

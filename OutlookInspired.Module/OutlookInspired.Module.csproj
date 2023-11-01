@@ -104,6 +104,10 @@
     <EmbeddedResource Include="Resources\MailMerge\Welcome to DevAV.docx" />
     <None Remove="Resources\Welcome.docx" />
     <EmbeddedResource Include="Resources\Welcome.docx" />
+    <None Remove="Images\Welcome.png" />
+    <EmbeddedResource Include="Images\Welcome.png" />
+    <None Remove="Resources\Welcome.pdf" />
+    <EmbeddedResource Include="Resources\Welcome.pdf" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" Version="23.2.1-alpha-23255" />
@@ -139,6 +143,9 @@
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes10.xml">
+      <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
+    </None>
+    <None Update="UnusableNodes11.xml">
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>
     </None>
     <None Update="UnusableNodes12.xml">

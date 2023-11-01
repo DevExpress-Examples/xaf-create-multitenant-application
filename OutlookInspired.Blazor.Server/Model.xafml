@@ -701,7 +701,7 @@
         <ControlDetailItem Id="MapsControl" ControlTypeName="OutlookInspired.Blazor.Server.Features.Maps.ModalDxVectorMapModel" />
       </Items>
     </DetailView>
-    <DetailView Id="Quote_DetailView_Pivot" FreezeLayout="True">
+    <DetailView Id="Quote_DetailView_Pivot" FreezeLayout="True" AllowNew="False" AllowEdit="False" AllowDelete="False">
       <Items>
         <ControlDetailItem Id="Model" ControlTypeName="OutlookInspired.Blazor.Server.Features.Quotes.DxPivotGridModel" IsNewNode="True" />
       </Items>
@@ -731,5 +731,11 @@
         <ColumnInfo Id="Name" AllowEdit="True" />
       </Columns>
     </ListView>
+    <DetailView Id="Welcome_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main" RelativeSize="3.865546218487395" />
+        <LayoutItem Id="Item1" Index="1" RelativeSize="96.1344537815126" IsNewNode="True" />
+      </Layout>
+    </DetailView>
   </Views>
 </Application>
