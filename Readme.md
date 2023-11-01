@@ -160,7 +160,7 @@ In the `Attributes` folder, you'll find attribute declarations, the implementati
 In this folder we have controllers with no dependecies, they could reside in a different library if we wish.
 * The `HideToolBarController`: extends the XAF IModelListView interface with a HideToolBar attribte so we can hide the nested listviews toolbare. 
 * <a name="splitter"></a>The `SplitterPositionController`: extends the XAF model withe a `RelativePosition` so we can configure the splitter position.
-##### Features Folder
+##### `Features` Folder
 This folder contains implementations specific to the solution.
 - ##### `CloneView` Subfolder
 
@@ -206,7 +206,8 @@ This folder contains implementations specific to the solution.
 
   This subfolder houses implementations related to map functionalities, including:
 
-  - ###### `RoutePointController`
+  <a name="mapsviewcontroller_"></a>
+  - ###### `MapsViewController`
 
     This controller declares actions related to map features (`MapItAction`, `TravelModeAction`, `ExportMapAction`, `PrintPreviewMapAction`, `PrintAction`, `StageAction`, `SalesPeriodAction`) and manages their state based on the `ISalesMapMarker` and `IRoutePointMapMarker` interfaces.
 
@@ -283,7 +284,7 @@ In this folder, we house custom user controls and XAF [property editors](https:/
 
 - `ColumnViewUserControl`: This is a base user control that implements the [IUserControl](#masterdetailcontroller-iusercontrol) discussed previously and has view-like behavior.
 
-- `EnumPropertyEditor`: This is a subsclass of the build-in EnumPropertyEditor with the difference that displays only the image.
+- `EnumPropertyEditor`: This is a subclass of the built-in EnumPropertyEditor, with the difference that it displays only the image.
    
    ![](Images/EnumPropertyEditorWin.png)
 
@@ -291,10 +292,53 @@ In this folder, we house custom user controls and XAF [property editors](https:/
 
    ![](Images/HyperLinkEditorWin.png)
 
-- `LabelControlPropertyEditor`: This is an editor that will render a label.
+- `LabelControlPropertyEditor`: This is an editor that renders a label.
 
   ![](Images/LabelWinEditor.png)
 
-- `PdfViewerEditor`: This is a pdf viewer using the [pdfviewer](https://docs.devexpress.com/WindowsForms/15216/controls-and-libraries/pdf-viewer) compoenent.
+- `PdfViewerEditor`: This is a PDF viewer using the [pdfviewer](https://docs.devexpress.com/WindowsForms/15216/controls-and-libraries/pdf-viewer) component.
 
   ![](Images/PdfViewerWin.png)
+
+- `PrintLayoutRichTextEditor`: This editor extends the built-in RichTextPropertyEditor, but uses the PrintLayout mode.
+
+- `ProgressPropertyEditor`: This editor is used to display progress in various contexts.
+
+  ![](Images/ProgressEditorWin.png)
+
+##### `Services` Folder
+
+Similarly to the agnostic [Services Folder](#services-folder) we keep all classes as thin as possible and we write the bussiness logig in extension methods.
+
+##### `Features` Folder
+
+This folder contains implementations specific to the solution.
+
+- ##### Maps Subfolder
+
+  This subfolder contains functionality related to maps.
+
+  - **MapsViewController**: This controller overrides the platform-agnostic MapsViewController to further configure the state of map actions.
+  
+  - **WinMapsViewController**: This is an abstract controller that provides functionality used by its derived classes, `SalesMapsViewController` and `RouteMapsViewController`. It configures Map views for all objects that implement the `ISalesMapsMarker` (Customer, Product) and `IRouteMapsMarker` (Order, Employee) interfaces.
+  
+  ![Win Opportunity Maps](Images/WinOppurtunityMaps.png)
+  
+  ![Win Sales Map](Images/WinSalesMap.png)
+
+- ##### Customers Subfolder
+
+  This subfolder contains functionality related to customers.
+
+  - **CustomerGridView**, **CustomerLayoutView**, and **CustomerStoreView**: These classes derive from the previously discussed `ColumnViewUserControl` and exhibit view-like behavior. They host custom GridControl variants, such as master-detail layouts.
+  
+  ![Win Master Detail Grid](Images/WinMasterDetailGrid.png)
+
+- ##### Employees Subfolder
+
+  This subfolder contains functionality related to employess.
+
+  - **EmployeesLayoutView**: This is a `ColumnViewUserControl` descanant hosting a GridCOntrol LayoutView.
+
+     ![Win Master Detail Grid](Images/EmployeeWinLayout.png)
+
