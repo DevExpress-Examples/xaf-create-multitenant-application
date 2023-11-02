@@ -10,10 +10,10 @@
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp.Api.EFCore.All" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.Security.AspNetCore.EFCore" Version="23.2.1-alpha-23255" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.2.1-alpha-23255" />
+    <PackageReference Include="DevExpress.ExpressApp.Api.EFCore.All" Version="23.2.1-alpha-23306" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2" Version="23.2.1-alpha-23306" />
+    <PackageReference Include="DevExpress.ExpressApp.Security.AspNetCore.EFCore" Version="23.2.1-alpha-23306" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.2.1-alpha-23306" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
