@@ -5,35 +5,30 @@ This is a Customer related views "CRUD walk" from one of the ![Azure DevOps test
 
 
 ## Table of Contents
-- [Architecture](#architecture)
-  - [Domain Diagram](#domain-diagram)
-  - [Entity Framework Core](#entity-framework-core)
-- [OutlookInspired.Win Project](#outlookinspiredwin-project)
-  - [Controllers Folder](#controllers-folder)
-  - [Editors Folder](#editors-folder)
-  - [Services Folder](#services-folder)
-  - [Features Folder](#features-folder)
-    - [Maps Subfolder](#maps-subfolder)
-    - [Customers Subfolder](#customers-subfolder)
-    - [Employees Subfolder](#employees-subfolder)
-    - [GridListEditor Subfolder](#gridlisteditor-subfolder)
-    - [Products Subfolder](#products-subfolder)
-    - [Quotes Subfolder](#quotes-subfolder)
-- [OutlookInspired.Blazor.Server Project](#outlookinspiredblazorserver-project)
-  - [Components Folder](#components-folder)
-  - [Controllers Folder](#controllers-folder)
-  - [Editors Folder](#editors-folder-1)
-    - [Customers Subfolder](#customers-subfolder-1)
-    - [Employees Subfolder](#employees-subfolder-1)
-    - [Evaluations Subfolder](#evaluations-subfolder)
-    - [Maps Subfolder](#maps-subfolder-1)
-    - [Orders Subfolder](#orders-subfolder)
-    - [Product Subfolder](#product-subfolder)
+- [Solution Overview](#solution-overview)
+  - [Introduction](#introduction)
+  - [Architecture](#architecture)
+    - [Domain Diagram](#domain-diagram)
+    - [Solution Structure](#solution-structure)
+      - [`OutlookInspired.Module` project](#`outlookinspired.module`-project)
+        - [`Services` Folder](#`services`-folder)
+        - [`Attributes` Folder](#`attributes`-folder)
+        - [`Controllers` Folder](#`controllers`-folder)
+        - [`Features` Folder](#`features`-folder)
+      - [`OutlookInspired.Win` project](#`outlookinspired.win`-project)
+        - [`Controllers` Folder](#`controllers`-folder)
+        - [`Editors` Folder](#`editors`-folder)
+        - [`Services` Folder](#`services`-folder)
+        - [`Features` Folder](#`features`-folder)
+  - [OutlookInspired.Blazor.Server Project](#outlookinspired.blazor.server-project)
+    - [Components Folder](#components-folder)
+    - [Controllers Folder](#controllers-folder)
+    - [Editors Folder](#editors-folder)
+    - [Editors Folder](#editors-folder)
 - [Importing](#importing)
-- [Continuous Integration and Continuous Deployment (CI/CD)](#continuous-integration-and-continuous-deployment-cicd)
+  - [Continuous Integration and Continuous Deployment (CI/CD)](#continuous-integration-and-continuous-deployment-(ci/cd))
   - [Test Projects Structure](#test-projects-structure)
   - [Testing Methodology](#testing-methodology)
-
 
 
 # Solution Overview
@@ -56,7 +51,7 @@ The domain architecture is depicted in the diagram below:
 The solution consists of five distinct projects.
 
 ![Project Structure Diagram](Images/Solution.png)
-<a name="OutlookInspiredModule"></a>
+
 - **OutlookInspired.Module**: This is a platform-agnostic module on which all other projects rely.
 - **OutlookInspired.Blazor.Server**: This is the Blazor platform port of the existing `OutlookInspired` WinForms demo.
 - **OutlookInspired.Win**: This represents the Windows port of the original demo.
@@ -289,7 +284,7 @@ This folder contains implementations specific to the solution.
   ![ViewFilterAction](Images/ViewFilterAction.png)
   ![ViewFilterView](Images/ViewFilterView.png)
 
-#### OutlookInspired.Win project
+#### `OutlookInspired.Win` project
 This is the Windows frontend project. It utilizes the previously mentioned agnostic `OutlookInspired.Module` and adheres to the same architectural folder structure.
 
 Next, we describe the functionality found in each project folder.
