@@ -1,6 +1,6 @@
 ﻿using DevExpress.ExpressApp;
 using OutlookInspired.Win.Editors;
-using OutlookInspired.Win.Extensions.Internal;
+using OutlookInspired.Win.Services.Internal;
 
 namespace OutlookInspired.Win.Features.Quotes{
     public class PropertyEditorController:ViewController<ListView>{

@@ -17,13 +17,14 @@ namespace OutlookInspired.Win.Editors{
             => new PdfViewer{
                 Dock = DockStyle.Fill, DetachStreamAfterLoadComplete = true, ZoomMode = PdfZoomMode.PageLevel,
                 NavigationPaneVisibility = PdfNavigationPaneVisibility.Hidden,
-                NavigationPanePageVisibility = PdfNavigationPanePageVisibility.None
+                NavigationPaneInitialVisibility = PdfNavigationPaneVisibility.Hidden
             };
         
         protected override void ReadValueCore(){
             if (PropertyValue is not byte[]{ Length: > 0 } bytes) return;
             using var memoryStream = new MemoryStream(bytes);
             Control?.LoadDocument(memoryStream);
+            
         }
     }
 }

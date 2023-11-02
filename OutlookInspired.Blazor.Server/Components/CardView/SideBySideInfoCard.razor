@@ -36,7 +36,9 @@
       max-width: 100%;  
   }
   .card-footer {
-    padding: 10px;
+    .card-footer {
+      padding: 10px 10px 20px 10px; 
+    }
   }
 </style>
 <div class="card" @onclick="HandleClickAsync" @ondblclick="HandleDoubleClickAsync" style="@(IsSelected ? "background-color: grey;" : "")" >

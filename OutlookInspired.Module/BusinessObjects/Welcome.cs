@@ -1,6 +1,7 @@
 ﻿using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes.Appearance;
+using OutlookInspired.Module.Services;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -8,10 +9,10 @@ namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("About")]
     public class Welcome{
         public Welcome(){
-            About = GetType().Assembly.GetManifestResourceStream(s => s.EndsWith("Welcome.docx")).Bytes();
+            About = GetType().Assembly.GetManifestResourceStream(s => s.EndsWith("Welcome.pdf")).Bytes();
         }
 
-        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
+        [EditorAlias(EditorAliases.PdfViewerEditor)]
         public byte[] About{ get; set; }
     }
 }

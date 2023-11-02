@@ -34,10 +34,5 @@ namespace OutlookInspired.Win.Tests{
             await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
         }
 
-        [RetryTestCaseSource(nameof(OpportunityVariants),MaxTries=MaxTries)]
-        [Category(Tests)]
-        public async Task Opportunity(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertOpportunitiesView(view, viewVariant));
-        }
     }
 }

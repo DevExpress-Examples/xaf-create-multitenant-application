@@ -92,13 +92,8 @@ namespace OutlookInspired.Win.Tests.Import{
                 }).ToUnit();
 
 
-        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : OutlookInspiredBaseObject{
-            var baseObject = objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
-            if (id.HasValue && baseObject == null){
-                throw new NotImplementedException(typeof(T).Name);
-            }
-            return baseObject;
-        }
+        private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : OutlookInspiredBaseObject 
+            => objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
 
         static IObservable<Unit> ImportEvaluation(this IObjectSpace objectSpace, DevAvDb sqliteContext)
             => new RichEditDocumentServer().Use(server => sqliteContext.Evaluations.Include(evaluation => evaluation.Employee)

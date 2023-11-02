@@ -5,8 +5,6 @@
 <div @ref=@Element ></div>
 
 @code {
-    private DotNetObjectReference<JsInterop> _itemSelected;
-    private bool _initClientObject;
 
     protected override async Task OnAfterImportDevExtremeModuleAsync(bool firstRender){
         if (firstRender){

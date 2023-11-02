@@ -4,7 +4,9 @@ using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using OutlookInspired.Module.Services;
 using System.Configuration;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
@@ -67,6 +69,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                     string connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                     ArgumentNullException.ThrowIfNull(connectionString);
+                    new SqlConnectionStringBuilder(connectionString).AttachDatabase();
                     options.UseSqlServer(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();

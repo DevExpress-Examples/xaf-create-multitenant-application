@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Services;
-using OutlookInspired.Win.Extensions;
+using OutlookInspired.Win.Services;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.Win.XAF;
@@ -56,19 +56,5 @@ namespace OutlookInspired.Win.Tests.Common{
             return application;
         }
 
-
-        [OneTimeSetUp]
-        public void OneTimeSetup(){
-            StopServer();
-            this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => $"{output}".Contains("Now listening on")));
-
-        }
-        
-        private static void StopServer() 
-            => AppDomain.CurrentDomain.KillAll("OutlookInspired.MiddleTier");
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown() 
-            => StopServer();
     }
 }

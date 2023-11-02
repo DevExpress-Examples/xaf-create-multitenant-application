@@ -4,6 +4,7 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using Aqua.EnumerableExtensions;
+using static XAF.Testing.Monitor;
 using static XAF.Testing.WinInterop;
 
 namespace XAF.Testing{
@@ -22,30 +23,41 @@ namespace XAF.Testing{
         public static IEnumerable<TSource> FromHierarchy<TSource>(this TSource source, Func<TSource, TSource> nextItem, Func<TSource, bool> canContinue){
             for (var current = source; canContinue(current); current = nextItem(current)) yield return current;
         }
-        public static IObservable<T> MoveToInactiveMonitor<T>(this IObservable<T> source,WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T:Process 
-            => source.Select(process => process.MoveToInactiveMonitor(position,alwaysOnTop));
+        public static IObservable<T> MoveToMonitor<T>(this IObservable<T> source,WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T:Process 
+            => source.Select(process => process.MoveToMonitor(position,alwaysOnTop));
 
 
-        public static T MoveToInactiveMonitor<T>(this T process, WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T : Process{
+        public static T MoveToMonitor<T>(this T process, WindowPosition position = WindowPosition.None,bool alwaysOnTop=false) where T : Process{
             if (position != WindowPosition.None){
-                process.MainWindowHandle.UseInactiveMonitorBounds(rect => {
-                    for (var i = 0; i < 2; i++){
-                        GetWindowRect(process.MainWindowHandle, out var currentRect);
-                        var currentWidth = currentRect.Right - currentRect.Left;
-                        var currentHeight = currentRect.Bottom - currentRect.Top;
-                        var (x, y, width, height) = position switch{
-                            WindowPosition.FullScreen => (rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top),
-                            WindowPosition.BottomRight => (rect.Right - currentWidth, rect.Bottom - currentHeight, currentWidth, currentHeight),
-                            WindowPosition.BottomLeft => (rect.Left, rect.Bottom - currentHeight, currentWidth, currentHeight),
-                            _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
-                        };
-                        process.MainWindowHandle.Move(x, y, width, height);
-                    }
-                });    
+                if (!process.MainWindowHandle.UseInactiveMonitorBounds(rect => process.MoveTo(position, rect))){
+                    process.MoveTo(position, PrimaryMonitor.MonitorBounds());
+                }    
             }
             process.MainWindowHandle.AlwaysOnTop(alwaysOnTop);
             return process;
         }
+
+        private static void MoveTo<T>(this T process, WindowPosition position, RECT rect) where T : Process{
+            for (var i = 0; i < 2; i++){
+                GetWindowRect(process.MainWindowHandle, out var currentRect);
+                var currentWidth = currentRect.Right - currentRect.Left;
+                var currentHeight = currentRect.Bottom - currentRect.Top;
+
+                if (position.HasFlag(WindowPosition.Small)){
+                    currentHeight /= 2;
+                }
+                
+                position &= ~WindowPosition.Small;
+                var (x, y, width, height) = position switch{
+                    WindowPosition.FullScreen => (rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top),
+                    WindowPosition.BottomRight => (rect.Right - currentWidth, rect.Bottom - currentHeight, currentWidth, currentHeight),
+                    WindowPosition.BottomLeft => (rect.Left, rect.Bottom - currentHeight, currentWidth, currentHeight),
+                    _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
+                };
+                process.MainWindowHandle.Move(x, y, width, height);
+            }
+        }
+
         public static void WriteSection(this string text){
             var dashCount = text.Length + 12; 
             var dashes = new string('-', dashCount);
@@ -84,11 +96,13 @@ namespace XAF.Testing{
         }
 
     }
+    [Flags]
     public enum WindowPosition{
-        None,
-        FullScreen,
-        BottomRight,
-        BottomLeft
+        None = 0,
+        FullScreen = 1 << 0,
+        BottomRight = 1 << 1,
+        BottomLeft = 1 << 2,
+        Small = 1 << 3  
     }
 
 }

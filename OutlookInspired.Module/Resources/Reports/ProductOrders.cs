@@ -42,15 +42,17 @@ using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Resources.Reports {
-	public class ProductOrders : DevExpress.XtraReports.UI.XtraReport {
-		private DevExpress.XtraReports.UI.TopMarginBand topMarginBand1;
-		private DevExpress.XtraReports.UI.DetailBand detailBand1;
+	public class ProductOrders : XtraReport {
+		#region Designer generated code
+
+		private TopMarginBand topMarginBand1;
+		private DetailBand detailBand1;
 		private CollectionDataSource bindingSource1;
-		private System.ComponentModel.IContainer components;
-		private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox1;
-		private DevExpress.XtraReports.UI.BottomMarginBand bottomMarginBand1;
-		private DevExpress.XtraReports.UI.XRPageInfo xrPageInfo1;
-		private DevExpress.XtraReports.UI.ReportHeaderBand ReportHeader;
+
+		private XRPictureBox xrPictureBox1;
+		private BottomMarginBand bottomMarginBand1;
+		private XRPageInfo xrPageInfo1;
+		private ReportHeaderBand ReportHeader;
 		private XRTable xrTable3;
 		private XRTableRow xrTableRow8;
 		private XRTableCell xrTableCell15;
@@ -111,18 +113,20 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRTableCell xrTableCell22;
 		private XRTableRow xrTableRow17;
 		private XRTableCell xrTableCell23;
-		private Color backCellColor = System.Drawing.Color.FromArgb(223, 223, 223);
-		private Color foreCellColor = System.Drawing.Color.FromArgb(221, 128, 71);
+		private Color backCellColor = Color.FromArgb(223, 223, 223);
+		private Color foreCellColor = Color.FromArgb(221, 128, 71);
 		private XRChart xrChart1;
 		private XRLabel xrLabel2;
 		private CalculatedField totalCost;
 		IList<State> states;
 		public ProductOrders() {
-            InitializeComponent();
-            InitializeDateTimeParameters();
-        }
+			InitializeComponent();
+			InitializeDateTimeParameters();
+		}
 
-		[Obsolete]
+		
+
+		
         private void InitializeDateTimeParameters() {
             // ParameterHelper.InitializeDateTimeParameters(paramFromDate, paramToDate);
         }
@@ -1016,5 +1020,6 @@ namespace OutlookInspired.Module.Resources.Reports {
 			// }
 			// xrTableCell2.Text = ((DateTime)paramFromDate.Value).ToString("MMMM d, yyyy") + " to " + ((DateTime)paramToDate.Value).ToString("MMMM d, yyyy");
 		}
+		#endregion
 	}
 }

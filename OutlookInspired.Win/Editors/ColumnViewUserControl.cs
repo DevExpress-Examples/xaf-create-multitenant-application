@@ -6,7 +6,7 @@ using DevExpress.Utils.Serializing.Helpers;
 using DevExpress.XtraGrid.Views.Base;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
-using OutlookInspired.Win.Extensions.Internal;
+using OutlookInspired.Win.Services.Internal;
 
 namespace OutlookInspired.Win.Editors{
     public partial class ColumnViewUserControl : UserControl, IUserControl{

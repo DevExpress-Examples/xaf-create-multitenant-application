@@ -14,13 +14,16 @@ using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
-        
+        protected WindowPosition BrowserPosition=>WindowPosition.FullScreen;
+        protected WindowPosition LoggerPosition=>WindowPosition.BottomRight|WindowPosition.Small;
         protected IObservable<Unit> StartTest(string user,Func<BlazorApplication,IObservable<Unit>> test) 
-            => Host.CreateDefaultBuilder().Observe().Do(_ => TestContext.CurrentContext.Test.FullName.WriteSection())
+            => Host.CreateDefaultBuilder().Observe()
+                .Do(_ => TestContext.CurrentContext.Test.FullName.WriteSection())
                 .StartTest<Startup, OutlookInspiredEFCoreDbContext>(
                     $"http://localhost:{IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().GetAvailablePort()}",
-                    "../../../../../OutlookInspired.Blazor.Server", user, test, Configure,Environment.GetEnvironmentVariable("XAFTESTBrowser") ,
-                    WindowPosition.FullScreen,LogContext,WindowPosition.BottomRight)
+                    "../../../../../OutlookInspired.Blazor.Server", user, test, Configure,
+                    Environment.GetEnvironmentVariable("XAFTESTBrowser"),
+                    BrowserPosition, LogContext, LoggerPosition)
                 .Timeout(Timeout);
 
         private void Configure(IServiceCollection collection){
