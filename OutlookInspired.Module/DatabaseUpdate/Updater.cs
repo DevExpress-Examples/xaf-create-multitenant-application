@@ -21,6 +21,9 @@ public class Updater : ModuleUpdater {
     }
 
     private void SynchronizeDatesWithToday(){
+        if (TenantName == null) {
+            return;
+        }
         new[]{
                 (table: nameof(OutlookInspiredEFCoreDbContext.Orders), column: nameof(Order.OrderDate)),
                 (table: nameof(OutlookInspiredEFCoreDbContext.Quotes), column: nameof(Quote.Date))
@@ -36,6 +39,10 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
 
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
+
+        if (!ObjectSpace.CanInstantiate(typeof(ApplicationUser))) {
+            return;
+        }
 
         if (TenantName == null) {
             CreateAdminObjects();
