@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Linq;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class ReportsExtensions{

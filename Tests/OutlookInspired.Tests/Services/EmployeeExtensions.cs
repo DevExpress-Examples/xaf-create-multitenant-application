@@ -4,7 +4,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.SystemModule;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Common;
-using XAF.Testing.RX;
+using XAF.Testing;
 using XAF.Testing.XAF;
 using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;

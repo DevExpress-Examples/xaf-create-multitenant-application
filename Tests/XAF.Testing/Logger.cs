@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
-using XAF.Testing.RX;
 
 namespace XAF.Testing{
     public class Logger:Process{
@@ -89,12 +88,6 @@ namespace XAF.Testing{
                     .Catch<Unit,TimeoutException>(_ => Observable.Empty<Unit>()).To(clientStream))
                 .Timeout(logger.ConnectionTimeout).WhenNotDefault(stream => stream.IsConnected).Take(1);
 
-        [Obsolete]
-        public static IObservable<T> Write<T>(this LogContext logContext, IObservable<T> source,
-            WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false){
-            logContext.Write(inactiveMonitorLocation,alwaysOnTop);
-            return source;
-        } 
         public static IObservable<T> Log<T>(this IObservable<T> source, LogContext logContext,
             WindowPosition inactiveMonitorLocation = WindowPosition.None, bool alwaysOnTop = false) 
             => source.Publish(obs => {
@@ -131,9 +124,6 @@ namespace XAF.Testing{
             public override Encoding Encoding => _originalWriter.Encoding;
         }
 
-        [Obsolete("remove")]
-        public static void Write(this LogContext logContext,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false) 
-            => logContext.Await(async () => Console.SetOut(await Logger.Writer(logContext,inactiveMonitorLocation,alwaysOnTop)));
     }
 
     public readonly struct LogContext : IEquatable<LogContext>{

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Reactive.Linq;
-using XAF.Testing.RX;
 
 namespace XAF.Testing{
     public static class SystemExtensions{
@@ -35,8 +34,6 @@ namespace XAF.Testing{
             return start;
         }
 
-        public static T CreateInstance<T>(this Type type) => (T)CreateInstance(type);
-
         public static object CreateInstance(this Type type,params object[] args) => Activator.CreateInstance(type,args:args);
 
         public static void KillAll(this AppDomain appDomain,string processName) 
@@ -45,23 +42,6 @@ namespace XAF.Testing{
                     process.Kill();
                     process.WaitForExit();
                 }).Enumerate();
-
-        public static async Task RunDotNet(this AppDomain appDomain,string path,string configuration,Func<string,bool> outputReceived){
-            var process = new Process{
-                StartInfo = new ProcessStartInfo{
-                    FileName = "dotnet",
-                    Arguments = $"run --configuration {configuration}",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = Path.GetFullPath($"{appDomain.BaseDirectory}{path}")
-                }
-            };
-
-            process.StartWithEvents();
-
-            await process.WhenOutputDataReceived().Where(outputReceived).Take(1).FirstOrDefaultAsync();
-        }
-
+        
     }
 }

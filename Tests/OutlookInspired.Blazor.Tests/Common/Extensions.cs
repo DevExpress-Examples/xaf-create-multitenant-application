@@ -1,7 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using OutlookInspired.Blazor.Server.Components;
-using XAF.Testing.RX;
+using XAF.Testing;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     static class Extensions{

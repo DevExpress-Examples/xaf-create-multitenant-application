@@ -8,7 +8,6 @@ using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.ExpressApp.Win.Layout;
 using DevExpress.XtraGrid;
 using DevExpress.XtraLayout;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
 
@@ -27,9 +26,7 @@ namespace XAF.Testing.Win.XAF{
                     .SelectMany(obj => gridView.WhenSelectRow(obj))
                     .Select(_ => gridView.FocusRowObject(view.ObjectSpace, view.ObjectTypeInfo.Type) as T);
             });
-
         
-
         public static void ClearFilter(this ListView listView){
             if ((listView.Editor) is GridListEditor listViewEditor) listViewEditor.GridView.ActiveFilterCriteria = null;
         }
@@ -42,7 +39,6 @@ namespace XAF.Testing.Win.XAF{
             => ((WinLayoutManager)detailView.LayoutManager).WhenItemCreated().Where(t => t.model == element).Select(t => t.control).Take(1)
                 .SelectMany(tabbedControlGroup => detailView.LayoutManager.WhenLayoutCreated().Take(1).To(tabbedControlGroup))
                 .Select(o => new TabControlProvider((TabbedControlGroup)o));
-
         
         public static IObservable<GridControl> WhenControlViewItemGridControl(this DetailView detailView)
             => detailView.WhenControlViewItemWinControl<GridControl>();

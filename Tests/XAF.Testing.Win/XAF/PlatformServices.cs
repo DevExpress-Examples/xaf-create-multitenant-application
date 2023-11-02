@@ -7,7 +7,6 @@ using DevExpress.ExpressApp.Model;
 using DevExpress.XtraGrid;
 using DevExpress.XtraLayout;
 using Microsoft.Extensions.DependencyInjection;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using ListView = DevExpress.ExpressApp.ListView;
 
@@ -21,12 +20,10 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<IFilterClearer, FilterClearer>();
             serviceCollection.AddSingleton<IDocumentActionAssertion, DocumentActionAssertion>();
             serviceCollection.AddSingleton<ITabControlObserver, TabControlObserver>();
-            serviceCollection.AddSingleton<ITabControlAsserter, TabControlAsserter>();
             serviceCollection.AddSingleton<IDashboardColumnViewObjectSelector, DashboardColumnViewObjectSelector>();
             serviceCollection.AddSingleton<IUserControlProvider, UserControlProvider>();
             serviceCollection.AddSingleton<IUserControlObjects, UserControlProperties>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
-            // serviceCollection.AddSingleton<INewObjectController, NewObjectController>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
@@ -44,11 +41,6 @@ namespace XAF.Testing.Win.XAF{
         public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
             => item.Observe().SelectDashboardColumnViewObject().ToUnit();
     }
-
-    // public class NewObjectController : INewObjectController{
-    //     public IObservable<Frame> CreateNewObjectController(Frame frame) 
-    //         => frame.CreateNewObjectController();
-    // }
     
     public class NewRowAdder : INewRowAdder{
         public void AddNewRowAndCloneMembers(Frame frame, object existingObject) 
@@ -127,12 +119,6 @@ namespace XAF.Testing.Win.XAF{
     public class TabControlObserver:ITabControlObserver{
         public IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element) 
             => detailView.WhenTabControl(element);
-    }
-
-    class TabControlAsserter:ITabControlAsserter{
-        public IObservable<ITabControlProvider> AssertTabbedGroup(Type objectType, int tabPages){
-            throw new NotImplementedException("Check employee");
-        }
     }
 
 

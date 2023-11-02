@@ -11,7 +11,6 @@ using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
 using Microsoft.Extensions.DependencyInjection;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class XafApplicationExtensions{

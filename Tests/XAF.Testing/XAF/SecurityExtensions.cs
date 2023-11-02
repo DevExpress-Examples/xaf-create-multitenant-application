@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using XAF.Testing.RX;
 using static DevExpress.ExpressApp.Security.SecurityOperations;
 
 namespace XAF.Testing.XAF{

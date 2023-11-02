@@ -7,17 +7,9 @@ using DevExpress.Data;
 using DevExpress.Data.Linq;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Utils;
-using XAF.Testing.RX;
 
 namespace XAF.Testing{
     public static class ReflectionExtensions{
-        public static string ToValidFileName(this string input) {
-            var invalidChars = Path.GetInvalidFileNameChars();
-            var validString = new string(input.Where(ch => !invalidChars.Contains(ch)).ToArray()).Replace(" ", "_");
-            return Regex.Replace(validString.Length > 250 ? validString.Substring(0, 250) : validString, "[^a-zA-Z0-9_]", "");
-        }
-        public static bool HasFlags(this Enum flag,params Enum[] values) 
-            => values.All(flag.HasFlag);
 
         public static Stream GetManifestResourceStream(this Assembly assembly, Func<string, bool> nameMatch)
             => assembly.GetManifestResourceStream(assembly.GetManifestResourceNames().First(nameMatch));

@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.ViewVariantsModule;
-using XAF.Testing.RX;
 using ListView = DevExpress.ExpressApp.ListView;
 using Unit = System.Reactive.Unit;
 using View = DevExpress.ExpressApp.View;

@@ -6,7 +6,6 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Security;
 using Microsoft.Extensions.DependencyInjection;
-using XAF.Testing.RX;
 using Observable = System.Reactive.Linq.Observable;
 using Unit = System.Reactive.Unit;
 

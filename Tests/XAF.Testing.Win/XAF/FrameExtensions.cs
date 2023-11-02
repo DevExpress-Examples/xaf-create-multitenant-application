@@ -3,10 +3,8 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Utils.Controls;
-using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace XAF.Testing.Win.XAF{
@@ -16,17 +14,9 @@ namespace XAF.Testing.Win.XAF{
             ((GridListEditor)frame.View.ToListView().Editor).GridView.AddNewRow(valueTuples);
         }
 
-        // public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
-        //     => frame.View.WhenObjectViewObjects(1).Take(1)
-        //         .SelectMany(selectedObject => frame.ColumnViewCreateNewObject().SwitchIfEmpty(frame.ListViewCreateNewObject())
-        //             .SelectMany(newObjectFrame => newObjectFrame.View.ToCompositeView().CloneExistingObjectMembers(false, selectedObject)
-        //                 .Select(_ => default(Frame)).IgnoreElements().Concat(newObjectFrame.YieldItem())));
-
         public static IObservable<Window> WhenMaximized(this Window window) 
             => window.Observe().Do(_ => ((Form)window.Template).WindowState = FormWindowState.Maximized)
                 .DelayOnContext();
-        public static IObservable<Window> CloseWindow(this IObservable<Frame> source) 
-            => source.Cast<Window>().DelayOnContext().Do(frame => frame.Close()).DelayOnContext().IgnoreElements();
         public static IObservable<(Frame frame, Frame detailViewFrame)> ProcessSelectedObject(this Frame frame) 
             => frame.View.Observe().OfType<DetailView>()
                 .SelectMany(detailView => detailView.WhenGridControl()
@@ -54,14 +44,5 @@ namespace XAF.Testing.Win.XAF{
                 .Select(gridControl => gridControl.MainView).Cast<ColumnView>()
                 .SelectMany(gridView => gridView.ProcessEvent(EventType.Click))
                 .Select(view => view));
-
-        internal static IObservable<Frame> ColumnViewCreateNewObject(this Frame frame){
-            throw new NotImplementedException();
-            // return frame.WhenGridControl().Select(t => t.frame).CreateNewObject();
-        }
-
-        public static IObservable<(GridControl gridControl, Frame frame)> WhenGridControl(this IObservable<Frame> source) 
-            => source.OfView<DetailView>().SelectMany(frame =>
-                frame.View.ToDetailView().WhenControlViewItemGridControl().Select(gridControl => (gridControl, frame)));
     }
 }

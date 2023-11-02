@@ -7,7 +7,6 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Security;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class AssertExtensions{

@@ -2,7 +2,6 @@
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class CollectionSourceExtensions{

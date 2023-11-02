@@ -9,7 +9,6 @@ using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 

@@ -8,7 +8,6 @@ using DevExpress.XtraRichEdit;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using State = OutlookInspired.Module.BusinessObjects.State;
 using StateEnum = DevExpress.DevAV.StateEnum;

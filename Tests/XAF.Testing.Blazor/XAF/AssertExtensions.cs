@@ -2,7 +2,6 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Office.Blazor.Components.Models;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace XAF.Testing.Blazor.XAF{

@@ -3,7 +3,6 @@ using Aqua.EnumerableExtensions;
 using Humanizer;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
-using XAF.Testing.RX;
 using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 
 #pragma warning disable CS8974 // Converting method group to non-delegate type
@@ -17,8 +16,8 @@ namespace OutlookInspired.Tests.Common{
         protected const int MaxTries = 1;
 #endif
         static TestBase(){
-            UtilityExtensions.TimeoutInterval = (Debugger.IsAttached ? 500 : 60).Seconds();
-            UtilityExtensions.DelayOnContextInterval=TimeSpan.FromMilliseconds(250);
+            ReactiveExtensions.TimeoutInterval = (Debugger.IsAttached ? 500 : 60).Seconds();
+            ReactiveExtensions.DelayOnContextInterval=TimeSpan.FromMilliseconds(250);
         }
 
         protected virtual bool RunInMainMonitor => false;
