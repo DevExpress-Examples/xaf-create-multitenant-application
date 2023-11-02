@@ -249,7 +249,7 @@ This folder contains implementations specific to the solution.
   - ###### `ReportsController`
     Declares an action to display report for Sales, Shipments, Comparisons, Top Sales Person .
   
-  ![ProductReports](Images/ProductReports.png)
+    ![ProductReports](Images/ProductReports.png)
   
 
 - ##### `Quotes` Subfolder
@@ -258,7 +258,7 @@ This folder contains implementations specific to the solution.
   - ###### `QuoteMapItemController`
     Calculates the QuoteMapItem non-persistent objects used from the Opportunities view
   
-  ![Opportunities](Images/Opportunities.png)
+    ![Opportunities](Images/Opportunities.png)
 
 - ##### `ViewFilter` Subfolder
   This subfolder has a Filter manager implementation which can be used from the end user to create and save view filters.
@@ -375,15 +375,210 @@ This folder contains implementations specific to the solution.
 This is the Blazor frontend project that utilizes the agnostic `OutlookInspired.Module`. It adheres to the same architectural folder structure.
 
 ### Components Folder
-This folder houses Blazor components necessary for fulfilling the requirements of this solution. These components are independent and could be relocated to another library if needed.
+This folder contains Blazor components essential for meeting the project's requirements. These components are self-contained and can be easily moved to another library.
 
-- **ComponentBase, ComponentModelBase**: `ComponentBase` is the base component for client side components like the DxMap, DxFunnel, DXPivot, PdfViewer, responsible for loading component resources like JavaScript files. `ComponentModelBase` serves as the base model for all components, providing common functionalities such as a `ClientReady` event, a hook for displaying browser console messages when necessary and much more.
+- **ComponentBase, ComponentModelBase**: `ComponentBase` is the foundational component for client-side components like DxMap, DxFunnel, DXPivot, and PdfViewer. It manages the loading of resources such as JavaScript files. `ComponentModelBase` acts as the base model for all components, offering functionalities like a `ClientReady` event and a hook for browser console messages, among other features.
+
+  ![](Images/ComponentBaseModelBase.png)
+
+- **HyperLink, Label**: These components function similarly to their Windows counterparts and are used to render hyperlinks and labels.
+
+  ![](Images/HyperLinkLabel.png)
+
+- **PdfViewer**: This is a descendant of `ComponentBase` and serves as a viewer for PDF files.
+
+  ![](Images/PdfViewerBlazor.png)
+
+- **XafImg, BOImage**: Both components know how to display images in a variety of contexts.
+
+  ![](Images/BOImage.png)
+  ![](Images/XafImg.png)
+
+- **XafChart**: This component is utilized for charting Customer stores.
+
+  ![](Images/BlazorChart.png)
+
+- ##### `CardView` Subfolder
+  
+  This folder contains the the `SideBySideCardView` and the `StackedCardView`. They are used to display Card like listviews like bellow.
+
+  ![](Images/CardViews.png)
+
+- ##### `DevExtreme` Subfolder
+
+  In this folder we have .NET reusabe compoenents that utilizing the [Map](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Map/Markers/Light/), [VectorMap](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/VectorMap/Overview/Light/), [Funnel](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Charts/FunnelChart/Light/) and [Chart](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Charts/Overview/Light/) DevExtreme Widgets.
 
 
-  - `Models` subfolder: Here the `UserControlComponentModel` implements the `IUserControl` we discussed in both the agnostic and the windows project. Therefore all models that derive from it e.g (DxFunnelModel, DxPivotGridModel, CardViewModel) excibit ListView like behaviour, exactly the same way as the windows counter parts.
-  - `HyperLink`, `Label`: Similarly to windows are used to render hyperlinks and labels as shown in the next image.
-     
-     ![](Images/HyperLinkLabel.png)
-  - `PdfViewer`: Is a `ComponentBase` descendant viewer for pdf files
+### Controllers Folder
+This folder similarly to the agnostic and windows project contains controllers that have no dependecies to this solution.
 
-  ![](Images/PdfViwerBlazor.png)
+- `CellDisplayTemplateController`: Is an abstract controller that allows us to render the GridListEditor row cell fragments.
+- `DxGridListEditorController`: Overiddes GridListEditor behaviours such as removing command columns.
+- `PopupWindowSizeController`: Configures the size of our popup windows.
+
+### Editors Folder
+This folder houses XAF custom yet reusable editors. They are not dependent on the OutlookInspired demo. Examples include:
+
+- **ChartListEditor**: An abstract list editor designed to aid in creating simple object-specific variants.
+  
+  ```csharp
+  [ListEditor(typeof(MapItem), true)]
+  public class MapItemChartListEditor : ChartListEditor<MapItem, string, decimal, string, XafChart<MapItem, string, decimal, string>> {
+      public MapItemChartListEditor(IModelListView info) : base(info) {
+      }
+  }
+
+- `ComponentPropertyEditor`: An abstract property editor that can be utilized to craft concrete editors like `ProgressPropertyEditor` or `PdfViewEditor`. The latter makes use of the PdfViewer component from the Components folder.
+
+  ```cs
+  [PropertyEditor(typeof(byte[]), EditorAliases.PdfViewerEditor)]
+  public class PdfViewerEditor : ComponentPropertyEditor<PdfModel, PdfModelAdapter, byte[]> {
+      public PdfViewerEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model) {
+      }
+  }
+
+  ```
+- `EnumPropertyEditor`: Inherits from XAF's native EnumPropertyEditor, but solely displays the image, akin to its Windows counterpart.
+
+`DisplayTestPropertyEditors`: Displays raw text, similar to the Windows LabelPropertyEditor.
+
+### Editors Folder
+Within this directory, you'll find implementations tailored to the solution.
+
+- ##### `Customers` subfolder
+  Here using components from the previously discussed `Compoenents` folder we bind them to Customer data. For example we use the `StackedCardView` with a `StackedInfoCard` like:
+
+  ```cs
+  <StackedCardView>
+    <Content>
+        @foreach (var store in ComponentModel.Stores){
+            <StackedInfoCard Body="@store.City" Image="@store.Crest.LargeImage.ToBase64Image()"/>
+        }
+    </Content>
+ </StackedCardView>
+  ```
+
+  The visual output is as follows:
+
+  ![](Images/StoresView.png)
+
+  
+- ##### `Employees` subfolder
+  
+  In a manner akin to the customers, this section demonstrates how the `StackedCardView` from the Components folder is paired with a `SideBySideInfoCard`.
+
+  ```cs
+  <StackedCardView >
+    <Content>
+        @foreach (var employee in ComponentModel.Objects){
+            <SideBySideInfoCard CurrentObject="employee" ComponentModel="@ComponentModel" Image="@employee.Picture?.Data?.ToBase64Image()" HeaderText="@employee.FullName" 
+                                InfoItems="@(new Dictionary<string, string>{{ "ADDRESS", employee.Address },
+                                               { "EMAIL", $"<a href=\"mailto:{employee.Email}\">{employee.Email}</a>" },{ "PHONE", employee.HomePhone } })"/>
+        }
+    </Content>
+</StackedCardView>
+  ```
+
+  The final visual representation is:
+
+  ![](Images/EmployeeCard.png)
+
+  Within the `Evaluations` and `Tasks` subfolders, components can be found that are responsible for rendering the cell fragment in the image below. Both are linked to the cell via the `Controllers\CellDisplayTemplateController`.
+
+  ![](Images/TasksView.png)
+
+- ##### `Evaluations` subfolder
+  The `SchedulerGroupTypeController` plays a role in setting up the scheduler, as depicted below:
+
+  ![](Images/Scheduler.png)
+
+- ##### `Maps` subfolder
+  Mirroring its Windows counterpart, this subfolder houses both the `RouteMapsViewController` and the `SalesMapsViewController`. These controllers are responsible for configuring the maps `ModalDxMap` and `ModalDxVectorMap` along with their associated actions such as `TravelMode`, `SalesPeriod`, `Print`, and more. The components within this directory are fragments that employ those found in `Components/DevExtreme`. Additionally, they adjust the height as they are displayed in a modal popup window.
+ 
+- ##### `Orders` subfolder
+  The `DetailRow` component renders the detail fragment for the OrderListView.
+
+  ![](Images/OrderDetailView.png)
+
+- ##### `Product` subfolder
+  Similar to the Employees subfolder, a `Component/CardViews/StackedCardView` declaration is found here:
+
+  ```xml
+  <StackedCardView>
+    <Content>
+        @foreach (var product in ComponentModel.Objects) {
+             <SideBySideInfoCard CurrentObject="product" ComponentModel="@ComponentModel" Image="@product.PrimaryImage.Data.ToBase64Image()" HeaderText="@product.Name" 
+                                 InfoItems="@(new Dictionary<string, string>{{ "COST", product.Cost.ToString("C") },
+                                                { "SALE PRICE", product.SalePrice.ToString("C") } })"
+                                 FooterText="@product.Description.ToDocument(server => server.Text)"/>
+         }
+
+    </Content>
+  </StackedCardView>
+  ```
+
+  and the result view for this looks like:
+
+  ![](Images/ProductCardView.png)
+
+# Importing
+  The importing process is initiated from the [ImportData/test](Tests/OutlookInspired.Win.Tests/Import/ImportData.cs) test; more details about this will be covered in the subsequent section. Here's the technique we adopted:
+
+  Our legacy database utilizes SQLite and has a long key. In contrast, this demo is built on SQL Server, which employs a GUID key. To match the objects without overwhelming the memory, we incorporated an additional long property into the base object of this demo.
+
+   ```cs
+       public abstract class OutlookInspiredBaseObject:BaseObject{
+        [Browsable(false)]
+        public virtual long IdInt64{ get; set; }
+   ```
+
+  The next method is used to do the SqlLite-SqlServer objects matching.
+
+  ```cs
+  private static T FindSqlLiteObject<T>(this IObjectSpace objectSpace, long? id) where T : OutlookInspiredBaseObject 
+            => objectSpace.FindObject<T>(migrationBaseObject => id == migrationBaseObject.IdInt64);
+  ```
+
+ In the test we first create a new instance and we setup a OutlookInspiredWindowsFormApplication then we create ObjectSpace and we call the `ImportFromSqlLite` demo. Similar to everything already discussed tests are no different so all logic lives in extension methods making our tests easy to read and maintain.
+
+ The ImportFromSqlLite method now has a connection to the new SqlServer database with the objectspace and we open one to the SqlLite with the legacy DBContext.
+
+ ```cs
+ public static IObservable<Unit> ImportFromSqlLite(this IObjectSpace objectSpace) 
+            => new DevAvDb($"Data Source={AppDomain.CurrentDomain.DBPath()}").Use(objectSpace.ImportFrom);
+ ```
+
+ To write the actual importing we first start with the zero-dependecies objects and then move downward the chain while we commit each level first. This is done with the `CommitAndConcat` method and we follow the [domain diagram](#domain-diagram) on the top of this wiki
+
+ ```cs
+ static IObservable<Unit> CommitAndConcat(this IObservable<Unit> source, IObjectSpace objectSpace, Func<IObservable<Unit>> nextSource)
+            => source.DoOnComplete(objectSpace.CommitChanges).ConcatDefer(nextSource);
+ ```
+
+First we import the `Crest`, `State`, `Customer`, `Picture`, `Probation` objects.
+
+```cs
+private static IObservable<Unit> ZeroDependencies(this IObjectSpace objectSpace, DevAvDb sqliteContext)
+    => objectSpace.ImportCrest(sqliteContext)
+        .Merge(objectSpace.ImportState(sqliteContext))
+        .Merge(objectSpace.ImportCustomer(sqliteContext))
+        .Merge(objectSpace.ImportPicture(sqliteContext))
+        .Merge(objectSpace.ImportProbation(sqliteContext));
+
+```
+and when finishing with all levels we end up with this method.
+
+```cs
+static IObservable<Unit> ImportFrom(this IObjectSpace objectSpace, DevAvDb sqliteContext) 
+    => objectSpace.ZeroDependencies(sqliteContext)
+        .CommitAndConcat(objectSpace, () => objectSpace.ImportCustomerStore(sqliteContext)
+            .Merge(objectSpace.ImportEmployee(sqliteContext)
+                .CommitAndConcat(objectSpace, () => objectSpace.EmployeeDependent(sqliteContext, objectSpace.ProductDependent(sqliteContext))))
+            .CommitAndConcat(objectSpace, () => objectSpace.CustomerStoreDependent(sqliteContext, objectSpace.CustomerEmployeeDependent(sqliteContext))))
+        .Finally(objectSpace.CommitChanges);
+
+```
+
+# Continuous Integration
+
+  The demo is accompanied with the [azure-pipelines.yml](azure-pipelines.yml). The yml configfuration is a complete CI/CD pipeline responsible for building and testing in the AzDevops cloud. Two jobs are used to run the `600+ tests` for `Windows` and `Blazor`
