@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" ?>
+<Application Title="XAF_EF">
+	<NavigationItems>
+		<Items Removed="True" />
+		<Items IsNewNode="True">
+			<Item Id="Default">
+				<Items>
+					<Item Id="Tenant" ViewId="Tenant_ListView" />
+					<Item Id="ApplicationUser_ListView" ViewId="ApplicationUser_ListView" />
+				</Items>
+			</Item>
+		</Items>
+	</NavigationItems>
+	<Views>
+		<ListView Id="Tenant_ListView" Caption="Tenants" />
+		<ListView Id="PermissionPolicyRole_ListView" AllowNew="False" AllowDelete="False" />
+		<ListView Id="PermissionPolicyRole_LookupListView" AllowDelete="False" AllowNew="False" />
+		<ListView Id="PermissionPolicyUser_Roles_ListView" AllowDelete="False" AllowNew="False" AllowLink="True" AllowUnlink="True" />
+		<DetailView Id="PermissionPolicyRole_DetailView" AllowDelete="False" AllowEdit="False" AllowNew="False" />
+	</Views>
+</Application>

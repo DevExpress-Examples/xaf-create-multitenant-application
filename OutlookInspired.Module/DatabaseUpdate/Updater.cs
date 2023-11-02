@@ -1,6 +1,9 @@
 ﻿using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Updating;
+using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
@@ -33,23 +36,44 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
 
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
-        
-        var defaultRole = ObjectSpace.EnsureDefaultRole();
-        CreateAdminObjects();
-        if (ObjectSpace.ModifiedObjects.Any()){
-            CreateDepartmentRoles();
-            CreateViewFilters();
-            ObjectSpace.CreateMailMergeTemplates();
-            ObjectSpace.GetObjectsQuery<Employee>().ToArray()
-                .Do(employee => {
-                    employee.User = ObjectSpace.EnsureUser(employee.FirstName.ToLower()
-                        .Concat(employee.LastName.ToLower().Take(1)).StringJoin(""),user => user.Employee=employee);
-                    employee.User.Roles.Add(defaultRole);
-                    employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
-                })
-                .Enumerate();
+
+        if (TenantName == null) {
+            CreateAdminObjects();
+            _ = CreateTenant("company1.com", "OutlookInspired_company1");
+            _ = CreateTenant("company2.com", "OutlookInspired_company2");
+            ObjectSpace.CommitChanges();
         }
-        ObjectSpace.CommitChanges();
+
+        if (TenantName != null) {
+            var defaultRole = ObjectSpace.EnsureDefaultRole();
+            CreateAdminObjects();
+            if (ObjectSpace.ModifiedObjects.Any())
+            {
+                CreateDepartmentRoles();
+                CreateViewFilters();
+                ObjectSpace.CreateMailMergeTemplates();
+                ObjectSpace.GetObjectsQuery<Employee>().ToArray()
+                    .Do(employee =>
+                    {
+                        employee.User = ObjectSpace.EnsureUser(employee.FirstName.ToLower()
+                            .Concat(employee.LastName.ToLower().Take(1)).StringJoin(""), user => user.Employee = employee);
+                        employee.User.Roles.Add(defaultRole);
+                        employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
+                    })
+                    .Enumerate();
+            }
+            ObjectSpace.CommitChanges();
+        }
+    }
+
+    private Tenant CreateTenant(string tenantName, string databaseName) {
+        var tenant = ObjectSpace.FirstOrDefault<Tenant>(t => t.Name == tenantName);
+        if (tenant == null) {
+            tenant = ObjectSpace.CreateObject<Tenant>();
+            tenant.Name = tenantName;
+            tenant.ConnectionString = $"Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\\mssqllocaldb;Initial Catalog={databaseName}";
+        }
+        return tenant;
     }
 
     private void CreateDepartmentRoles() 
@@ -57,9 +81,11 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             .Do(department => ObjectSpace.EnsureRole(department))
             .Enumerate();
 
-    private void CreateAdminObjects() 
-        => ObjectSpace.EnsureUser("Admin")
-            .Roles.Add(ObjectSpace.EnsureRole("Administrators",isAdmin:true));
+    private void CreateAdminObjects() {
+        string adminName = (TenantName != null) ? $"Admin@{TenantName}" : "Admin";
+        ObjectSpace.EnsureUser(adminName)
+            .Roles.Add(ObjectSpace.EnsureRole("Administrators", isAdmin: true));
+    }
     
 
     private void CreateViewFilters(){
@@ -142,4 +168,14 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             viewFilter.Name = status.ToString();
         }).Enumerate();
 
+    Guid? TenantId {
+        get {
+            return ObjectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantId;
+        }
+    }
+    string TenantName {
+        get {
+            return ObjectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantName;
+        }
+    }
 }

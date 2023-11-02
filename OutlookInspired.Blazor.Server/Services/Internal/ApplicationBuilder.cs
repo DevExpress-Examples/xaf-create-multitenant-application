@@ -1,9 +1,11 @@
 ﻿using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
+using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class ApplicationBuilder{
@@ -39,19 +41,31 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
             return builder;
         }
 
+        public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationBuilder builder, IConfiguration configuration)
+        {
+            builder.AddMultiTenancy()
+                .WithServiceDbContext((serviceProvider, options) => {
+#if EASYTEST
+                    string connectionString = configuration.GetConnectionString("EasyTestConnectionString");
+#else
+                    string connectionString = configuration.GetConnectionString("ConnectionString");
+#endif
+                    options.UseSqlServer(connectionString);
+                    options.UseChangeTrackingProxies();
+                    options.UseLazyLoadingProxies();
+                })
+                .WithMultiTenancyModelDifferenceStore(mds => {
+                    mds.ModuleType = typeof(Module.OutlookInspiredModule);
+                })
+                .WithTenantResolver<TenantByEmailResolver>();
+            return builder;
+        }
+
         public static IBlazorApplicationBuilder AddObjectSpaceProviders(this IBlazorApplicationBuilder builder, IConfiguration configuration){
             builder.ObjectSpaceProviders
                 .AddSecuredEFCore(options => options.PreFetchReferenceProperties())
-                .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((_, options) => {
-                    string connectionString = null;
-                    if (configuration.GetConnectionString("ConnectionString") != null){
-                        connectionString = configuration.GetConnectionString("ConnectionString");
-                    }
-#if EASYTEST
-                        if(Configuration.GetConnectionString("EasyTestConnectionString") != null) {
-                            connectionString = Configuration.GetConnectionString("EasyTestConnectionString");
-                        }
-#endif
+                .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
+                    string connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                     ArgumentNullException.ThrowIfNull(connectionString);
                     options.UseSqlServer(connectionString);
                     options.UseChangeTrackingProxies();

@@ -21,7 +21,7 @@ public class Startup {
         services.AddHttpContextAccessor();
         services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
         services.AddXaf(Configuration, builder => builder.UseApplication<OutlookInspiredBlazorApplication>().AddModules()
-            .AddObjectSpaceProviders(Configuration).AddSecurity().AddBuildStep());
+            .AddObjectSpaceProviders(Configuration).AddSecurity().AddMultiTenancy(Configuration).AddBuildStep());
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/LoginPage");
     }
     
