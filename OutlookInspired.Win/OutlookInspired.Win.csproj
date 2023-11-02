@@ -62,6 +62,7 @@
     <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.2.1-alpha-23306" />
     <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.2.1-alpha-23306" />
     <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.2.1-alpha-23306" />
+    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Win.EFCore" Version="23.2.1-alpha-23306" />
     <PackageReference Include="DevExpress.ExpressApp.Notifications.Win" Version="23.2.1-alpha-23306" />
     <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.2.1-alpha-23306" />
     <PackageReference Include="DevExpress.ExpressApp.PivotChart.Win" Version="23.2.1-alpha-23306" />
