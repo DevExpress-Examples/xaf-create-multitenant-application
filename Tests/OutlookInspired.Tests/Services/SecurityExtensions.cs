@@ -1,6 +1,4 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
@@ -50,50 +48,14 @@ namespace OutlookInspired.Tests.Services{
             };
 
         public static bool AssertMapItAction(this SimpleAction action)
-            => action.UseCurrentEmployee(employee => employee?.Department switch{
-                _ => true
-            });
+            => action.UseCurrentEmployee(employee => employee?.Department switch{ _ => true });
 
-
-
+        
         public static IObservable<XafApplication> CanNavigate(this XafApplication application, string viewId) 
             => application.Defer(() => application.NewObjectSpace()
-                .Use(space => {
-                    var applicationUser = space.CurrentUser<ApplicationUser>();
-                    var navigationViews = applicationUser.NavigationViews();
-                    var contains = navigationViews.Contains(viewId);
-                    return contains.Observe();
-                }).WhenNotDefault()
-                // .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<bool>(new AssertException())))
+                .Use(space => space.CurrentUser<ApplicationUser>().NavigationViews().Contains(viewId).Observe()).WhenNotDefault()
                 .To(application));
-
-        public static bool CanNavigate(this SingleChoiceAction action,string viewId){
-            return action.UseCurrentUser(user => user.NavigationViews().Contains(viewId));
-            // return action.UseCurrentUser(user => user.IsAdmin() || !(viewId switch{
-            //     "EmployeeListView" => new[]{
-            //         EmployeeDepartment.Support, EmployeeDepartment.Shipping, EmployeeDepartment.IT
-            //     },
-            //     "CustomerListView" => new[]{ EmployeeDepartment.HumanResources },
-            //     "ProductListView" => new[]{
-            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Support, EmployeeDepartment.Shipping,
-            //         EmployeeDepartment.Engineering, EmployeeDepartment.IT, EmployeeDepartment.Management
-            //     },
-            //     "OrderListView" => new[]{
-            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Support, EmployeeDepartment.Engineering,
-            //         EmployeeDepartment.Management,
-            //     },
-            //     "Evaluation_ListView" => new[]{
-            //         EmployeeDepartment.Sales, EmployeeDepartment.Support, EmployeeDepartment.Shipping,
-            //         EmployeeDepartment.Engineering, EmployeeDepartment.IT,
-            //     },
-            //     "Opportunities" => new[]{
-            //         EmployeeDepartment.HumanResources, EmployeeDepartment.Shipping, EmployeeDepartment.Engineering,
-            //         EmployeeDepartment.Management, EmployeeDepartment.IT
-            //     },
-            //     _ => throw new NotImplementedException(viewId)
-            // }).Contains(user.Employee().Department));
-        }
-
+        
         public static int NavigationItems(this SingleChoiceAction action, ChoiceActionItem item=null) 
             => action.UseCurrentUser(user => user.IsAdmin() ? item.AdminNavigationItems() : item.EmployeeNavigationItems( user));
 
@@ -117,7 +79,7 @@ namespace OutlookInspired.Tests.Services{
                 _ => throw new NotImplementedException(item.Caption)
             };
 
-        static AssertAction EmployeeTaskAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
+        static AssertAction EmployeeTaskAssertAction(this EmployeeDepartment? department, Frame frame) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
                 _ => XAF.Testing.XAF.AssertAction.All
@@ -185,10 +147,9 @@ namespace OutlookInspired.Tests.Services{
                 _ => XAF.Testing.XAF.AssertAction.All
             };
 
-        static AssertAction EvaluationAssertAction(this EmployeeDepartment? department, Frame frame, Frame source) 
+        static AssertAction EvaluationAssertAction(this EmployeeDepartment? department, Frame frame) 
             => department switch{
                 EmployeeDepartment.Sales when !frame.View.IsRoot=>XAF.Testing.XAF.AssertAction.Process,
-                // _ when source!=null=> XAF.Testing.XAF.AssertAction.All,
                 _ => XAF.Testing.XAF.AssertAction.All
             };
 
@@ -214,8 +175,8 @@ namespace OutlookInspired.Tests.Services{
                 _ when type == typeof(CustomerCommunication) => department.CustomerCommunicationAssertAction(frame),
                 _ when type == typeof(Customer) => department.CustomerAssertAction(frame),
                 _ when type == typeof(Employee) => department.EmployeeAssertAction(frame,source),
-                _ when type == typeof(Evaluation) => department.EvaluationAssertAction(frame,source),
-                _ when type == typeof(EmployeeTask) => department.EmployeeTaskAssertAction(frame,source),
+                _ when type == typeof(Evaluation) => department.EvaluationAssertAction(frame),
+                _ when type == typeof(EmployeeTask) => department.EmployeeTaskAssertAction(frame),
                 _ when type == typeof(TaskAttachedFile) => department.TaskAttachedFileAssertAction(),
                 _ when type == typeof(Product) => department.TaskAttachedFileAssertAction(),
                 _ => throw new NotImplementedException($"{frame.View} {department}")

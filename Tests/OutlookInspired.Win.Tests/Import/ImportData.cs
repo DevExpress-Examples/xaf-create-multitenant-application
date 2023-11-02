@@ -1,7 +1,6 @@
 using System.Reactive.Linq;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Import;
 using OutlookInspired.Win.Tests.Common;
 using Shouldly;
 using XAF.Testing;

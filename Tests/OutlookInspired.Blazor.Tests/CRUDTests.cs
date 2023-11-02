@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
-using XAF.Testing.RX;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{

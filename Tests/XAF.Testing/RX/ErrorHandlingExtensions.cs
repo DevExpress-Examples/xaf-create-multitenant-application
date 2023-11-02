@@ -8,11 +8,5 @@ namespace XAF.Testing.RX{
                 onError?.Invoke(exception);
                 return Observable.Empty<T>();
             });
-        
-        public static IObservable<T> CompleteOnError<T,TException>(this IObservable<T> source,Action<Exception> onError=null) where TException:Exception
-            => source.CompleteOnError(onError,exception => exception is TException);
-        
-        public static IObservable<T> CompleteOnError<T>(this IObservable<T> source,Type exceptionType,Action<Exception> onError=null) 
-            => source.CompleteOnError(onError,exceptionType.IsInstanceOfType);
     }
 }

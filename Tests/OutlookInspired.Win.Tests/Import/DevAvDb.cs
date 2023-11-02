@@ -1,7 +1,7 @@
 ﻿using DevExpress.DevAV;
 using Microsoft.EntityFrameworkCore;
 
-namespace OutlookInspired.Tests.Import{
+namespace OutlookInspired.Win.Tests.Import{
 	public class DevAvDb : DevAVDb{
 		public DevAvDb(string connectionStringOrName) : base(connectionStringOrName){
 		}

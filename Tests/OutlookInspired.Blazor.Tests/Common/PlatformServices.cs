@@ -1,10 +1,8 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
-using OutlookInspired.Blazor.Server;
 using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
@@ -43,13 +41,6 @@ namespace OutlookInspired.Blazor.Tests.Common{
 
     class FilterViewManager:IFilterViewManager{
         public bool InlineEdit => false;
-    }
-    public class AssertAssertFilterView:IAssertFilterView{
-        public IObservable<Unit> AssertCreateNew(SingleChoiceAction action){
-            // return source.AssertDialogControllerListView(typeof(ViewFilter), _ => AssertAction.AllButProcess)
-                // .ToSecond().IgnoreElements();
-                throw new NotImplementedException();
-        }
     }
     class UserControlProperties:IUserControlObjects{
         public int ObjectsCount(object control) => ((IUserControlDataSource)control).Objects.Count;

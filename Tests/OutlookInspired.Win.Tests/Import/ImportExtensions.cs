@@ -7,7 +7,6 @@ using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.XtraRichEdit;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Tests.Import;
 using XAF.Testing;
 using XAF.Testing.RX;
 using XAF.Testing.XAF;

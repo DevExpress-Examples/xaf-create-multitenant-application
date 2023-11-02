@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -55,17 +54,14 @@ namespace XAF.Testing.RX{
                     .OrderByDescending(info => info.IsPublic()).First(info => info.Name == eventName || info.Name.EndsWith($".{eventName}"));
                 return (eventInfo, eventInfo.AddMethod,eventInfo.RemoveMethod)!;
             });
-
-        public static IObservable<(TEventArgs args, TSource source)> WhenEvent<TSource,TEventArgs>(this object source, string eventName,[CallerMemberName]string caller="")
-            => source.FromEventPattern<TEventArgs>(eventName,caller).Select(pattern => (pattern.EventArgs,(TSource)source));
         
         public static IObservable<TEventArgs> WhenEvent<TEventArgs>(this object source, string eventName,[CallerMemberName]string caller="") 
             => source.FromEventPattern<TEventArgs>(eventName,caller).Select(pattern => pattern.EventArgs);
         
         public static IObservable<T> TakeUntilDisposed<T>(this IObservable<T> source, IComponent component, [CallerMemberName] string caller = "")
-            => component != null ? source.TakeUntil(component.WhenDisposed(caller)) : source;
+            => component != null ? source.TakeUntil(component.WhenDisposed()) : source;
         
-        public static IObservable<TDisposable> WhenDisposed<TDisposable>(this TDisposable source,[CallerMemberName]string caller="") where TDisposable : IComponent 
+        public static IObservable<TDisposable> WhenDisposed<TDisposable>(this TDisposable source) where TDisposable : IComponent 
             => Observable.FromEventPattern(source, nameof(source.Disposed), ImmediateScheduler).Take(1).To(source);
     }
 }
