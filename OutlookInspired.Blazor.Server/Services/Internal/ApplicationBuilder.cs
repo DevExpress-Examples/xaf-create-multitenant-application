@@ -3,7 +3,9 @@ using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class ApplicationBuilder{
@@ -53,6 +55,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                         }
 #endif
                     ArgumentNullException.ThrowIfNull(connectionString);
+                    new SqlConnectionStringBuilder(connectionString).AttachDatabase();
                     options.UseSqlServer(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();

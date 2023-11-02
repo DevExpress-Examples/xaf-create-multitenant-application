@@ -56,19 +56,5 @@ namespace OutlookInspired.Win.Tests.Common{
             return application;
         }
 
-
-        [OneTimeSetUp]
-        public void OneTimeSetup(){
-            StopServer();
-            this.Await(async () => await AppDomain.CurrentDomain.RunDotNet("/../../../../../OutlookInspired.MiddleTier","TEST",output => $"{output}".Contains("Now listening on")));
-
-        }
-        
-        private static void StopServer() 
-            => AppDomain.CurrentDomain.KillAll("OutlookInspired.MiddleTier");
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown() 
-            => StopServer();
     }
 }

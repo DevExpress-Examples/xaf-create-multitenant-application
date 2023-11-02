@@ -4,13 +4,14 @@ using System.Net.Http.Json;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
-using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Services{
     public static class ApplicationBuilder{
@@ -24,25 +25,16 @@ namespace OutlookInspired.Win.Services{
         }
         public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString){
             builder.AddBuildStep(application => {
-            application.DatabaseUpdateMode = DatabaseUpdateMode.Never;
+            application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
+            application.CheckCompatibilityType = CheckCompatibilityType.DatabaseSchema;
             ((WinApplication)application).SplashScreen = new DevExpress.ExpressApp.Win.Utils.DXSplashScreen(
                 typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
-            application.ApplicationName = "MainDemo";
+            application.ApplicationName = "OutlookInspired";
             DevExpress.ExpressApp.Scheduler.Win.SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
             DevExpress.ExpressApp.ReportsV2.Win.WinReportServiceController.UseNewWizard = true;
             application.DatabaseVersionMismatch += (_, e) => {
-                string message = "Application cannot connect to the specified database.";
-                if(e.CompatibilityError is CompatibilityDatabaseIsOldError{ Module: not null } isOldError) {
-                    message = "The client application cannot connect to the Middle Tier Application Server and its database. " +
-                              "To avoid this error, ensure that both the client and the server have the same modules set. Problematic module: " + isOldError.Module.Name +
-                              ". For more information, see https://docs.devexpress.com/eXpressAppFramework/113439/concepts/security-system/middle-tier-security-wcf-service#troubleshooting";
-                }
-                if(e.CompatibilityError == null) {
-                    message = "You probably tried to update the database in Middle Tier Security mode from the client side. " +
-                              "In this mode, the server application updates the database automatically. " +
-                              "To disable the automatic database update, set the XafApplication.DatabaseUpdateMode property to the DatabaseUpdateMode.Never value in the client application.";
-                }
-                throw new InvalidOperationException(message);
+                e.Updater.Update();
+                e.Handled = true;
             };
             application.LastLogonParametersReading+= (_, e) => {
                 if(string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) {
@@ -94,6 +86,7 @@ namespace OutlookInspired.Win.Services{
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,string connectionString,bool useSecuredProvider=true) 
             => builder.AddObjectSpaceProviders( useSecuredProvider,connectionString)
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
+                    
                     // options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
@@ -101,6 +94,7 @@ namespace OutlookInspired.Win.Services{
                         options.UseMiddleTier(application.Security);
                     }
                     else{
+                        new SqlConnectionStringBuilder(connectionString).AttachDatabase();
                         options.UseSqlServer(connectionString);
                         options.UseLazyLoadingProxies();
                     }

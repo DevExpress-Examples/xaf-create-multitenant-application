@@ -24,12 +24,12 @@ namespace XAF.Testing{
         public string PipeName{ get; set; } = nameof(Logger);
         public string ServerName{ get; set; } = ".";
         public TimeSpan ConnectionTimeout{ get; set; } = 5.Seconds();
-        public string PowerShellName{ get; set; } = "pwsh.exe";
+        public string PowerShellName{ get; set; } =Directory.Exists("C:\\Program Files\\PowerShell\\")?"pwsh.exe": "powershell.exe";
     }
     public static class LoggerExtensions{
         public static IObservable<NamedPipeClientStream> ConnectClient(this Logger logger,LogContext context=default,WindowPosition inactiveMonitorLocation=WindowPosition.None,bool alwaysOnTop=false){
             var startServer = logger.StartServer(context);
-            return startServer.Connect().Do(_ => startServer.MoveToInactiveMonitor(inactiveMonitorLocation,alwaysOnTop));
+            return startServer.Connect().Do(_ => startServer.MoveToMonitor(inactiveMonitorLocation,alwaysOnTop));
         }
 
         private static Logger StartServer(this Logger logger,string condition=".*"){

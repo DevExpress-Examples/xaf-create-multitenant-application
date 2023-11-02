@@ -42,8 +42,7 @@ namespace XAF.Testing.Blazor.XAF{
                         .SelectMany(xafApplication => test(xafApplication).To(xafApplication)))
                     .Select(application => application.ServiceProvider)
                     .DoAlways(() => host.Services.StopTest()).Take(1)
-                    .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition))
-                    )
+                    .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition)))
                 .LogError()
                 .Log(logContext,inactiveWindowLogContextPosition,true);
 
@@ -55,7 +54,7 @@ namespace XAF.Testing.Blazor.XAF{
         private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 
             => host.Services.WhenApplicationStopping().Publish(whenHostStop => whenHostStop
                 .Merge(host.Services.WhenApplicationStarted().SelectMany(_ => new Uri(url).Start(browser)
-                        .MoveToInactiveMonitor(inactiveWindowPosition)
+                        .MoveToMonitor(inactiveWindowPosition)
                         .SelectMany(process => whenHostStop.Do(_ => CurrentDomain.KillAll(process.ProcessName))))
                     .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable().Select(unit => unit)).Merge())));
 
@@ -120,7 +119,7 @@ namespace XAF.Testing.Blazor.XAF{
             startup.User=user;
             new Uri(context.Configuration["Urls"]).Start(browser)
                 .MergeIgnored(process => whenCompleted.Catch<Unit,Exception>(_ => Unit.Default.Observe().Do(_ => process.Kill())))
-                .Do(process => process.MoveToInactiveMonitor(inactiveMonitorLocation))
+                .Do(process => process.MoveToMonitor(inactiveMonitorLocation))
                 .SelectMany(process => startup.WhenApplication
                     .DoOnFirst(application => {
                         application.ConnectionString= application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");

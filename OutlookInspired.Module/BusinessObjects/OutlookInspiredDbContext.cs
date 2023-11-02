@@ -4,6 +4,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
 using DevExpress.Persistent.BaseImpl.EF;
+using Microsoft.Data.SqlClient;
 
 
 namespace OutlookInspired.Module.BusinessObjects;

@@ -24,6 +24,7 @@ namespace OutlookInspired.Tests.Common{
 #endif
         static TestBase(){
             UtilityExtensions.TimeoutInterval = (Debugger.IsAttached ? 500 : 60).Seconds();
+            UtilityExtensions.DelayOnContextInterval=TimeSpan.FromMilliseconds(250);
         }
 
         protected virtual bool RunInMainMonitor => false;

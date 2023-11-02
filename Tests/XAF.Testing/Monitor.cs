@@ -64,13 +64,14 @@ public static class Monitor{
 
     public static void Move(this IntPtr intPtr, int x, int y,int width,int height) => MoveWindow(intPtr, x, y, width, height, true);
     
-    public static void UseInactiveMonitorBounds(this IntPtr handle, Action<RECT> bounds){
+    public static bool UseInactiveMonitorBounds(this IntPtr handle, Action<RECT> bounds){
         var monitors = Monitors.ToArray();
-        if (monitors.Length <= 1) return;
+        if (monitors.Length <= 1) return false;
         var currentScreen = handle.MonitorFromWindow();
         var inactiveScreen = monitors.FirstOrDefault(monitor => !Equals(monitor,currentScreen));
-        if (inactiveScreen == IntPtr.Zero) return;
+        if (inactiveScreen == IntPtr.Zero) return false;
         bounds(inactiveScreen.MonitorBounds());
+        return true;
     }
     
     public static IntPtr PrimaryMonitor 

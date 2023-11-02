@@ -1,4 +1,43 @@
 jobs:
+  - job: ImportData
+    displayName: 'ImportData Job'
+    timeoutInMinutes: 90
+    variables:
+      runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
+      testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
+      dxFeedVar: '$(DXFeed)'
+      NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: PowerShell@2
+      displayName: Build
+      continueOnError: false
+      inputs:
+        targetType: 'inline'
+        script: |
+          & sqllocaldb start mssqllocaldb
+          dotnet nuget add source $(dxFeedVar) --name DX
+          cd $env:BUILD_SOURCESDIRECTORY
+          dotnet build --configuration TEST
+          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)\Tests" -Recurse -Directory -Include "ref", "refint", "obj" | 
+          ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
+        pwsh: true      
+    - task: VSTest@3
+      displayName: 'ImportData.Test'
+      continueOnError: false
+      enabled: true
+      inputs:
+        minimumExpectedTests: "1"
+        failOnMinTestsNotRun: true
+        searchFolder: $(testsFolderPath)
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: '**\OutlookInspired.Win.Tests.dll'
+        testFiltercriteria: TestCategory=ImportData
+        diagnosticsEnabled: true
+        codeCoverageEnabled: true
+        runSettingsFile: $(runSettingsPath)
+
   - template: job-template.yml
     parameters:
       testAssembly: '**\OutlookInspired.Win.Tests.dll'
@@ -8,4 +47,3 @@ jobs:
     parameters:
       testAssembly: '**\OutlookInspired.Blazor.Tests.dll'
       displayName: 'Blazor'
-  

@@ -38,20 +38,6 @@ jobs:
         ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
       pwsh: true      
   - task: VSTest@3
-    displayName: 'ImportData.Test'
-    continueOnError: false
-    enabled: true
-    inputs:
-      minimumExpectedTests: "1"
-      failOnMinTestsNotRun: true
-      searchFolder: $(testsFolderPath)
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: '**\OutlookInspired.Win.Tests.dll'
-      testFiltercriteria: TestCategory=ImportData
-      diagnosticsEnabled: true
-      codeCoverageEnabled: true
-      runSettingsFile: $(runSettingsPath)
-  - task: VSTest@3
     displayName: ${{ parameters.displayName }}
     continueOnError: false
     env:
