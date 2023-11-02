@@ -115,8 +115,10 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string ZipCode { get; set; }
 		public virtual ObservableCollection<Evaluation> EvaluationsCreatedBy{ get; set; } = new();
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();
+		[InverseProperty(nameof(Product.Engineer))]
 		public virtual ObservableCollection<Product> Products{ get; set; } = new();
-		public virtual ObservableCollection<Product> SupportedProducts{ get; set; } = new();
+        [InverseProperty(nameof(Product.Support))]
+        public virtual ObservableCollection<Product> SupportedProducts{ get; set; } = new();
 		public virtual ObservableCollection<Quote> Quotes{ get; set; } = new();
 		public virtual ObservableCollection<CustomerCommunication> CustomerCommunications{ get; set; } = new();
 		[Browsable(false)]
