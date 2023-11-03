@@ -6,6 +6,9 @@
     <Platforms>AnyCPU</Platforms>
     <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23255" />
     <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.1-alpha-23255" />

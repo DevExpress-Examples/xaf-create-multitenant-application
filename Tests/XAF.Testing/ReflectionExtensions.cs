@@ -50,13 +50,13 @@ namespace XAF.Testing{
                 .First(info => info.IsStatic&&info.IsPublic
                         &&info.GetParameters().Length==2&& info.GetParameters().Last().ParameterType==typeof(int));
 
-        [Obsolete("make it ObserveItems and remove the Take(1) after it")]
-        public static IObservable<object> YieldItems(this object value,int count=0) 
+        
+        public static IObservable<object> ObserveItems(this object value,int count=0) 
             => value switch{
                 null => Observable.Empty<object>(),
                 EntityServerModeFrontEnd source => 0.Range(source.Count).Select(i => source[i]).Where(row => row != null).ToAsyncEnumerable().TakeOrOriginal(source.Count<count?source.Count:count).ToObservable(),
                 ServerModeSourceAdderRemover source => source.GetType().GetFields(BindingFlags.NonPublic|BindingFlags.Instance)
-                    .First(info => typeof(IListServer).IsAssignableFrom(info.FieldType)).GetValue(source).YieldItems(count),
+                    .First(info => typeof(IListServer).IsAssignableFrom(info.FieldType)).GetValue(source).ObserveItems(count),
                 EFCoreServerCollection source=>source.QueryableSource.PaginateAsync(100>count?count:100).TakeOrOriginal(count).ToObservable(),
                 IEnumerable source => source.Cast<object>().ToNowObservable(),
                 _ => value.YieldItem().ToNowObservable()

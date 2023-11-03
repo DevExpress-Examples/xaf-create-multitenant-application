@@ -46,7 +46,7 @@ namespace XAF.Testing.Win.XAF{
             => view.WhenEvent<CustomMasterRowEventArgs>(nameof(GridView.MasterRowExpanded))
                 .Select(e => view.GetDetailView(e.RowHandle, e.RelationIndex)).Cast<ColumnView>()
                 .Delay(100.Milliseconds(), new SynchronizationContextScheduler(SynchronizationContext.Current!))
-                .SelectMany(baseView => baseView.DataSource.YieldItems(count?.Invoke(baseView)??0).Select(o => (baseView, o)))
+                .SelectMany(baseView => baseView.DataSource.ObserveItems(count?.Invoke(baseView)??0).Select(o => (baseView, o)))
                 .Take(view.GridControl.LevelTree.Nodes.Count).BufferUntilCompleted().SelectMany()
                 .Merge(view.Observe().Do(gridView => gridView.RecursiveExpandAndFocus(0)).IgnoreElements()
                     .To<(ColumnView baseView, object value)>());
@@ -73,7 +73,7 @@ namespace XAF.Testing.Win.XAF{
                 .Do(_ => columnView.ViewHandler().ProcessEvent(eventType, EventArgs.Empty))
                 .To(columnView)
                 .Merge(columnView.WhenEvent(nameof(ColumnView.DataSourceChanged)).StartWith(columnView.DataSource).WhenNotDefault()
-                    .SelectMany(_ => columnView.DataSource.YieldItems(1)
+                    .SelectMany(_ => columnView.DataSource.ObserveItems(1)
                         .SelectMany(o => {
                             var row = columnView.FindRow(o);
                             columnView.ClearSelection();
@@ -90,7 +90,7 @@ namespace XAF.Testing.Win.XAF{
             => columnView is LayoutView layoutView ? new LayoutViewHandler(layoutView) : new GridHandler((GridView)columnView);
 
         public static IObservable<object> WhenObjects(this IObservable<GridControl> source,int count=0)
-            => source.SelectMany(control => control.MainView.DataSource.YieldItems(count));
+            => source.SelectMany(control => control.MainView.DataSource.ObserveItems(count));
 
     }
 }

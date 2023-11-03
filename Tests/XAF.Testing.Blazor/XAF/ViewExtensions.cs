@@ -32,7 +32,7 @@ namespace XAF.Testing.Blazor.XAF{
                 throw new NotImplementedException(nameof(ListView.Editor));
             viewEditor.UnselectObjects(viewEditor.GetSelectedObjects());
             return objects.ToNowObservable()
-                .SwitchIfEmpty(Observable.Defer(() => viewEditor.DataSource.YieldItems(1).OfType<T>()))
+                .SwitchIfEmpty(Observable.Defer(() => viewEditor.DataSource.ObserveItems(1).OfType<T>()))
                 .Do(obj => viewEditor.SelectObject(obj));
         }
     }

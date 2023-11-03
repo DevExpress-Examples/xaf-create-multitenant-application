@@ -196,8 +196,7 @@ namespace XAF.Testing.XAF{
 
         private static void AddNewRowAndCloneMembers(this Frame frame, object existingObject) 
             => frame.Application.GetRequiredService<INewRowAdder>().AddNewRowAndCloneMembers(frame,existingObject);
-
-        [Obsolete("remove the take(1)")]
+        
         public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
             => frame.WhenObjects(1).Take(1).SelectMany(selectedObject => frame.ColumnViewCreateNewObject()
                     .SwitchIfEmpty(frame.ListViewCreateNewObject())

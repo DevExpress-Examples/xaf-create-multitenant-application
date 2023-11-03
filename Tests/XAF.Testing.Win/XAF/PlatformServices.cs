@@ -49,7 +49,7 @@ namespace XAF.Testing.Win.XAF{
     }
     class UserControlProperties:IUserControlObjects{
         public int ObjectsCount(object control) => ((GridControl)control).MainView.DataRowCount;
-        public IObservable<object> WhenObjects(object control, int i) => ((GridControl)control).DataSource.YieldItems(1);
+        public IObservable<object> WhenObjects(object control, int i) => ((GridControl)control).DataSource.ObserveItems(1);
     }
 
     class UserControlProvider:IUserControlProvider{

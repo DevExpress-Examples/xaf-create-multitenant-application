@@ -51,7 +51,7 @@ namespace XAF.Testing.XAF{
             if (collectionSourceBase.Collection is IEnumerable collection)
                 return collection.Cast<T>().ToNowObservable();
             if (collectionSourceBase.Collection is IListSource listSource)
-                return listSource.YieldItems(count).Cast<T>();
+                return listSource.ObserveItems(count).Cast<T>();
             if (collectionSourceBase is PropertyCollectionSource propertyCollectionSource) {
                 var masterObject = propertyCollectionSource.MasterObject;
                 return masterObject != null ? ((IEnumerable)propertyCollectionSource.MemberInfo.GetValue(masterObject)).Cast<T>().ToNowObservable() : Observable.Empty<T>();
@@ -73,7 +73,7 @@ namespace XAF.Testing.XAF{
                     .MergeToObject(listView.Editor.WhenEvent(nameof(listView.Editor.DataSourceChanged)).Take(1)
                         .To(listView.Editor.DataSource)
                         .StartWith(listView.Editor.DataSource).WhenNotDefault()
-                        .SelectMany(datasource => datasource.YieldItems(count)))
+                        .SelectMany(datasource => datasource.ObserveItems(count)))
                     )
                 ).TakeOrOriginal(count);
 
