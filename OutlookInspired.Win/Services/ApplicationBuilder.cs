@@ -94,7 +94,7 @@ namespace OutlookInspired.Win.Services{
                         options.UseMiddleTier(application.Security);
                     }
                     else{
-                        new SqlConnectionStringBuilder(connectionString).AttachDatabase();
+                        new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\Data\\");
                         options.UseSqlServer(connectionString);
                         options.UseLazyLoadingProxies();
                     }

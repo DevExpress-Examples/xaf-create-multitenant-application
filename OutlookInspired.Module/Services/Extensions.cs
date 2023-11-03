@@ -9,7 +9,7 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions{
-        public static void AttachDatabase(this SqlConnectionStringBuilder builder){
+        public static void AttachDatabase(this SqlConnectionStringBuilder builder,string dataPath){
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);
@@ -17,7 +17,7 @@ namespace OutlookInspired.Module.Services{
             sqlConnection.Open();
             using var command = new SqlCommand();
             command.Connection = sqlConnection;
-            var filePath = "..\\..\\..\\..\\..\\Data\\OutlookInspired.mdf";
+            var filePath = Path.GetFullPath($"{dataPath}\\OutlookInspired.mdf");
             var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var destFileName = $"{userProfilePath}\\{Path.GetFileName(filePath)}";
             if (!File.Exists(destFileName)){
