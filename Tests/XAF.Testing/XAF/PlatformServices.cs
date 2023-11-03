@@ -32,9 +32,6 @@ namespace XAF.Testing.XAF{
         IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element);
     }
 
-    public interface IDataSourceChanged{
-        IObservable<EventPattern<object>> WhenDatasourceChanged(object editor);
-    }
     public interface IDashboardColumnViewObjectSelector{
         IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem frame);
     }

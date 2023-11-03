@@ -4,7 +4,6 @@ using System.Reactive.Subjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Blazor.Components.Models;
-using DevExpress.ExpressApp.Blazor.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.XtraReports.Services;
 using DevExpress.XtraReports.UI;
@@ -29,7 +28,6 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddScoped<IAssertReport, AssertReport>();
             serviceCollection.AddScoped<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddScoped<IWindowMaximizer, WindowMaximizer>();
-            serviceCollection.AddScoped<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddScoped(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
     }
@@ -50,14 +48,6 @@ namespace XAF.Testing.Blazor.XAF{
             => _resolvedSubject.PushNext(base.Resolve(reportEntry));
     }
     
-    public class DataSourceChanged:IDataSourceChanged{
-        IObservable<EventPattern<object>> IDataSourceChanged.WhenDatasourceChanged(object editor){
-            if (editor is DxGridListEditor dxGridListEditor){
-                return dxGridListEditor.WhenEvent(nameof(DxGridListEditor.DataSourceChanged));
-            }
-            throw new NotImplementedException(editor.GetType().Namespace);
-        }
-    }
     
     public class ObjectSelector<T> : IObjectSelector<T> where T : class{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 

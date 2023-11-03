@@ -87,8 +87,6 @@ namespace XAF.Testing.XAF{
             
         private void OnSelectionChanged() => SelectionChanged?.Invoke(this, EventArgs.Empty);
         private void OnCurrentObjectChanged() => CurrentObjectChanged?.Invoke(this, EventArgs.Empty);
-
-        public void OnSelectionTypeChanged() => SelectionTypeChanged?.Invoke(this, EventArgs.Empty);
     }
 
 }

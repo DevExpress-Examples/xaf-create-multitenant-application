@@ -11,19 +11,6 @@ using Unit = System.Reactive.Unit;
 
 namespace XAF.Testing.XAF{
     public static class ObjectSpaceExtensions{
-        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> ObjectChanged(this IObservable<IObjectSpace> source) 
-            => source.SelectMany(item => item.WhenObjectChanged());
-
-        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> WhenObjectChanged(this IObjectSpace objectSpace,params Type[] objectTypes) 
-            => objectSpace.WhenEvent<ObjectChangedEventArgs>(nameof(IObjectSpace.ObjectChanged)).InversePair(objectSpace)
-                .TakeUntil(objectSpace.WhenDisposed())
-                .Where(t =>!objectTypes.Any() ||objectTypes.Any(type => type.IsInstanceOfType(t.source.Object)));
-        
-        public static IObservable<(IObjectSpace objectSpace,ObjectChangedEventArgs e)> WhenObjectChanged(this IObjectSpace objectSpace,Type objectType,params string[] properties) 
-            => objectSpace.WhenEvent<ObjectChangedEventArgs>(nameof(IObjectSpace.ObjectChanged)).InversePair(objectSpace)
-                .TakeUntil(objectSpace.WhenDisposed())
-                .Where(t =>objectType.IsInstanceOfType(t.source.Object)&&properties.Any(s => t.source.PropertyName==s));
-        
         public static T EnsureObject<T>(this IObjectSpace objectSpace,
             Expression<Func<T, bool>> criteriaExpression = null, Action<T> initialize = null, Action<T> update = null,
             bool inTransaction = false) where T : class{
@@ -71,9 +58,7 @@ namespace XAF.Testing.XAF{
             this IObjectSpace objectSpace, ObjectModification objectModification ,[CallerMemberName]string caller="") 
             => objectSpace.WhenCommitingDetailed<T>(objectModification, true)
                 .Select(t => (t.objectSpace,t.details.Select(t1 => t1.instance)));
-        
-        public static IObservable<T> ToObjects<T>(this IObservable<(IObjectSpace objectSpace, T[] objects)> source)
-            =>source.SelectMany(t => t.objects.Select(arg => arg));
+
         public static IObservable<T> ToObjects<T>(this IObservable<(IObjectSpace objectSpace, IEnumerable<T> objects)> source)
             =>source.SelectMany(t => t.objects.Select(arg => arg));
         

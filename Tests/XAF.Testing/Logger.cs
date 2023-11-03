@@ -72,15 +72,7 @@ namespace XAF.Testing{
         public static StreamWriter Writer(this NamedPipeClientStream client){
             return new StreamWriter(client){AutoFlush = true};
         }
-        
-        public static IObservable<Unit> Write(this IObservable<string> source, NamedPipeClientStream client)
-            => new StreamWriter(client).Use(writer => {
-                writer.AutoFlush = true;
-                return source.SelectManySequential(msg => writer.WriteLineAsync(msg).ToObservable());
-            });
-        public static IObservable<Unit> Write(this IObservable<NamedPipeClientStream> source, IObservable<string> messages) 
-            => source.SelectMany(messages.Write);
-        
+
         private static IObservable<NamedPipeClientStream> Connect(this Logger logger) 
             => Observable.Interval(100.Milliseconds())
                 .Select(_ => new NamedPipeClientStream(logger.ServerName, logger.PipeName, PipeDirection.Out))

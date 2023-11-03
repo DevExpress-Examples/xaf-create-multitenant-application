@@ -45,11 +45,7 @@ namespace XAF.Testing{
         public static IObservable<TResult> If<TSource, TResult>(this IObservable<TSource> source,
             Func<TSource, bool> predicate, Func<TSource, IObservable<TResult>> thenSource, Func<TSource, IObservable<TResult>> elseSource) 
             => source.SelectMany(value => predicate(value) ? thenSource(value) : elseSource(value));
-        
-        public static IObservable<TResult> If<TSource, TResult>(this IObservable<TSource> source,
-            Func<TSource, bool> predicate, Func<IObservable<TResult>> thenSource, Func< IObservable<TResult>> elseSource) 
-            => source.If(predicate, _ => thenSource(),_ => elseSource());
-        
+
         public static IObservable<EventPattern<object>> WhenEvent(this object source,string eventName,[CallerMemberName]string caller="") 
             => source.FromEventPattern<EventArgs>(eventName,caller)
                 .Select(pattern => new EventPattern<object>(pattern.Sender, pattern.EventArgs));
@@ -164,10 +160,7 @@ namespace XAF.Testing{
         
         public static IObservable<(TValue value, TSource source)> InversePair<TSource, TValue>(this IObservable<TSource> source, TValue value) 
             => source.Select(x => ( value,x));
-        
-        public static IObservable<(TSource source, TValue other)> Pair<TSource, TValue>(this IObservable<TSource> source, TValue value) 
-            => source.Select(z => (z, value));
-        
+
         public static IObservable<Unit> ToUnit<T>(this IObservable<T> source) 
             => source.Select(_ => Unit.Default);
         public static IEnumerable<Unit> ToUnit<T>(this IEnumerable<T> source)

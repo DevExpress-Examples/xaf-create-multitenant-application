@@ -31,7 +31,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<T> WhenClosing<T>(this T view) where T : View 
             => view.WhenViewEvent(nameof(view.Closing)).To(view).Select(view1 => view1);
-        internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = DevExpress.ExpressApp.Nesting.Any, Type objectType = null) 
+        internal static bool Is(this View view, ViewType viewType = ViewType.Any, Nesting nesting = Nesting.Any, Type objectType = null) 
             => view.FitsCore( viewType) && view.FitsCore( nesting) &&
                (viewType==ViewType.DashboardView&&view is DashboardView||(objectType ?? typeof(object)).IsAssignableFrom(view.ObjectTypeInfo?.Type));
 
@@ -40,10 +40,10 @@ namespace XAF.Testing.XAF{
                 ? view is DetailView : viewType != ViewType.DashboardView || view is DashboardView);
 
         private static bool FitsCore(this View view, Nesting nesting) 
-            => nesting == DevExpress.ExpressApp.Nesting.Nested ? !view.IsRoot : nesting != DevExpress.ExpressApp.Nesting.Root || view.IsRoot;
+            => nesting == Nesting.Nested ? !view.IsRoot : nesting != Nesting.Root || view.IsRoot;
 
         public static bool Is(this View view, params Type[] objectTypes ) 
-            => objectTypes.All(objectType => view.Is(ViewType.Any,DevExpress.ExpressApp.Nesting.Any,objectType));
+            => objectTypes.All(objectType => view.Is(ViewType.Any,Nesting.Any,objectType));
         
         public static IObservable<object> Objects(this CollectionSourceBase collectionSourceBase,int count=0) => collectionSourceBase.Objects<object>(count);
 
@@ -63,10 +63,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<T> Objects<T>(this View view,int count=0) 
             => view is DetailView ? ((T)view.CurrentObject).YieldItem().ToArray().ToNowObservable()
                 : view.ToListView().CollectionSource.Objects<T>(count);
-        
-        public static IObservable<DashboardViewItem> When(this IObservable<DashboardViewItem> source, params ViewType[] viewTypes) 
-            => source.Where(item => viewTypes.All(viewType => item.InnerView.Is(viewType)));
-        
+
         public static IObservable<object> WhenObjects(this ListView listView,int count=0) 
             => listView.Objects(count)
                 .SwitchIfEmpty(Observable.Defer(() => listView.CollectionSource.WhenCollectionChanged()
@@ -142,9 +139,6 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenTabControl(this DetailView detailView, Func<IModelTabbedGroup, bool> match=null)
             => detailView.WhenTabControl(detailView.LayoutGroupItem(element => element is IModelTabbedGroup group&& (match?.Invoke(group) ?? true)));
 
-        public static IObservable<TView> When<TView>(this IObservable<TView> source,string viewId) where TView:View 
-            => source.Where(view =>view.Id==viewId);
-        
         public static IModelViewLayoutElement LayoutGroupItem(this DetailView detailView,Func<IModelViewLayoutElement,bool> match)
             => detailView.Model.Layout.Flatten().FirstOrDefault(match);
 
@@ -153,11 +147,7 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<TViewItem> NestedViewItems<TView,TViewItem>(this TView view, params Type[] objectTypes ) where TView : DetailView where TViewItem:ViewItem,IFrameContainer 
             => view.NestedFrameContainers(objectTypes).OfType<TViewItem>();
-        
-        public static IObservable<T> WhenClosed<T>(this T view) where T : View 
-            => view.WhenViewEvent(nameof(view.Closed));
-        public static IObservable<T> WhenActivated<T>(this T view) where T : View 
-            => view.WhenViewEvent(nameof(View.Activated));
+
         public static IObservable<TView> WhenViewEvent<TView>(this TView view,string eventName) where TView:View 
             => view.WhenEvent(eventName).To(view).TakeUntilViewDisposed();
         
@@ -167,15 +157,6 @@ namespace XAF.Testing.XAF{
         public static ListView AsListView(this View view) => view as ListView;
         public static ListView ToListView(this View view) => ((ListView)view);
 
-        public static IObservable<T> WhenControlsCreated<T>(this IObservable<T> source) where T:View 
-            => source.SelectMany(view => view.WhenViewEvent(nameof(View.ControlsCreated)));
-        public static IObservable<object> WhenSelectedObjects(this View view) 
-            => view.WhenSelectionChanged().SelectMany(_ => view.SelectedObjects.Cast<object>())
-                .StartWith(view.SelectedObjects.Cast<object>());
-
-        public static Nesting Nesting(this View view)
-            => view.IsRoot ? DevExpress.ExpressApp.Nesting.Root : DevExpress.ExpressApp.Nesting.Nested;
-        
         public static IObservable<object> WhenObjectViewObjects(this View view,int count=0) 
             => view is ListView listView ? listView.WhenObjects(count)
                     .SwitchIfEmpty(Observable.Defer(() => listView.CollectionSource.WhenCollectionChanged()
@@ -194,10 +175,5 @@ namespace XAF.Testing.XAF{
                 .Where(frameContainer =>!objectTypes.Any()|| objectTypes.Any(type => type.IsAssignableFrom(frameContainer.Frame.View.ObjectTypeInfo.Type)))
                 .Merge(nestedEditors);
         }
-
-        public static IObservable<Frame> ToEditFrame(this IObservable<ListView> source) 
-            => source.Select(view => view.EditFrame);
-
-        
     }
 }

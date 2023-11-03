@@ -29,14 +29,10 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddSingleton<IAssertMapControl, AssertMapControl>();
             serviceCollection.AddSingleton<IWindowMaximizer, WindowMaximizer>();
-            serviceCollection.AddSingleton<IDataSourceChanged, DataSourceChanged>();
             serviceCollection.AddSingleton(typeof(IObjectSelector<>), typeof(ObjectSelector<>));
         }
     }
 
-    public class DataSourceChanged:IDataSourceChanged{
-        IObservable<EventPattern<object>> IDataSourceChanged.WhenDatasourceChanged(object editor) => editor.WhenEvent("DataSourceChanged");
-    }
     public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
         public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
             => item.Observe().SelectDashboardColumnViewObject().ToUnit();
