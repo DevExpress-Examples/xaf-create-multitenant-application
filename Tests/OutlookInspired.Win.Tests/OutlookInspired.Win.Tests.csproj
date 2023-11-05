@@ -25,7 +25,7 @@
     </ItemGroup>
     <ItemGroup>
       <Reference Include="DevExpress.DevAV.v23.2.Data">
-        
+		  <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
       </Reference>
     </ItemGroup>
     <ItemGroup>

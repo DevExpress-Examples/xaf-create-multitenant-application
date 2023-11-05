@@ -49,7 +49,7 @@ namespace OutlookInspired.Win.Tests.Common{
 #if TEST
             var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
 #else
-            var application = builder.BuildApplication(useServer ? null : connectionString, useSecuredProvider);
+            var application = builder.BuildApplication(connectionString);
             
 #endif
             return application;
