@@ -17,11 +17,12 @@ namespace OutlookInspired.Module.Services{
             sqlConnection.Open();
             using var command = new SqlCommand();
             command.Connection = sqlConnection;
-            var filePath = Path.GetFullPath($"{dataPath}\\OutlookInspired.mdf");
+            var fullDataPath = Path.GetFullPath(dataPath);
             var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var destFileName = $"{userProfilePath}\\{Path.GetFileName(filePath)}";
-            if (!File.Exists(destFileName)){
-                ZipFile.ExtractToDirectory($"{Path.GetDirectoryName(filePath)}\\OutlookInspired.zip",userProfilePath);
+            var destFileName = $"{userProfilePath}\\{databaseName}.mdf";
+            if (!File.Exists(destFileName)) {
+                ZipFile.ExtractToDirectory($"{fullDataPath}\\OutlookInspired.zip", userProfilePath);
+                File.Move($"{userProfilePath}\\OutlookInspired.mdf", destFileName);
             }
             command.CommandText = $@"
                         IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{databaseName}')
