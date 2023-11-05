@@ -76,8 +76,6 @@ namespace XAF.Testing{
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
 
-        
-
         public static Rectangle ToRectangle(this RECT rect) 
             => new(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
     }

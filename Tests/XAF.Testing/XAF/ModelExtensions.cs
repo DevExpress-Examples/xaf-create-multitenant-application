@@ -15,7 +15,6 @@ namespace XAF.Testing.XAF{
             => modelObjectView is IModelListView modelListView ? modelObjectView.ModelClass.DefaultListView == modelListView
                 : modelObjectView.ModelClass.DefaultDetailView == modelObjectView;
 
-        public static IModelMemberViewItem[] VisibleMemberViewItems(this IModelObjectView modelObjectView) => modelObjectView.MemberViewItems().VisibleMemberViewItems().ToArray();
         public static IEnumerable<IModelMemberViewItem> MemberViewItems(this IModelView modelObjectView, Type propertyEditorType=null)
             => !(modelObjectView is IModelObjectView) ? Enumerable.Empty<IModelMemberViewItem>()
                 : (modelObjectView is IModelListView modelListView ? modelListView.Columns : ((IModelDetailView) modelObjectView).Items.OfType<IModelMemberViewItem>())

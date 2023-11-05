@@ -29,9 +29,6 @@ public static class Monitor{
         UpdateWindow(hWnd);
     }
     
-    public static void MoveActiveWindowToMainMonitor(this RECT mainMonitor, IntPtr hWnd) 
-        => mainMonitor.ToRectangle().MoveActiveWindowToMainMonitor(hWnd);
-
     public static IEnumerable<IntPtr> Monitors{
         get{
             var handles = new List<IntPtr>();
@@ -44,9 +41,6 @@ public static class Monitor{
         }
     }
     
-    public static IntPtr GetMonitorFromWindow(IntPtr hwnd) 
-        => WinInterop.MonitorFromWindow(hwnd, MonitorDefaultToNearest);
-
     public static RECT MonitorBounds(this IntPtr monitorHandle){
         var monitorInfo = new Monitorinfo{
             cbSize = (uint)Marshal.SizeOf(typeof(Monitorinfo))
@@ -57,11 +51,7 @@ public static class Monitor{
     
     public static IntPtr MonitorFromWindow(this IntPtr hwnd) 
         => WinInterop.MonitorFromWindow(hwnd, MonitorDefaultToNearest);
-
-    public static void Maximize(this IntPtr intPtr){
-        ShowWindow(intPtr, SwMaximize);
-    }
-
+    
     public static void Move(this IntPtr intPtr, int x, int y,int width,int height) => MoveWindow(intPtr, x, y, width, height, true);
     
     public static bool UseInactiveMonitorBounds(this IntPtr handle, Action<RECT> bounds){

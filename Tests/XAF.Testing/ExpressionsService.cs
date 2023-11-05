@@ -35,10 +35,6 @@ public static class ExpressionExtensions{
     public static MethodCallExpression Call(this Type type,string methodName,Type[] typeArguments, params Expression[] arguments)
         => Expression.Call(type, methodName, typeArguments,arguments);
     
-    public static Expression<TDelegate> Lambda<TDelegate>(this Expression body,
-        params ParameterExpression[] parameters){
-        return Expression.Lambda<TDelegate>(body, parameters);
-    }
     
     public static T FuseAny<T>(this T expression,params LambdaExpression[] expressions) where T:Expression
         => (T)new ExpressionReplacer(expressions).Visit(expression);
@@ -68,40 +64,3 @@ public static class ExpressionExtensions{
 
 }
 
-// using System.Linq.Expressions;
-//
-// namespace OutlookInspired.Win.Tests.ImportData{
-//     public static class ExpressionExtensions{
-//         public static Expression<TDelegate> Lambda<TDelegate>(this Expression body, params ParameterExpression[]? parameters)
-//             => Expression.Lambda<TDelegate>(body, parameters);
-//         
-//         public static BinaryExpression AndAlso(this Expression expression, Expression right)
-//             => Expression.AndAlso(expression, right);
-//         
-//         public static InvocationExpression Invoke(this Expression expression, params ParameterExpression[] parameterExpressions)
-//             => Expression.Invoke(expression, parameterExpressions.Cast<Expression>());
-//         
-//         public static ParameterExpression ParameterExpression(this Type type, string name=null)
-//             => Expression.Parameter(type, name??type.Name);
-//         public static Expression<Func<TParent, bool>> Combine<TParent, TChild>(this Expression<Func<TChild, bool>> childCondition,
-//             Expression<Func<TParent, IEnumerable<TChild>>> collectionSelector){
-//             var parentParam = Expression.Parameter(typeof(TParent), "parent");
-//             var childParam = Expression.Parameter(typeof(TChild), "child");
-//             var methodInfo = typeof(Enumerable).GetMethods().First(m => m.Name == "Any" && m.GetParameters().Length == 2).MakeGenericMethod(typeof(TChild));
-//             var invocationExpression = collectionSelector.Invoke( parentParam);
-//             var expression = new ParameterReplacer(childParam).Visit(childCondition.Body);
-//             return Expression.Lambda<Func<TParent, bool>>(
-//                 Expression.Call(methodInfo,
-//                 invocationExpression,
-//                 Expression.Lambda(expression, childParam)
-//             ), parentParam);
-//         }
-//         class ParameterReplacer : ExpressionVisitor{
-//             private readonly ParameterExpression _parameter;
-//             public ParameterReplacer(ParameterExpression parameter) => _parameter = parameter;
-//             protected override Expression VisitParameter(ParameterExpression node) => _parameter;
-//         }
-//     }
-//
-//     
-// }

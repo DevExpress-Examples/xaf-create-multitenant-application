@@ -1,7 +1,6 @@
 ﻿using System.Reactive;
 using DevExpress.ExpressApp;
-using OutlookInspired.Module.Features.Customers;
-using XAF.Testing.RX;
+using XAF.Testing;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Services{

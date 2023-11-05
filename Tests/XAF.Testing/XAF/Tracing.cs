@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using DevExpress.Persistent.Base;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class TracingExtensions{

@@ -10,15 +10,7 @@ namespace XAF.Testing{
                 foreach (var i in alt)
                     yield return i;
         }
-    
-        public static IEnumerable<TSource> WhereNotDefault<TSource>(this IEnumerable<TSource> source) {
-            var type = typeof(TSource);
-            if (type.IsClass || type.IsInterface){
-                return source.Where(source1 => source1!=null);   
-            }
-            var instance = type.CreateInstance();
-            return source.Where(source1 => !source1.Equals(instance));
-        }
+
         public static async IAsyncEnumerable<T> TakeOrOriginal<T>(this IAsyncEnumerable<T> source, int count){
             var i = 0;
             await foreach (var item in source)
@@ -64,7 +56,5 @@ namespace XAF.Testing{
         public static TimeSpan Milliseconds(this int milliSeconds) => TimeSpan.FromMilliseconds(milliSeconds);
         internal static TimeSpan Seconds(this int seconds) => TimeSpan.FromSeconds(seconds);
         internal static object DefaultValue(this Type t) => t.IsValueType ? Activator.CreateInstance(t) : null;
-        internal static bool IsNullOrEmpty(this string strString)
-            => string.IsNullOrEmpty(strString);
     }
 }

@@ -69,7 +69,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                     string connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                     ArgumentNullException.ThrowIfNull(connectionString);
-                    new SqlConnectionStringBuilder(connectionString).AttachDatabase();
+                    new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\Data");
                     options.UseSqlServer(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();

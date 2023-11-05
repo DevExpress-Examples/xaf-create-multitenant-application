@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Microsoft.AspNetCore.Components;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.Blazor;
 
@@ -20,9 +19,7 @@ public static class WebExtensions{
         theEvent(serviceProvider.GetRequiredService<IHostApplicationLifetime>()).Register(_ => subject.OnNext(), null);
         return subject.AsObservable().Take(1).Finally(() => subject.Dispose());
     }
-
-    public static IObservable<Unit> WhenApplicationStopped(this IServiceProvider serviceProvider) 
-        => serviceProvider.WhenLifeTimeEvent(lifetime => lifetime.ApplicationStopped);
+    
     public static IObservable<Unit> WhenApplicationStopping(this IServiceProvider serviceProvider) 
         => serviceProvider.WhenLifeTimeEvent(lifetime => lifetime.ApplicationStopping);
 
@@ -34,7 +31,6 @@ public static class WebExtensions{
     public static IObservable<TMemberValue> WhenCallback<TObject,TMemberValue>(this TObject source, Expression<Func<TObject, EventCallback<TMemberValue>>> callbackName) 
         => source.WhenCallback<TMemberValue>(callbackName.MemberExpressionName());
     
-
     public static IObservable<Process> Start(this Uri uri,string browser=null) 
         => new ProcessStartInfo{
             FileName = browser??"chrome",

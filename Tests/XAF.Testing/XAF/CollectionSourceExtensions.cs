@@ -2,7 +2,6 @@
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
-using XAF.Testing.RX;
 
 namespace XAF.Testing.XAF{
     public static class CollectionSourceExtensions{
@@ -12,8 +11,7 @@ namespace XAF.Testing.XAF{
             => collectionSourceBase.SetCriteria(key, lambda.Parameters.First().Type,lambda);
         public static void SetCriteria<T>(this CollectionSourceBase collectionSourceBase, Expression<Func<T, bool>> lambda,[CallerMemberName]string callMemberName="") 
             => collectionSourceBase.SetCriteria(callMemberName,lambda);
-        public static void SetCriteria(this CollectionSourceBase collectionSourceBase, Type type,LambdaExpression lambda,[CallerMemberName]string caller="") 
-            => collectionSourceBase.SetCriteria(caller,type, lambda);
+        
         public static void SetCriteria(this CollectionSourceBase collectionSourceBase, LambdaExpression lambda,[CallerMemberName]string caller="") 
             => collectionSourceBase.SetCriteria(caller,collectionSourceBase.ObjectTypeInfo.Type, lambda);
         

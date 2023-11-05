@@ -5,7 +5,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using XAF.Testing.RX;
 using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{

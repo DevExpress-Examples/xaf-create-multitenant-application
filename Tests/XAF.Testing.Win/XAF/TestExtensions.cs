@@ -4,7 +4,6 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Map.Kml.Model;
 using DevExpress.Persistent.Validation;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using Point = System.Drawing.Point;
 

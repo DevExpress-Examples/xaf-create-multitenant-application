@@ -8,7 +8,6 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Tests.Services;
 using XAF.Testing;
 using XAF.Testing.Blazor.XAF;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
@@ -30,29 +29,10 @@ namespace OutlookInspired.Blazor.Tests.Common{
             collection.AddScoped<IPdfViewerAssertion,PdfViewerAssertion>();
             collection.AddScoped<IUserControlProcessSelectedObject,UserControlProcessSelectedObject>();
             collection.AddScoped<IAssertMapControl,AssertMapControl>();
-            collection.AddScoped<IAssertFilterView,AssertAssertFilterView>();
             collection.AddScoped<IFilterViewManager,FilterViewManager>();
             collection.AddScoped<IDashboardColumnViewObjectSelector,DashboardColumnViewObjectSelector>();
             collection.AddScoped<IUserControlProvider, UserControlProvider>();
             collection.AddScoped<IUserControlObjects, UserControlProperties>();
         }
-        
-        public IObservable<Unit> StartBlazorTest(string user, Func<BlazorApplication, IObservable<Unit>> test,
-            string browser, WindowPosition inactiveMonitorLocation = WindowPosition.None){
-            throw new NotImplementedException();
-            // return Host.CreateDefaultBuilder().Run("http://localhost:5000",
-            //         "../../../../../OutlookInspired.Blazor.Server",
-            //         (builder, whenCompleted) => builder.UseStartup(context
-            //             => context.Use<Startup, OutlookInspiredEFCoreDbContext>(test, user, whenCompleted, browser,
-            //                 inactiveMonitorLocation)), browser)
-            //     .Timeout(Timeout);
-        }
-
-        // public IObservable<Unit> StartTest(string user, Func<BlazorApplication, IObservable<Unit>> test)
-        //
-        //     => StartBlazorTest(user, test,
-        //             browser:Environment.GetEnvironmentVariable("XAFTESTBrowser"),inactiveMonitorLocation:WindowPosition.FullScreen)
-        //         // .Log(LogContext, inactiveMonitorLocation:WindowPosition.BottomRight,alwaysOnTop:true)
-        //     ;
     }
 }

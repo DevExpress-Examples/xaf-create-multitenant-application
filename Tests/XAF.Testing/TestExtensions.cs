@@ -5,7 +5,6 @@ using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
 using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.EntityFrameworkCore;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 
 namespace XAF.Testing{

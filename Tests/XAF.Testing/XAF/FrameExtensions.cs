@@ -5,8 +5,6 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.ViewVariantsModule;
-using XAF.Testing.RX;
-using ListView = DevExpress.ExpressApp.ListView;
 using Unit = System.Reactive.Unit;
 using View = DevExpress.ExpressApp.View;
 
@@ -20,9 +18,6 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<T> SelectUntilViewClosed<T,TFrame>(this IObservable<TFrame> source, Func<TFrame, IObservable<T>> selector) where TFrame:Frame 
             => source.SelectMany(frame => selector(frame).TakeUntilViewClosed(frame));
-        
-        public static IObservable<T> SwitchUntilViewClosed<T,TFrame>(this IObservable<TFrame> source, Func<TFrame, IObservable<T>> selector) where TFrame:Frame 
-            => source.Select(frame => selector(frame).TakeUntilViewClosed(frame)).Switch();
         
         public static IObservable<TFrame> TakeUntilViewClosed<TFrame>(this IObservable<TFrame> source,Frame frame)  
             => source.TakeUntil(frame.View.WhenClosing());
@@ -47,11 +42,7 @@ namespace XAF.Testing.XAF{
                 .Take(1).Select(frame1 => frame1),selectedObject().YieldItem().Cast<object>().ToArray())
                 .Select(frame1 => frame1);
         }
-
         
-        public static IObservable<IFrameContainer> NestedFrameContainers<TWindow>(this TWindow window,
-            params Type[] objectTypes) where TWindow : Window
-            => window.View.ToCompositeView().NestedFrameContainers(objectTypes);
         public static IObservable<T> WhenFrame<T>(this IObservable<T> source, params ViewType[] viewTypes) where T : Frame
             => source.Where(frame => frame.When(viewTypes));
         
@@ -85,9 +76,6 @@ namespace XAF.Testing.XAF{
                         .SelectMany(a => a.Trigger().To(frame)),
                     _ => frame.Observe());
         
-        public static IObservable<Unit> WhenAcceptTriggered(this IObservable<DialogController> source) 
-            => source.SelectMany(controller => controller.AcceptAction.Trigger().Take(1));
-        
         public static IObservable<T> WhenAcceptTriggered<T>(this IObservable<DialogController> source,IObservable<T> afterExecuted,params object[] selection) 
             => source.SelectMany(controller => controller.AcceptAction.Trigger(afterExecuted,selection).Take(1));
         
@@ -102,10 +90,6 @@ namespace XAF.Testing.XAF{
         public static IEnumerable<DashboardViewItem> DashboardViewItem(this Frame frame,Func<DashboardViewItem, bool> itemSelector=null) 
             => frame.DashboardViewItems(ViewType.DetailView).Where(item => item.MasterViewItem(itemSelector))
                 .SwitchIfEmpty(frame.DashboardViewItems(ViewType.ListView).Where(item => item.MasterViewItem(itemSelector)));
-
-        public static IObservable<Frame> DashboardListViewEditFrame(this Frame frame) 
-            => frame.DashboardViewItems(ViewType.ListView).Where(item =>item.MasterViewItem()).ToNowObservable()
-                .ToFrame().ToListView().ToEditFrame();
         
         public static bool MasterViewItem(this DashboardViewItem item,Func<DashboardViewItem, bool> masterItem=null) 
             => masterItem?.Invoke(item)??item.Model.ActionsToolbarVisibility != ActionsToolbarVisibility.Hide;
@@ -115,9 +99,6 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<T> WhenFrame<T>(this IObservable<T> source, params string[] viewIds) where T:Frame 
             => source.Where(frame => frame.When(viewIds));
-        
-        public static IObservable<T> WhenFrame<T>(this IObservable<T> source, params Type[] objectTypes) where T:Frame 
-            => source.Where(frame => frame.When(objectTypes));
         
         public static IObservable<TFrame> WhenTemplateChanged<TFrame>(this TFrame item) where TFrame : Frame 
             => item.WhenEvent(nameof(Frame.TemplateChanged)).Select(pattern => pattern).To(item)
@@ -139,18 +120,12 @@ namespace XAF.Testing.XAF{
         public static IObservable<TFrame > WhenViewChanged<TFrame>(this TFrame item) where TFrame : Frame 
             => item.WhenEvent<ViewChangedEventArgs>(nameof(Frame.ViewChanged))
                 .TakeUntil(item.WhenDisposedFrame()).Select(_ => item);
-        public static IObservable<ViewItem> ViewItems(this Window frame,params Type[] objectTypes) 
-            => frame.NestedFrameContainers(objectTypes).OfType<ViewItem>();
-        
+
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,params Type[] objectTypes) 
             => frame.View.ToCompositeView().DashboardViewItems(objectTypes);
 
         public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,ViewType viewType,params Type[] objectTypes) 
             => frame.DashboardViewItems(objectTypes).When(viewType);
-        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,Type objectType,params ViewType[] viewTypes) 
-            => frame.DashboardViewItems(objectType.YieldItem().ToArray()).When(viewTypes);
-        public static IEnumerable<DashboardViewItem> DashboardViewItems(this Frame frame,params ViewType[] viewTypes) 
-            => frame.DashboardViewItems(typeof(object).YieldItem().ToArray()).When(viewTypes);
 
         public static IEnumerable<DashboardViewItem> When(this IEnumerable<DashboardViewItem> source, params ViewType[] viewTypes) 
             => source.Where(item => viewTypes.All(viewType => item.InnerView.Is(viewType)));
@@ -160,8 +135,7 @@ namespace XAF.Testing.XAF{
         
         public static IObservable<ListPropertyEditor> NestedListViews(this Frame frame, params Type[] objectTypes ) 
             => frame.View.ToDetailView().NestedListViews(objectTypes);
-
-        public static DetailView AsDetailView(this View view) => view as DetailView;
+        
         public static DetailView ToDetailView(this View view) => (DetailView)view;
 
         public static IObservable<Frame> DashboardDetailViewFrame(this Frame frame) 
@@ -172,13 +146,7 @@ namespace XAF.Testing.XAF{
             => source.Select(frame => frame.View.ToDetailView());
         public static IObservable<Unit> WhenDisposedFrame<TFrame>(this TFrame source) where TFrame : Frame
             => source.WhenEvent(nameof(Frame.Disposed)).ToUnit();
-
         
-
-        public static T Action<T>(this Frame frame, string id) where T:ActionBase
-            => frame.Actions<T>(id).FirstOrDefault();
-        public static ActionBase Action(this Frame frame, string id) 
-            => frame.Actions(id).FirstOrDefault();
         
         public static IEnumerable<ActionBase> Actions(this Frame frame,params string[] actionsIds) 
             => frame.Actions<ActionBase>(actionsIds);
@@ -201,9 +169,6 @@ namespace XAF.Testing.XAF{
         public static IObservable<object> WhenObjects(this Frame frame,int count=0) 
             => frame.Application.GetRequiredService<IFrameObjectObserver>().WhenObjects(frame,count);
 
-        public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> ProcessSelectedObject(this IObservable<Window> source)
-            => source.SelectMany(window => window.ProcessSelectedObject());
-        
         public static NestedFrame ToNestedFrame(this Frame frame) => (NestedFrame)frame;
         public static IObservable<Frame> SelectDashboardListViewObject(this IObservable<Frame> source, Func<DashboardViewItem, bool> itemSelector=null) 
             => source.SelectDashboardColumnViewObject(itemSelector??(item =>item.MasterViewItem()) )
@@ -219,12 +184,6 @@ namespace XAF.Testing.XAF{
                 .SelectMany(item => frame.Application.GetRequiredService<IDashboardColumnViewObjectSelector>()
                     .SelectDashboardColumnViewObject(item).To(frame));
 
-        public static IObservable<ListView> ToListView<T>(this IObservable<T> source) where T : Frame
-            => source.Select(frame => frame.View.ToListView());
-        
-        public static IObservable<Frame> OfView<TView>(this IObservable<Frame> source)
-            => source.Where(item => item.View is TView);
-        
         public static IObservable<Frame> CreateNewObject(this Frame frame,bool inLine=false) 
             => !inLine ? frame.CreateNewObjectController() : frame.CreateNewObjectEditor();
 
@@ -237,8 +196,7 @@ namespace XAF.Testing.XAF{
 
         private static void AddNewRowAndCloneMembers(this Frame frame, object existingObject) 
             => frame.Application.GetRequiredService<INewRowAdder>().AddNewRowAndCloneMembers(frame,existingObject);
-
-        [Obsolete("remove the take(1)")]
+        
         public static IObservable<Frame> CreateNewObjectController(this Frame frame) 
             => frame.WhenObjects(1).Take(1).SelectMany(selectedObject => frame.ColumnViewCreateNewObject()
                     .SwitchIfEmpty(frame.ListViewCreateNewObject())

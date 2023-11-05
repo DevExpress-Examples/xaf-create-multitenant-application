@@ -11,12 +11,6 @@ namespace XAF.Testing.XAF{
         void SelectTab(int pageIndex);
     }
     
-
-    [Obsolete("check EmployeeExtensions not use this")]
-    public interface ITabControlAsserter{
-        IObservable<ITabControlProvider> AssertTabbedGroup(Type objectType, int tabPages);
-    }
-
     public interface IRichEditControlAsserter{
         IObservable<Unit> Assert(DetailView detailView, bool assertMailMerge);    
     }
@@ -38,9 +32,6 @@ namespace XAF.Testing.XAF{
         IObservable<ITabControlProvider> WhenTabControl(DetailView detailView, IModelViewLayoutElement element);
     }
 
-    public interface IDataSourceChanged{
-        IObservable<EventPattern<object>> WhenDatasourceChanged(object editor);
-    }
     public interface IDashboardColumnViewObjectSelector{
         IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem frame);
     }

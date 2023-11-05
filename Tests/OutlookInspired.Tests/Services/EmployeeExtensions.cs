@@ -3,21 +3,14 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.SystemModule;
 using OutlookInspired.Module.BusinessObjects;
-using OutlookInspired.Module.Services;
 using OutlookInspired.Tests.Common;
 using XAF.Testing;
-using XAF.Testing.RX;
 using XAF.Testing.XAF;
 using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 
 namespace OutlookInspired.Tests.Services{
     public static class EmployeeExtensions{
-        // public static IObservable<Unit> AssertCustomerMaps(this XafApplication application,string view, string viewVariant) 
-        //     => application.AssertNavigation(view, viewVariant,source => source.AssertSelectDashboardListViewObject()
-        //             .AssertMapItAction(typeof(Customer), frame => frame.AssertNestedListView(typeof(MapItem), assert: _ => AssertAction.HasObject)).ToUnit(),
-        //         application.CanNavigate(view).ToUnit());
-
         public static IObservable<Unit> AssertEmployeeListView(this XafApplication application,string view, string viewVariant) 
             => application.AssertNavigation(view, viewVariant, source => {
                 var employeeTab = application.AssertTabbedGroup(typeof(Employee),2,detailView => detailView.Model.IsDefault());
@@ -26,8 +19,7 @@ namespace OutlookInspired.Tests.Services{
                     .ReplayFirstTake()
                     .ToUnit();
             },application.CanNavigate(view).ToUnit())
-            .FilterListViews(application)
-            ;    
+            .FilterListViews(application);    
         
         static IObservable<Frame> AssertEmployeeDetailView(this IObservable<ITabControlProvider> source, Frame detailViewFrame){
             return detailViewFrame.AssertNestedEmployeeTask().IgnoreElements()
@@ -49,7 +41,7 @@ namespace OutlookInspired.Tests.Services{
         private static IObservable<Frame> ConfigureClonedEmployee(this XafApplication application) 
             => application.WhenFrame(typeof(Employee), ViewType.DetailView).Where(frame => frame.View.IsNewObject())
                 .SelectMany(frame => frame.GetController<ModificationsController>().SaveAction.WhenExecuting().ToFirst()
-                    .Do(tuple => ((Employee)frame.View.CurrentObject).User = frame.View.ObjectSpace
+                    .Do(_ => ((Employee)frame.View.CurrentObject).User = frame.View.ObjectSpace
                         .GetObjectsQuery<ApplicationUser>().First(user => user.Employee == null))).Take(1).To<Frame>()
                 .IgnoreElements();
         

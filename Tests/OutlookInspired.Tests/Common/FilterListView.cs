@@ -3,20 +3,16 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
-using XAF.Testing.RX;
+using XAF.Testing;
 using XAF.Testing.XAF;
 
 namespace OutlookInspired.Tests.Common{
     static class FilterListView{
-
-        internal static IObservable<XafApplication> FilterListViews(this XafApplication application)
-            => application.FilterListViews((view, expression) => view.FilterUserControl(expression).ToObservable(), Expressions())
-                .IgnoreElements().TakeUntilDisposed(application).To<XafApplication>().Merge(application.Observe());
         
         internal static IObservable<T> FilterListViews<T>(this IObservable<T> source, XafApplication application)
             => application.Security.IsAuthenticated.Observe()
-                .If(b => b,b => application.WhenMainWindowCreated().ToUnit(),b => application.WhenLoggedOn().ToUnit())
-                .SelectMany(result => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
+                .If(b => b,_ => application.WhenMainWindowCreated().ToUnit(),_ => application.WhenLoggedOn().ToUnit())
+                .SelectMany(_ => application.FilterListViews((view, expression) => view.FilterUserControl( expression).ToObservable(),Expressions())
                     .IgnoreElements())
                 .TakeUntilFinished(source).To<T>()
                 .Concat(source);
