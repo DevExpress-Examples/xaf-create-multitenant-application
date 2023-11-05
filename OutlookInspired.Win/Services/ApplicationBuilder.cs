@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
+using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
@@ -10,16 +11,18 @@ using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Services{
     public static class ApplicationBuilder{
-        public static WinApplication BuildApplication(this IWinApplicationBuilder builder,string connectionString, bool useSecuredProvider, string address=null){
+        public static WinApplication BuildApplication(this IWinApplicationBuilder builder,string connectionString){
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();
-            builder.AddObjectSpaceProviders(connectionString, useSecuredProvider);
-            builder.AddSecurity(connectionString == null, address);
+            builder.AddObjectSpaceProviders();
+            builder.AddIntegratedModeSecurity();
+            builder.AddMultiTenancy(connectionString);
             builder.AddBuildSteps(connectionString);
             return builder.Build();
         }
@@ -44,15 +47,6 @@ namespace OutlookInspired.Win.Services{
             application.ConnectionString = connectionString;
 
         });
-        }
-
-        public static void AddSecurity(this IWinApplicationBuilder builder, bool useMiddleTier,string address=null){
-            if (!useMiddleTier){
-                builder.AddIntegratedModeSecurity();
-            }
-            else{
-                builder.UseMiddleTierModeSecurity(address).UsePasswordAuthentication();    
-            }
         }
 
         private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder,string address=null) 
@@ -83,29 +77,31 @@ namespace OutlookInspired.Win.Services{
                 })
                 .UsePasswordAuthentication();
 
-        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder,string connectionString,bool useSecuredProvider=true) 
-            => builder.AddObjectSpaceProviders( useSecuredProvider,connectionString)
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder)
+            => builder.ObjectSpaceProviders.AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
-                    
-                    // options.ConfigureWarnings(configurationBuilder => configurationBuilder.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
+                    string connectionString = application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
+                    new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\..\\..\\..\\Data\\");
+                    options.UseSqlServer(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
-                    if (connectionString == null){
-                        options.UseMiddleTier(application.Security);
-                    }
-                    else{
-                        new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\Data\\");
-                        options.UseSqlServer(connectionString);
-                        options.UseLazyLoadingProxies();
-                    }
+                    options.UseLazyLoadingProxies();
                 })
                 .AddNonPersistent();
 
-        private static DbContextBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(
-            this IWinApplicationBuilder builder, bool useSecuredProvider, string connectionString) 
-            => !useSecuredProvider||connectionString == null? builder.ObjectSpaceProviders
-                .AddEFCore(options => options.PreFetchReferenceProperties()): builder.ObjectSpaceProviders
-                .AddSecuredEFCore(options => options.PreFetchReferenceProperties());
+        public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
+            builder.AddMultiTenancy()
+                .WithServiceDbContext((serviceProvider, options) => {
+                    options.UseSqlServer(serviceConnectionString);
+                    options.UseChangeTrackingProxies();
+                    options.UseLazyLoadingProxies();
+                })
+                .WithMultiTenancyModelDifferenceStore(mds => {
+                    mds.ModuleType = typeof(Module.OutlookInspiredModule);
+                })
+                .WithTenantResolver<TenantByEmailResolver>();
+            return builder;
+        }
 
         public static IModuleBuilder<IWinApplicationBuilder> AddModules(this IWinApplicationBuilder builder) 
             => builder.Modules
@@ -117,8 +113,8 @@ namespace OutlookInspired.Win.Services{
                 })
                 .AddFileAttachments()
                 .AddNotifications()
-                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
-                .AddPivotChart(options => options.ShowAdditionalNavigation = true)
+                //.AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
+                //.AddPivotChart(options => options.ShowAdditionalNavigation = true)
                 .AddPivotGrid()
                 .AddReports(options => {
                     options.EnableInplaceReports = true;

@@ -7,12 +7,12 @@ using OutlookInspired.Win.Services;
 
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
-    public static WinApplication BuildApplication(string connectionString=null,bool useSecuredProvider=true,string address=null) 
-        => WinApplication.CreateBuilder().BuildApplication(connectionString, useSecuredProvider, address);
+    public static WinApplication BuildApplication(string connectionString) 
+        => WinApplication.CreateBuilder().BuildApplication(connectionString);
 
     XafApplication IDesignTimeApplicationFactory.Create() {
         MiddleTierClientSecurityBase.DesignModeUserType = typeof(Module.BusinessObjects.ApplicationUser);
         MiddleTierClientSecurityBase.DesignModeRoleType = typeof(PermissionPolicyRole);
-        return BuildApplication();
+        return BuildApplication(XafApplication.DesignTimeConnectionString);
     }
 }
