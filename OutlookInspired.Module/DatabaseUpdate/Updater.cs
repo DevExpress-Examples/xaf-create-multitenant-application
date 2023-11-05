@@ -17,13 +17,12 @@ public class Updater : ModuleUpdater {
 
     public override void UpdateDatabaseBeforeUpdateSchema(){
         base.UpdateDatabaseBeforeUpdateSchema();
-        SynchronizeDatesWithToday();
+        if (TenantName != null) {
+            SynchronizeDatesWithToday();
+        }
     }
 
     private void SynchronizeDatesWithToday(){
-        if (TenantName == null) {
-            return;
-        }
         new[]{
                 (table: nameof(OutlookInspiredEFCoreDbContext.Orders), column: nameof(Order.OrderDate)),
                 (table: nameof(OutlookInspiredEFCoreDbContext.Quotes), column: nameof(Quote.Date))
@@ -62,8 +61,10 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
                 ObjectSpace.GetObjectsQuery<Employee>().ToArray()
                     .Do(employee =>
                     {
-                        employee.User = ObjectSpace.EnsureUser(employee.FirstName.ToLower()
-                            .Concat(employee.LastName.ToLower().Take(1)).StringJoin(""), user => user.Employee = employee);
+                        string employeeName = employee.FirstName.ToLower()
+                            .Concat(employee.LastName.ToLower().Take(1)).StringJoin("");
+                        string userName = $"{employeeName}@{TenantName}";
+                        employee.User = ObjectSpace.EnsureUser(userName, user => user.Employee = employee);
                         employee.User.Roles.Add(defaultRole);
                         employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
                     })
