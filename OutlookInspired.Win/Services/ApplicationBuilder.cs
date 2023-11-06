@@ -113,8 +113,8 @@ namespace OutlookInspired.Win.Services{
                 })
                 .AddFileAttachments()
                 .AddNotifications()
-                //.AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
-                //.AddPivotChart(options => options.ShowAdditionalNavigation = true)
+                .AddOffice(options => options.RichTextMailMergeDataType=typeof(RichTextMailMergeData))
+                .AddPivotChart(options => options.ShowAdditionalNavigation = true)
                 .AddPivotGrid()
                 .AddReports(options => {
                     options.EnableInplaceReports = true;
