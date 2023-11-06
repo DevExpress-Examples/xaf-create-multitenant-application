@@ -86,7 +86,7 @@ namespace OutlookInspired.Win.Services{
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();
-                })
+                }, ServiceLifetime.Transient)
                 .AddNonPersistent();
 
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
