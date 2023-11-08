@@ -17,6 +17,5 @@
         <ProjectReference Include="..\..\OutlookInspired.Blazor.Server\OutlookInspired.Blazor.Server.csproj" />
         <ProjectReference Include="..\OutlookInspired.Tests\OutlookInspired.Tests.csproj" />
         <ProjectReference Include="..\XAF.Testing.Blazor\XAF.Testing.Blazor.csproj" />
-<!--        <ProjectReference Include="..\..\OutlookInspired.Blazor.Server\OutlookInspired.Blazor.Server.csproj" />-->
     </ItemGroup>
 </Project>

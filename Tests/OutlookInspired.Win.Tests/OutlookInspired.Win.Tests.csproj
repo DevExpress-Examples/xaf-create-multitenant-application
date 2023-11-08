@@ -24,11 +24,11 @@
       <None Remove="Import\devav.sqlite3" />
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="DevExpress.DevAV.v23.2.Data">
-		  <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
-      </Reference>
+      <EmbeddedResource Include="Import\devav.sqlite3" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="Import\devav.sqlite3" />
+      <Reference Include="DevExpress.DevAV.v23.2.Data">
+        <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>
