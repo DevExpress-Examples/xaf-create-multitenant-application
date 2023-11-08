@@ -42,7 +42,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
 
         public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationBuilder builder, IConfiguration configuration){
             builder.AddMultiTenancy()
-                .WithServiceDbContext((_, options) => {
+                .WithHostDbContext((_, options) => {
 #if EASYTEST
                     string connectionString = configuration.GetConnectionString("EasyTestConnectionString");
 #else

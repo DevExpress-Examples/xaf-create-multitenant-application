@@ -69,7 +69,7 @@ namespace OutlookInspired.Win.Services{
 
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
             builder.AddMultiTenancy()
-                .WithServiceDbContext((_, options) => {
+                .WithHostDbContext((_, options) => {
                     options.UseSqlServer(serviceConnectionString);
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
