@@ -61,7 +61,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
             builder.ObjectSpaceProviders
                 .AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
-                    serviceProvider.AttachDatabase("..\\Data");
+                    serviceProvider.AttachDatabase();
                     options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
