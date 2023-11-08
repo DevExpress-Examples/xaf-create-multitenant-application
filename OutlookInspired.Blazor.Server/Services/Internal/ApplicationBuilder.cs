@@ -4,10 +4,9 @@ using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Module.Services;
-using System.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class ApplicationBuilder{
@@ -20,10 +19,8 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                     e.Handled = true;
                 };
                 application.LastLogonParametersRead += (_, e) => {
-                    if (e.LogonObject is AuthenticationStandardLogonParameters logonParameters &&
-                        string.IsNullOrEmpty(logonParameters.UserName)){
-                        logonParameters.UserName = "Admin";
-                    }
+                    if (e.LogonObject is not AuthenticationStandardLogonParameters logonParameters || !logonParameters.UserName.IsNullOrEmpty()) return;
+                    logonParameters.UserName = "Admin";
                 };
             });
             return builder;
@@ -43,10 +40,9 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
             return builder;
         }
 
-        public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationBuilder builder, IConfiguration configuration)
-        {
+        public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationBuilder builder, IConfiguration configuration){
             builder.AddMultiTenancy()
-                .WithServiceDbContext((serviceProvider, options) => {
+                .WithServiceDbContext((_, options) => {
 #if EASYTEST
                     string connectionString = configuration.GetConnectionString("EasyTestConnectionString");
 #else
@@ -56,21 +52,17 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })
-                .WithMultiTenancyModelDifferenceStore(mds => {
-                    mds.ModuleType = typeof(Module.OutlookInspiredModule);
-                })
+                .WithMultiTenancyModelDifferenceStore(mds => mds.ModuleType = typeof(Module.OutlookInspiredModule))
                 .WithTenantResolver<TenantByEmailResolver>();
             return builder;
         }
 
-        public static IBlazorApplicationBuilder AddObjectSpaceProviders(this IBlazorApplicationBuilder builder, IConfiguration configuration){
+        public static IBlazorApplicationBuilder AddObjectSpaceProviders(this IBlazorApplicationBuilder builder){
             builder.ObjectSpaceProviders
                 .AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
-                    string connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
-                    ArgumentNullException.ThrowIfNull(connectionString);
-                    new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\Data");
-                    options.UseSqlServer(connectionString);
+                    serviceProvider.AttachDatabase("..\\Data");
+                    options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();

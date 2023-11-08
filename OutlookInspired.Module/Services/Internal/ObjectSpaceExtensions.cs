@@ -4,8 +4,10 @@ using DevExpress.Data.Linq.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.EFCore.Internal;
+using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
 using Microsoft.Extensions.DependencyInjection;
 using Type = System.Type;
 
@@ -13,6 +15,13 @@ namespace OutlookInspired.Module.Services.Internal{
     internal static class ObjectSpaceExtensions{
         public static TUser CurrentUser<TUser>(this IObjectSpace objectSpace) where TUser:ISecurityUser 
             => objectSpace.GetObjectByKey<TUser>(objectSpace.ServiceProvider.GetRequiredService<ISecurityStrategyBase>().UserId);
+
+        public static string TenantName(this IObjectSpace objectSpace) 
+            => objectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantName;
+        
+        public static TTenant CurrentTenant<TTenant>(this IObjectSpace objectSpace) where TTenant:Tenant 
+            => objectSpace.GetObjectByKey<TTenant>(objectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantId);
+        
         
         public static T EnsureObject<T>(this IObjectSpace objectSpace,
             Expression<Func<T, bool>> criteriaExpression = null, Action<T> initialize = null, Action<T> update = null,

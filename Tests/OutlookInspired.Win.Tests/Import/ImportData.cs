@@ -47,7 +47,6 @@ namespace OutlookInspired.Win.Tests.Import{
             // objectSpace.GenerateOrders();
         }
 
-        protected override bool UseServer => false;
-        protected override bool UseSecuredProvider => false;
+        
     }
 }

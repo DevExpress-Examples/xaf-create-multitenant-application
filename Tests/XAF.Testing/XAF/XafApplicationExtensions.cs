@@ -19,6 +19,8 @@ namespace XAF.Testing.XAF{
                 .Where(view => match?.Invoke(view)??true)
                 .SelectMany(detailView => detailView.WhenTabControl()).Cast<TTabbedControl>();
 
+        public static T GetService<T>(this XafApplication application) where T : notnull
+            => application.ServiceProvider.GetService<T>();
         public static T GetRequiredService<T>(this XafApplication application) where T : notnull 
             => application.ServiceProvider.GetRequiredService<T>();
 

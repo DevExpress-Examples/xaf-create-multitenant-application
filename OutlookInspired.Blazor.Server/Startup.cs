@@ -1,4 +1,6 @@
 ﻿using DevExpress.ExpressApp.ApplicationBuilder;
+using DevExpress.ExpressApp.AspNetCore.Core;
+using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.ApplicationBuilder;
 using DevExpress.ExpressApp.Blazor.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,11 +22,15 @@ public class Startup {
         services.AddServerSideBlazor();
         services.AddHttpContextAccessor();
         services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
-        services.AddXaf(Configuration, builder => builder.UseApplication<OutlookInspiredBlazorApplication>().AddModules()
-            .AddObjectSpaceProviders(Configuration).AddSecurity().AddMultiTenancy(Configuration).AddBuildStep());
+        services.AddXaf(Configuration, builder => {
+            var buildStep = builder.UseApplication<OutlookInspiredBlazorApplication>().AddModules()
+                .AddObjectSpaceProviders().AddSecurity().AddMultiTenancy(Configuration).AddBuildStep();
+            
+        });
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/LoginPage");
+        
     }
-    
+
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
         if(env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();

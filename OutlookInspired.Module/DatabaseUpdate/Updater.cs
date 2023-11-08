@@ -1,9 +1,7 @@
 ﻿using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
-using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
@@ -17,9 +15,8 @@ public class Updater : ModuleUpdater {
 
     public override void UpdateDatabaseBeforeUpdateSchema(){
         base.UpdateDatabaseBeforeUpdateSchema();
-        if (TenantName != null) {
-            SynchronizeDatesWithToday();
-        }
+        if (ObjectSpace.TenantName() == null) return;
+        SynchronizeDatesWithToday();
     }
 
     private void SynchronizeDatesWithToday(){
@@ -43,27 +40,24 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             return;
         }
 
-        if (TenantName == null) {
+        if (ObjectSpace.TenantName() == null) {
             CreateAdminObjects();
             _ = CreateTenant("company1.com", "OutlookInspired_company1");
             _ = CreateTenant("company2.com", "OutlookInspired_company2");
             ObjectSpace.CommitChanges();
         }
-
-        if (TenantName != null) {
+        else {
             var defaultRole = ObjectSpace.EnsureDefaultRole();
             CreateAdminObjects();
-            if (ObjectSpace.ModifiedObjects.Any())
-            {
+            if (ObjectSpace.ModifiedObjects.Any()){
                 CreateDepartmentRoles();
                 CreateViewFilters();
                 ObjectSpace.CreateMailMergeTemplates();
                 ObjectSpace.GetObjectsQuery<Employee>().ToArray()
-                    .Do(employee =>
-                    {
+                    .Do(employee => {
                         string employeeName = employee.FirstName.ToLower()
                             .Concat(employee.LastName.ToLower().Take(1)).StringJoin("");
-                        string userName = $"{employeeName}@{TenantName}";
+                        string userName = $"{employeeName}@{ObjectSpace.TenantName()}";
                         employee.User = ObjectSpace.EnsureUser(userName, user => user.Employee = employee);
                         employee.User.Roles.Add(defaultRole);
                         employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
@@ -90,11 +84,9 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             .Enumerate();
 
     private void CreateAdminObjects() {
-        string adminName = (TenantName != null) ? $"Admin@{TenantName}" : "Admin";
-        ObjectSpace.EnsureUser(adminName)
-            .Roles.Add(ObjectSpace.EnsureRole("Administrators", isAdmin: true));
+        var adminName = (ObjectSpace.TenantName() != null) ? $"Admin@{ObjectSpace.TenantName()}" : "Admin";
+        ObjectSpace.EnsureUser(adminName).Roles.Add(ObjectSpace.EnsureRole("Administrators", isAdmin: true));
     }
-    
 
     private void CreateViewFilters(){
         EmployeeFilters();
@@ -176,14 +168,5 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
             viewFilter.Name = status.ToString();
         }).Enumerate();
 
-    Guid? TenantId {
-        get {
-            return ObjectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantId;
-        }
-    }
-    string TenantName {
-        get {
-            return ObjectSpace.ServiceProvider.GetRequiredService<ITenantProvider>().TenantName;
-        }
-    }
+    
 }

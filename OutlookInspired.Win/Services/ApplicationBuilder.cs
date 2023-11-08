@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Security;
@@ -9,7 +6,6 @@ using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
@@ -48,24 +44,7 @@ namespace OutlookInspired.Win.Services{
 
         });
         }
-
-        private static IEFCoreMiddleTierAuthenticationBuilder UseMiddleTierModeSecurity(this IWinApplicationBuilder builder,string address=null) 
-            => builder.Security.UseMiddleTierMode(options => {
-                options.BaseAddress = new Uri(address??"https://localhost:5001/");
-                options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
-                options.Events.OnCustomAuthenticate = (_, _, args) => {
-                    args.Handled = true;
-                    var msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate",
-                        (AuthenticationStandardLogonParameters)args.LogonParameters).GetAwaiter().GetResult();
-                    var token = (string)msg.Content.ReadFromJsonAsync(typeof(string)).GetAwaiter().GetResult();
-                    if (msg.StatusCode == HttpStatusCode.Unauthorized){
-                        throw new UserFriendlyException(token);
-                    }
-                    msg.EnsureSuccessStatusCode();
-                    args.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-                };
-            });
-
+        
         private static void AddIntegratedModeSecurity(this IWinApplicationBuilder builder) 
             => builder.Security
                 .UseIntegratedMode(options => {
@@ -80,9 +59,8 @@ namespace OutlookInspired.Win.Services{
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder)
             => builder.ObjectSpaceProviders.AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
-                    string connectionString = application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
-                    new SqlConnectionStringBuilder(connectionString).AttachDatabase("..\\..\\..\\..\\Data\\");
-                    options.UseSqlServer(connectionString);
+                    application.ServiceProvider.AttachDatabase("..\\..\\..\\..\\Data\\");
+                    options.UseSqlServer(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();
@@ -91,14 +69,12 @@ namespace OutlookInspired.Win.Services{
 
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
             builder.AddMultiTenancy()
-                .WithServiceDbContext((serviceProvider, options) => {
+                .WithServiceDbContext((_, options) => {
                     options.UseSqlServer(serviceConnectionString);
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })
-                .WithMultiTenancyModelDifferenceStore(mds => {
-                    mds.ModuleType = typeof(Module.OutlookInspiredModule);
-                })
+                .WithMultiTenancyModelDifferenceStore(mds => mds.ModuleType = typeof(Module.OutlookInspiredModule))
                 .WithTenantResolver<TenantByEmailResolver>();
             return builder;
         }

@@ -28,19 +28,15 @@ namespace OutlookInspired.Win.Tests.Common{
 
         public IObservable<WinApplication> WinApplication() 
             => Observable.Defer(() => {
-                var application = WinApplication(UseServer, UseSecuredProvider, ConnectionString);
+                var application = WinApplication(ConnectionString);
                 application.ConnectionString = ConnectionString;
                 application.DeleteModelDiffs<OutlookInspiredEFCoreDbContext>();
                 application.SplashScreen = null;
                 return application.Observe();
             });
-
-        
-        protected virtual bool UseSecuredProvider => true;
-        protected virtual bool UseServer => false;
         
         
-        private static WinApplication WinApplication(bool useServer, bool useSecuredProvider, string connectionString){
+        private static WinApplication WinApplication(string connectionString){
             var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
                 options.Services.AddPlatformServices();
                 options.Services.AddSingleton<IAssertFilterView, AssertFilterView>();

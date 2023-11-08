@@ -2,14 +2,17 @@
 using System.Linq.Expressions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.MultiTenancy;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.MasterDetail;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions{
-        public static void AttachDatabase(this SqlConnectionStringBuilder builder,string dataPath){
+        public static void AttachDatabase(this IServiceProvider serviceProvider,string dataPath){
+            var builder = new SqlConnectionStringBuilder((serviceProvider.GetRequiredService<IConnectionStringProvider>()).GetConnectionString());
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);

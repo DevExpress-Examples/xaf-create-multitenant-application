@@ -5,6 +5,7 @@ using System.Reactive.Threading.Tasks;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Services;
+using DevExpress.ExpressApp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 using XAF.Testing.XAF;
 using static System.AppDomain;
@@ -59,9 +60,16 @@ namespace XAF.Testing.Blazor.XAF{
         public static IObservable<BlazorApplication> DeleteModelDiffs<T>(this IObservable<BlazorApplication> source) where T : DbContext 
             => source.Do(application => {
                 application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                application.ConnectionString = application.GetRequiredService<IConfiguration>()
-                    .GetConnectionString("ConnectionString");
-                application.DeleteModelDiffs<T>();
+                var tenantProvider = application.GetService<ITenantProvider>();
+                if (tenantProvider == null){
+                    application.ConnectionString = application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");
+                    application.DeleteModelDiffs<T>();
+                }
+                else{
+                    if (tenantProvider.TenantName == null) return;
+                    application.ConnectionString = application.ServiceProvider.GetService<IConnectionStringProvider>().GetConnectionString();
+                    application.DeleteModelDiffs<T>();
+                }
             });
 
 

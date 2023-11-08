@@ -15,7 +15,11 @@ namespace XAF.Testing{
             sqlConnection.Open();
             using var sqlCommand = sqlConnection.CreateCommand();
             sqlCommand.CommandText=new []{typeof(ModelDifference),typeof(ModelDifferenceAspect)}
-                .SelectMany(type => application.GetRequiredService<TDBContext>().Model.FindEntityTypes(type).Select(entityType => entityType.GetTableName()))
+                .SelectMany(type => {
+                    var requiredService = application.GetRequiredService<TDBContext>();
+                    return requiredService.Model.FindEntityTypes(type)
+                        .Select(entityType => entityType.GetTableName());
+                })
                 .Select(table => $"IF OBJECT_ID('{table}', 'U') IS NOT NULL Delete FROM {table};").StringJoin("");
             sqlCommand.ExecuteNonQuery();
         }
