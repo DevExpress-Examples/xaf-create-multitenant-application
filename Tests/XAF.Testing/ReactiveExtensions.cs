@@ -124,7 +124,6 @@ namespace XAF.Testing{
         public static IObservable<T2> SelectManySequential<T1, T2>(this IObservable<T1> source, Func<T1, IObservable<T2>> selector) 
             => source.Select(x => Observable.Defer(() => selector(x))).Concat();
         
-        
         public static IObservable<T> ThrowIfEmpty<T>(this IObservable<T> source,[CallerMemberName]string caller="")
             => source.SwitchIfEmpty(Observable.Defer(() => Observable.Throw<T>(new SequenceIsEmptyException($"source is empty {caller}"))));
         public static IObservable<T> ConcatDefer<T>(this IObservable<T> source, Func<IObservable<T>> target)

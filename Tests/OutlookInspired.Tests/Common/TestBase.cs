@@ -21,7 +21,7 @@ namespace OutlookInspired.Tests.Common{
         }
 
         protected virtual bool RunInMainMonitor => false;
-        protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired";
+        protected readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired_Service";
         protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
 
         public static IEnumerable<object> EmployeeVariants 

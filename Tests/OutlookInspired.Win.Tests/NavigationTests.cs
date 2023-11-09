@@ -11,6 +11,7 @@ namespace OutlookInspired.Win.Tests{
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
         [Category(Tests)]
         public async Task Items_Count(string user){
+            
             await StartTest(user, application => application.AssertNavigationItemsCount());
         }
 

@@ -2,15 +2,16 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
-using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.MultiTenancy;
+using DevExpress.ExpressApp.SystemModule;
 using Microsoft.EntityFrameworkCore;
 using XAF.Testing.XAF;
 using static System.AppDomain;
 using static System.Environment;
 using static XAF.Testing.Blazor.XAF.TestExtensions.XafApplicationMonitor;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using Uri = System.Uri;
 
 namespace XAF.Testing.Blazor.XAF{
@@ -33,7 +34,9 @@ namespace XAF.Testing.Blazor.XAF{
             WindowPosition inactiveWindowBrowserPosition = WindowPosition.None,LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
-                .Observe().SelectMany(host => Application.DeleteModelDiffs<TDBContext>()
+                .Observe().SelectMany(host => Application.DeleteModelDiffs<TDBContext>(application =>
+                        application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"),user).Cast<BlazorApplication>()
+                    .EnsureMultiTenantMainDatabase()
                     .TakeUntil(host.Services.WhenApplicationStopping())
                     .SelectMany(application => application.WhenLoggedOn(user).IgnoreElements()
                         .Merge(application.WhenMainWindowCreated().To(application))
@@ -57,21 +60,24 @@ namespace XAF.Testing.Blazor.XAF{
                         .SelectMany(process => whenHostStop.Do(_ => CurrentDomain.KillAll(process.ProcessName))))
                     .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable().Select(unit => unit)).Merge())));
 
-        public static IObservable<BlazorApplication> DeleteModelDiffs<T>(this IObservable<BlazorApplication> source) where T : DbContext 
-            => source.Do(application => {
-                application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                var tenantProvider = application.GetService<ITenantProvider>();
-                if (tenantProvider == null){
-                    application.ConnectionString = application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString");
-                    application.DeleteModelDiffs<T>();
+        public static IObservable<BlazorApplication> EnsureMultiTenantMainDatabase(
+            this IObservable<BlazorApplication> source){
+            var subscribed = new BehaviorSubject<bool>(false);
+            return source.SelectMany(application => {
+                if (application.GetService<ITenantProvider>() == null){
+                    return application.Observe();
                 }
-                else{
-                    if (tenantProvider.TenantName == null) return;
-                    application.ConnectionString = application.ServiceProvider.GetService<IConnectionStringProvider>().GetConnectionString();
-                    application.DeleteModelDiffs<T>();
+                if (application.DbExist(application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"))){
+                    return application.WhenMainWindowCreated().DoNotComplete()
+                        .TakeUntil(subscribed.WhenDefault())
+                        .SelectMany(window => window.GetController<LogoffController>().LogoffAction.Trigger().To(application))
+                        .TakeUntil(application.WhenDisposed().Do(_ => subscribed.OnNext(false))).Take(1)
+                        .Merge(subscribed.WhenDefault().To(application).WhenDefault(blazorApplication => blazorApplication.IsDisposed()));
                 }
+                subscribed.OnNext(true);
+                return application.WhenLoggedOn("Admin").IgnoreElements().To<BlazorApplication>();
             });
-
+        }
 
         private static IHostBuilder ConfigureWebHostDefaults<TStartup>(this IHostBuilder builder,string url, string contentRoot,Action<IServiceCollection> configure=null) where TStartup : class 
             => builder.ConfigureWebHostDefaults(webBuilder => {
