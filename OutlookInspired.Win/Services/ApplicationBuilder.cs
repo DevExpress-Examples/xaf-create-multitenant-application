@@ -59,7 +59,7 @@ namespace OutlookInspired.Win.Services{
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder)
             => builder.ObjectSpaceProviders.AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
-                    application.ServiceProvider.AttachDatabase("..\\..\\..\\..\\Data\\");
+                    application.ServiceProvider.AttachDatabase();
                     options.UseSqlServer(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();

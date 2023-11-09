@@ -18,11 +18,5 @@ namespace OutlookInspired.Blazor.Tests{
         public async Task Active_Items(string user){
             await StartTest(user, application => application.AssertNavigationViews());
         }
-
-        
     }
-    
-    
-    
-
 }

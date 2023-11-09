@@ -11,7 +11,8 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Services{
     public static class Extensions{
-        public static void AttachDatabase(this IServiceProvider serviceProvider,string dataPath){
+        public static void AttachDatabase(this IServiceProvider serviceProvider){
+            var dataPath = Path.Combine(Path.GetFullPath(new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderUpwards("OutlookInspired")),"Data");
             var builder = new SqlConnectionStringBuilder((serviceProvider.GetRequiredService<IConnectionStringProvider>()).GetConnectionString());
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();

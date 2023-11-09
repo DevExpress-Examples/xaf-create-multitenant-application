@@ -5,21 +5,26 @@ using System.Text;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
-using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
-        public static Color ColorFromHex(this string hex)
-        {
+        public static Color ColorFromHex(this string hex){
             hex = hex.Replace("#", "");
             return Color.FromArgb(hex.Substring(0, 2).ToByte( 16), hex.Substring(2, 2).ToByte( 16), hex.Substring(4, 2).ToByte(16));
         }
+        public static string FindFolderUpwards(this DirectoryInfo current, string folderName){
+            var directory = current;
+            while (directory.Parent != null){
+                if (directory.GetDirectories(folderName).Any()){
+                    return Path.GetRelativePath(current.FullName, Path.Combine(directory.FullName, folderName));
+                }
+                directory = directory.Parent;
+            }
+            throw new DirectoryNotFoundException($"Folder '{folderName}' not found up the tree from '{current.FullName}'");
+        }
+
         public static byte ToByte(this string value,int fromBase) 
             => Convert.ToByte(value, fromBase);
-        
-        public static IMemberInfo FindDisplayableMember(this IMemberInfo memberInfo) 
-            => ReflectionHelper.FindDisplayableMemberDescriptor(memberInfo);
-        
         
         public static CriteriaOperator Combine(this CriteriaOperator criteriaOperator,string criteria,GroupOperatorType type=GroupOperatorType.And){
             var @operator = CriteriaOperator.Parse(criteria);
