@@ -185,7 +185,7 @@ namespace OutlookInspired.Module.Services.Internal{
         public static PermissionPolicyRole EnsureDefaultRole(this IObjectSpace objectSpace) 
             => objectSpace.EnsureRole(DefaultRoleName, defaultRole => {
                 defaultRole.AddObjectPermissionFromLambda<ApplicationUser>(Read, cm => cm.ID == (Guid)CurrentUserId(), Allow);
-                defaultRole.AddNavigationPermission($@"Application/NavigationItems/Items/Default/Items/{ApplicationUserDetailView}", Allow);
+                defaultRole.AddNavigationPermission($@"Application/NavigationItems/Items/Default/Items/{UserListView}", Allow);
                 defaultRole.AddNavigationPermission($@"Application/NavigationItems/Items/Default/Items/{WelcomeDetailView}", Allow);
                 defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(Write, "ChangePasswordOnFirstLogon", cm => cm.ID == (Guid)CurrentUserId(), Allow);
                 defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(Write, "StoredPassword", cm => cm.ID == (Guid)CurrentUserId(), Allow);

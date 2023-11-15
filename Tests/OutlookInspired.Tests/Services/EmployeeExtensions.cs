@@ -54,14 +54,14 @@ namespace OutlookInspired.Tests.Services{
         
         public static string[] NavigationViews(this ApplicationUser user) 
             => (user.Employee?.Department switch{
-                EmployeeDepartment.Sales => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,WelcomeDetailView, ApplicationUserDetailView },
-                EmployeeDepartment.HumanResources => new[]{ WelcomeDetailView, EmployeeListView, EvaluationListView, ApplicationUserDetailView },
-                EmployeeDepartment.Support => new[]{ WelcomeDetailView, CustomerListView, Opportunities, ApplicationUserDetailView },
-                EmployeeDepartment.Shipping or EmployeeDepartment.IT => new[]{ WelcomeDetailView, CustomerListView, OrderListView, ApplicationUserDetailView },
-                EmployeeDepartment.Engineering => new[]{ WelcomeDetailView, EmployeeListView, CustomerListView, ApplicationUserDetailView },
-                EmployeeDepartment.Management => new[]{ WelcomeDetailView, EmployeeListView,EvaluationListView, CustomerListView, ApplicationUserDetailView },
+                EmployeeDepartment.Sales => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,WelcomeDetailView },
+                EmployeeDepartment.HumanResources => new[]{ WelcomeDetailView, EmployeeListView, EvaluationListView },
+                EmployeeDepartment.Support => new[]{ WelcomeDetailView, CustomerListView, Opportunities },
+                EmployeeDepartment.Shipping or EmployeeDepartment.IT => new[]{ WelcomeDetailView, CustomerListView, OrderListView },
+                EmployeeDepartment.Engineering => new[]{ WelcomeDetailView, EmployeeListView, CustomerListView },
+                EmployeeDepartment.Management => new[]{ WelcomeDetailView, EmployeeListView,EvaluationListView, CustomerListView },
                 _ => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,
-                    WelcomeDetailView, ApplicationUserDetailView, EvaluationListView,RoleListView,UserListView,ModelDifferenceListView,RichTextMailMergeDataListView}
+                    WelcomeDetailView, UserListView, EvaluationListView,RoleListView,ModelDifferenceListView,RichTextMailMergeDataListView}
             }).OrderBy(view => view).ToArray();
     }
 }

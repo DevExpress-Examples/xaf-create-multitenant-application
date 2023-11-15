@@ -63,18 +63,19 @@ namespace OutlookInspired.Tests.Services{
             if (item == null) return 1;
             var employee = user.Employee();
             return employee.Department switch{
-                EmployeeDepartment.Sales => 7,
-                EmployeeDepartment.Management => 5,
+                EmployeeDepartment.Sales => 6,
+                EmployeeDepartment.Management => 4,
                 EmployeeDepartment.Support or EmployeeDepartment.Shipping or EmployeeDepartment.Engineering
-                    or EmployeeDepartment.IT or EmployeeDepartment.HumanResources => 4,
+                    or EmployeeDepartment.IT or EmployeeDepartment.HumanResources => 3,
                 _ => throw new NotImplementedException(employee.Department.ToString())
             };
         }
 
         private static int AdminNavigationItems(this ChoiceActionItem item) 
             => item switch{
-                null => 2,
-                { Caption: "Default" } => 11,
+                null => 3,
+                { Caption: "Admin Portal" } => 3,
+                { Caption: "Default" } => 7,
                 { Caption: "Reports" } => 1,
                 _ => throw new NotImplementedException(item.Caption)
             };

@@ -56,7 +56,6 @@ namespace OutlookInspired.Tests.Common{
             {(EmployeeDepartment)(-1),"Admin"}
         };
         
-        
         protected virtual LogContext LogContext{
 #if TEST
             get{ return default; }
