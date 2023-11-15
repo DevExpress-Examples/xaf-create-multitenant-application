@@ -1,9 +1,12 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.MultiTenancy;
+using DevExpress.ExpressApp.ReportsV2.Win;
+using DevExpress.ExpressApp.Scheduler.Win;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
+using DevExpress.ExpressApp.Win.Utils;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
@@ -22,29 +25,26 @@ namespace OutlookInspired.Win.Services{
             builder.AddBuildSteps(connectionString);
             return builder.Build();
         }
-        public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString){
-            builder.AddBuildStep(application => {
-            application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-            application.CheckCompatibilityType = CheckCompatibilityType.DatabaseSchema;
-            ((WinApplication)application).SplashScreen = new DevExpress.ExpressApp.Win.Utils.DXSplashScreen(
-                typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
-            application.ApplicationName = "OutlookInspired";
-            DevExpress.ExpressApp.Scheduler.Win.SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
-            DevExpress.ExpressApp.ReportsV2.Win.WinReportServiceController.UseNewWizard = true;
-            application.DatabaseVersionMismatch += (_, e) => {
-                e.Updater.Update();
-                e.Handled = true;
-            };
-            application.LastLogonParametersReading+= (_, e) => {
-                if(string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) {
+        public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString) 
+            => builder.AddBuildStep(application => {
+                application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
+                application.CheckCompatibilityType = CheckCompatibilityType.DatabaseSchema;
+                ((WinApplication)application).SplashScreen = new DXSplashScreen(
+                    typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
+                application.ApplicationName = "OutlookInspired";
+                SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
+                WinReportServiceController.UseNewWizard = true;
+                application.DatabaseVersionMismatch += (_, e) => {
+                    e.Updater.Update();
+                    e.Handled = true;
+                };
+                application.LastLogonParametersReading += (_, e) => {
+                    if (!string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) return;
                     e.SettingsStorage.SaveOption("", "UserName", "Admin");
-                }
-            };
-            application.ConnectionString = connectionString;
+                };
+                application.ConnectionString = connectionString;
+            });
 
-        });
-        }
-        
         private static void AddIntegratedModeSecurity(this IWinApplicationBuilder builder) 
             => builder.Security
                 .UseIntegratedMode(options => {

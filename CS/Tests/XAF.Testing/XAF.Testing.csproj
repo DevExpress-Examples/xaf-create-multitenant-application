@@ -14,6 +14,7 @@
     <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.1-alpha-23312" />
     <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.1-alpha-23312" />
     <PackageReference Include="DevExpress.Reporting.Core" Version="23.2.1-alpha-23312" />
+    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.EFCore" Version="23.2.1-alpha-23312" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
