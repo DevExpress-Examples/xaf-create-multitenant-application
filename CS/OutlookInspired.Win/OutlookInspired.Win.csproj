@@ -57,30 +57,30 @@
   </ItemGroup>
   <ItemGroup>
     
-    <PackageReference Include="DevExpress.ExpressApp" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Chart.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Win.EFCore" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Notifications.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.PivotChart.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.PivotGrid.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Security.EFCore.Extensions.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.TreeListEditors.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.ExpressApp.Win.Design" Version="23.2.1-alpha-23313" />
+    <PackageReference Include="DevExpress.ExpressApp" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Chart.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.EFCore" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Win.EFCore" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Notifications.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.PivotChart.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.PivotGrid.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Security.EFCore.Extensions.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.TreeListEditors.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Win" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.ExpressApp.Win.Design" Version="23.2.2-beta" />
     
     
-    <PackageReference Include="DevExpress.Win.Map" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.Persistent.Base" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.RichEdit.Export" Version="23.2.1-alpha-23313" />
-    <PackageReference Include="DevExpress.Win.Design" Version="23.2.1-alpha-23313" />
+    <PackageReference Include="DevExpress.Win.Map" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.Persistent.Base" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.RichEdit.Export" Version="23.2.2-beta" />
+    <PackageReference Include="DevExpress.Win.Design" Version="23.2.2-beta" />
 <!--    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />-->
   </ItemGroup>
   <ItemGroup>
@@ -98,49 +98,5 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="UnusableNodes.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes1.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes10.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes11.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes12.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes13.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes2.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes3.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes4.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes5.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes6.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes7.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes8.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes9.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
   </ItemGroup>
 </Project>
