@@ -19,6 +19,9 @@ namespace XAF.Testing.XAF{
                 .Where(view => match?.Invoke(view)??true)
                 .SelectMany(detailView => detailView.WhenTabControl()).Cast<TTabbedControl>();
 
+        public static bool IsDisposed(this XafApplication application)
+            => (bool)application.GetPropertyValue("IsDisposed");
+        
         public static T GetService<T>(this XafApplication application) where T : notnull
             => application.ServiceProvider.GetService<T>();
         public static T GetRequiredService<T>(this XafApplication application) where T : notnull 
@@ -72,6 +75,27 @@ namespace XAF.Testing.XAF{
             => application.Defer(() => application.MainWindow == null ? application.WhenWindowCreated(true)
                     .SelectMany(window => window.Navigate(viewId,afterNavigation(window),navigate))
                 : application.MainWindow.Navigate(viewId, afterNavigation(application.MainWindow),navigate));
+        
+        public static bool TenantsExist(this XafApplication application,string connectionString=null,int recordCount=2){
+            connectionString ??= application.ConnectionString;
+            using var sqlConnection = new SqlConnection(connectionString);
+            var cmdText = @"
+            IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Tenant')
+            BEGIN
+                SELECT CASE WHEN COUNT(*) = @RecordCount THEN 1 ELSE 0 END FROM dbo.Tenant;
+            END
+            ELSE
+            BEGIN
+                SELECT 0;
+            END";
+
+            using var command = new SqlCommand(cmdText, sqlConnection);
+            command.Parameters.AddWithValue("@RecordCount", recordCount);
+            sqlConnection.Open();
+            var result = command.ExecuteScalar()!;
+            sqlConnection.Close();
+            return result == (object)1;
+        }
         
         public static bool DbExist(this XafApplication application,string connectionString=null) {
             var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
@@ -155,6 +179,8 @@ namespace XAF.Testing.XAF{
 
         public static IObservable<(XafApplication application, LogonEventArgs e)> WhenLoggedOn(this XafApplication application) 
             => application.WhenEvent<LogonEventArgs>(nameof(XafApplication.LoggedOn)).InversePair(application);
+        public static IObservable<XafApplication> WhenLogOff(this XafApplication application) 
+            => application.WhenEvent<EventArgs>(nameof(XafApplication.LoggedOff)).Select(_ => application);
 
 
         public static IObservable<(XafApplication application, ListViewCreatingEventArgs e)> WhenListViewCreating(this XafApplication application,Type objectType=null,bool? isRoot=null) 

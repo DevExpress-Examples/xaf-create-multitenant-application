@@ -19,9 +19,8 @@ namespace OutlookInspired.Blazor.Tests.Common{
             => Host.CreateDefaultBuilder().Observe()
                 .Do(_ => TestContext.CurrentContext.Test.FullName.WriteSection())
                 .StartTest<Startup, OutlookInspiredEFCoreDbContext>(
-                    $"http://localhost:{IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().GetAvailablePort()}",
-                    "../../../../../OutlookInspired.Blazor.Server", user, test, Configure,
-                    Environment.GetEnvironmentVariable("XAFTESTBrowser"),
+                    $"http://localhost:{IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().GetRandomAvailablePort()}",
+                    "../../../../../OutlookInspired.Blazor.Server", user, test, Configure, Environment.GetEnvironmentVariable("XAFTESTBrowser"),
                     BrowserPosition, LogContext, LoggerPosition)
                 .Timeout(Timeout);
 

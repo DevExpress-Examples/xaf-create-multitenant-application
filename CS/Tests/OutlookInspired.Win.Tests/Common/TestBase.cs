@@ -15,9 +15,9 @@ namespace OutlookInspired.Win.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
         public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
-            => SetupWinApplication().SelectMany(application => application.Use(winApplication =>
-                winApplication.StartWinTest(test(winApplication)
-                    .Timeout(Timeout), user, LogContext)));
+            => SetupWinApplication().SelectMany(application => application
+                .Use(winApplication => winApplication.StartWinTest<Unit, OutlookInspiredEFCoreDbContext>(test(winApplication)
+                    .Timeout(Timeout), user,ConnectionString, LogContext)));
         
         public IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {
@@ -30,7 +30,6 @@ namespace OutlookInspired.Win.Tests.Common{
             => Observable.Defer(() => {
                 var application = WinApplication(ConnectionString);
                 application.ConnectionString = ConnectionString;
-                application.DeleteModelDiffs<OutlookInspiredEFCoreDbContext>();
                 application.SplashScreen = null;
                 return application.Observe();
             });
