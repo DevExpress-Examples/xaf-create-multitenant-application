@@ -12,7 +12,7 @@ namespace OutlookInspired.Module.Services.Internal{
             hex = hex.Replace("#", "");
             return Color.FromArgb(hex.Substring(0, 2).ToByte( 16), hex.Substring(2, 2).ToByte( 16), hex.Substring(4, 2).ToByte(16));
         }
-        public static string FindFolderUpwards(this DirectoryInfo current, string folderName){
+        public static string FindFolderInPathUpwards(this DirectoryInfo current, string folderName){
             var directory = current;
             while (directory.Parent != null){
                 if (directory.GetDirectories(folderName).Any()){
