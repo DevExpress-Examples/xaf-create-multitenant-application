@@ -69,9 +69,7 @@ namespace XAF.Testing{
         public static IObservable<StreamWriter> Writer(this IObservable<NamedPipeClientStream> source) 
             => source.Select(client => client.Writer());
 
-        public static StreamWriter Writer(this NamedPipeClientStream client){
-            return new StreamWriter(client){AutoFlush = true};
-        }
+        public static StreamWriter Writer(this NamedPipeClientStream client) => new(client){AutoFlush = true};
 
         private static IObservable<NamedPipeClientStream> Connect(this Logger logger) 
             => Observable.Interval(100.Milliseconds())
@@ -130,19 +128,13 @@ namespace XAF.Testing{
 
         public bool Equals(LogContext other) => CustomValue == other.CustomValue;
 
-        public static bool operator ==(LogContext x, LogContext y){
-            return x.Equals(y);
-        }
+        public static bool operator ==(LogContext x, LogContext y) => x.Equals(y);
 
-        public static bool operator !=(LogContext x, LogContext y){
-            return !x.Equals(y);
-        }
+        public static bool operator !=(LogContext x, LogContext y) => !x.Equals(y);
 
         public string CustomValue{ get; }
 
-        public static implicit operator LogContext(string s){
-            return new LogContext(s);
-        }
+        public static implicit operator LogContext(string s) => new(s);
 
         public static implicit operator string(LogContext context) => context.CustomValue switch{
             nameof(All) => ".*",

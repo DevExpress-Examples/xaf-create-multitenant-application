@@ -43,6 +43,7 @@ jobs:
     continueOnError: false
     env:
         TEST_ROLE: $(Agent.JobName)
+        BingKey: $(BingKey)
     enabled: true
     inputs:
       minimumExpectedTests: "1"

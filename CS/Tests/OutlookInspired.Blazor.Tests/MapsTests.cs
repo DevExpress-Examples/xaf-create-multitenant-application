@@ -8,7 +8,11 @@ using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 namespace OutlookInspired.Blazor.Tests{
     [Order(30)]
     public class MapsTests:TestBase{
+#if Test
         protected new const int MaxTries = 5;
+#else
+        protected new const int MaxTries = 1;
+#endif
 
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(Tests)]

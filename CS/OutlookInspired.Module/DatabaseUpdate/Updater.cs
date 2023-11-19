@@ -35,15 +35,11 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
 
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
-
-        if (!ObjectSpace.CanInstantiate(typeof(ApplicationUser))) {
-            return;
-        }
-
+        if (!ObjectSpace.CanInstantiate(typeof(ApplicationUser))) return;
         if (ObjectSpace.TenantName() == null) {
             CreateAdminObjects();
-            _ = CreateTenant("company1.com", "OutlookInspired_company1");
-            _ = CreateTenant("company2.com", "OutlookInspired_company2");
+            CreateTenant("company1.com", "OutlookInspired_company1");
+            CreateTenant("company2.com", "OutlookInspired_company2");
             ObjectSpace.CommitChanges();
         }
         else {
@@ -55,9 +51,8 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
                 ObjectSpace.CreateMailMergeTemplates();
                 ObjectSpace.GetObjectsQuery<Employee>().ToArray()
                     .Do(employee => {
-                        string employeeName = employee.FirstName.ToLower()
-                            .Concat(employee.LastName.ToLower().Take(1)).StringJoin("");
-                        string userName = $"{employeeName}@{ObjectSpace.TenantName()}";
+                        var employeeName = employee.FirstName.ToLower().Concat(employee.LastName.ToLower().Take(1)).StringJoin("");
+                        var userName = $"{employeeName}@{ObjectSpace.TenantName()}";
                         employee.User = ObjectSpace.EnsureUser(userName, user => user.Employee = employee);
                         employee.User.Roles.Add(defaultRole);
                         employee.User.Roles.Add(ObjectSpace.FindRole(employee.Department));
@@ -68,14 +63,13 @@ SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
         }
     }
 
-    private Tenant CreateTenant(string tenantName, string databaseName) {
+    private void CreateTenant(string tenantName, string databaseName) {
         var tenant = ObjectSpace.FirstOrDefault<Tenant>(t => t.Name == tenantName);
         if (tenant == null) {
             tenant = ObjectSpace.CreateObject<Tenant>();
             tenant.Name = tenantName;
             tenant.ConnectionString = $"Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\\mssqllocaldb;Initial Catalog={databaseName}";
         }
-        return tenant;
     }
 
     private void CreateDepartmentRoles() 

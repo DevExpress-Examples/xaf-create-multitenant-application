@@ -22,8 +22,8 @@ namespace XAF.Testing.Win.XAF{
             SynchronizationContext context, string connectionString, string user = null, LogContext logContext = default) where TDBContext : DbContext 
             => context.Observe().Do(SynchronizationContext.SetSynchronizationContext)
                 .SelectMany(_ => application.Start(Tracing.WhenError().ThrowTestException().DoOnError(_ => application.Terminate(context)).To<T>()
-                            .Merge(application.Observe().DeleteModelDiffs<TDBContext>(_ => connectionString,user)
-                                .EnsureMultiTenantMainDatabase(connectionString)
+                            .Merge(application.Observe().EnsureMultiTenantMainDatabase(connectionString)
+                                .DeleteModelDiffs<TDBContext>(_ => connectionString,user)
                                 .SelectMany(_ => application.Start(test,user,context))
                                 .LogError()))
                 )

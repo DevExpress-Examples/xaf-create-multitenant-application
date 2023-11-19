@@ -1,13 +1,42 @@
 using System.Drawing;
+using System.IO.Compression;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Utils;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
+        public static void AttachDatabase(this IServiceProvider serviceProvider){
+            var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
+            var builder = new SqlConnectionStringBuilder((serviceProvider.GetRequiredService<IConnectionStringProvider>()).GetConnectionString());
+            var initialCatalog = "Initial catalog";
+            var databaseName = builder[initialCatalog].ToString();
+            builder.Remove(initialCatalog);
+            using var sqlConnection = new SqlConnection(builder.ConnectionString);
+            sqlConnection.Open();
+            using var command = new SqlCommand();
+            command.Connection = sqlConnection;
+            var fullDataPath = Path.GetFullPath(dataPath);
+            var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var destFileName = $"{userProfilePath}\\{databaseName}.mdf";
+            if (!File.Exists(destFileName)) {
+                ZipFile.ExtractToDirectory($"{fullDataPath}\\OutlookInspired.zip", userProfilePath);
+                File.Move($"{userProfilePath}\\OutlookInspired.mdf", destFileName);
+            }
+            command.CommandText = $@"
+                        IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{databaseName}')
+                        BEGIN
+                            CREATE DATABASE {databaseName} ON (FILENAME = '{destFileName}') FOR ATTACH_REBUILD_LOG;
+                        END";
+            command.ExecuteNonQuery();
+        }
+        
         public static Color ColorFromHex(this string hex){
             hex = hex.Replace("#", "");
             return Color.FromArgb(hex.Substring(0, 2).ToByte( 16), hex.Substring(2, 2).ToByte( 16), hex.Substring(4, 2).ToByte(16));
