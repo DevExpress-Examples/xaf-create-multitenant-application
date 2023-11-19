@@ -35,20 +35,11 @@ namespace OutlookInspired.Win.Tests.Common{
             });
         
         
-        private static WinApplication WinApplication(string connectionString){
-            var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
+        private static WinApplication WinApplication(string connectionString) 
+            => DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
                 options.Services.AddPlatformServices();
                 options.Services.AddSingleton<IAssertFilterView, AssertFilterView>();
                 options.Services.AddSingleton<IFilterViewManager, FilterViewManager>();
-            });
-#if TEST
-            var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
-#else
-            var application = builder.BuildApplication(connectionString);
-            
-#endif
-            return application;
-        }
-
+            }).BuildApplication(connectionString);
     }
 }
