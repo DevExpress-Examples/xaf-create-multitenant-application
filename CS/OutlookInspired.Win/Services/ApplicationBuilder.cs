@@ -16,14 +16,14 @@ using OutlookInspired.Module.Services;
 
 namespace OutlookInspired.Win.Services{
     public static class ApplicationBuilder{
-        public static WinApplication BuildApplication(this IWinApplicationBuilder builder,string connectionString){
+        public static IWinApplicationBuilder Configure(this IWinApplicationBuilder builder,string connectionString){
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();
-            builder.AddObjectSpaceProviders();
+            builder.AddSecuredObjectSpaceProviders();
             builder.AddIntegratedModeSecurity();
             builder.AddMultiTenancy(connectionString);
             builder.AddBuildSteps(connectionString);
-            return builder.Build();
+            return builder;
         }
         public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString) 
             => builder.AddBuildStep(application => {
@@ -56,15 +56,24 @@ namespace OutlookInspired.Win.Services{
                 })
                 .UsePasswordAuthentication();
 
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddSecuredObjectSpaceProviders(this IWinApplicationBuilder builder)
+            => builder.ObjectSpaceProviders.AddSecuredEFCore(ConfigureObjectSpaceProvider())
+                .ObjectSpaceProviderBuilder(application => application.ServiceProvider.AttachDatabase());
+
+        private static Action<EFCoreObjectSpaceProviderOptionsBuilder> ConfigureObjectSpaceProvider()
+            => options => options.PreFetchReferenceProperties();
+
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder)
-            => builder.ObjectSpaceProviders.AddSecuredEFCore(options => options.PreFetchReferenceProperties())
-                .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
-                    application.ServiceProvider.AttachDatabase();
-                    options.UseSqlServer(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
-                    options.UseChangeTrackingProxies();
-                    options.UseObjectSpaceLinkProxies();
-                    options.UseLazyLoadingProxies();
-                }, ServiceLifetime.Transient)
+            => builder.ObjectSpaceProviders.AddEFCore(ConfigureObjectSpaceProvider()).ObjectSpaceProviderBuilder();
+
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> ObjectSpaceProviderBuilder(this DbContextBuilder<IWinApplicationBuilder> builder,Action<XafApplication> configure=null) 
+            => builder.WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
+                configure?.Invoke(application);
+                options.UseSqlServer(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+                options.UseChangeTrackingProxies();
+                options.UseObjectSpaceLinkProxies();
+                options.UseLazyLoadingProxies();
+            }, ServiceLifetime.Transient)
                 .AddNonPersistent();
 
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {

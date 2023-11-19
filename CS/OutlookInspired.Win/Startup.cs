@@ -8,7 +8,7 @@ using OutlookInspired.Win.Services;
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
     public static WinApplication BuildApplication(string connectionString) 
-        => WinApplication.CreateBuilder().BuildApplication(connectionString);
+        => WinApplication.CreateBuilder().Configure(connectionString).Build();
 
     XafApplication IDesignTimeApplicationFactory.Create() {
         MiddleTierClientSecurityBase.DesignModeUserType = typeof(Module.BusinessObjects.ApplicationUser);

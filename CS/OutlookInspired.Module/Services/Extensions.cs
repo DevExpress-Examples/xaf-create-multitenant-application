@@ -13,7 +13,7 @@ namespace OutlookInspired.Module.Services{
     public static class Extensions{
         public static void AttachDatabase(this IServiceProvider serviceProvider){
             var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
-            var builder = new SqlConnectionStringBuilder((serviceProvider.GetRequiredService<IConnectionStringProvider>()).GetConnectionString());
+            var builder = new SqlConnectionStringBuilder(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);

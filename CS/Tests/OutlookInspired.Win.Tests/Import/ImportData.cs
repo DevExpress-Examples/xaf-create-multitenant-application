@@ -1,6 +1,10 @@
 using System.Reactive.Linq;
+using DevExpress.ExpressApp.MultiTenancy;
+using DevExpress.ExpressApp.Win.ApplicationBuilder;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Win.Services;
 using OutlookInspired.Win.Tests.Common;
 using Shouldly;
 using XAF.Testing;
@@ -12,8 +16,12 @@ namespace OutlookInspired.Win.Tests.Import{
         [Category(nameof(ImportData))]
         [Test]
         public async Task Test(){
-            
-            using var application = await WinApplication();
+            var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder();
+            builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
+            builder.AddModules();
+            builder.AddObjectSpaceProviders();
+            builder.Services.AddScoped<IConnectionStringProvider, ImportConnectionStringProvider>();
+            using var application = builder.Build();
             await application.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
             application.Setup();
             
@@ -47,6 +55,8 @@ namespace OutlookInspired.Win.Tests.Import{
             // objectSpace.GenerateOrders();
         }
 
-        
+        class ImportConnectionStringProvider:IConnectionStringProvider{
+            public string GetConnectionString() => ConnectionString;
+        }    
     }
 }
