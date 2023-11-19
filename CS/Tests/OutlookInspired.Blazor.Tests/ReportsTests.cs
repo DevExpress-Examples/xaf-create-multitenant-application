@@ -10,18 +10,17 @@ namespace OutlookInspired.Blazor.Tests{
         
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Customer(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertCustomerReports(view, viewVariant));
-        }
+        public async Task Customer(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertCustomerReports(view, viewVariant));
+
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Product(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertProductReports(view, viewVariant));
-        }
+        public async Task Product(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertProductReports(view, viewVariant));
+
         [RetryTestCaseSource(nameof(OrderVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Order(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
-        }
+        public async Task Order(string user, string view, string viewVariant)
+            => await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
     }
 }
