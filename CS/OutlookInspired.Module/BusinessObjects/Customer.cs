@@ -11,7 +11,6 @@ using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services;
-using OutlookInspired.Module.Services.Internal;
 
 
 namespace OutlookInspired.Module.BusinessObjects {

@@ -37,8 +37,6 @@ namespace OutlookInspired.Tests.Services{
         public static IObservable<Frame> AssertMapItAction(this IObservable<Frame> source,Type objectType,Func<Frame,IObservable<Frame>> assert=null) 
             => source.SelectMany(frame => frame.View.ToDashboardView().Observe()
                     .AssertSimpleAction(MapsViewController.MapItActionId,action => action.AssertMapItAction())
-                    .Select(action => action)
-                    .Finally(() => {})
                     .SelectMany(action => action.Trigger(action.Application.WhenFrame(objectType, ViewType.DetailView).Cast<Window>().Take(1)
                         .WhenMaximized()
                         .SelectMany(frame1 => ((DetailView)frame1.View).AssertMapsControl().Select(unit => unit)
