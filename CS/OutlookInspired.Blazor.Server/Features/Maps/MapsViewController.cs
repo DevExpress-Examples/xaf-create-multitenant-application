@@ -9,7 +9,8 @@ namespace OutlookInspired.Blazor.Server.Features.Maps{
         protected override void Configure(ShowViewParameters parameters){
             base.Configure(parameters);
             var dialogController = Application.CreateController<DialogController>();
-            dialogController.CancelAction.Active[nameof(MapsViewController)] = false;
+            // dialogController.CancelAction.Active[nameof(MapsViewController)] = false;
+            dialogController.AcceptAction.Caption = "OK";
             parameters.Controllers.Add(dialogController);
         }
 
