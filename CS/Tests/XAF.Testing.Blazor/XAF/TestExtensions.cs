@@ -34,9 +34,8 @@ namespace XAF.Testing.Blazor.XAF{
             WindowPosition inactiveWindowBrowserPosition = WindowPosition.None,LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
-                .Observe().SelectMany(host => Application.DeleteModelDiffs<TDBContext>(application =>
-                        application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"),user).Cast<BlazorApplication>()
-                    .EnsureMultiTenantMainDatabase()
+                .Observe().SelectMany(host => Application.EnsureMultiTenantMainDatabase()
+                    .DeleteModelDiffs<TDBContext>(application => application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"),user).Cast<BlazorApplication>()
                     .TakeUntil(host.Services.WhenApplicationStopping())
                     .SelectMany(application => application.WhenLoggedOn(user).IgnoreElements()
                         .Merge(application.WhenMainWindowCreated().To(application))
@@ -60,8 +59,7 @@ namespace XAF.Testing.Blazor.XAF{
                         .SelectMany(process => whenHostStop.Do(_ => CurrentDomain.KillAll(process.ProcessName))))
                     .MergeToUnit(Observable.Start(() => host.RunAsync().ToObservable().Select(unit => unit)).Merge())));
 
-        public static IObservable<BlazorApplication> EnsureMultiTenantMainDatabase(
-            this IObservable<BlazorApplication> source){
+        public static IObservable<BlazorApplication> EnsureMultiTenantMainDatabase(this IObservable<BlazorApplication> source){
             var subscribed = new BehaviorSubject<bool>(false);
             return source.SelectMany(application => {
                 if (application.GetService<ITenantProvider>() == null){

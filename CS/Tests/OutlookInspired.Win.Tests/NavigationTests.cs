@@ -10,15 +10,12 @@ namespace OutlookInspired.Win.Tests{
     public class NavigationTests:TestBase{
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Items_Count(string user){
-            
-            await StartTest(user, application => application.AssertNavigationItemsCount());
-        }
+        public async Task Items_Count(string user) 
+            => await StartTest(user, application => application.AssertNavigationItemsCount());
 
         [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Active_Items(string user){
-            await StartTest(user, application => application.AssertNavigationViews());
-        }
+        public async Task Active_Items(string user) 
+            => await StartTest(user, application => application.AssertNavigationViews());
     }
 }

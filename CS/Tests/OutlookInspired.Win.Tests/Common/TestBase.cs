@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Win;
+using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
@@ -14,41 +15,36 @@ namespace OutlookInspired.Win.Tests.Common{
     
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
-        public IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
+
+        protected IObservable<Unit> StartTest(string user, Func<WinApplication, IObservable<Unit>> test)
             => SetupWinApplication().SelectMany(application => application
                 .Use(winApplication => winApplication.StartWinTest<Unit, OutlookInspiredEFCoreDbContext>(test(winApplication)
                     .Timeout(Timeout), user,ConnectionString, LogContext)));
-        
-        public IObservable<WinApplication> SetupWinApplication() 
+
+        protected IObservable<WinApplication> SetupWinApplication() 
             => WinApplication().Do(application => {
-                TestContext.CurrentContext.Test.FullName.WriteSection();
                 application.Setup();
                 application.ChangeStartupState(FormWindowState.Maximized, moveToInactiveMonitor: !RunInMainMonitor);
             });
 
-        public IObservable<WinApplication> WinApplication() 
-            => Observable.Defer(() => {
-                var application = WinApplication(ConnectionString);
-                application.ConnectionString = ConnectionString;
-                application.SplashScreen = null;
-                return application.Observe();
-            });
-        
-        
-        private static WinApplication WinApplication(string connectionString){
+        protected IObservable<WinApplication> WinApplication(Action<IWinApplicationBuilder> configureBuilder=null) 
+            => TestContext.CurrentContext.Observe().Do(context => context.Test.FullName.WriteSection())
+                .Select(_ => {
+                    var application = WinApplication(ConnectionString,configureBuilder);
+                    application.ConnectionString = ConnectionString;
+                    application.SplashScreen = null;
+                    return application;
+                });
+
+
+        private static WinApplication WinApplication(string connectionString,Action<IWinApplicationBuilder> configureBuilder=null){
             var builder = DevExpress.ExpressApp.Win.WinApplication.CreateBuilder(options => {
                 options.Services.AddPlatformServices();
                 options.Services.AddSingleton<IAssertFilterView, AssertFilterView>();
                 options.Services.AddSingleton<IFilterViewManager, FilterViewManager>();
-            });
-#if TEST
-            var application = builder.BuildApplication(useServer?null:connectionString,useSecuredProvider,"http://localhost:5000/");
-#else
-            var application = builder.BuildApplication(connectionString);
-            
-#endif
-            return application;
+            }).Configure(connectionString);
+            configureBuilder?.Invoke(builder);
+            return builder.Build();
         }
-
     }
 }

@@ -10,8 +10,7 @@ namespace OutlookInspired.Blazor.Tests{
     public class MailMergeTests : TestBase{
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Employee(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertEmployeeMailMerge(view, viewVariant));
-        }
+        public async Task Employee(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertEmployeeMailMerge(view, viewVariant));
     }
 }

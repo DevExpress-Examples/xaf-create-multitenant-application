@@ -1,4 +1,4 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using Aqua.EnumerableExtensions;
@@ -7,29 +7,36 @@ using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.Persistent.BaseImpl.EF;
 using Microsoft.EntityFrameworkCore;
 using XAF.Testing.XAF;
+using SqlCommand = System.Data.SqlClient.SqlCommand;
+using SqlConnection = System.Data.SqlClient.SqlConnection;
+using SqlConnectionStringBuilder = System.Data.SqlClient.SqlConnectionStringBuilder;
 
 namespace XAF.Testing{
     public static class TestExtensions{
-        public static IObservable<XafApplication> DeleteModelDiffs<T>(this IObservable<XafApplication> source,Func<XafApplication,string> connectionString,string user=null) where T : DbContext 
+        public static IObservable<XafApplication> DeleteModelDiffs<T>(this IObservable<XafApplication> source,Func<XafApplication,string> connectionStringSelector,string user=null) where T : DbContext 
             => source.Do(application => {
                 application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
                 var tenantProvider = application.GetService<ITenantProvider>();
+                var connectionString = connectionStringSelector(application);
                 if (tenantProvider == null){
-                    application.DeleteModelDiffs<T>(connectionString(application));
+                    application.DeleteModelDiffs<T>(connectionString);
                 }
                 else{
-                    using var sqlConnection = new SqlConnection(connectionString(application));
+                    if (!new SqlConnectionStringBuilder(connectionString).DBExist()) return;
+                    using var sqlConnection = new SqlConnection(connectionString);
                     var tenant = sqlConnection.GetTenant(user);
                     tenantProvider.TenantId = tenant.id;
                     application.DeleteModelDiffs<T>(tenant.connectionString);
                 }
             });
 
+        
+
         public static (Guid id, string connectionString) GetTenant(this SqlConnection connection, string user){
             var query = "SELECT ID, ConnectionString FROM Tenant WHERE Name = @Name";
             using var command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Name", user.Split('@')[1]);
-            connection.Open();
+            if (connection.State!=ConnectionState.Open) connection.Open();
             using var reader = command.ExecuteReader();
             return reader.Read() ? (reader.GetGuid(0), reader.GetString(1))
                 : throw new InvalidOperationException("Tenant not found.");

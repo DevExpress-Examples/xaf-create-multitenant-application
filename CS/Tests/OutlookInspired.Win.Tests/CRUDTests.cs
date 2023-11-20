@@ -11,28 +11,22 @@ namespace OutlookInspired.Win.Tests{
         
         [RetryTestCaseSource(nameof(EmployeeVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        
-        public async Task Employee(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertEmployeeListView(view, viewVariant));
-        }
+        public async Task Employee(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertEmployeeListView(view, viewVariant));
 
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Customer(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertCustomerListView(view, viewVariant));
-        }
+        public async Task Customer(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertCustomerListView(view, viewVariant));
 
         [RetryTestCaseSource(nameof(ProductVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Product(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertProductListView(view, viewVariant));
-        }
+        public async Task Product(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertProductListView(view, viewVariant));
 
         [RetryTestCaseSource(nameof(OrderVariants),MaxTries=MaxTries)]
         [Category(Tests)]
-        public async Task Order(string user,string view,string viewVariant){
-            await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
-        }
-
+        public async Task Order(string user, string view, string viewVariant) 
+            => await StartTest(user, application => application.AssertOrderListView(view, viewVariant));
     }
 }

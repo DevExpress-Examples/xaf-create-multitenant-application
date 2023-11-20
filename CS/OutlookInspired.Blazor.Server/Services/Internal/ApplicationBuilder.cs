@@ -5,8 +5,8 @@ using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
-using OutlookInspired.Module.Services;
 using Microsoft.IdentityModel.Tokens;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class ApplicationBuilder{

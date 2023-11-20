@@ -5,8 +5,9 @@ parameters:
 jobs:
 - job: ${{ parameters.displayName }}
   variables:
-    runSettingsPath: '$(System.DefaultWorkingDirectory)\Tests\Tests.runsettings'
-    testsFolderPath: '$(System.DefaultWorkingDirectory)\Tests'
+    defaultWorkingDir: '$(System.DefaultWorkingDirectory)\CS'
+    runSettingsPath: '$(defaultWorkingDir)\Tests\Tests.runsettings'
+    testsFolderPath: '$(defaultWorkingDir)\Tests'
     dxFeedVar: '$(DXFeed)'
     NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   strategy:
@@ -21,7 +22,7 @@ jobs:
       HumanResources: {}
   timeoutInMinutes: 90
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2022'
   steps:
   - task: PowerShell@2
     displayName: Build
@@ -32,9 +33,9 @@ jobs:
         Write-Output "${{ parameters.testAssembly }}"
         & sqllocaldb start mssqllocaldb
         dotnet nuget add source $(dxFeedVar) --name DX
-        cd $env:BUILD_SOURCESDIRECTORY
+        cd "$(defaultWorkingDir)"
         dotnet build --configuration TEST
-        Get-ChildItem -Path "$(System.DefaultWorkingDirectory)\Tests" -Recurse -Directory -Include "ref", "refint", "obj" | 
+        Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | 
         ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
       pwsh: true      
   - task: VSTest@3
@@ -42,6 +43,7 @@ jobs:
     continueOnError: false
     env:
         TEST_ROLE: $(Agent.JobName)
+        BingKey: $(BingKey)
     enabled: true
     inputs:
       minimumExpectedTests: "1"
