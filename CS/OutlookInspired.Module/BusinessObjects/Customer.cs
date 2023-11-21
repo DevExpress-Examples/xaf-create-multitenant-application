@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using DevExpress.ExpressApp.DC;
@@ -65,7 +64,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		[Attributes.Validation.Url]
 		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)][VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual string Website { get; set; }
-		[DataType(DataType.Currency)][VisibleInListView(false)][VisibleInLookupListView(false)]
+		[Column(TypeName = CurrencyType)][VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual decimal AnnualRevenue { get; set; }
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual int TotalStores { get; set; }
