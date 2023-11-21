@@ -57,3 +57,17 @@ jobs:
       codeCoverageEnabled: true
       uiTests: true
       runSettingsFile: $(runSettingsPath)
+      otherConsoleOptions: /Diag:vstestlog.txt
+  - task: CopyFiles@2
+    displayName: Copy vstestlog logs to staging
+    inputs:
+      contents: '**/*vstestlog*.diag'
+      targetFolder: $(Build.ArtifactStagingDirectory)/vstestlog
+    condition: always()
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish vstestlog log
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)/vstestlog
+      artifactName: vstestlog      
+    condition: always()
