@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.Persistent.Base;
-using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.ViewFilter;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
@@ -20,11 +18,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual CustomerStore CustomerStore { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual DateTime Date { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal SubTotal { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal ShippingAmount { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal Total { get; set; }
         [EditorAlias(EditorAliases.ProgressEditor)]
         // [ProgressPropertyEditor(Maximum = 1)]

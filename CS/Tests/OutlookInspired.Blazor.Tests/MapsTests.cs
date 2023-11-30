@@ -8,7 +8,7 @@ using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 namespace OutlookInspired.Blazor.Tests{
     [Order(30)]
     public class MapsTests:TestBase{
-#if Test
+#if TEST
         protected new const int MaxTries = 5;
 #else
         protected new const int MaxTries = 1;

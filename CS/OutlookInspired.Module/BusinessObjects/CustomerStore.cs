@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes.Validation;
@@ -23,7 +23,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual string Fax { get; set; }
 		public virtual int TotalEmployees { get; set; }
 		public virtual int SquereFootage { get; set; }
-		[DataType(DataType.Currency)]
+		
+		[Column(TypeName = CurrencyType)]
 		public virtual decimal AnnualSales { get; set; }
 		public virtual Crest Crest { get; set; }
 		public virtual string Location { get; set; }

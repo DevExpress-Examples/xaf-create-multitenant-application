@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using DevExpress.ExpressApp.ConditionalAppearance;
@@ -51,11 +50,11 @@ namespace OutlookInspired.Module.BusinessObjects{
         [NotMapped][VisibleInDetailView(false)]
         public virtual ObservableCollection<MapItem> CitySales{ get; set; } = new();
         public virtual Picture PrimaryImage { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal Cost { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal SalePrice { get; set; }
-        [DataType(DataType.Currency)][Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = CurrencyType)]
         public  virtual decimal RetailPrice { get; set; }
         public  virtual double Weight { get; set; }
         public  virtual double ConsumerRating { get; set; }

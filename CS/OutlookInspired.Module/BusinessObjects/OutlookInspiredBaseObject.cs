@@ -15,6 +15,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         Context = Customer.MapsDetailView + ";" + Employee.MapsDetailView + ";" + Product.MapsDetailView + ";" +
                                               Order.MapsDetailView + ";" + Quote.MapsDetailView)]
     public abstract class OutlookInspiredBaseObject:BaseObject{
+        protected const string CurrencyType = "decimal(18, 2)";
         [Browsable(false)]
         public virtual long IdInt64{ get; set; }
 
