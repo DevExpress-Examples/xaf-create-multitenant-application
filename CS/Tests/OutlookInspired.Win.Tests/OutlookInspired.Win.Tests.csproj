@@ -27,8 +27,8 @@
       <EmbeddedResource Include="Import\devav.sqlite3" />
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="DevAV.Data">
-        <HintPath>..\DevAV.Data.dll</HintPath>
+      <Reference Include="DevExpress.DevAV.v23.2.Data">
+        <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
       </Reference>
     </ItemGroup>
 </Project>
