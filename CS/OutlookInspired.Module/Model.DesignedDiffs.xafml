@@ -14,6 +14,13 @@
   </ActionDesign>
   <NavigationItems StartupNavigationItem="Welcome_DetailView">
     <Items>
+      <Item Id="Admin Portal">
+        <Items>
+          <Item Id="ApplicationUser_ListView" ImageName="BO_User" />
+          <Item Id="ModelDifference_ListView" ImageName="BO_Security_Permission_Model" />
+          <Item Id="PermissionPolicyRole_ListView" ImageName="BO_Role" />
+        </Items>
+      </Item>
       <Item Id="Default">
         <Items>
           <Item Id="Welcome_DetailView" Index="0" ImageName="About" />
@@ -23,13 +30,7 @@
           <Item Id="ProductListView" Index="4" ImageName="BO_Product" />
           <Item Id="OrderListView" Index="5" ImageName="BO_Order" />
           <Item Id="Opportunities" Index="6" ImageName="BO_Opportunity" />
-          <Item Id="ModelDifference_ListView" Index="7" ImageName="BO_Security_Permission_Model" />
-          <Item Id="ApplicationUser_DetailView" ImageName="BO_MyDetails" ObjectKey="@CurrentUserID" Caption="My Details" />
-          <Item Id="ApplicationUser_ListView" ImageName="BO_User" />
-          <Item Id="CustomerCardListView" Removed="True" />
-          <Item Id="OrderGridView" Removed="True" />
-          <Item Id="PermissionPolicyRole_ListView" ImageName="BO_Role" />
-          <Item Id="ProductCardView" Removed="True" />
+          <Item Id="My Details" ViewId="ApplicationUser_DetailView" Caption="My Details" ImageName="BO_MyDetails" ObjectKey="@CurrentUserID" IsNewNode="True" />
         </Items>
       </Item>
       <Item Id="Reports">
@@ -45,8 +46,8 @@
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <DetailView Id="ApplicationUser_DetailView" FreezeLayout="True">

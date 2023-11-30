@@ -2,6 +2,13 @@
 <Application Logo="ExpressAppLogo">
   <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated">
     <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="CustomerCardListView" Removed="True" />
+          <Item Id="OrderGridView" Removed="True" />
+          <Item Id="ProductCardView" Removed="True" />
+        </Items>
+      </Item>
       <Item Id="Reports">
         <Items>
           <Item Id="ReportDataV2_ListView" Removed="True" />
@@ -11,10 +18,10 @@
   </NavigationItems>
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemWindowsFormsModule" Version="23.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemWindowsFormsModule" Version="23.2.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">

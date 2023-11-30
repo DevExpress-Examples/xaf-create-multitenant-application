@@ -2,6 +2,13 @@
 <Application>
   <NavigationItems NavigationStyle="Accordion">
     <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="CustomerCardListView" Removed="True" />
+          <Item Id="OrderGridView" Removed="True" />
+          <Item Id="ProductCardView" Removed="True" />
+        </Items>
+      </Item>
       <Item Id="Reports">
         <Items>
           <Item Id="ReportDataV2_ListView" Removed="True" />
@@ -10,8 +17,8 @@
     </Items>
   </NavigationItems>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">
@@ -343,7 +350,6 @@
                 <LayoutItem Id="Subject" RelativeSize="32.22222222222222" CaptionLocation="Left" />
                 <LayoutItem Id="StartDate" RelativeSize="24.444444444444443" CaptionLocation="Left" />
                 <LayoutItem Id="Owner" RelativeSize="43.333333333333336" CaptionLocation="Left" />
-                <LayoutItem Id="AssignedEmployee" Removed="True" />
               </LayoutGroup>
               <LayoutGroup Id="Auto73145059-6b79-4322-98d0-81ef2a6189f9" RelativeSize="61.59554730983302">
                 <LayoutGroup Id="Autobde92749-14ac-4179-aa35-b0db870951da" RelativeSize="99.44444444444444">
