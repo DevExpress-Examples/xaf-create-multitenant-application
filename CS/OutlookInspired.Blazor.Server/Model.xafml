@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
+  <BOModel>
+    <Class Name="DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyUser">
+      <OwnMembers>
+        <Member Name="UserName" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.HyperLinkPropertyEditor" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
   <NavigationItems NavigationStyle="Accordion">
     <Items>
       <Item Id="Default">
@@ -302,6 +309,11 @@
         <ColumnInfo Id="Raise" Index="-1" />
         <ColumnInfo Id="Subject" Index="0" SortIndex="-1" SortOrder="None" />
         <ColumnInfo Id="StartOn" Index="1" SortIndex="0" SortOrder="Descending" />
+      </Columns>
+    </ListView>
+    <ListView Id="Employee_ListView">
+      <Columns>
+        <ColumnInfo Id="User" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.HyperLinkPropertyEditor" />
       </Columns>
     </ListView>
     <DashboardView Id="EmployeeCardListView">

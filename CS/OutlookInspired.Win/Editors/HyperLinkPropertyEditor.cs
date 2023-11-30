@@ -11,7 +11,7 @@ using DevExpress.XtraEditors.Repository;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Win.Editors{
-    [PropertyEditor(typeof(String), EditorAliases.HyperLinkPropertyEditor, false)]
+    [PropertyEditor(typeof(object), EditorAliases.HyperLinkPropertyEditor, false)]
     public class HyperLinkPropertyEditor : StringPropertyEditor,IComplexViewItem {
         public const string UrlEmailMask = @"(((http|https|ftp)\://)?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,100})";
 
@@ -48,7 +48,7 @@ namespace OutlookInspired.Win.Editors{
         }
 
         public static string GetResolvedUrl(object value) {
-            var url = Convert.ToString(value);
+            var url=$"{value}";
             if (!string.IsNullOrEmpty(url)) {
                 if (url.Contains("@") && IsValidUrl(url))
                     return $"mailto:{url}";

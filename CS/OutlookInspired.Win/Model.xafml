@@ -232,6 +232,9 @@
     </ListView>
     <ListView Id="Employee_EvaluationsCreatedBy_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
     <ListView Id="Employee_ListView" ShowFindPanel="True">
+      <Columns>
+        <ColumnInfo Id="User" PropertyEditorType="OutlookInspired.Win.Editors.HyperLinkPropertyEditor" />
+      </Columns>
       <SplitLayout SplitterPosition="1262" />
     </ListView>
     <ListView Id="Employee_ListView_Card" ClassName="OutlookInspired.Module.BusinessObjects.Employee" AutoExpandAllGroups="True" IsGroupPanelVisible="True" MasterDetailView="Employee_DetailView_Child" ShowFindPanel="True" IsNewNode="True">

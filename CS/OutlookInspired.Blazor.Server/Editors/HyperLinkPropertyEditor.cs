@@ -4,12 +4,11 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using Microsoft.AspNetCore.Components;
 using OutlookInspired.Blazor.Server.Components;
-using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors{
-    [PropertyEditor(typeof(String), EditorAliases.HyperLinkPropertyEditor, false)]
+    [PropertyEditor(typeof(object), EditorAliases.HyperLinkPropertyEditor, false)]
     public class HyperLinkPropertyEditor:DevExpress.ExpressApp.Blazor.Editors.BlazorPropertyEditorBase{
         public HyperLinkPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }
