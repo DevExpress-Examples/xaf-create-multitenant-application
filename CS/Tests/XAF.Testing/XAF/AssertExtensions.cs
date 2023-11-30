@@ -130,6 +130,10 @@ namespace XAF.Testing.XAF{
                     .SelectMany(frame => assert(frame.Observe())))
                 .FirstOrDefaultAsync().ReplayFirstTake();
         
+        public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
+            => application.Navigate2(viewId,window => (navigate?.Invoke(window)?? Observable.Empty<Unit>()).SwitchIfEmpty(Unit.Default.Observe()))
+                .Assert($"{viewId}").Catch<Window,CannotNavigateException>(_ => Observable.Empty<Window>());
+        
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this Frame frame) 
             => frame.Observe().SelectMany(frame1 => frame1.ProcessSelectedObject().Assert($"{frame.View.Id}"));
         
@@ -232,9 +236,7 @@ namespace XAF.Testing.XAF{
                 .Assert(item => $"{item?.Id}")
                 .ReplayFirstTake();
 
-        public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
-            => application.Navigate2(viewId,window => (navigate?.Invoke(window)?? Observable.Empty<Unit>()).SwitchIfEmpty(Unit.Default.Observe()))
-                .Assert($"{viewId}").Catch<Window,CannotNavigateException>(_ => Observable.Empty<Window>());
+        
 
         public static IObservable<Frame> AssertDashboardListViewEditViewHasObject(this IObservable<Frame> source,Func<Frame,IObservable<Frame>> detailView=null)
             =>source.SelectMany(frame => frame.DashboardViewItems<ListView>().ToNowObservable()
