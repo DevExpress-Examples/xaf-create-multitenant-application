@@ -35,14 +35,17 @@ namespace OutlookInspired.Module.BusinessObjects{
 			get => Employee?.ID;
 			set => Employee = ObjectSpace.GetObjectByKey<Employee>(value);
 		}
-		
-		string IEvent.Description{
-			get => Description.ToDocument(server => server.Text);
-			set => Description=value.Bytes().ToDocument(server => server.OpenXmlBytes);
+
+		[NotMapped]
+		public string Description{
+			get => DescriptionBytes.ToDocument(server => server.Text);
+			set => DescriptionBytes=value.Bytes().ToDocument(server => server.OpenXmlBytes);
 		}
 
 		[EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
-		public virtual byte[] Description{ get; set; }
+		[Column(nameof(Description))]
+		[XafDisplayName(nameof(Description))]
+		public virtual byte[] DescriptionBytes{ get; set; }
 		public virtual DateTime? EndOn { get; set; }
 		[ImmediatePostData][Browsable(false)]
 		public virtual Boolean AllDay { get; set; }

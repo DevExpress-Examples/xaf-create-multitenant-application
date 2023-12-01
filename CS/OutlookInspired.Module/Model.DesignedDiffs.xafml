@@ -864,7 +864,7 @@
                 <LayoutItem Id="Bonus" ViewItem="Bonus" Index="2" RelativeSize="35.714285714285715" IsNewNode="True" />
               </LayoutGroup>
             </LayoutGroup>
-            <LayoutItem Id="Description" ViewItem="Description" Index="2" RelativeSize="90.83837510803804" IsNewNode="True" />
+            <LayoutItem Id="DescriptionBytes" ViewItem="DescriptionBytes" Index="2" RelativeSize="90.83837510803804" IsNewNode="True" />
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
