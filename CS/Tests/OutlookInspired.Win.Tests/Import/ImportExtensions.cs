@@ -105,13 +105,13 @@ namespace OutlookInspired.Win.Tests.Import{
                     evaluation.StartOn = sqlLite.CreatedOn;
                     evaluation.EndOn = sqlLite.CreatedOn.AddHours(1);
                     evaluation.Rating = (EvaluationRating)sqlLite.Rating;
-                    evaluation.Description = server.Load(sqlLite.Details.Bytes()).OpenXmlBytes;
+                    evaluation.DescriptionBytes = server.Load(sqlLite.Details.Bytes()).OpenXmlBytes;
                     var description = Regex.Replace(sqlLite.Details, $@"Raise:\s*{Raise.Yes}", "");
-                    if (!description.Equals(evaluation.Description)){
+                    if (!description.Equals(evaluation.DescriptionBytes)){
                         evaluation.Raise=Raise.Yes;
                     }
                     description = Regex.Replace(sqlLite.Details, $@"Bonus:\s*{Bonus.Yes}", "");
-                    if (!description.Equals(evaluation.Description)){
+                    if (!description.Equals(evaluation.DescriptionBytes)){
                         evaluation.Bonus=Bonus.Yes;
                     }
                     return evaluation;

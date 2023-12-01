@@ -11,7 +11,7 @@
         <td ><table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Raise))</td><td>RAISE</td></tr></table></td>
     </tr>
     <tr>
-        <td class="evaluations-td" colspan="2">@(((Evaluation)Context.DataItem).Description.ToDocument(evaluation => evaluation.Text))</td>
+        <td class="evaluations-td" colspan="2">@(((Evaluation)Context.DataItem).DescriptionBytes.ToDocument(evaluation => evaluation.Text))</td>
         <td><table><tr><td>@(((Evaluation)Context.DataItem).BootFragment(evaluation => evaluation.Bonus))</td><td>BONUS</td></tr></table></td>
     </tr>
 </table>

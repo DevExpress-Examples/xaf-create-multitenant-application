@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
+using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Features.ViewFilter{
@@ -115,7 +116,7 @@ namespace OutlookInspired.Module.Features.ViewFilter{
                 .Select(t => new ChoiceActionItem(t.caption, t.data)).Concat(ObjectSpace.GetObjectsQuery<BusinessObjects.ViewFilter>()
                     .Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToArray()
                     .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count(viewCriteria)})",filter))).ToArray());
-            FilterAction.SelectedItem = FilterAction.Items.First(item => item.Data as string == "All");
+            FilterAction.SelectedItem = FilterAction.Items.First(item => $"{item.Data}".StartsWith(View.ObjectTypeInfo.Type == typeof(Quote)?"This Month":"All"));
         }
     }
 }
