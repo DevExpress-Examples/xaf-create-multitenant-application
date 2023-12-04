@@ -4,14 +4,12 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components{
     public abstract class ComponentBase:Microsoft.AspNetCore.Components.ComponentBase{
-        
-        protected static readonly string JsPath = "js";
+        public static readonly string JsPath = "js";
         protected static readonly string ComponentBasePath = $"/{JsPath}/{ComponentBaseName}.js";
-        protected static string WwwRootPath;
+        public static string WwwRootPath="/";
         protected const string ComponentBaseName = "ComponentBase";
         private static readonly SemaphoreSlim Semaphore = new(1, 1);
         private static readonly HashSet<Type> InitializedTypes = new();
-        
         [Inject]
         public IWebHostEnvironment WebHostEnvironment{ get; set; }
 
@@ -29,9 +27,9 @@ namespace OutlookInspired.Blazor.Server.Components{
         }
         
         protected virtual async Task OneTimeInitializeAsync(){
-            WwwRootPath = $"{WebHostEnvironment.WebRootPath}";
             using var memoryStream = new MemoryStream(Script.Bytes());
-            await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentBaseName}.js");
+            var filePath = $"{WebHostEnvironment.ContentRootPath}{WwwRootPath}/{JsPath}/{ComponentBaseName}.js";
+            await memoryStream.SaveToFileAsync(filePath);
             await ExtractResourceAsync();
         }
         
@@ -39,7 +37,7 @@ namespace OutlookInspired.Blazor.Server.Components{
             => await CreateResourceAsync(GetType().Assembly.GetManifestResourceStream(name => name.EndsWith($"{GetType()}.razor.js")));
         
         private async Task CreateResourceAsync(Stream manifestResourceStream) 
-            => await manifestResourceStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{DefaultResourceName(GetType())}");
+            => await manifestResourceStream.SaveToFileAsync($"{WebHostEnvironment.ContentRootPath}{WwwRootPath}/{JsPath}/{DefaultResourceName(GetType())}");
 
         protected static string DefaultResourceName(Type type) 
             => $"{type.Name}.js";
@@ -122,7 +120,7 @@ namespace OutlookInspired.Blazor.Server.Components{
         }
 
         protected ValueTask<IJSObjectReference> ImportResource(string resourceName=null) 
-            => JS.InvokeAsync<IJSObjectReference>("import", $"/{JsPath}/{GetResourceName(resourceName)}");
+            => JS.InvokeAsync<IJSObjectReference>("import", $"{WwwRootPath}/{JsPath}/{GetResourceName(resourceName)}");
         
         private string GetResourceName(string resourceName) 
             => resourceName ?? DefaultResourceName(GetType());

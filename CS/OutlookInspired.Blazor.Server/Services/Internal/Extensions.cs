@@ -5,6 +5,7 @@ using DevExpress.ExpressApp.Blazor.Components;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using DevExpress.ExpressApp.DC;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.JSInterop;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.BusinessObjects;
@@ -12,6 +13,12 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class Extensions{
+        public static void UseComponentStaticFiles(this IApplicationBuilder builder, IWebHostEnvironment environment) 
+            => builder.UseStaticFiles(new StaticFileOptions{
+                FileProvider = new PhysicalFileProvider( environment.ContentRootPath),
+                RequestPath = Components.ComponentBase.WwwRootPath=$"/{Components.ComponentBase.JsPath}"
+            });
+
         public static async Task<string> ModalBodyHeight(this IJSRuntime js){
             await js.EvalAsync(@"window.getClientHeight = (element) => {
         const startTime = new Date().getTime();
