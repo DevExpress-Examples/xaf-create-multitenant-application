@@ -1,6 +1,5 @@
 ﻿using DevExpress.Blazor.Popup.Internal;
 using Microsoft.JSInterop;
-using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module.Services.Internal;
 
@@ -11,8 +10,11 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         
         protected override async Task OneTimeInitializeAsync(){
             await base.OneTimeInitializeAsync();
-            using var memoryStream = new MemoryStream(_script.Bytes());
-            await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentName}.js");
+            if (!InitializedTypes.Contains(typeof(DevExtremeComponent<,>))){
+                InitializedTypes.Add(typeof(DevExtremeComponent<,>));
+                using var memoryStream = new MemoryStream(_script.Bytes());
+                await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentName}.js");    
+            }
         }
 
         protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
@@ -61,4 +63,5 @@ function loadDevExtreme(scriptLoader) {{
 ";
         
     }
+
 }

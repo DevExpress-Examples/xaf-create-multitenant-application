@@ -4,14 +4,12 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components{
     public abstract class ComponentBase:Microsoft.AspNetCore.Components.ComponentBase{
-        
-        protected static readonly string JsPath = "js";
+        public static readonly string JsPath = "js";
         protected static readonly string ComponentBasePath = $"/{JsPath}/{ComponentBaseName}.js";
-        protected static string WwwRootPath;
+        protected static string WwwRootPath=null;
         protected const string ComponentBaseName = "ComponentBase";
         private static readonly SemaphoreSlim Semaphore = new(1, 1);
-        private static readonly HashSet<Type> InitializedTypes = new();
-        
+        protected static readonly HashSet<Type> InitializedTypes = new();
         [Inject]
         public IWebHostEnvironment WebHostEnvironment{ get; set; }
 
@@ -29,17 +27,22 @@ namespace OutlookInspired.Blazor.Server.Components{
         }
         
         protected virtual async Task OneTimeInitializeAsync(){
-            WwwRootPath = $"{WebHostEnvironment.WebRootPath}";
-            using var memoryStream = new MemoryStream(Script.Bytes());
-            await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentBaseName}.js");
+            if (!InitializedTypes.Contains(typeof(ComponentBase))){
+                WwwRootPath = WebHostEnvironment.ContentRootPath;
+                using var memoryStream = new MemoryStream(Script.Bytes());
+                await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentBaseName}.js");
+                InitializedTypes.Add(typeof(ComponentBase));    
+            }
             await ExtractResourceAsync();
         }
         
         protected async Task ExtractResourceAsync() 
             => await CreateResourceAsync(GetType().Assembly.GetManifestResourceStream(name => name.EndsWith($"{GetType()}.razor.js")));
         
-        private async Task CreateResourceAsync(Stream manifestResourceStream) 
-            => await manifestResourceStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{DefaultResourceName(GetType())}");
+        private async Task CreateResourceAsync(Stream manifestResourceStream){
+            var filePath = $"{WwwRootPath}/{JsPath}/{DefaultResourceName(GetType())}";
+            await manifestResourceStream.SaveToFileAsync(filePath);
+        }
 
         protected static string DefaultResourceName(Type type) 
             => $"{type.Name}.js";
