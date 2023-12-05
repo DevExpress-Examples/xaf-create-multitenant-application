@@ -6,7 +6,7 @@ namespace OutlookInspired.Blazor.Server.Components{
     public abstract class ComponentBase:Microsoft.AspNetCore.Components.ComponentBase{
         public static readonly string JsPath = "js";
         protected static readonly string ComponentBasePath = $"/{JsPath}/{ComponentBaseName}.js";
-        protected static string WwwRootPath=null;
+        protected static string WwwRootPath;
         protected const string ComponentBaseName = "ComponentBase";
         private static readonly SemaphoreSlim Semaphore = new(1, 1);
         protected static readonly HashSet<Type> InitializedTypes = new();
