@@ -5,7 +5,7 @@ namespace OutlookInspired.Module.Services.Internal{
     internal static class OfficeExtensions{
         public static T ToDocument<T>(this byte[] bytes,Func<IRichEditDocumentServer,T> data){
             using var server = new RichEditDocumentServer();
-            return server.ToDocument(bytes,() => data(server));
+            return server.ToDocument(bytes,() => data(server),DocumentFormat.OpenXml);
         }
 
         public static T ToDocument<T>(this IRichEditDocumentServer server,byte[] bytes,Func<T> data,DocumentFormat? documentFormat=null){
@@ -29,7 +29,7 @@ namespace OutlookInspired.Module.Services.Internal{
 
         public static byte[] ToPdf(this byte[] bytes){
             using var richEditDocumentServer = new RichEditDocumentServer();
-            richEditDocumentServer.LoadDocument(bytes);
+            richEditDocumentServer.LoadDocument(bytes,DocumentFormat.OpenXml);
             using var memoryStream = new MemoryStream();
             richEditDocumentServer.ExportToPdf(memoryStream);
             return memoryStream.ToArray();

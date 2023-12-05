@@ -1,9 +1,7 @@
 ﻿@using OutlookInspired.Module.Services.Internal
 @inherits ComponentBase<PdfModel,PdfViewer>
 
-@if (ComponentModel?.Bytes is {Length:> 0 }){
-    <embed @ref=@Element type="application/pdf" style="@(ComponentModel.Style??"width:100%; height:100vh;")"/>
-}
+<embed  @ref=@Element type="application/pdf" style="@(ComponentModel?.Style??"width:100%; height:100vh;")"/>
 
 @code {
 

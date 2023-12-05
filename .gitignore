@@ -402,3 +402,5 @@ FodyWeavers.xsd
 
 /OutlookInspired.Blazor.Server/wwwroot/js/DevExtremeComponent/
 /OutlookInspired.Blazor.Server/wwwroot/js/
+/CS/OutlookInspired.Blazor.Server/js/
+/CS/OutlookInspired.Blazor.Serverjs/js/

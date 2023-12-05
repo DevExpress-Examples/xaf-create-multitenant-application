@@ -1,6 +1,4 @@
 export async function addPdfLoadListener(element,model, base64Pdf, toolbar) {
-    debugger
-    // const pdfEmbed = document.getElementById("pdfEmbed");
     const pdfEmbed = element;
     if (pdfEmbed) {
         const newEmbed = pdfEmbed.cloneNode();

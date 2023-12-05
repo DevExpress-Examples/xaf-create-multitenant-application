@@ -69,7 +69,6 @@ function AssignTooltip(model) {
     };
 }
 export async function InitVectorMap(element, model, dotnetCallback) {
-    debugger;
     AssignTooltip(model);
     if (dotnetCallback) {
         AssignOnDisposing(model, dotnetCallback);
