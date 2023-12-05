@@ -13,11 +13,16 @@ using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
     internal static class Extensions{
-        public static void UseComponentStaticFiles(this IApplicationBuilder builder, IWebHostEnvironment environment) 
-            => builder.UseStaticFiles(new StaticFileOptions{
-                FileProvider = new PhysicalFileProvider( environment.ContentRootPath),
-                RequestPath = Components.ComponentBase.WwwRootPath=$"/{Components.ComponentBase.JsPath}"
+        public static void UseComponentStaticFiles(this IApplicationBuilder builder, IWebHostEnvironment environment){
+            var root = $"{environment.ContentRootPath}/{Components.ComponentBase.JsPath}";
+            if (!Directory.Exists(root)){
+                Directory.CreateDirectory(root);
+            }
+            builder.UseStaticFiles(new StaticFileOptions{
+                FileProvider = new PhysicalFileProvider(root),
+                RequestPath =  $"/{Components.ComponentBase.JsPath}"
             });
+        }
 
         public static async Task<string> ModalBodyHeight(this IJSRuntime js){
             await js.EvalAsync(@"window.getClientHeight = (element) => {
