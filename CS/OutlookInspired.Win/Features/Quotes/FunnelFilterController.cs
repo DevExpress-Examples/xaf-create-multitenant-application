@@ -3,8 +3,8 @@ using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Win.Features.Quotes{
-    public class QuoteMapItemController:ViewController<DashboardView>{
-        public QuoteMapItemController() => TargetViewId = "Opportunities";
+    public class FunnelFilterController:ViewController<DashboardView>{
+        public FunnelFilterController() => TargetViewId = "Opportunities";
         protected override void OnDeactivated(){
             base.OnDeactivated();
             View.MasterItem().Frame.View.ToListView().CollectionSource.CriteriaApplied-=CollectionSourceOnCriteriaApplied;

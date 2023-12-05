@@ -2,6 +2,7 @@
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.Persistent.Base;
@@ -16,7 +17,8 @@ namespace OutlookInspired.Module.Features.ViewFilter{
                 ImageName = "Action_Filter",PaintStyle = ActionItemPaintStyle.Image
             };
             FilterAction.Executed += (_, e) => {
-                if (!ManagerFilters(e)) FilterView();
+                if (ManagerFilters(e)) return;
+                FilterView();
             };
         }
         
@@ -46,11 +48,11 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             showViewParameters.Controllers.Add(controller);
             controller.AcceptAction.Executed += (_, _) => {
                 AddFilterItems();
-                FilterAction.DoExecute(FilterAction.SelectedItem);
+                FilterAction.DoExecute();
             };
             controller.CancelAction.Executed+= (_, _) => {
                 AddFilterItems();
-                FilterAction.DoExecute(FilterAction.SelectedItem);
+                FilterAction.DoExecute();
             }; 
         }
 
@@ -82,9 +84,9 @@ namespace OutlookInspired.Module.Features.ViewFilter{
             base.OnActivated();
             if (!(FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame&&Frame.View.IsRoot))return;
             AddFilterItems();
+            View.CustomizeViewItemControlCore<ControlViewItem>(this, _ => FilterAction.DoExecute(item => $"{item.Data}" == "This Month"),_ => View.ObjectTypeInfo.Type==typeof(Quote));
             Application.ObjectSpaceCreated+=ApplicationOnObjectSpaceCreated;
         }
-        
 
         private void ApplicationOnObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e){
             e.ObjectSpace.Committing+=ObjectSpaceOnCommitting;
@@ -107,7 +109,7 @@ namespace OutlookInspired.Module.Features.ViewFilter{
 
         private void ObjectSpaceOnCommitted(object sender, EventArgs e) => AddFilterItems();
         
-        public void AddFilterItems(){
+        void AddFilterItems(){
             if (View==null)return;
             FilterAction.Items.Clear();
             var viewCriteria =View is ListView listView? listView.CollectionSource.GetTotalCriteria():null;
@@ -116,7 +118,7 @@ namespace OutlookInspired.Module.Features.ViewFilter{
                 .Select(t => new ChoiceActionItem(t.caption, t.data)).Concat(ObjectSpace.GetObjectsQuery<BusinessObjects.ViewFilter>()
                     .Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToArray()
                     .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count(viewCriteria)})",filter))).ToArray());
-            FilterAction.SelectedItem = FilterAction.Items.First(item => $"{item.Data}".StartsWith(View.ObjectTypeInfo.Type == typeof(Quote)?"This Month":"All"));
+            FilterAction.SelectedItem = FilterAction.Items.First(item => $"{item.Data}"=="All");
         }
     }
 }

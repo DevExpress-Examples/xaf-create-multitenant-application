@@ -49,12 +49,12 @@ namespace OutlookInspired.Blazor.Server.Components{
 
         private const string Script = @"
     export function printElement(element){
-        document.body.innerHTML = '';
-        document.body.appendChild(element);
-        setTimeout(() => {
-            window.print();
-            location.reload();
-        }, 2000);
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write(element.outerHTML);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
     };
 
     export function loadScriptAsync(src) {
