@@ -30,7 +30,7 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 
         => new[]{
             typeof(MapsViewController), typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
-            typeof(WinMapsController),typeof(PaletteEntriesController),typeof(QuoteMapItemController),
+            typeof(WinMapsController),typeof(PaletteEntriesController),typeof(FunnelFilterController),
             typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
         };

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Components\DevExtreme\DevExtremePivotGrid.razor.cs" />
+    <Compile Remove="js\**" />
   </ItemGroup>
   <ItemGroup>
     
@@ -19,6 +20,7 @@
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\PdfViewer.razor.js" />
     <None Remove="Model.xafml" />
+    <None Remove="js\**" />
   </ItemGroup>
   <ItemGroup>
     
@@ -29,6 +31,8 @@
     </Content>
     <Content Remove="Components\DevExtreme\DevExtremeResources.razor" />
     <Content Remove="UserControls\CustomerEmployees.razor" />
+    <EmbeddedResource Remove="js\**" />
+    <Content Remove="js\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.2.3" />

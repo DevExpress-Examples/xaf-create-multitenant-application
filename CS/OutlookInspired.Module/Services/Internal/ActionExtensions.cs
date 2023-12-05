@@ -1,4 +1,5 @@
-﻿using DevExpress.Data.Filtering;
+﻿using System.Linq.Expressions;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
@@ -11,7 +12,15 @@ namespace OutlookInspired.Module.Services.Internal{
             if (!action.Available()) return;
             action.DoExecute();
         }
-        
+
+        public static void DoExecute(this SingleChoiceAction action) 
+            => action.DoExecute(action.SelectedItem);
+
+        public static void DoExecute(this SingleChoiceAction action,Func<ChoiceActionItem,bool> selectItem){
+            action.SelectedItem = action.Items.First(selectItem);
+            action.DoExecute();
+        }
+
         public static bool Available(this ActionBase action) => action.Active && action.Enabled;
 
         public static void ShowReportPreview(this SingleChoiceAction action,Type reportDataType, CriteriaOperator criteria=null) 

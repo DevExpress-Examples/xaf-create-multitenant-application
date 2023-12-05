@@ -31,7 +31,7 @@ namespace OutlookInspired.Module.Services.Internal{
                 frame.Application.DetailViewCreated-=OnDetailViewCreated;
             }
             frame.Application.DetailViewCreated += OnDetailViewCreated;
-            showInDocumentAction.DoExecute(showInDocumentAction.Items.First(item => ((MailMergeDataInfo)item.Data).DisplayName == template));
+            showInDocumentAction.DoExecute(item => ((MailMergeDataInfo)item.Data).DisplayName == template);
             showInDocumentAction.Active["ByAppearance"] = false;
         }
 
