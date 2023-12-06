@@ -24,8 +24,8 @@
     </Items>
   </NavigationItems>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="23.2.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.3.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">
@@ -300,7 +300,11 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor" />
+    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+      <Columns>
+        <ColumnInfo Id="Description" Removed="True" />
+      </Columns>
+    </ListView>
     <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
       <Columns>
         <ColumnInfo Id="Bonus" Index="-1" />
@@ -405,7 +409,6 @@
                 <LayoutItem Id="Employee1" Removed="True" />
               </LayoutGroup>
             </LayoutGroup>
-            <LayoutItem Id="Description" RelativeSize="90.83837510803804" CaptionLocation="Top" />
           </LayoutGroup>
         </LayoutGroup>
       </Layout>
