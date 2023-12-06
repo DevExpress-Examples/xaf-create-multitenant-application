@@ -104,7 +104,7 @@
   }
 
   private void HandleDoubleClickAsync(MouseEventArgs e) 
-    => ComponentModel.ProcessSelectedObject();
+    => ComponentModel?.ProcessSelectedObject();
 
   private async Task HandleClickAsync(MouseEventArgs e){
     if (ComponentModel==null)return;
