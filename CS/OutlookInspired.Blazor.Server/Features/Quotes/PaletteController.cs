@@ -4,6 +4,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
+using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Quotes{
@@ -43,6 +44,9 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
             var controller = Application.CreateController<BlazorMapsViewController>();
             controller.Palette = _palette;
             e.ShowViewParameters.Controllers.Add(controller);
+            if (View.MasterItem().Frame.GetController<ViewFilterController>()
+                    .FilterAction.SelectedItem.Data is not Module.BusinessObjects.ViewFilter viewFilter) return;
+            controller.Criteria = viewFilter.Criteria;
         }
     }
 }
