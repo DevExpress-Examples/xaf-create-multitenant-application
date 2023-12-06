@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using OutlookInspired.Module.BusinessObjects;
@@ -69,8 +70,8 @@ namespace OutlookInspired.Module.Services.Internal{
         public static CustomerStore[] Stores(this IObjectSpace objectSpace, Stage stage) 
             => objectSpace.Quotes(stage).Select(quote => quote.CustomerStore).Distinct().ToArray();
 
-        public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage)
-            => objectSpace.Quotes(stage).ToArray().Select(quote => {
+        public static QuoteMapItem[] Opportunities(this IObjectSpace objectSpace, Stage stage,string criteria=null)
+            => objectSpace.Quotes(stage,criteria).ToArray().Select(quote => {
                 var mapItem = objectSpace.CreateObject<QuoteMapItem>();
                 mapItem.Stage = stage;
                 mapItem.Value = quote.Total;
@@ -82,20 +83,29 @@ namespace OutlookInspired.Module.Services.Internal{
             }).ToArray().Do((item, i) => item.ID=i).ToArray();
          
         public static IEnumerable<QuoteMapItem> Opportunities(this IObjectSpace objectSpace,string criteria=null)
-            => Enum.GetValues<Stage>().Where(stage => stage!=Stage.Summary)
-                .Select(stage => new QuoteMapItem
-                { Stage = stage, Value = ((IQueryable<Quote>)objectSpace.YieldAll().OfType<EFCoreObjectSpace>().First()
-                        .Query(typeof(Quote), criteria))
-                    .Where(stage).TotalSum(q => q.Total) }).Do((item, i) => item.ID=i);
+            => Enum.GetValues<Stage>().Where(stage1 => stage1!=Stage.Summary).Select(stage1 => new QuoteMapItem{ Stage = stage1, 
+                    Value = ((IQueryable<Quote>)objectSpace.YieldAll().OfType<EFCoreObjectSpace>().First().Query(typeof(Quote), criteria))
+                        .Where(stage1).TotalSum(q => q.Total) }).Do((item, i) => item.ID=i);
 
-        private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage) 
-            => objectSpace.GetObjectsQuery<Quote>().Where( stage);
+        private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage,string criteria=null){
+            return ((IQueryable<Quote>)((EFCoreObjectSpace)objectSpace).Query(typeof(Quote),
+                criteria)).Where(stage);
+        }
 
         public static decimal TotalSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
             var source = query.AsQueryable().Select(selector);
             return !source.Any() ? 0M : source.AsEnumerable().Sum();
         }
-
+        static LambdaExpression Where(this Stage stage){
+            var (min, max) = new Dictionary<Stage, (double, double)>{
+                [Stage.High] = (0.6, 1.0), [Stage.Medium] = (0.3, 0.6), [Stage.Low] = (0.12, 0.3), [Stage.Summary] = (0.0, 1.0),
+            }.GetValueOrDefault(stage, (0.0, 0.12));
+            var quoteParam = Expression.Parameter(typeof(Quote), "quote");
+            return Expression.Lambda<Func<Quote, bool>>(Expression.And(
+                    Expression.GreaterThan(Expression.Property(quoteParam, nameof(Quote.Opportunity)), Expression.Constant(min)),
+                    Expression.LessThan(Expression.Property(quoteParam, nameof(Quote.Opportunity)), Expression.Constant(max))), quoteParam);
+        }
+        
         static IQueryable<Quote> Where(this IQueryable<Quote> quotes, Stage stage){
             var (min, max) = new Dictionary<Stage, (double, double)>{
                 [Stage.High] = (0.6, 1.0), [Stage.Medium] = (0.3, 0.6),

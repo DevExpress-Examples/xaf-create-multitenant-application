@@ -22,17 +22,20 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
 
         protected override DxVectorMapModel CustomizeModel(DxVectorMapModel model){
             var stage = (Stage)Frame.GetController<MapsViewController>().StageAction.SelectedItem.Data;
-            var mapItems = ObjectSpace.Opportunities(stage).ToArray();
+            var mapItems = ObjectSpace.Opportunities(stage,Criteria).ToArray();
             model.Options = mapItems.VectorMapOptions<QuoteMapItem, BubbleLayer>(Palette.Where(t => t.stage==stage).Select(t => t.color).ToArray(),
                 items => items.Sum(item => item.Total).YieldItem().Select(arg => arg.RoundNumber()).ToList());
-            var quoteMapItem = mapItems.First();
-            model.Options.Annotations.Add(new Annotation(){
-                Coordinates = new[]{ quoteMapItem.Longitude,quoteMapItem.Latitude },
-                Data = ObjectSpace.OpportunityCallout(quoteMapItem)
-            });
+            var quoteMapItem = mapItems.FirstOrDefault();
+            if (quoteMapItem != null){
+                model.Options.Annotations.Add(new Annotation(){
+                    Coordinates = new[]{ quoteMapItem.Longitude,quoteMapItem.Latitude },
+                    Data = ObjectSpace.OpportunityCallout(quoteMapItem)
+                });    
+            }
             return model;
         }
 
         public (string color, Stage stage)[] Palette{ get; set; }
+        public string Criteria{ get; set; }
     }
 }
