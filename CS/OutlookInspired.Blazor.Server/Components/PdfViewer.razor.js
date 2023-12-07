@@ -7,7 +7,8 @@ export async function addPdfLoadListener(element,model, base64Pdf, toolbar) {
             model.readyReference.invokeMethodAsync('Invoke', null);
         };
         newEmbed.addEventListener("load", loadHandler);
-        newEmbed.setAttribute("src", `data:application/pdf;base64,${base64Pdf}#toolbar=${toolbar}`);
         pdfEmbed.parentNode.replaceChild(newEmbed, pdfEmbed);
+        newEmbed.setAttribute("src", `data:application/pdf;base64,${base64Pdf}#toolbar=${toolbar}`);
+        
     }
 }
