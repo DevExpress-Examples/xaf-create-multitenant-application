@@ -10,8 +10,7 @@ namespace OutlookInspired.Blazor.Server.Components.DevExtreme{
         
         protected override async Task OneTimeInitializeAsync(){
             await base.OneTimeInitializeAsync();
-            if (!InitializedTypes.Contains(typeof(DevExtremeComponent<,>))){
-                InitializedTypes.Add(typeof(DevExtremeComponent<,>));
+            if (InitializedTypes.Add(typeof(DevExtremeComponent<,>))){
                 using var memoryStream = new MemoryStream(_script.Bytes());
                 await memoryStream.SaveToFileAsync($"{WwwRootPath}/{JsPath}/{ComponentName}.js");    
             }
@@ -50,12 +49,12 @@ export async function ensureDevExtremeAsync() {{
 
 function loadDevExtreme(scriptLoader) {{
     return devExtremeInitPromise || (devExtremeInitPromise = new Promise(async (resolve, _) => {{
-        await scriptLoader.loadScriptAsync(""https://cdnjs.cloudflare.com/ajax/libs/devextreme-quill/1.6.2/dx-quill.min.js"");
-        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.1.3/js/dx.all.js"");
-        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.1.5/js/vectormap-data/usa.js"");
-        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.1.5/js/vectormap-data/world.js"");
-        await scriptLoader.loadStylesheetAsync(""https://cdn3.devexpress.com/jslib/23.1.3/css/dx.common.css"");
-        await scriptLoader.loadStylesheetAsync(""https://cdn3.devexpress.com/jslib/23.1.3/css/dx.material.orange.dark.compact.css"");
+        await scriptLoader.loadScriptAsync(""https://cdnjs.cloudflare.com/ajax/libs/devextreme-quill/1.6.3/dx-quill.min.js"");
+        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.2.3/js/dx.all.js"");
+        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.2.3/js/vectormap-data/usa.js"");
+        await scriptLoader.loadScriptAsync(""https://cdn3.devexpress.com/jslib/23.2.3/js/vectormap-data/world.js"");
+        await scriptLoader.loadStylesheetAsync(""https://cdn3.devexpress.com/jslib/23.2.3/css/dx.common.css"");
+        await scriptLoader.loadStylesheetAsync(""https://cdn3.devexpress.com/jslib/23.2.3/css/dx.material.orange.dark.compact.css"");
         resolve();
     }}));
 }}
