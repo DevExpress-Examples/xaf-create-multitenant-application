@@ -17,8 +17,7 @@ namespace OutlookInspired.Blazor.Server.Components{
             await Semaphore.WaitAsync();
             try{
                 var type = GetType();
-                if (InitializedTypes.Contains(type)) return;
-                InitializedTypes.Add(type);
+                if (!InitializedTypes.Add(type)) return;
                 await OneTimeInitializeAsync();
             }
             finally{
