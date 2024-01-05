@@ -21,54 +21,6 @@ For additional information, refer to the [Multitenancy](https://docs.devexpress.
 
 > Before you review this XAF sample project, please take a moment to [complete a short multi-tenancy related survey](https://www.devexpress.com/products/net/application_framework/survey.xml) (share your multi-tenancy requirements with us).
 
-## Table of Contents
-
-- [Run the Application](#run-the-application) 
-- [Implementation Details](#implementation-details) 
-  - [Enable Multi-Tenancy](#enable-multi-tenancy)
-  - [Configure ObjectSpaceProviders for tenants](#configure-objectspaceproviders-for-tenants)
-  - [Populate Databases with Data](#populate-databases-with-data)
-- [Solution Overview](#solution-overview)
-  - [Domain Diagram](#domain-diagram)
-  - **OutlookInspired.Module Project**
-    - [Services Folder](#services-folder)
-    - [Attributes Folder](#attributes-folder)
-      - [Appearance Subfolder](#appearance-subfolder)
-      - [Validation Subfolder ](#validation-subfolder)
-    - [Controllers Folder](#controllers-folder)
-    - [Features Folder](#features-folder)
-      - [CloneView Subfolder](#cloneview-subfolder)
-      - [Customers Subfolder](#customers-subfolder)
-      - [Employees Subfolder](#employees-subfolder)
-      - [Maps Subfolder](#maps-subfolder)
-      - [MasterDetail Subfolder](#masterdetail-subfolder)
-      - [Orders Subfolder](#orders-subfolder)
-      - [Products Subfolder](#products-subfolder)
-      - [Quotes Subfolder](#quotes-subfolder)
-      - [ViewFilter Subfolder](#viewfilter-subfolder)
-  - **OutlookInspired.Win Project**
-    - [Controllers Folder](#controllers-folder-1)
-    - [Editors Folder](#editors-folder)
-    - [Services Folder](#services-folder-1)
-    - [Features Folder](#features-folder-1)
-      - [Maps Subfolder](#maps-subfolder-1)
-      - [Customers Subfolder](#customers-subfolder-1)
-      - [Employees Subfolder](#employees-subfolder-1)
-      - [GridListEditor Subfolder](#gridlisteditor-subfolder)
-      - [Products Subfolder](#products-subfolder-1)
-      - [Quotes Subfolder](#quotes-subfolder)
-  - **OutlookInspired.Blazor.Server Project**
-    - [Components Folder](#components-folder)
-    - [Controllers Folder](#controllers-folder-2)
-    - [Editors Folder](#editors-folder-1)
-    - [Features Folder](#features-folder-2)
-      - [Customers Subfolder](#customers-subfolder-2)
-      - [Employees Subfolder](#employees-subfolder-2)
-      - [Evaluations Subfolder](#evaluations-subfolder)
-      - [Maps Subfolder](#maps-subfolder-2)
-      - [Orders Subfolder](#orders-subfolder-1)
-      - [Products Subfolder](#products-subfolder-2)
-
 ## Run the Application
 
 When you launch the WinForms or Blazor application for the first time, you can login using the "Admin" account and a blank password. The application will execute in Host User Interface mode (used to view, create and edit Tenants).
