@@ -30,28 +30,27 @@ For additional information, refer to the [Multitenancy](https://docs.devexpress.
   - [Populate Databases with Data](#populate-databases-with-data)
 - [Solution Overview](#solution-overview)
   - [Domain Diagram](#domain-diagram)
-  - [Entity Framework Core](#entity-framework-core)
-- [OutlookInspired.Win Project](#outlookinspiredwin)
-  - [Controllers Folder](#controllers-folder)
-  - [Editors Folder](#editors-folder)
-  - [Services Folder](#services-folder)
-  - [Features Folder](#features-folder)
-    - [Maps Subfolder](#maps-subfolder)
-    - [Customers Subfolder](#customers-subfolder)
-    - [Employees Subfolder](#employees-subfolder)
-    - [GridListEditor Subfolder](#gridlisteditor-subfolder)
-    - [Products Subfolder](#products-subfolder)
-    - [Quotes Subfolder](#quotes-subfolder)
-- [OutlookInspired.Blazor.Server Project](#outlookinspiredblazorserver-project)
-  - [Components Folder](#components-folder)
-  - [Controllers Folder](#controllers-folder)
-  - [Editors Folder](#editors-folder-1)
-    - [Customers Subfolder](#customers-subfolder-1)
-    - [Employees Subfolder](#employees-subfolder-1)
-    - [Evaluations Subfolder](#evaluations-subfolder)
-    - [Maps Subfolder](#maps-subfolder-1)
-    - [Orders Subfolder](#orders-subfolder)
-    - [Product Subfolder](#product-subfolder)
+  - [OutlookInspired.Win Project](#outlookinspiredwin)
+    - [Controllers Folder](#controllers-folder)
+    - [Editors Folder](#editors-folder)
+    - [Services Folder](#services-folder)
+    - [Features Folder](#features-folder)
+      - [Maps Subfolder](#maps-subfolder)
+      - [Customers Subfolder](#customers-subfolder)
+      - [Employees Subfolder](#employees-subfolder)
+      - [GridListEditor Subfolder](#gridlisteditor-subfolder)
+      - [Products Subfolder](#products-subfolder)
+      - [Quotes Subfolder](#quotes-subfolder)
+  - [OutlookInspired.Blazor.Server Project](#outlookinspiredblazorserver-project)
+    - [Components Folder](#components-folder)
+    - [Controllers Folder](#controllers-folder)
+    - [Editors Folder](#editors-folder-1)
+      - [Customers Subfolder](#customers-subfolder-1)
+      - [Employees Subfolder](#employees-subfolder-1)
+      - [Evaluations Subfolder](#evaluations-subfolder)
+      - [Maps Subfolder](#maps-subfolder-1)
+      - [Orders Subfolder](#orders-subfolder)
+      - [Product Subfolder](#product-subfolder)
 
 ## Run the Application
 
@@ -442,7 +441,9 @@ This folder implements features specific to the solution.
   ![ViewFilterAction](Images/ViewFilterAction.png)
   ![ViewFilterView](Images/ViewFilterView.png)
 
-#### <a name="outlookinspiredwin"></a>OutlookInspired.Win project
+<a name="outlookinspiredwin"></a>
+
+#### OutlookInspired.Win project
 This is a WinForms frontend project. It utilizes the previously mentioned `OutlookInspired.Module` and adheres to the same folder structure.
 
 ##### `Controllers` Folder
