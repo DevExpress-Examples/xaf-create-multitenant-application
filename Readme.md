@@ -31,7 +31,7 @@ For additional information, refer to the [Multitenancy](https://docs.devexpress.
 - [Solution Overview](#solution-overview)
   - [Domain Diagram](#domain-diagram)
   - [Entity Framework Core](#entity-framework-core)
-- [OutlookInspired.Win Project](#outlookinspiredwin-project)
+- [OutlookInspired.Win Project](#outlookinspiredwin)
   - [Controllers Folder](#controllers-folder)
   - [Editors Folder](#editors-folder)
   - [Services Folder](#services-folder)
@@ -442,7 +442,7 @@ This folder implements features specific to the solution.
   ![ViewFilterAction](Images/ViewFilterAction.png)
   ![ViewFilterView](Images/ViewFilterView.png)
 
-#### OutlookInspired.Win project
+#### <a name="outlookinspiredwin"></a>OutlookInspired.Win project
 This is a WinForms frontend project. It utilizes the previously mentioned `OutlookInspired.Module` and adheres to the same folder structure.
 
 ##### `Controllers` Folder
