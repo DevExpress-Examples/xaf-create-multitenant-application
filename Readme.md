@@ -207,7 +207,7 @@ private static void AddManagementPermissions(this PermissionPolicyRole role)
         .Enumerate();
 ```
 
-#### Attributes Folder
+### Attributes Folder
 
 The [Attributes](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/tree/23.2.3%2B/CS/OutlookInspired.Module/Attributes) folder contains attribute declarations.
 
