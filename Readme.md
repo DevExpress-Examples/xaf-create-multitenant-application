@@ -168,9 +168,9 @@ The solution consists of three distinct projects.
 - **OutlookInspired.Blazor.Server** - A Blazor port of the original _OutlookInspired_ demo.
 - **OutlookInspired.Win** - A WinForms port of the original _OutlookInspired_ demo.
 
-#### OutlookInspired.Module project
+## OutlookInspired.Module project
 
-##### Services Folder
+### Services Folder
 
 This folder serves as the centralized storage for app business logic so that all other class implementations can be compact. For instance, methods that utilize `XafApplication` are located in [Services/Internal/XafApplicationExtensions](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Module/Services/Internal/XafApplicationExtensions.cs):
 
@@ -207,7 +207,7 @@ private static void AddManagementPermissions(this PermissionPolicyRole role)
         .Enumerate();
 ```
 
-##### Attributes Folder
+#### Attributes Folder
 
 The [Attributes](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/tree/23.2.3%2B/CS/OutlookInspired.Module/Attributes) folder contains attribute declarations.
 
@@ -261,7 +261,7 @@ The [Attributes](https://github.com/DevExpress-Examples/xaf-create-multitenant-a
   
   ![](Images/BlazorFontDelta.png)
 
-- ##### Appearance Subfolder
+- #### Appearance Subfolder
 
   The following [Conditional Appearance module](https://docs.devexpress.com/eXpressAppFramework/113286/conditional-appearance) attributes are in this subfolder:
 
@@ -282,7 +282,7 @@ The [Attributes](https://github.com/DevExpress-Examples/xaf-create-multitenant-a
 
   In much the same way, we derive from this attribute to create other attributes found in the same folder (`ForbidCRUDAttribute`, `ForbidDeleteAttribute`,`ForbidDeleteAttribute`).
 
-- ##### Validation Subfolder 
+- #### Validation Subfolder 
   This folder includes attributes that extend the [XAF Validation module](https://docs.devexpress.com/eXpressAppFramework/113684/validation-module). Available attributes include: `EmailAddressAttribute`, `PhoneAttribute`, `UrlAttribute`, `ZipCodeAttribute`. The following code snippet illustrates how the `ZipCodeAttribute` is implemented. Other attributes are implemented in a similar fashion.
 
   [Attributes/FontSizeDeltaAttribute.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Module/Attributes/FontSizeDeltaAttribute.cs):
@@ -295,13 +295,13 @@ The [Attributes](https://github.com/DevExpress-Examples/xaf-create-multitenant-a
   }
   ```
 
-##### Controllers Folder
+### Controllers Folder
 This folder contains controllers with no dependencies:
 
 * The `HideToolBarController` - extends the XAF `IModelListView` interface with a `HideToolBar` attribute so we can hide the nested list view toolbar. 
 * <a name="splitter"></a>The `SplitterPositionController` - extends the XAF model with a `RelativePosition` property used to configure the splitter position.
 
-##### Features Folder
+### Features Folder
 This folder implements features specific to the solution.
 
 - ##### CloneView Subfolder
@@ -322,23 +322,23 @@ This folder implements features specific to the solution.
       public const string LayoutViewDetailView =   "EmployeeLayoutView_DetailView";
       // ...
   }
-- ##### Customers Subfolder
+- #### Customers Subfolder
   This subfolder includes Customer-related controllers, such as:
 
-  - ###### MailMergeController
+  - ##### MailMergeController
     XAF ships with built-in [mail merge](https://docs.devexpress.com/eXpressAppFramework/400006/document-management/office-module/mail-merge) support. This controller modifies the default `ShowInDocumentAction` icons.
 
       ![Modified ShowInDocumentAction Icon](Images/ShowInDocumentIcon.png)
 
-  - ###### ReportsController
+  - ##### ReportsController
     This controller declares an action used to display Customer Reports. (The [XAF Reports module](https://docs.devexpress.com/eXpressAppFramework/113591/shape-export-print-data/reports/reports-v2-module-overview) API is used).
 
       ![Customer Report Action Icon](Images/CustomerReportAction.png)
 
-- ##### Employees Subfolder
+- #### Employees Subfolder
   This subfolder includes Employee-related controllers such as:
 
-  - ###### RoutePointController
+  - ##### RoutePointController
     This controller sets travel distance (calculated using the MAP service).
 
     WindowsForms:
@@ -351,75 +351,75 @@ This folder implements features specific to the solution.
 
   This subfolder includes mapping-related logic, including:
 
-  - ###### MapsViewController
+  - ##### MapsViewController
 
     This controller declares map-related actions (`MapItAction`, `TravelModeAction`, `ExportMapAction`, `PrintPreviewMapAction`, `PrintAction`, `StageAction`, `SalesPeriodAction`) and manages associated state based on `ISalesMapMarker` and `IRoutePointMapMarker` interfaces.
 
-- ##### MasterDetail Subfolder
+- #### MasterDetail Subfolder
   This subfolder adds platform-agnostic master-detail capabilities based on XAF's [DashboardViews](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.DashboardView).
 
-  - ###### MasterDetailController, IUserControl
+  - ##### MasterDetailController, IUserControl
     The `IUserControl` is implemented in a manner similar to the technique described in the following topic: [How to: Include a Custom UI Control That Is Not Integrated by Default (WinForms, ASP.NET WebForms, and ASP.NET Core Blazor)](https://docs.devexpress.com/eXpressAppFramework/113610/ui-construction/using-a-custom-control-that-is-not-integrated-by-default/using-a-custom-control-that-is-not-integrated-by-default). The distinction lies in the addition of `UserControl` (for WinForms) and the Component (for Blazor) to a `DetailView`.
 
-- ##### Orders Subfolder
+- #### Orders Subfolder
   This subfolder includes functionality specific to the Sales moduel.
 
-  - ###### FollowUpController
+  - ##### FollowUpController
     Declares an action used to display the follow-up mail merge template for the selected order.
     
     ![Follow-Up Template](Images/FollowUp.png)
 
-  - ###### InvoiceController
+  - ##### InvoiceController
     Uses a master-detail mail merge template pair to generate an invoice, converts it to a PDF, and displays it using the `PdfViewEditor`.
   
-  - ###### Pay/Refund Controllers
+  - ##### Pay/Refund Controllers
     These controllers declare actions used to mark the selected order as either Paid or Refunded.
   
-  - ###### ReportController
+  - ##### ReportController
     Provides access to Order Revenue reports.
 
     ![Revenue Analysis](Images/RevenueAnalysis.png)
 
-  - ###### ShipmentDetailController
+  - ##### ShipmentDetailController
     Adds a watermark to the Shipment Report based on order status.
 
     ![Watermarked Report](Images/WatermarkReport.png)
     
 
-- ##### Products Subfolder
+- #### Products Subfolder
   This subfolder includes functionality specific to the Products module.
 
-  - ###### ReportsController
+  - ##### ReportsController
     Declares an action used to display reports for Sales, Shipments, Comparisons, and Top Sales Person.
   
     ![ProductReports](Images/ProductReports.png)
   
 
-- ##### Quotes Subfolder
+- #### Quotes Subfolder
   This subfolder includes functionality specific to the Quotes module.
 
-  - ###### QuoteMapItemController
+  - ##### QuoteMapItemController
     Calculates non-persistent `QuoteMapItem` objects used by the Opportunities view
   
     ![Opportunities](Images/Opportunities.png)
 
-- ##### ViewFilter Subfolder
+- #### ViewFilter Subfolder
   This subfolder includes our implementation of a Filter manager, used by the end-user to create and save view filters.
   
   ![ViewFilterAction](Images/ViewFilterAction.png)
   ![ViewFilterView](Images/ViewFilterView.png)
 
-#### OutlookInspired.Win project
+### OutlookInspired.Win project
 This is a WinForms frontend project. It utilizes the previously mentioned `OutlookInspired.Module` and adheres to the same folder structure.
 
-##### Controllers Folder
+#### Controllers Folder
 This folder contains the following controllers with no dependencies:
 
 - `DisableSkinsController` - This controller disables the XAF default theme-switching action.
 
 - **`SplitterPositionController`** - This is the WinForms implementation of the [SplitterPositionController](#splitter). We discussed its platform agnostic counterpart in the `OutlookInspired.Module` section.
 
-##### Editors Folder
+#### Editors Folder
 This folder contains custom controls and XAF [property editors](https://docs.devexpress.com/eXpressAppFramework/113097/ui-construction/view-items-and-property-editors/property-editors).
 
 - `ColumnViewUserControl` - This is a base control that implements [IUserControl](#masterdetailcontroller-iusercontrol) discussed previously.
@@ -446,15 +446,15 @@ This folder contains custom controls and XAF [property editors](https://docs.dev
 
   ![](Images/ProgressEditorWin.png)
 
-##### Services Folder
+#### Services Folder
 
 Much like the platform-agnostic module's [Services Folder](#services-folder), our WinForms project keeps all classes as small as possible and implements business logic in extension methods.
 
-##### Features Folder
+#### Features Folder
 
 This folder contains custom functionality specific to the solution.
 
-- ##### Maps Subfolder
+- #### Maps Subfolder
 
   This subfolder includes logic related to mapping.
 
@@ -466,7 +466,7 @@ This folder contains custom functionality specific to the solution.
   
   ![Win Sales Map](Images/WinSalesMap.png)
 
-- ##### Customers Subfolder
+- #### Customers Subfolder
 
   This subfolder contains customer module-related functionality.
 
@@ -474,7 +474,7 @@ This folder contains custom functionality specific to the solution.
   
   ![WinForms Master Detail Grid](Images/WinMasterDetailGrid.png)
 
-- ##### Employees Subfolder
+- #### Employees Subfolder
 
   This subfolder contains employee module-related functionality.
 
@@ -482,7 +482,7 @@ This folder contains custom functionality specific to the solution.
 
   ![Win Employee Layout](Images/EmployeeWinLayout.png)
 
-- ##### GridListEditor Subfolder
+- #### GridListEditor Subfolder
 
   This subfolder contains functionality related to the default XAF GridListEditor.
 
@@ -490,7 +490,7 @@ This folder contains custom functionality specific to the solution.
 
   - `NewItemRowHandlingModeController` - Modifies how new object are handled when a dashboard master detail view (discussed in the platform-agnostic module section) objects are created.
 
-- ##### Products Subfolder
+- #### Products Subfolder
 
   This subfolder contains functionality related to products.
   
@@ -498,7 +498,7 @@ This folder contains custom functionality specific to the solution.
 
     ![](Images/WinProductLayout.png)
 
-- ##### Quotes Subfolder
+- #### Quotes Subfolder
 
   This subfolder contains opportunity module-related functionality.
 
@@ -539,12 +539,12 @@ This folder contains Blazor components essential for project requirements.
 
   ![](Images/BlazorChart.png)
 
-- ##### CardView Subfolder
+- #### CardView Subfolder
   
   This folder contains the `SideBySideCardView` and the `StackedCardView`. They are used to display Card like list views as follows:
   ![](Images/CardViews.png)
 
-- ##### DevExtreme Subfolder
+- #### DevExtreme Subfolder
 
   This folder includes reusable .NET components, including [Map](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Map/Markers/Light/), [VectorMap](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/VectorMap/Overview/Light/), [Funnel](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Charts/FunnelChart/Light/) and [Chart](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/Charts/Overview/Light/) DevExtreme Widgets.
 
@@ -590,7 +590,7 @@ This folder contains XAF custom editors. Examples include:
 
 This folder contains solution-specific functionality.
 
-- ##### Customers subfolder
+- #### Customers subfolder
   Uses components from `Components` (bound to data) to render customer-related data. For example, it uses the `StackedCardView` with a `StackedInfoCard` as shown below:
 
   [Features/Customers/Stores/StoresCardView.razor](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Blazor.Server/Features/Customers/Stores/StoresCardView.razor):
@@ -610,7 +610,7 @@ This folder contains solution-specific functionality.
   ![](Images/StoresView.png)
 
   
-- ##### Employees subfolder
+- #### Employees subfolder
   
   Uses data-bound components from the `Components` folder to render employee-related data.
 
@@ -636,20 +636,20 @@ This folder contains solution-specific functionality.
 
   ![](Images/TasksView.png)
 
-- ##### Evaluations subfolder
+- #### Evaluations subfolder
   The `SchedulerGroupTypeController` is required to set up the scheduler, as follows:
 
   ![](Images/Scheduler.png)
 
-- ##### Maps subfolder
+- #### Maps subfolder
   Mirroring its WinForms counterpart, this subfolder contains both the `RouteMapsViewController` and the `SalesMapsViewController`. These controllers are needed to configure maps (`ModalDxMap` and `ModalDxVectorMap`) and associated actions (such as `TravelMode`, `SalesPeriod`, `Print`, etc). Components within this directory are fragments that use components in `Components/DevExtreme`. Additionally, they adjust height as they are displayed in a modal popup window.
  
-- ##### Orders subfolder
+- #### Orders subfolder
   The `DetailRow` component renders the detail fragment for the `OrderListView`.
 
   ![](Images/OrderDetailView.png)
 
-- ##### Products subfolder
+- #### Products subfolder
   Much like the _Employees_ subfolder, the `Component/CardViews/StackedCardView` declaration is as follow:
 
   [Features/Products/CardView.razor](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Blazor.Server/Features/Products/CardView.razor):
