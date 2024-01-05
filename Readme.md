@@ -417,12 +417,12 @@ This folder contains the following controllers with no dependencies:
 
 - `DisableSkinsController` - This controller disables the XAF default theme-switching action.
 
-- **`SplitterPositionController`** - This is the WinForms implementation of the [SplitterPositionController](#splitter). We discussed its platform agnostic counterpart in the `OutlookInspired.Module` section.
+- **`SplitterPositionController`** - This is the WinForms implementation of the SplitterPositionController. We discussed its platform agnostic counterpart in the `OutlookInspired.Module` section.
 
 #### Editors Folder
 This folder contains custom controls and XAF [property editors](https://docs.devexpress.com/eXpressAppFramework/113097/ui-construction/view-items-and-property-editors/property-editors).
 
-- `ColumnViewUserControl` - This is a base control that implements [IUserControl](#masterdetailcontroller-iusercontrol) discussed previously.
+- `ColumnViewUserControl` - This is a base control that implements IUserControl discussed previously.
 
 - `EnumPropertyEditor` - This is a subclass of the built-in `EnumPropertyEditor` (it only displays an image).
    
@@ -519,8 +519,6 @@ This is the Blazor frontend project. It utilizes the previously mentioned `Outlo
 This folder contains Blazor components essential for project requirements.
 
 - **ComponentBase, ComponentModelBase** - `ComponentBase`  is the foundation for client-side components like DxMap, DxFunnel, DXPivot, and PdfViewer. It manages loading of resources such as JavaScript files. `ComponentModelBase` acts as the base model for all components, offering functionality such as `ClientReady` event and a hook for browser console messages, among other features.
-
-  ![](Images/ComponentBaseModelBase.png)
 
 - **HyperLink, Label** - TThese components mirror their WinForms counterparts and are used to render hyperlinks and labels.
 
