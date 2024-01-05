@@ -409,17 +409,17 @@ This folder implements features specific to the solution.
   ![ViewFilterAction](Images/ViewFilterAction.png)
   ![ViewFilterView](Images/ViewFilterView.png)
 
-### OutlookInspired.Win project
+## OutlookInspired.Win project
 This is a WinForms frontend project. It utilizes the previously mentioned `OutlookInspired.Module` and adheres to the same folder structure.
 
-#### Controllers Folder
+### Controllers Folder
 This folder contains the following controllers with no dependencies:
 
 - `DisableSkinsController` - This controller disables the XAF default theme-switching action.
 
 - **`SplitterPositionController`** - This is the WinForms implementation of the SplitterPositionController. We discussed its platform agnostic counterpart in the `OutlookInspired.Module` section.
 
-#### Editors Folder
+### Editors Folder
 This folder contains custom controls and XAF [property editors](https://docs.devexpress.com/eXpressAppFramework/113097/ui-construction/view-items-and-property-editors/property-editors).
 
 - `ColumnViewUserControl` - This is a base control that implements IUserControl discussed previously.
@@ -446,11 +446,11 @@ This folder contains custom controls and XAF [property editors](https://docs.dev
 
   ![](Images/ProgressEditorWin.png)
 
-#### Services Folder
+### Services Folder
 
 Much like the platform-agnostic module's [Services Folder](#services-folder), our WinForms project keeps all classes as small as possible and implements business logic in extension methods.
 
-#### Features Folder
+### Features Folder
 
 This folder contains custom functionality specific to the solution.
 
