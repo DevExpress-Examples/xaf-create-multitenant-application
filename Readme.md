@@ -8,12 +8,12 @@
 
 XAF v23.2 marks the first official release of the DevExpress Multi-Tenancy Module. This release supports straightforward CRUD usage scenarios and includes the following built-in features:
 
- - XPO ORM support (v23.1 only supported EF Core).
+ - EF Core and XPO ORM support
  - Authentication: Log in with an email/OAuth2 account (like Microsoft Entra ID or Google) and a password (the domain automatically resolves the tenant and its storage).
  - Tenant Isolation: Multi-tenant app with multiple databases (a database per tenant).
  - Database Creation: The application automatically creates a tenant database and schema at runtime (if the database does not exist).
 
-This example application is a modern multi-tenant iteration of our original WinForms-based demo. It serves as the central data management hub for the fictitious company, overseeing various business entities such as Employees, Products, Orders, Quotes, Customers, and Stores.
+This example application is a modern multi-tenant iteration of our original WinForms-based Outlook Inspired App. It serves as the central data management hub for the fictitious company, overseeing various business entities such as Employees, Products, Orders, Quotes, Customers, and Stores.
 
 ![](./Images/ManageTenants.png)
 
