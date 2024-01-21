@@ -1,3 +1,8 @@
+parameters:
+- name: useSelfHostedPool
+  displayName: Use Self Hosted Pool
+  type: boolean
+  default: false
 jobs:
   - job: ImportData
     displayName: 'ImportData Job'
@@ -9,7 +14,10 @@ jobs:
       dxFeedVar: '$(DXFeed)'
       NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
     pool:
-      vmImage: 'windows-2022'
+      ${{ if eq(parameters.useSelfHostedPool, true) }}:
+        name: Self
+      ${{ if ne(parameters.useSelfHostedPool, true) }}:
+        vmImage: 'windows-2022'
     steps:
     - task: PowerShell@2
       displayName: Build

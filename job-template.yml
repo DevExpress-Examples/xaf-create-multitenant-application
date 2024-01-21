@@ -22,7 +22,10 @@ jobs:
       HumanResources: {}
   timeoutInMinutes: 90
   pool:
-    vmImage: 'windows-2022'
+    ${{ if eq(parameters.useSelfHostedPool, true) }}:
+      name: Self
+    ${{ if ne(parameters.useSelfHostedPool, true) }}:
+      vmImage: 'windows-2022'
   steps:
   - task: PowerShell@2
     displayName: Build
