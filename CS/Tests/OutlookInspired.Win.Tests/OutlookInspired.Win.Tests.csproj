@@ -23,15 +23,11 @@
         <ProjectReference Include="..\..\OutlookInspired.Win\OutlookInspired.Win.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Import\devav.sqlite3" />
-      <None Remove="Import\**" />
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="Import\devav.sqlite3" />
       <EmbeddedResource Remove="Import\**" />
     </ItemGroup>
     <!--        uncomment to see/use the importing tests, make the DevExpress.DevAV.v23.2.Data.dll version matches the DevExpress version used. You can find the assembly in your C:\Program Files\DevExpress 23.2\Components\Bin\Framework\-->
-    <!--        <DefineConstants>TRACE;Import</DefineConstants>-->
+<!--<PropertyGroup><DefineConstants>TRACE;Import</DefineConstants></PropertyGroup>-->
     <ItemGroup Condition=" $(DefineConstants.Contains('Import'))">
       <Reference Include="DevExpress.DevAV.v23.2.Data">
         <HintPath>..\DevExpress.DevAV.v23.2.Data.dll</HintPath>
@@ -39,5 +35,11 @@
     </ItemGroup>
     <ItemGroup Condition=" !$(DefineConstants.Contains('Import')) ">
       <Compile Remove="Import\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Import\devav.sqlite3" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Import\devav.sqlite3" />
     </ItemGroup>
 </Project>

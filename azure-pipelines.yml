@@ -1,11 +1,7 @@
-parameters:
-- name: useSelfHostedPool
-  displayName: Use Self Hosted Pool
-  type: boolean
-  default: false
 jobs:
   - job: ImportData
     displayName: 'ImportData Job'
+    dependsOn: []
     timeoutInMinutes: 90
     variables:
       defaultWorkingDir: '$(System.DefaultWorkingDirectory)\CS'
@@ -14,10 +10,7 @@ jobs:
       dxFeedVar: '$(DXFeed)'
       NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
     pool:
-      ${{ if eq(parameters.useSelfHostedPool, true) }}:
         name: Self
-      ${{ if ne(parameters.useSelfHostedPool, true) }}:
-        vmImage: 'windows-2022'
     steps:
     - task: PowerShell@2
       displayName: Build
@@ -27,10 +20,19 @@ jobs:
         script: |
           & sqllocaldb start mssqllocaldb
           dotnet nuget add source $(dxFeedVar) --name DX
+
+          $projectPath='$(defaultWorkingDir)\Tests\OutlookInspired.Win.Tests\OutlookInspired.Win.Tests.csproj'
+          [xml]$xmlDoc = Get-Content $projectPath
+          $newPropertyGroup = $xmlDoc.CreateElement("PropertyGroup")
+          $defineConstants = $xmlDoc.CreateElement("DefineConstants")
+          $defineConstants.InnerText = "TRACE;Import"
+          $newPropertyGroup.AppendChild($defineConstants)
+          $xmlDoc.Project.AppendChild($newPropertyGroup)
+          $xmlDoc.Save($projectPath)
+
           cd "$(defaultWorkingDir)"
           dotnet build --configuration TEST
-          Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | 
-          ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
+          Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
         pwsh: true      
     - task: VSTest@3
       displayName: 'ImportData.Test'

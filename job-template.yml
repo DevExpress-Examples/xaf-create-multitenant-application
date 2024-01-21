@@ -1,7 +1,6 @@
 parameters:
   testAssembly: ''
   displayName: ''
-
 jobs:
 - job: ${{ parameters.displayName }}
   variables:
@@ -21,11 +20,8 @@ jobs:
       Shipping: {}
       HumanResources: {}
   timeoutInMinutes: 90
-  pool:
-    ${{ if eq(parameters.useSelfHostedPool, true) }}:
-      name: Self
-    ${{ if ne(parameters.useSelfHostedPool, true) }}:
-      vmImage: 'windows-2022'
+  pool: 
+    name: Self
   steps:
   - task: PowerShell@2
     displayName: Build
