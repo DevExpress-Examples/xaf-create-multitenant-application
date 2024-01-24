@@ -34,7 +34,7 @@ public static class WebExtensions{
     public static IObservable<Process> Start(this Uri uri,string browser=null) 
         => new ProcessStartInfo{
             FileName = browser??"chrome",
-            Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} {uri}",
+            Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} --no-first-run --no-default-browser-check {uri}",
             UseShellExecute = true
         }.Start().Observe().Delay(TimeSpan.FromSeconds(2));
 

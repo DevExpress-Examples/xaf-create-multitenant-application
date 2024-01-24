@@ -20,16 +20,6 @@ jobs:
         script: |
           & sqllocaldb start mssqllocaldb
           dotnet nuget add source $(dxFeedVar) --name DX
-
-          $projectPath='$(defaultWorkingDir)\Tests\OutlookInspired.Win.Tests\OutlookInspired.Win.Tests.csproj'
-          [xml]$xmlDoc = Get-Content $projectPath
-          $newPropertyGroup = $xmlDoc.CreateElement("PropertyGroup")
-          $defineConstants = $xmlDoc.CreateElement("DefineConstants")
-          $defineConstants.InnerText = "TRACE;Import"
-          $newPropertyGroup.AppendChild($defineConstants)
-          $xmlDoc.Project.AppendChild($newPropertyGroup)
-          $xmlDoc.Save($projectPath)
-
           cd "$(defaultWorkingDir)"
           dotnet build --configuration TEST
           Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  

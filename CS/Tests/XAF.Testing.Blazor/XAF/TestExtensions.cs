@@ -34,7 +34,9 @@ namespace XAF.Testing.Blazor.XAF{
             WindowPosition inactiveWindowBrowserPosition = WindowPosition.None,LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
-                .Observe().SelectMany(host => Application.EnsureMultiTenantMainDatabase()
+                .Observe().SelectMany(host => Application
+                    .DoOnFirst(application => application.DropDb(application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString")))
+                    .EnsureMultiTenantMainDatabase()
                     .DeleteModelDiffs<TDBContext>(application => application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"),user).Cast<BlazorApplication>()
                     .TakeUntil(host.Services.WhenApplicationStopping())
                     .SelectMany(application => application.WhenLoggedOn(user).IgnoreElements()

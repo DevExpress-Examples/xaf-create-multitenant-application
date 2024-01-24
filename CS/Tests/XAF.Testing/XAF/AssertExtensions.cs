@@ -28,11 +28,10 @@ namespace XAF.Testing.XAF{
             => source.AssertNestedListView(frame, objectType, group => group.SelectTab(selectedTabPageIndex),existingObjectDetailview,assert,inlineEdit,caller);
         
         public static IObservable<Frame> AssertNestedListView(this IObservable<ITabControlProvider> source, Frame frame, Type objectType, Action<ITabControlProvider> tabGroupAction,
-            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false,[CallerMemberName]string caller=""){
-            return frame.AssertNestedListView(objectType, existingObjectDetailview, assert, inlineEdit, caller)
+            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false,[CallerMemberName]string caller="")
+            => frame.AssertNestedListView(objectType, existingObjectDetailview, assert, inlineEdit, caller)
                 .Merge(source.DelayOnContext().Do(tabGroupAction).DelayOnContext().IgnoreElements().To<Frame>())
                 .ReplayFirstTake();
-        }
 
         public static void ClearFilter(this Frame frame){
             if (frame.View is not ListView listView) return;
