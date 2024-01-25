@@ -62,9 +62,7 @@ namespace XAF.Testing.Blazor.XAF{
     }
 
     public class AssertReport : IAssertReport{
-        public IObservable<Unit> Assert(Frame frame, string item){
-            return frame.AssertReport(item).ToUnit();
-        }
+        public IObservable<Unit> Assert(Frame frame, string item) => frame.AssertReport(item).ToUnit();
     }
     
     public class WindowMaximizer : IWindowMaximizer{
@@ -90,9 +88,7 @@ namespace XAF.Testing.Blazor.XAF{
             => detailView.AssertRichEditControl(assertMailMerge).ToUnit();
     }
     class DashboardViewGridControlDetailViewObjectsAsserter:IDashboardViewGridControlDetailViewObjectsAsserter{
-        public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames){
-            return Observable.Empty<Frame>();
-        }
+        public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames) => Observable.Empty<Frame>();
     }
     public class FilterClearer : IFilterClearer{
         public void Clear(ListView listView) => listView.ClearFilter();

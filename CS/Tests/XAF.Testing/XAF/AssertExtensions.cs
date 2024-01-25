@@ -223,11 +223,11 @@ namespace XAF.Testing.XAF{
             => source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
                     .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
                     .Where(item => itemSelector?.Invoke(action, item) ?? true)
-                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.Application.AssertReport(action, item), () => item)))
+                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReport((item.Data ??item).ToString()), () => item)))
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
-        public static IObservable<Unit> AssertReport(this XafApplication application, SingleChoiceAction action, ChoiceActionItem item) 
-            => application.GetRequiredService<IAssertReport>().Assert(action.Controller.Frame, (item.Data ??item).ToString());
+        public static IObservable<Unit> AssertReport(this Frame frame, string report) 
+            => frame.Application.GetRequiredService<IAssertReport>().Assert(frame, report);
 
         
         public static IObservable<DashboardViewItem> AssertMasterFrame(this IObservable<Frame> source,Func<DashboardViewItem, bool> masterItem=null) 

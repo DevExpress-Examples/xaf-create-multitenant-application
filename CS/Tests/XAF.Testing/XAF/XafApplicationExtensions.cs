@@ -8,7 +8,6 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Layout;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace XAF.Testing.XAF{
@@ -213,8 +212,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
             viewNavigationController.NavigateBackAction.SelectedItem = viewNavigationController.NavigateBackAction.Items.First();
-            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged())
-                .Select(window => window);
+            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged());
         }
 
         public static IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame)> WhenSaveObject(this IObservable<Frame> source,Frame parentFrame)

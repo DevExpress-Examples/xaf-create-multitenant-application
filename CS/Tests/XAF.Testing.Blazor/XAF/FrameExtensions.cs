@@ -9,10 +9,12 @@ namespace XAF.Testing.Blazor.XAF{
         public static IObservable<Frame> AssertReport(this Frame frame,[CallerMemberName]string caller="") 
             => frame.Application.WhenFrame("ReportViewer_DetailView")
                 .Where(frame1 => ((IReportDataV2)frame1.View.CurrentObject).DisplayName==caller).To<Frame>()
-                .SelectUntilViewClosed(frame1 => frame.Application.GetRequiredService<IReportResolver>().WhenResolved(frame1)
-                    .SelectMany(report => report.WhenReady()).To(frame1).CloseWindow(frame))
+                .SelectMany(frame1 => frame.Application.GetRequiredService<IReportResolver>().WhenResolved(frame1)
+                    .SelectMany(report => report.WhenReady())
+                    .DelayOnContext(5) 
+                    .To(frame1).CloseWindow(frame)
+                )
                 .Assert($"{nameof(AssertReport)}", caller: caller)
-                .Select(frame1 => frame1)
                 .To<Frame>();
 
 

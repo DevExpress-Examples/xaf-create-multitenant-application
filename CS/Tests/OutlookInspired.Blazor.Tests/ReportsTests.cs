@@ -22,5 +22,11 @@ namespace OutlookInspired.Blazor.Tests{
         [Category(Tests)]
         public async Task Order(string user, string view, string viewVariant)
             => await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
+        
+        [Test][Retry(MaxTries)]
+        [Category(Tests)]
+        public async Task Reports() 
+            => await StartTest(Admin,application => application.AssertReports());
+
     }
 }
