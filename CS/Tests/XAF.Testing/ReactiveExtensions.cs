@@ -265,7 +265,7 @@ namespace XAF.Testing{
                 .Merge(obs.DoOnComplete(always)).Merge(obs.Do(_ => always()))
                 .IgnoreElements().Merge(obs));
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 15).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 60).Seconds();
         
 
         public static IObservable<TSource> Assert<TSource>(

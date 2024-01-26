@@ -5,7 +5,7 @@ using OutlookInspired.Tests.Services;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{
-    [Order(10)]
+    [Order(-1)]
     public class ReportsTests : TestBase{
         
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]
@@ -24,7 +24,7 @@ namespace OutlookInspired.Blazor.Tests{
             => await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
         
         [Test][Retry(MaxTries)]
-        [Category(Tests)]
+        [Category(Tests)][Order(-1)]
         public async Task Reports() 
             => await StartTest(Admin,application => application.AssertReports());
 

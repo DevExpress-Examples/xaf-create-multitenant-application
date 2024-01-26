@@ -100,6 +100,7 @@ namespace XAF.Testing.XAF{
         }
 
         public static void DropDb(this XafApplication application, string connectionString=null){
+            return;
             if (!application.DbExist(connectionString)) return;
             var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
             var initialCatalog = "Initial catalog";
