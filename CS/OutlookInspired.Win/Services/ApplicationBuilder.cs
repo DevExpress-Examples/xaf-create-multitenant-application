@@ -84,8 +84,9 @@ namespace OutlookInspired.Win.Services{
                     options.UseLazyLoadingProxies();
                 })
                 .WithMultiTenancyModelDifferenceStore(mds => {
-                    mds.ModuleType = typeof(Module.OutlookInspiredModule);
+#if !RELEASE
                     mds.UseTenantSpecificModel = false;
+#endif
                 })
                 .WithTenantResolver<TenantByEmailResolver>();
             return builder;
