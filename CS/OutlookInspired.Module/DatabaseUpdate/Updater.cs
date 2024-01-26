@@ -21,23 +21,21 @@ public class Updater : ModuleUpdater {
 
     private void SynchronizeDatesWithToday(){
         using var updateCommand = CreateCommand($@"
-        WITH ProductOrderDates AS (
-            SELECT
-                oi.{nameof(OrderItem.ProductID)},
-                MAX(o.{nameof(Order.OrderDate)}) AS MostRecentOrderDate
-            FROM
-                {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi
-                INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.Orders)} o ON oi.{nameof(OrderItem.OrderID)} = o.Id
-            GROUP BY
-                oi.{nameof(OrderItem.ProductID)}
-        )
-        UPDATE o
-        SET o.{nameof(Order.OrderDate)} = DATEADD(DAY, DATEDIFF(DAY, pod.MostRecentOrderDate, GETDATE()), o.{nameof(Order.OrderDate)})
-        FROM {nameof(OutlookInspiredEFCoreDbContext.Orders)} o
-        INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi ON o.Id = oi.{nameof(OrderItem.OrderID)}
-        INNER JOIN ProductOrderDates pod ON oi.{nameof(OrderItem.ProductID)} = pod.{nameof(OrderItem.ProductID)}");
-        updateCommand.ExecuteNonQuery();
-        
+            UPDATE o
+            SET o.{nameof(Order.OrderDate)} = DATEADD(DAY, DATEDIFF(DAY, MAX_ORDER_DATE.MostRecentOrderDate, GETDATE()), o.{nameof(Order.OrderDate)})
+            FROM {nameof(OutlookInspiredEFCoreDbContext.Orders)} o
+            INNER JOIN (
+                SELECT
+                    oi.{nameof(OrderItem.OrderID)},
+                    MAX(o.{nameof(Order.OrderDate)}) AS MostRecentOrderDate
+                FROM
+                    {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi
+                    INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.Orders)} o ON oi.{nameof(OrderItem.OrderID)} = o.Id
+                GROUP BY
+                    oi.{nameof(OrderItem.OrderID)}
+            ) AS MAX_ORDER_DATE ON o.Id = MAX_ORDER_DATE.{nameof(OrderItem.OrderID)}
+            ");
+        updateCommand.ExecuteNonQuery();        
     }
 
     public override void UpdateDatabaseAfterUpdateSchema() {
