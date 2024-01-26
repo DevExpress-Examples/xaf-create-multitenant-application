@@ -78,6 +78,7 @@ namespace XAF.Testing.XAF{
         
         public static bool TenantsExist(this XafApplication application,string connectionString=null,int recordCount=2){
             connectionString ??= application.ConnectionString;
+            if (!application.DbExist(connectionString)) return false;
             using var sqlConnection = new SqlConnection(connectionString);
             var cmdText = @"
             IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Tenant')
@@ -95,8 +96,21 @@ namespace XAF.Testing.XAF{
             var result = command.ExecuteScalar()!;
             sqlConnection.Close();
             return result == (object)1;
+
         }
-        
+
+        public static void DropDb(this XafApplication application, string connectionString=null){
+            if (!application.DbExist(connectionString)) return;
+            var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
+            var initialCatalog = "Initial catalog";
+            var databaseName = builder[initialCatalog].ToString();
+            builder.Remove(initialCatalog);
+            using SqlConnection connection = new SqlConnection(builder.ConnectionString);
+            connection.Open();
+            using SqlCommand cmd = new SqlCommand($"USE master; ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection);
+            cmd.ExecuteNonQuery();
+        }
+
         public static bool DbExist(this XafApplication application,string connectionString=null) {
             var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
             var initialCatalog = "Initial catalog";
@@ -152,8 +166,7 @@ namespace XAF.Testing.XAF{
         }
 
         private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).Select(window => window).TemplateChanged().Cast<Window>().Take(1)
-                .Select(window => window);
+            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1);
 
         public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation,Func<Window,IObservable<Unit>> navigate=null){
             navigate ??= _ => Unit.Default.Observe();
@@ -199,8 +212,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
             viewNavigationController.NavigateBackAction.SelectedItem = viewNavigationController.NavigateBackAction.Items.First();
-            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged())
-                .Select(window => window);
+            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged());
         }
 
         public static IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame)> WhenSaveObject(this IObservable<Frame> source,Frame parentFrame)

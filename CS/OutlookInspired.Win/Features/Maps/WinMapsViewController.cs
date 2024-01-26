@@ -14,9 +14,7 @@ namespace OutlookInspired.Win.Features.Maps{
         protected MapsViewController MapsViewController;
         private ImageLayer _imageLayer;
 
-        static WinMapsViewController(){
-            var _ = typeof(MapControl);
-        }
+        static WinMapsViewController() => _ = typeof(MapControl);
 
         protected override void OnDeactivated(){
             base.OnActivated();

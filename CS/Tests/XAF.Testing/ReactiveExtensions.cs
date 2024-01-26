@@ -231,7 +231,15 @@ namespace XAF.Testing{
             var synchronizationContext = SynchronizationContext.Current;
             return synchronizationContext != null ? source.ObserveOn(synchronizationContext) : source;
         }
-        
+        public static IObservable<TSource> DoOnFirst<TSource>(this IObservable<TSource> source, Action<TSource> action)
+            => source.DoWhen((i, _) => i == 0, action);
+        public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<int,TSource, bool> predicate, Action<TSource> action)
+            => source.Select((source1, i) => {
+                if (predicate(i,source1)) {
+                    action(source1);
+                }
+                return source1;
+            });
         public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action,Action<TSource> actionElse=null)
             => source.Do(source1 => {
                 if (predicate(source1)) {

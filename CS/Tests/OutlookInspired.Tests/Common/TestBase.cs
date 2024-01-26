@@ -10,6 +10,7 @@ using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
         protected const string Tests = nameof(Tests);
+        protected const string Admin = "Admin@company1.com";
 #if TEST
         protected const int MaxTries = 3;
 #else
@@ -32,6 +33,7 @@ namespace OutlookInspired.Tests.Common{
             => ViewVariants(ProductListView, ProductListView, ProductCardView);
         public static IEnumerable<object> OrderVariants 
             => ViewVariants(OrderListView, OrderListView, OrderGridView);
+
         public static IEnumerable<object> OpportunityVariants 
             => ViewVariants(Opportunities, null,null);
 

@@ -13,9 +13,7 @@
     <Compile Remove="js\**" />
   </ItemGroup>
   <ItemGroup>
-    
     <None Remove="Components\DevExtreme\Chart\DxChart.razor.js" />
-    
     <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
     <None Remove="Components\PdfViewer.razor.js" />

@@ -47,12 +47,10 @@ namespace OutlookInspired.Win.Tests.Import{
             objectSpace.Count<OrderItem>().ShouldBe(14440);
             objectSpace.Count<Quote>().ShouldBe(8788);
             objectSpace.Count<QuoteItem>().ShouldBe(26859);
-            1.Range(100).Do(user => {
-                var applicationUser = objectSpace.CreateObject<ApplicationUser>();
-                applicationUser.UserName = $"New user {user}";
-            }).Finally(objectSpace.CommitChanges).Enumerate();
+            1.Range(100).Do(user => objectSpace.CreateObject<ApplicationUser>().UserName = $"New user {user}")
+                .Finally(objectSpace.CommitChanges).Enumerate();
               
-            // objectSpace.GenerateOrders();
+            objectSpace.GenerateOrders();
         }
 
         class ImportConnectionStringProvider:IConnectionStringProvider{

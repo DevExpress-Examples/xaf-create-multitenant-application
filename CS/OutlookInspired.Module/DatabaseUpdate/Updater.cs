@@ -20,17 +20,24 @@ public class Updater : ModuleUpdater {
     }
 
     private void SynchronizeDatesWithToday(){
-        new[]{
-                (table: nameof(OutlookInspiredEFCoreDbContext.Orders), column: nameof(Order.OrderDate)),
-                (table: nameof(OutlookInspiredEFCoreDbContext.Quotes), column: nameof(Quote.Date))
-            }
-            .Do(t => CreateCommand($@"
-DECLARE @MostRecentDate DATE = (SELECT MAX({t.column}) FROM {t.table});
-DECLARE @DaysDifference INT = DATEDIFF(DAY, @MostRecentDate, GETDATE());
-
-UPDATE {t.table}
-SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
-").ExecuteNonQuery()).Enumerate();
+        using var updateCommand = CreateCommand($@"
+        WITH ProductOrderDates AS (
+            SELECT
+                oi.{nameof(OrderItem.ProductID)},
+                MAX(o.{nameof(Order.OrderDate)}) AS MostRecentOrderDate
+            FROM
+                {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi
+                INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.Orders)} o ON oi.{nameof(OrderItem.OrderID)} = o.Id
+            GROUP BY
+                oi.{nameof(OrderItem.ProductID)}
+        )
+        UPDATE o
+        SET o.{nameof(Order.OrderDate)} = DATEADD(DAY, DATEDIFF(DAY, pod.MostRecentOrderDate, GETDATE()), o.{nameof(Order.OrderDate)})
+        FROM {nameof(OutlookInspiredEFCoreDbContext.Orders)} o
+        INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi ON o.Id = oi.{nameof(OrderItem.OrderID)}
+        INNER JOIN ProductOrderDates pod ON oi.{nameof(OrderItem.ProductID)} = pod.{nameof(OrderItem.ProductID)}");
+        updateCommand.ExecuteNonQuery();
+        
     }
 
     public override void UpdateDatabaseAfterUpdateSchema() {

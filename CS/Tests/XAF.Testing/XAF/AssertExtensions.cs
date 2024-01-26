@@ -28,11 +28,10 @@ namespace XAF.Testing.XAF{
             => source.AssertNestedListView(frame, objectType, group => group.SelectTab(selectedTabPageIndex),existingObjectDetailview,assert,inlineEdit,caller);
         
         public static IObservable<Frame> AssertNestedListView(this IObservable<ITabControlProvider> source, Frame frame, Type objectType, Action<ITabControlProvider> tabGroupAction,
-            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false,[CallerMemberName]string caller=""){
-            return frame.AssertNestedListView(objectType, existingObjectDetailview, assert, inlineEdit, caller)
+            Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false,[CallerMemberName]string caller="")
+            => frame.AssertNestedListView(objectType, existingObjectDetailview, assert, inlineEdit, caller)
                 .Merge(source.DelayOnContext().Do(tabGroupAction).DelayOnContext().IgnoreElements().To<Frame>())
                 .ReplayFirstTake();
-        }
 
         public static void ClearFilter(this Frame frame){
             if (frame.View is not ListView listView) return;
@@ -224,11 +223,11 @@ namespace XAF.Testing.XAF{
             => source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
                     .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
                     .Where(item => itemSelector?.Invoke(action, item) ?? true)
-                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.Application.AssertReport(action, item), () => item)))
+                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReport((item.Data ??item).ToString()), () => item)))
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
-        public static IObservable<Unit> AssertReport(this XafApplication application, SingleChoiceAction action, ChoiceActionItem item) 
-            => application.GetRequiredService<IAssertReport>().Assert(action.Controller.Frame, (item.Data ??item).ToString());
+        public static IObservable<Unit> AssertReport(this Frame frame, string report) 
+            => frame.Application.GetRequiredService<IAssertReport>().Assert(frame, report);
 
         
         public static IObservable<DashboardViewItem> AssertMasterFrame(this IObservable<Frame> source,Func<DashboardViewItem, bool> masterItem=null) 

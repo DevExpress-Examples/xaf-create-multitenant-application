@@ -9,11 +9,7 @@
           <Item Id="ProductCardView" Removed="True" />
         </Items>
       </Item>
-      <Item Id="Reports">
-        <Items>
-          <Item Id="ReportDataV2_ListView" Removed="True" />
-        </Items>
-      </Item>
+      
     </Items>
   </NavigationItems>
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
