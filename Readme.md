@@ -48,7 +48,7 @@ In addition, the sample application creates a list of users with restricted acce
 
 In the Blazor application, the following code activates multi-tenancy.
 
-[OutlookInspired.Blazor.Server/Services/Internal/ApplicationBuilder.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Blazor.Server/Services/Internal/ApplicationBuilder.cs#L46C12-L46C12):
+[OutlookInspired.Blazor.Server/Services/Internal/ApplicationBuilder.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/23.2.3%2B/CS/OutlookInspired.Blazor.Server/Services/Internal/ApplicationBuilder.cs#L44):
 
 ```cs
 public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationBuilder builder, IConfiguration configuration){
@@ -62,6 +62,11 @@ public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationB
             options.UseSqlServer(connectionString);
             options.UseChangeTrackingProxies();
             options.UseLazyLoadingProxies();
+        })
+        .WithMultiTenancyModelDifferenceStore(e => {
+#if !RELEASE
+            e.UseTenantSpecificModel = false;
+#endif
         })
         .WithTenantResolver<TenantByEmailResolver>();
     return builder;
@@ -79,6 +84,11 @@ public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder
             options.UseSqlServer(serviceConnectionString);
             options.UseChangeTrackingProxies();
             options.UseLazyLoadingProxies();
+        })
+        .WithMultiTenancyModelDifferenceStore(mds => {
+#if !RELEASE
+            mds.UseTenantSpecificModel = false;
+#endif
         })
         .WithTenantResolver<TenantByEmailResolver>();
     return builder;
