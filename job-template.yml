@@ -12,13 +12,13 @@ jobs:
   strategy:
     matrix:
       Admin: {}
-      # Sales: {}
-      # Support: {}
-      # Management: {}
-      # Engineering: {}
-      # IT: {}
-      # Shipping: {}
-      # HumanResources: {}
+      Sales: {}
+      Support: {}
+      Management: {}
+      Engineering: {}
+      IT: {}
+      Shipping: {}
+      HumanResources: {}
   timeoutInMinutes: 90
   pool: 
     name: Self

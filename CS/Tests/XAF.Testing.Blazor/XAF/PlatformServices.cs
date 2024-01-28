@@ -9,7 +9,6 @@ using DevExpress.XtraPrinting;
 using DevExpress.XtraPrinting.Caching;
 using DevExpress.XtraReports.Services;
 using DevExpress.XtraReports.UI;
-using DevExpress.XtraReports.Web;
 using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using XAF.Testing.XAF;
@@ -18,9 +17,7 @@ using ListView = DevExpress.ExpressApp.ListView;
 namespace XAF.Testing.Blazor.XAF{
     public static class PlatformImplementations{
         public static void AddPlatformServices(this IServiceCollection serviceCollection){
-            // serviceCollection.AddSingleton<WebDocumentViewerOperationLogger>();
             serviceCollection.AddSingleton<DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger,WebDocumentViewerOperationLogger>();
-            // serviceCollection.AddSingleton<DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger>(provider => provider.GetRequiredService<WebDocumentViewerOperationLogger>());
             serviceCollection.AddScoped<DefaultWebDocumentViewerReportResolver>();
             serviceCollection.AddScoped<IWebDocumentViewerReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
             serviceCollection.AddScoped<IReportResolver>(sp => sp.GetRequiredService<DefaultWebDocumentViewerReportResolver>());
@@ -50,16 +47,7 @@ namespace XAF.Testing.Blazor.XAF{
             base.CachedDocumentSourceSerializing(documentId, cachedDocumentSource, documentDetails, documentStorage, printingSystemSource);
             _cachedReportReleasedSubject.PushNext(null);
         }
-
-        public override void ReportOpening(string reportId, string documentId, XtraReport report){
-            base.ReportOpening(reportId, documentId, report);
-        }
-
-        public override void CachedDocumentSourceDeserialized(string documentId, CachedDocumentSource cachedDocumentSource,
-            GeneratedDocumentDetails documentDetails, DocumentStorage documentStorage){
-            base.CachedDocumentSourceDeserialized(documentId, cachedDocumentSource, documentDetails, documentStorage);
-        }
-
+        
         public IObservable<XtraReport> WhenCachedReportReleased() 
             => _cachedReportReleasedSubject.AsObservable();
         
@@ -77,10 +65,7 @@ namespace XAF.Testing.Blazor.XAF{
 
         public IObservable<XtraReport> WhenResolved(Frame frame)
             => _resolvedSubject.AsObservable();
-                // .IgnoreElements().SelectMany(report => report.WhenReady()
-                // .SelectMany(ready => ((WebDocumentViewerOperationLogger)frame.Application.GetRequiredService<DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger>())
-                //     .WhenCachedReportReleasedSubject().FirstAsync(cached => cached.GetType() == ready.GetType())));
-
+                
         public override XtraReport Resolve(string reportEntry) 
             => _resolvedSubject.PushNext(base.Resolve(reportEntry));
     }
@@ -125,7 +110,7 @@ namespace XAF.Testing.Blazor.XAF{
             => detailView.AssertRichEditControl(assertMailMerge).ToUnit();
     }
     class DashboardViewGridControlDetailViewObjectsAsserter:IDashboardViewGridControlDetailViewObjectsAsserter{
-        public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames) => Observable.Empty<Frame>();
+        public IObservable<Frame> AssertDashboardViewGridControlDetailViewObjects(Frame frame, params string[] relationNames) => frame.Observe();
     }
     public class FilterClearer : IFilterClearer{
         public void Clear(ListView listView) => listView.ClearFilter();

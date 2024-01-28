@@ -16,7 +16,10 @@ public static class WebExtensions{
 
     private static IObservable<Unit> WhenLifeTimeEvent(this IServiceProvider serviceProvider,Func<IHostApplicationLifetime,CancellationToken> theEvent){
         var subject = new Subject<Unit>();
-        theEvent(serviceProvider.GetRequiredService<IHostApplicationLifetime>()).Register(_ => subject.OnNext(), null);
+        theEvent(serviceProvider.GetRequiredService<IHostApplicationLifetime>()).Register(_ => {
+            if (subject.IsDisposed)return;
+            subject.OnNext();
+        }, null);
         return subject.AsObservable().Take(1).Finally(() => subject.Dispose());
     }
     

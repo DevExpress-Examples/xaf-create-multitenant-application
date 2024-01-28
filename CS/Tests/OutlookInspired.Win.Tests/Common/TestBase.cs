@@ -9,7 +9,6 @@ using OutlookInspired.Tests.Services;
 using OutlookInspired.Win.Services;
 using XAF.Testing;
 using XAF.Testing.Win.XAF;
-using XAF.Testing.XAF;
 using Tracing = XAF.Testing.XAF.Tracing;
 
 namespace OutlookInspired.Win.Tests.Common{
@@ -34,7 +33,6 @@ namespace OutlookInspired.Win.Tests.Common{
                     var application = WinApplication(ConnectionString,configureBuilder);
                     application.ConnectionString = ConnectionString;
                     application.SplashScreen = null;
-                    application.DropDb();
                     return application;
                 });
 

@@ -18,13 +18,11 @@ namespace OutlookInspired.Tests.Services{
 
         public static IObservable<Unit> AssertReports(this XafApplication application) 
             => application.AssertNavigation("ReportDataV2_ListView")
-                .AssertListViewHasObjects()
-                .Zip(application.WhenFrame(typeof(ReportDataV2),ViewType.ListView)).ToSecond()
-                .SelectMany(frame => frame.View.ToListView().WhenObjects().Take(1)
-                    .SelectMany(_ => frame.View.ToListView().Objects<ReportDataV2>()
-                        .SelectManySequential(frame.AssertReports)
-                        .BufferUntilCompleted()))
-                .ReplayFirstTake().ToUnit();
+                .SelectMany(window => window.AssertListViewHasObject().Take(1).To(window))
+                .SelectMany(frame => frame.View.ToListView().Objects<ReportDataV2>()
+                    .SelectManySequential(frame.AssertReports).BufferUntilCompleted())
+                .ReplayFirstTake().ToUnit()
+            ;
 
         private static IObservable<Unit> AssertReports(this Frame frame, ReportDataV2 reportDataV2) 
             => frame.View.ObjectSpace.GetRequiredService<IObjectSelector<ReportDataV2>>()

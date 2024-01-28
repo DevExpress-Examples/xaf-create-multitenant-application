@@ -55,7 +55,7 @@ namespace XAF.Testing.XAF{
             => source.Where(frame => frame.When(nesting))
                 .SelectMany(frame => frame.WhenFrame(viewType?.Invoke(frame)??ViewType.Any, objectType?.Invoke(frame)));
 
-        public static IObservable<Window> Navigate2(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
+        public static IObservable<Window> Navigate(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
             => application.Navigate(viewId,frame =>frame.WhenFrame(viewId).Select(frame1 => frame1),navigate).Take(1).Cast<Window>();
         
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
@@ -99,27 +99,17 @@ namespace XAF.Testing.XAF{
 
         }
 
-        public static void DropDb(this XafApplication application, string connectionString=null){
-            return;
-            if (!application.DbExist(connectionString)) return;
-            var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
-            var initialCatalog = "Initial catalog";
-            var databaseName = builder[initialCatalog].ToString();
-            builder.Remove(initialCatalog);
-            using SqlConnection connection = new SqlConnection(builder.ConnectionString);
-            connection.Open();
-            using SqlCommand cmd = new SqlCommand($"USE master; ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection);
-            cmd.ExecuteNonQuery();
-        }
+        public static bool DbExist(this XafApplication application,string connectionString=null) 
+            => new SqlConnectionStringBuilder(connectionString??application.ConnectionString).DbExists();
 
-        public static bool DbExist(this XafApplication application,string connectionString=null) {
-            var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
+        public static bool DbExists(this SqlConnectionStringBuilder builder){
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);
             using var sqlConnection = new SqlConnection(builder.ConnectionString);
             return sqlConnection.DbExists(databaseName);
         }
+
         public static bool DbExists(this IDbConnection dbConnection, string databaseName=null){
             if (dbConnection.State != ConnectionState.Open) {
                 dbConnection.Open();

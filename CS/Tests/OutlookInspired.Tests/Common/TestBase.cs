@@ -1,14 +1,18 @@
-﻿using System.Diagnostics;
+﻿using System.Data.SqlClient;
+using System.Diagnostics;
 using Aqua.EnumerableExtensions;
 using Humanizer;
+using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
 using XAF.Testing;
+using XAF.Testing.XAF;
 using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 
 #pragma warning disable CS8974 // Converting method group to non-delegate type
 
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
+        protected const string ServiceDbName = "OutlookInspired_Service";
         protected const string Tests = nameof(Tests);
         protected const string Admin = "Admin@company1.com";
 #if TEST
@@ -22,7 +26,7 @@ namespace OutlookInspired.Tests.Common{
         }
 
         protected virtual bool RunInMainMonitor => false;
-        public static readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired_Service";
+        public static readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=";
         protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
 
         public static IEnumerable<object> EmployeeVariants 
@@ -47,7 +51,9 @@ namespace OutlookInspired.Tests.Common{
                 return (Enum.TryParse(roleStr, out EmployeeDepartment department) &&
                         Roles.TryGetValue(department, out var user) ? user.YieldItem() :
                     roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values)
-                    .Select(userName => $"{userName}@company1.com");
+                    .Select(userName => $"{userName}@company1.com")
+                    // .Where(s => s.StartsWith("barta"))
+                    ;
             }
         }
 
@@ -65,6 +71,20 @@ namespace OutlookInspired.Tests.Common{
             get{ return LogContext.None; }
 #endif
         }
-        
+
+        [OneTimeSetUp]
+        public void Setup() 
+            => new[]{ServiceDbName,"OutlookInspired_company1"}
+                .Select(dbName => $"{ConnectionString}{dbName}").Where(connectionString => new SqlConnectionStringBuilder(connectionString).DbExists())
+                .Do(connectionString => {
+                    var builder = new SqlConnectionStringBuilder(connectionString);
+                    var initialCatalog = "Initial catalog";
+                    var databaseName = builder[initialCatalog].ToString();
+                    builder.Remove(initialCatalog);
+                    using SqlConnection connection = new SqlConnection(builder.ConnectionString);
+                    connection.Open();
+                    using SqlCommand cmd = new SqlCommand($"USE master; ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection);
+                    cmd.ExecuteNonQuery();
+                }).Enumerate();
     }
 }

@@ -54,7 +54,7 @@ namespace OutlookInspired.Win.Tests.Import{
         }
 
         class ImportConnectionStringProvider:IConnectionStringProvider{
-            public string GetConnectionString() => ConnectionString;
+            public string GetConnectionString() => $"{ConnectionString}{ServiceDbName}";
         }    
     }
 }

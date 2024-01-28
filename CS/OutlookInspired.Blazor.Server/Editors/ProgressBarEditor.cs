@@ -17,5 +17,7 @@ namespace OutlookInspired.Blazor.Server.Editors{
     public class ProgressBarModelAdapter:ComponentModelAdapter<ProgressBar,ProgressBarModel>{
         public override void SetPropertyValue(object value) 
             => Model.Width = value is double doubleValue ? Convert.ToInt32(doubleValue * 100) : Convert.ToInt32(value ?? 0);
+
+        public override object GetPropertyValue() => Model.Width;
     }
 }
