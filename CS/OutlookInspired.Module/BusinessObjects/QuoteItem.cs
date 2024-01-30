@@ -7,6 +7,8 @@ namespace OutlookInspired.Module.BusinessObjects{
     [ImageName("Shopping_Sales")]
     public class QuoteItem :OutlookInspiredBaseObject{
         public virtual Quote Quote { get; set; }
+        [Browsable(false)]
+        public virtual Guid? QuoteID { get; set; }
         public virtual Product Product { get; set; }
         [Browsable(false)]
         public virtual Guid? ProductId { get; set; }

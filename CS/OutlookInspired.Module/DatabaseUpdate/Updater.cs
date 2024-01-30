@@ -16,29 +16,30 @@ public class Updater : ModuleUpdater {
     public override void UpdateDatabaseBeforeUpdateSchema(){
         base.UpdateDatabaseBeforeUpdateSchema();
         if (ObjectSpace.TenantName() == null) return;
-        SynchronizeDatesWithToday();
+        new[]{ new { ParentTable = nameof(OutlookInspiredEFCoreDbContext.Orders), ChildTable = nameof(Order.OrderItems), DateField = nameof(Order.OrderDate), ForeignKeyField = nameof(OrderItem.OrderID), GroupField = nameof(OrderItem.ProductID) },
+            new { ParentTable = nameof(OutlookInspiredEFCoreDbContext.Quotes), ChildTable = nameof(Quote.QuoteItems), DateField = nameof(Quote.Date), ForeignKeyField = nameof(QuoteItem.QuoteID), GroupField = nameof(QuoteItem.ProductId) }
+        }.Do(entity => SynchronizeDates(entity.ParentTable, entity.ChildTable, entity.DateField, entity.ForeignKeyField, entity.GroupField)).Enumerate();
     }
 
-    private void SynchronizeDatesWithToday(){
+    private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName){
         using var updateCommand = CreateCommand($@"
-        WITH ProductOrderDates AS (
+        UPDATE p
+        SET p.{parentDateFieldName} = DATEADD(DAY, DATEDIFF(DAY, agg.MostRecentDate, GETDATE()), p.{parentDateFieldName})
+        FROM {parentTableName} p
+        INNER JOIN {childTableName} c ON p.Id = c.{childForeignKeyFieldName}
+        INNER JOIN (
             SELECT
-                oi.{nameof(OrderItem.ProductID)},
-                MAX(o.{nameof(Order.OrderDate)}) AS MostRecentOrderDate
+                c.{groupingFieldName},
+                MAX(p.{parentDateFieldName}) AS MostRecentDate
             FROM
-                {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi
-                INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.Orders)} o ON oi.{nameof(OrderItem.OrderID)} = o.Id
+                {childTableName} c
+                INNER JOIN {parentTableName} p ON c.{childForeignKeyFieldName} = p.Id
             GROUP BY
-                oi.{nameof(OrderItem.ProductID)}
-        )
-        UPDATE o
-        SET o.{nameof(Order.OrderDate)} = DATEADD(DAY, DATEDIFF(DAY, pod.MostRecentOrderDate, GETDATE()), o.{nameof(Order.OrderDate)})
-        FROM {nameof(OutlookInspiredEFCoreDbContext.Orders)} o
-        INNER JOIN {nameof(OutlookInspiredEFCoreDbContext.OrderItems)} oi ON o.Id = oi.{nameof(OrderItem.OrderID)}
-        INNER JOIN ProductOrderDates pod ON oi.{nameof(OrderItem.ProductID)} = pod.{nameof(OrderItem.ProductID)}");
+                c.{groupingFieldName}
+        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}");
         updateCommand.ExecuteNonQuery();
-        
     }
+
 
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();

@@ -101,13 +101,6 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private Parameter paramContacts;
 		public CustomerProfile() {
 			InitializeComponent();
-			BeforePrint += CustomerProfile_BeforePrint;
-		}
-		private void CustomerProfile_BeforePrint(object sender, CancelEventArgs e) {
-			SetShowEvaluations((bool)Parameters["paramContacts"].Value);
-		}
-		public void SetShowEvaluations(bool show) {
-			if(DetailReport.Visible != show) DetailReport.Visible = show;
 		}
 		private void InitializeComponent() {
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(CustomerProfile));

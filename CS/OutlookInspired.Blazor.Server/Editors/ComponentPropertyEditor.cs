@@ -44,7 +44,7 @@ namespace OutlookInspired.Blazor.Server.Editors {
         public sealed override object GetValue() => GetPropertyValue();
         public sealed override void SetValue(object value) => SetPropertyValue((TMemberType)value);
         public abstract void SetPropertyValue(TMemberType value);
-        public virtual TMemberType GetPropertyValue(){throw new NotImplementedException(); }
+        public virtual TMemberType GetPropertyValue() => throw new NotImplementedException();
         public sealed override IComponentModel ComponentModel => Model;
         public virtual TModel Model{ get; } = new();
         protected override RenderFragment CreateComponent() => Model.Create(RenderFragment);

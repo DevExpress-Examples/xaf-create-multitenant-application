@@ -123,15 +123,19 @@ namespace XAF.Testing.XAF{
                 .ReplayFirstTake();
 
         public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
-            => application.AssertNavigation(view,_ => canNavigate.SwitchIfEmpty(Observable.Throw<Unit>(new CannotNavigateException())).ToUnit())
+            => application.AssertNavigation(view,_ => canNavigate
+                    .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<Unit>(new CannotNavigateException()))).ToUnit())
                 .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
                         .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
                     .SelectMany(frame => assert(frame.Observe())))
-                .FirstOrDefaultAsync().ReplayFirstTake();
+                .Catch<Unit,CannotNavigateException>(_ => Unit.Default.Observe())
+                .ReplayFirstTake();
+
+        public static IObservable<Unit> AssertReportsNavigation(this XafApplication application,Func<IObservable<Frame>,IObservable<Unit>> assert,IObservable<Unit> canNavigate)
+            => application.AssertNavigation("ReportDataV2_ListView",null,assert,canNavigate);
         
         public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
-            => application.Navigate2(viewId,window => (navigate?.Invoke(window)?? Observable.Empty<Unit>()).SwitchIfEmpty(Unit.Default.Observe()))
-                .Assert($"{viewId}").Catch<Window,CannotNavigateException>(_ => Observable.Empty<Window>());
+            => application.WhenMainWindowCreated().SelectMany(window => window.Navigate(viewId, window.Observe(),navigate).Cast<Window>().Assert($"{viewId}"));
         
         public static IObservable<(Frame listViewFrame, Frame detailViewFrame)> AssertProcessSelectedObject(this Frame frame) 
             => frame.Observe().SelectMany(frame1 => frame1.ProcessSelectedObject().Assert($"{frame.View.Id}"));
@@ -223,10 +227,10 @@ namespace XAF.Testing.XAF{
             => source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
                     .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
                     .Where(item => itemSelector?.Invoke(action, item) ?? true)
-                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReport((item.Data ??item).ToString()), () => item)))
+                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReportExecution((item.Data ??item).ToString()), () => item)))
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
-        public static IObservable<Unit> AssertReport(this Frame frame, string report) 
+        public static IObservable<Unit> AssertReportExecution(this Frame frame, string report) 
             => frame.Application.GetRequiredService<IAssertReport>().Assert(frame, report);
 
         
@@ -273,7 +277,10 @@ namespace XAF.Testing.XAF{
             => source.AssertObjectViewHasObjects(caller);
             
         public static IObservable<object> AssertObjectViewHasObjects(this IObservable<Frame> source,[CallerMemberName]string caller="")
-            => source.SelectMany(frame => frame.Observe().WhenObjects(1).Take(1).Select(instance => (msg:$"{frame.View.Id} {instance}", t: instance)).Assert(t => t.msg,caller:caller)).ToSecond();
+            => source.SelectMany(frame => frame.AssertListViewHasObject(caller)).ToSecond();
+
+        public static IObservable<(string msg, object t)> AssertListViewHasObject(this Frame frame,[CallerMemberName]string caller="")
+            => frame.Observe().WhenObjects(1).Take(1).Select(instance => (msg:$"{frame.View.Id} {instance}", t: instance)).Assert(t => t.msg,caller:caller);
 
         public static IObservable<Frame> AssertNestedListView(this Frame detailViewFrame, Type objectType,
             Func<Frame, IObservable<Unit>> existingObjectDetailview = null, Func<Frame,AssertAction> assert = null,bool inlineEdit=false, [CallerMemberName] string caller = "") 

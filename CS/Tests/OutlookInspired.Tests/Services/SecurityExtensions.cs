@@ -76,7 +76,7 @@ namespace OutlookInspired.Tests.Services{
                 null => 3,
                 { Caption: "Admin Portal" } => 3,
                 { Caption: "Default" } => 8,
-                { Caption: "Reports" } => 1,
+                { Caption: "Reports" } => 2,
                 _ => throw new NotImplementedException(item.Caption)
             };
 

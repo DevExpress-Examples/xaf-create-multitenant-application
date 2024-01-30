@@ -2,11 +2,13 @@
 using NUnit.Framework;
 using OutlookInspired.Tests.Common;
 using OutlookInspired.Tests.Services;
+using XAF.Testing;
+using XAF.Testing.Win.XAF;
+using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 using TestBase = OutlookInspired.Win.Tests.Common.TestBase;
 
 namespace OutlookInspired.Win.Tests{
-    [Apartment(ApartmentState.STA)]
-    [Order(10)]
+    [Order(-1)]
     public class ReportsTests : TestBase{
         [RetryTestCaseSource(nameof(CustomerVariants), MaxTries = MaxTries)]
         [Category(Tests)]
@@ -23,9 +25,10 @@ namespace OutlookInspired.Win.Tests{
         public async Task Order(string user,string view,string viewVariant) 
             => await StartTest(user, application => application.AssertOrderReports(view, viewVariant));
         
-        [Test][Retry(MaxTries)]
-        [Category(Tests)]
-        public async Task Reports() 
-            => await StartTest(Admin,application => application.AssertReports());
+        [RetryTestCaseSource(nameof(Users),MaxTries=MaxTries)]
+        [Category(Tests)][Order(-1)]
+        public async Task Reports(string user) 
+            => await StartTest(user,application => application.AssertReports(application.CanNavigate(ReportDataV2ListView).ToUnit()));
+
     }
 }

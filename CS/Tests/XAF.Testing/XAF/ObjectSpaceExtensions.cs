@@ -73,6 +73,9 @@ namespace XAF.Testing.XAF{
         public static IObservable<CancelEventArgs> WhenCommiting(this IObjectSpace objectSpace) 
             => objectSpace.WhenEvent<CancelEventArgs>(nameof(IObjectSpace.Committing))
                 .TakeUntil(objectSpace.WhenDisposed());
+        public static IObservable<IObjectSpace> WhenReloaded(this IObjectSpace objectSpace) 
+            => objectSpace.WhenEvent(nameof(IObjectSpace.Reloaded))
+                .TakeUntil(objectSpace.WhenDisposed()).Select(p => p.Sender).Cast<IObjectSpace>();
 
         public static IObservable<IObjectSpace> WhenModifyChanged(this IObjectSpace objectSpace) 
             => objectSpace.WhenEvent(nameof(IObjectSpace.ModifiedChanged)).To(objectSpace)

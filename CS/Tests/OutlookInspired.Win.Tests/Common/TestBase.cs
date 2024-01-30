@@ -9,11 +9,10 @@ using OutlookInspired.Tests.Services;
 using OutlookInspired.Win.Services;
 using XAF.Testing;
 using XAF.Testing.Win.XAF;
-using XAF.Testing.XAF;
 using Tracing = XAF.Testing.XAF.Tracing;
 
 namespace OutlookInspired.Win.Tests.Common{
-    
+    [Apartment(ApartmentState.STA)]
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 
@@ -34,7 +33,6 @@ namespace OutlookInspired.Win.Tests.Common{
                     var application = WinApplication(ConnectionString,configureBuilder);
                     application.ConnectionString = ConnectionString;
                     application.SplashScreen = null;
-                    application.DropDb();
                     return application;
                 });
 

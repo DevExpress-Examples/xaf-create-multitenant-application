@@ -1,9 +1,11 @@
-﻿using System.Reactive.Linq;
+﻿using System.Reactive;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Office.Win;
 using DevExpress.ExpressApp.ReportsV2.Win;
+using DevExpress.ExpressApp.Win;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraMap;
 using DevExpress.XtraPdfViewer;
@@ -13,6 +15,11 @@ using XAF.Testing.XAF;
 
 namespace XAF.Testing.Win.XAF{
     public static class AssertExtensions{
+        public static IObservable<Unit> AssertReports(this WinApplication application,IObservable<Unit> canNavigate) 
+            => application.AssertReports(showReportDesigner =>
+                showReportDesigner.Frame().GetController<WinReportServiceController>().WhenEvent<DesignFormEventArgs>(nameof(WinReportServiceController.DesignFormCreated))
+                    .ConcatIgnored(e => ((Form)e.DesignForm).WhenEvent(nameof(Form.Activated)).Take(1).DelayOnContext().To(e.Report).Validate())
+                    .Do(args => ((Form)args.DesignForm).Close()).ToUnit(),canNavigate);
 
         public static IObservable<Frame> AssertReport(this Frame frame, [CallerMemberName]string caller="") 
             => frame.GetController<WinReportServiceController>()

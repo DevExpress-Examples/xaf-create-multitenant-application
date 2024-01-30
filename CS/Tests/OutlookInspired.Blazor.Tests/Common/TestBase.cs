@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.Blazor;
+using DevExpress.ExpressApp.EFCore;
 using NUnit.Framework;
 using OutlookInspired.Blazor.Server;
 using OutlookInspired.Module.BusinessObjects;
@@ -13,6 +14,7 @@ using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
 namespace OutlookInspired.Blazor.Tests.Common{
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
+        // static TestBase() => DatabaseSchemaStateCache.Enabled = false;
         protected WindowPosition BrowserPosition=>WindowPosition.FullScreen;
         protected WindowPosition LoggerPosition=>WindowPosition.BottomRight|WindowPosition.Small;
         protected IObservable<Unit> StartTest(string user,Func<BlazorApplication,IObservable<Unit>> test) 

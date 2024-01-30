@@ -693,7 +693,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 			this.Parameters.AddRange(new Parameter[] {
 				this.paramAscending});
 			this.Version = "23.1";
-			this.BeforePrint += new BeforePrintEventHandler(this.CustomerLocationsDirectory_BeforePrint);
+			
 			((ISupportInitialize)(this.xrTable2)).EndInit();
 			((ISupportInitialize)(this.bindingSource1)).EndInit();
 			((ISupportInitialize)(this.xrTable1)).EndInit();
@@ -702,13 +702,6 @@ namespace OutlookInspired.Module.Resources.Reports {
 			((ISupportInitialize)(this)).EndInit();
 
 		}
-		private void CustomerLocationsDirectory_BeforePrint(object sender, CancelEventArgs e) {
-			if(Equals(true, paramAscending.Value)) {
-				this.detailBand1.SortFields[0].SortOrder = XRColumnSortOrder.Ascending;
-			} else {
-				this.detailBand1.SortFields[0].SortOrder = XRColumnSortOrder.Descending;
-			}
-		} 
 
 		#endregion
 	}

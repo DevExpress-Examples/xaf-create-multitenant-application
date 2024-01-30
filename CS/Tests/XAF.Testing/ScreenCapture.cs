@@ -24,8 +24,10 @@ namespace XAF.Testing{
             Monitor.MoveActiveWindowToMainMonitor();
             var filename = path??Path.GetTempFileName().Replace(".tmp", ".bmp");
             using var bitmap = CaptureActiveWindow();
+            if (bitmap == null) return null;
             bitmap.Save(filename);
             return new Uri(filename).AbsoluteUri;
+
         }
     }
     
