@@ -130,6 +130,9 @@ namespace XAF.Testing.XAF{
                     .SelectMany(frame => assert(frame.Observe())))
                 .Catch<Unit,CannotNavigateException>(_ => Unit.Default.Observe())
                 .ReplayFirstTake();
+
+        public static IObservable<Unit> AssertReportsNavigation(this XafApplication application,Func<IObservable<Frame>,IObservable<Unit>> assert,IObservable<Unit> canNavigate)
+            => application.AssertNavigation("ReportDataV2_ListView",null,assert,canNavigate);
         
         public static IObservable<Window> AssertNavigation(this XafApplication application, string viewId,Func<Window,IObservable<Unit>> navigate=null)
             => application.WhenMainWindowCreated().SelectMany(window => window.Navigate(viewId, window.Observe(),navigate).Cast<Window>().Assert($"{viewId}"));
@@ -224,10 +227,10 @@ namespace XAF.Testing.XAF{
             => source.Where(action => action.Available()).SelectMany(action => action.Items.Available()
                     .SelectManyRecursive(item => item.Items.Available()).ToNowObservable()
                     .Where(item => itemSelector?.Invoke(action, item) ?? true)
-                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReport((item.Data ??item).ToString()), () => item)))
+                    .SelectManySequential(item => action.Trigger(action.Controller.Frame.AssertReportExecution((item.Data ??item).ToString()), () => item)))
                 .IgnoreElements().To<SingleChoiceAction>().Concat(source);
 
-        public static IObservable<Unit> AssertReport(this Frame frame, string report) 
+        public static IObservable<Unit> AssertReportExecution(this Frame frame, string report) 
             => frame.Application.GetRequiredService<IAssertReport>().Assert(frame, report);
 
         

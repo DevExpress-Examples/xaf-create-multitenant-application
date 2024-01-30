@@ -52,7 +52,7 @@ namespace OutlookInspired.Tests.Common{
                         Roles.TryGetValue(department, out var user) ? user.YieldItem() :
                     roleStr == "Admin" ? "Admin".YieldItem() : Roles.Values)
                     .Select(userName => $"{userName}@company1.com")
-                    // .Where(s => s.StartsWith("barta"))
+                    // .Where(s => s.StartsWith("Admin"))
                     ;
             }
         }

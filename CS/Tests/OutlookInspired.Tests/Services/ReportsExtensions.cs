@@ -1,9 +1,6 @@
 ﻿using System.Reactive;
-using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.ReportsV2;
-using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Module.Features.Customers;
 using XAF.Testing;
 using XAF.Testing.XAF;
@@ -15,23 +12,6 @@ namespace OutlookInspired.Tests.Services{
         
         public static IObservable<Unit> AssertProductReports(this XafApplication application,string view, string viewVariant) 
             => application.AssertReports( view, viewVariant, Module.Features.Products.ReportController.ReportActionId);
-
-        public static IObservable<Unit> AssertReports(this XafApplication application) 
-            => application.AssertNavigation("ReportDataV2_ListView")
-                .SelectMany(window => window.AssertListViewHasObject().Take(1).To(window))
-                .SelectMany(frame => frame.View.ToListView().Objects<ReportDataV2>()
-                    .SelectManySequential(frame.AssertReports).BufferUntilCompleted())
-                .ReplayFirstTake().ToUnit()
-            ;
-
-        private static IObservable<Unit> AssertReports(this Frame frame, ReportDataV2 reportDataV2) 
-            => frame.View.ObjectSpace.GetRequiredService<IObjectSelector<ReportDataV2>>()
-                .SelectObject(frame.View.ToListView(),reportDataV2).Take(1)
-                .SelectMany(dataV2 => frame.AssertSimpleAction(frame.GetController<ReportsControllerCore>().Actions.First().Id)
-                    .SelectMany(action => action.Trigger(action.Frame().AssertReport(dataV2.DisplayName)))
-                )
-                .Take(1).ToUnit()
-            ;
 
         public static IObservable<Unit> AssertOrderReports(this XafApplication application,string view, string viewVariant) 
             => application.AssertReports( view, viewVariant, Module.Features.Orders.ReportController.ReportActionId,(_, item) =>  item.ParentItem is{ Data: null });

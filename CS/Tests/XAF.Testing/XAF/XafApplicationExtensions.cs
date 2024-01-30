@@ -6,8 +6,11 @@ using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Layout;
+using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
+using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.XtraReports.UI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace XAF.Testing.XAF{
@@ -199,6 +202,8 @@ namespace XAF.Testing.XAF{
                 .Where(pattern => (!isRoot.HasValue || pattern.IsRoot == isRoot) &&
                                   (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type)))
                 .InversePair(application);
+
+        
 
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();

@@ -536,22 +536,14 @@ namespace OutlookInspired.Module.Resources.Reports {
 			this.Parameters.AddRange(new Parameter[] {
 				this.paramAscending});
 			this.Version = "23.1";
-			this.BeforePrint += new BeforePrintEventHandler(this.CustomerContactDirectory_BeforePrint);
+		
 			((ISupportInitialize)(this.xrTable2)).EndInit();
 			((ISupportInitialize)(this.bindingSource1)).EndInit();
 			((ISupportInitialize)(this.xrTable1)).EndInit();
 			((ISupportInitialize)(this)).EndInit();
 
 		}
-		private void CustomerContactDirectory_BeforePrint(object sender, CancelEventArgs e) {
-			if(Equals(true, paramAscending.Value)) {
-				this.GroupHeader1.GroupFields[0].SortOrder = XRColumnSortOrder.Ascending;
-				this.detailBand1.SortFields[0].SortOrder = XRColumnSortOrder.Ascending;
-			} else {
-				this.GroupHeader1.GroupFields[0].SortOrder = XRColumnSortOrder.Descending;
-				this.detailBand1.SortFields[0].SortOrder = XRColumnSortOrder.Descending;
-			}
-		}
+		
 
 		#endregion
 	}

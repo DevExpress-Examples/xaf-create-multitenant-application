@@ -12,7 +12,7 @@ using DevExpress.XtraGrid.Views.Layout.Handler;
 
 namespace XAF.Testing.Win.XAF{
     public static class WinComponentExtensions{
-
+        
         public static IObservable<int> WhenSelectRow<T>(this GridView gridView, T row) where T : class 
             => gridView.Defer(() => {
                 var rowHandle = gridView.FindRow(row);

@@ -1040,7 +1040,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 				this.GroupFooter1});
 			this.DataSource = this.bindingSource1;
 			this.DesignerOptions.ShowExportWarnings = false;
-			this.FilterString = "[OrderDate] >= ?paramFromDate And [OrderDate] <= ?paramToDate";
+			
 			this.Font = new DXFont("Segoe UI", 9.75F);
 			this.Margins = new DXMargins(100F, 100F, 119F, 93.37113F);
 			this.ParameterPanelLayoutItems.AddRange(new ParameterPanelLayoutItem[] {
@@ -1052,7 +1052,6 @@ namespace OutlookInspired.Module.Resources.Reports {
 				this.paramToDate,
 				this.paramOrderDate});
 			this.Version = "23.1";
-			this.DataSourceDemanded += new EventHandler<EventArgs>(this.CustomerSalesSummary_DataSourceDemanded);
 			((ISupportInitialize)(this.xrTable7)).EndInit();
 			((ISupportInitialize)(this.xrTable3)).EndInit();
 			((ISupportInitialize)(this.bindingSource1)).EndInit();
@@ -1075,16 +1074,6 @@ namespace OutlookInspired.Module.Resources.Reports {
 			if(currentOrderInfo != null) {
 				(sender as XRLabel).Text = currentOrderInfo.Product.Category.ToString();
 			}
-		}
-		private void CustomerSalesSummary_DataSourceDemanded(object sender, EventArgs e) {
-			if(Equals(true, paramOrderDate.Value)) {
-				xrTableCell6.Text = "Grouped by Category | Sorted by Order Date";
-				this.detailBand1.SortFields[0].FieldName = "OrderDate";
-			} else {
-				xrTableCell6.Text = "Grouped by Category | Sorted by Invoice #";
-				this.detailBand1.SortFields[0].FieldName = "InvoiceNumber";
-			}
-			xrTableCell2.Text = ((DateTime)paramFromDate.Value).ToString("MMMM d, yyyy") + " to " + ((DateTime)paramToDate.Value).ToString("MMMM d, yyyy");
 		}
 		class StoreInfo {
 			public StoreInfo(string city) {

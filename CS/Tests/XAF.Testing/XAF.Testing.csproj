@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp" Version="23.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2" Version="23.2.3" />
     <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.2.3" />
     <PackageReference Include="DevExpress.Persistent.BaseImpl.EFCore" Version="23.2.3" />
     <PackageReference Include="DevExpress.Reporting.Core" Version="23.2.3" />
