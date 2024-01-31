@@ -18,5 +18,6 @@
     <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.EFCore" Version="23.2.3" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
+	<PackageReference Include="Microsoft.JSInterop" Version="6.0.0" />
   </ItemGroup>
 </Project>
