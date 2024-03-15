@@ -24,14 +24,13 @@ namespace OutlookInspired.Tests.Services{
                 .ToUnit();
         }
 
-        internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,
-            Frame frame)
-            =>source.AssertNestedCustomerEmployee(frame, 1).IgnoreElements()
+        internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source, Frame frame)
+            => source.AssertNestedCustomerEmployee(frame, 1).IgnoreElements()
                 .Concat(source.AssertNestedQuote(frame, 2)).IgnoreElements()
                 .Concat(source.AssertNestedCustomerStore(frame)).IgnoreElements()
                 .Concat(source.AssertNestedOrder(frame, 4))
                 .ReplayFirstTake();
-        
+
         internal static IObservable<Frame> AssertNestedCustomerEmployee(this IObservable<ITabControlProvider> source, Frame nestedFrame,int tabIndex)
             => source.AssertNestedListView(nestedFrame, typeof(CustomerEmployee),tabIndex, existingObjectDetailViewFrame => 
                 existingObjectDetailViewFrame.AssertRootCustomerEmployee(), frame =>frame.AssertAction(nestedFrame) );
