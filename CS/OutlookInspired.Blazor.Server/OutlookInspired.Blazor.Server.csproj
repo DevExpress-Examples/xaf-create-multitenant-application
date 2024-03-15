@@ -22,7 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     
-    <EmbeddedResource Include="Components\DevExtreme\Maps\DxMap.razor.js" />
+    <EmbeddedResource Include="Components\DevExtreme\Maps\DxrMap.razor.js" />
     
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -33,14 +33,14 @@
     <Content Remove="js\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.EFCore" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Office.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="23.2.3" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="23.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.EFCore" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.Office.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="24.1.1-alpha-24065" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="24.1.1-alpha-24065" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />

@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using DevExpress.Persistent.Base;
-using Microsoft.JSInterop;
 
 namespace XAF.Testing.XAF{
     public static class TracingExtensions{
@@ -16,7 +15,7 @@ namespace XAF.Testing.XAF{
         readonly Subject<Exception> _errorSubject = new();
         
         public static IObservable<Exception> WhenError([CallerMemberName]string caller="") 
-            => ((Tracing)Tracer)._errorSubject.Where(exception => exception is not JSDisconnectedException).Select(exception => exception.ToTestException(caller)).AsObservable();
+            => ((Tracing)Tracer)._errorSubject.Where(exception => exception.GetType().Name!="JSDisconnectedException").Select(exception => exception.ToTestException(caller)).AsObservable();
 
         public static IObservable<Tracing> Use() 
             => typeof(Tracing).WhenEvent<CreateCustomTracerEventArgs>(nameof(CreateCustomTracer))
