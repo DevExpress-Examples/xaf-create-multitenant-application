@@ -1,4 +1,8 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.ReportsV2.Win;
@@ -20,7 +24,26 @@ namespace OutlookInspired.Win.Services{
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();
             builder.AddSecuredObjectSpaceProviders();
-            builder.AddIntegratedModeSecurity();
+            // builder.AddIntegratedModeSecurity();
+            builder.Security
+                .UseMiddleTierMode(options => {
+#if DEBUG
+                    options.WaitForMiddleTierServerReady();
+#endif
+                    options.BaseAddress = new Uri("https://localhost:44319/");
+                    options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    options.Events.OnCustomAuthenticate = (sender, security, args) => {
+                        args.Handled = true;
+                        HttpResponseMessage msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate", (AuthenticationStandardLogonParameters)args.LogonParameters).GetAwaiter().GetResult();
+                        string token = (string)msg.Content.ReadFromJsonAsync(typeof(string)).GetAwaiter().GetResult();
+                        if(msg.StatusCode == HttpStatusCode.Unauthorized) {
+                            XafExceptions.Authentication.ThrowAuthenticationFailedFromResponse(token);
+                        }
+                        msg.EnsureSuccessStatusCode();
+                        args.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+                    };
+                })
+                .UsePasswordAuthentication();
             builder.AddMultiTenancy(connectionString);
             builder.AddBuildSteps(connectionString);
             return builder;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using DevExpress.ExpressApp.ConditionalAppearance;
@@ -26,7 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public const string BrochureDetailView = "Product_Brochure_DetailView";
         public const string MapsDetailView = "Product_DetailView_Maps";
         
-        [FontSizeDelta(8)]
+        [FontSizeDelta(8)][MaxLength(100)]
         public  virtual string Name { get; set; }
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
         public  virtual byte[] Description { get; set; }

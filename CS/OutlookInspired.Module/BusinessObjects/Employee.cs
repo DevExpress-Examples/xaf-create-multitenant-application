@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
@@ -38,7 +39,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[Browsable(false)]
 		public Int32 OleColor => 0;
 		public virtual  EmployeeDepartment Department { get; set; }
-		[RuleRequiredField][FontSizeDelta(8)]
+		[RuleRequiredField][FontSizeDelta(8)][MaxLength(100)]
 		public virtual string Title { get; set; }
 		double IBaseMapsMarker.Latitude => AddressLatitude;
 		double IBaseMapsMarker.Longitude => AddressLongitude;
@@ -57,16 +58,16 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
 		[InverseProperty(nameof(Evaluation.Employee))][Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
-		[VisibleInListView(false)]
+		[VisibleInListView(false)][MaxLength(100)]
 		public virtual string PersonalProfile { get; set; }
 		[VisibleInListView(false)]
 		public virtual Probation ProbationReason { get; set; }
-		[RuleRequiredField][VisibleInListView(false)]
+		[RuleRequiredField][VisibleInListView(false)][MaxLength(100)]
 		public virtual string FirstName { get; set; }
-		[RuleRequiredField][VisibleInListView(false)]
+		[RuleRequiredField][VisibleInListView(false)][MaxLength(100)]
 		public virtual string LastName { get; set; }
 		
-		[FontSizeDelta(16)]
+		[FontSizeDelta(16)][MaxLength(100)]
 		public virtual string FullName { get; set; }
 
 		public override void OnSaving(){
@@ -81,18 +82,18 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[XafDisplayName(nameof(Prefix))]
 		public virtual byte[] PrefixImage => Prefix.ImageInfo().ImageBytes;
 		
-		[Phone][VisibleInListView(false)]
+		[Attributes.Validation.Phone][VisibleInListView(false)][MaxLength(100)]
 		public virtual string HomePhone { get; set; }
-		[RuleRequiredField, Phone][VisibleInListView(false)]
+		[RuleRequiredField, Attributes.Validation.Phone][VisibleInListView(false)][MaxLength(100)]
 		public virtual string MobilePhone { get; set; }
-		[RuleRequiredField, EmailAddress]
-		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)]
+		[RuleRequiredField, Attributes.Validation.EmailAddress]
+		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)][MaxLength(255)]
 		public virtual string Email { get; set; }
 
 		[VisibleInDetailView(false)]
 		[NotMapped]
 		public virtual ObservableCollection<RoutePoint> RoutePoints{ get; set; } = new();
-		[VisibleInListView(false)]
+		[VisibleInListView(false)][MaxLength(100)]
 		public virtual string Skype { get; set; }
 		[VisibleInListView(false)]
 		public virtual DateTime? BirthDate { get; set; }
@@ -107,11 +108,11 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual double AddressLatitude { get; set; }
 		[VisibleInListView(false)]
 		public virtual double AddressLongitude { get; set; }
-		[RuleRequiredField][FontSizeDelta(2)]
+		[RuleRequiredField][FontSizeDelta(2)][MaxLength(255)]
 		public virtual string Address { get; set; }
-		[RuleRequiredField]
+		[RuleRequiredField][MaxLength(100)]
 		public virtual string City { get; set; }
-        [ZipCode]
+        [ZipCode][MaxLength(20)]
 		public virtual string ZipCode { get; set; }
 		public virtual ObservableCollection<Evaluation> EvaluationsCreatedBy{ get; set; } = new();
 		public virtual ObservableCollection<Order> Orders{ get; set; } = new();

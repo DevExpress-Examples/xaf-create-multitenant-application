@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
@@ -8,15 +9,16 @@ namespace OutlookInspired.Module.BusinessObjects {
 	[DefaultProperty(nameof(FullName))]
 	[ImageName("BO_Employee")]
 	public class CustomerEmployee :OutlookInspiredBaseObject{
-		[RuleRequiredField]
+		[RuleRequiredField][MaxLength(100)]
 		public virtual string FirstName { get; set; }
-		[RuleRequiredField]
+		[RuleRequiredField][MaxLength(100)]
 		public virtual string LastName { get; set; }
+		[MaxLength(100)]
 		public virtual string FullName { get; set; }
 		public virtual PersonPrefix Prefix { get; set; }
-		[RuleRequiredField, Attributes.Validation.Phone]
+		[RuleRequiredField, Attributes.Validation.Phone][MaxLength(100)]
 		public virtual string MobilePhone { get; set; }
-		[RuleRequiredField, Attributes.Validation.EmailAddress]
+		[RuleRequiredField, Attributes.Validation.EmailAddress][MaxLength(255)]
 		public virtual string Email { get; set; }
 		public virtual Picture Picture { get; set; }
 		
@@ -25,6 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual Guid CustomerId { get; set; }
 		
 		public virtual CustomerStore CustomerStore { get; set; }
+		[MaxLength(100)]
 		public virtual string Position { get; set; }
 		public virtual bool IsPurchaseAuthority { get; set; }
 		[Aggregated]

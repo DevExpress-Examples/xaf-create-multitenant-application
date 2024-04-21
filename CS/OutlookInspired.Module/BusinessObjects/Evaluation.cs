@@ -49,7 +49,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual DateTime? EndOn { get; set; }
 		[ImmediatePostData][Browsable(false)]
 		public virtual Boolean AllDay { get; set; }
-		[Browsable(false)]
+		[Browsable(false)][MaxLength(255)]
 		public virtual String Location { get; set; }
 		[Browsable(false)]
 		public virtual Int32 Label { get; set; }
@@ -81,7 +81,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual DateTime? StartOn{ get; set; }
         [RuleRequiredField(DefaultContexts.Save)]
         public virtual Employee Employee{ get; set; }
-        [FontSizeDelta(8)]
+        [FontSizeDelta(8)][MaxLength(100)]
         public virtual string Subject{ get; set; }
 
         [NotMapped]
