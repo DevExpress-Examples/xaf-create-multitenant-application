@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using DevExpress.ExpressApp;
 using DevExpress.Map.Native;
 using DevExpress.Persistent.Base;
-using Newtonsoft.Json.Linq;
 using OutlookInspired.Blazor.Server.Components.DevExtreme.Maps;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
@@ -42,29 +42,33 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                 }
             };
 
-        public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA,Location locationB,string travelMode,string apiKey){
+        public static async Task<RouteCalculatedArgs> ManeuverInstructions(this IObjectSpace objectSpace, Location locationA, Location locationB, string travelMode, string apiKey){
             var url = $"https://dev.virtualearth.net/REST/V1/Routes/{travelMode}?wp.0={locationA.Lat},{locationA.Lng}&wp.1={locationB.Lat},{locationB.Lng}&key={apiKey}";
             using var httpClient = new HttpClient();
             var httpResponseMessage = await httpClient.GetAsync(url);
             if (httpResponseMessage.IsSuccessStatusCode){
-                var readAsStringAsync = await httpResponseMessage.Content.ReadAsStringAsync();
-                var result = JObject.Parse(readAsStringAsync)["resourceSets"]![0]!["resources"]![0];
-                return new RouteCalculatedArgs(result!["routeLegs"]!.SelectMany(leg => leg["itineraryItems"])
-                        .Select(objectSpace.RoutePoint).ToArray(), (double)result["travelDistance"],
-                    TimeSpan.FromMinutes((double)result["travelDuration"]), Enum.Parse<TravelMode>(travelMode,true));    
+                var jsonString = await httpResponseMessage.Content.ReadAsStringAsync();
+                using var jsonDoc = JsonDocument.Parse(jsonString);
+                var result = jsonDoc.RootElement.GetProperty("resourceSets").EnumerateArray().First().GetProperty("resources").EnumerateArray().First();
+                var routeLegs = result.GetProperty("routeLegs").EnumerateArray().SelectMany(leg => leg.GetProperty("itineraryItems").EnumerateArray());
+                var routePoints = routeLegs.Select(objectSpace.RoutePoint).ToArray();
+                var travelDistance = result.GetProperty("travelDistance").GetDouble();
+                var travelDuration = result.GetProperty("travelDuration").GetDouble();
+                return new RouteCalculatedArgs(routePoints, travelDistance, TimeSpan.FromMinutes(travelDuration), Enum.Parse<TravelMode>(travelMode, true));
             }
 
             return new RouteCalculatedArgs(Array.Empty<RoutePoint>(), 0, TimeSpan.Zero, Enum.Parse<TravelMode>(travelMode, true));
         }
 
-        private static RoutePoint RoutePoint(this IObjectSpace objectSpace, JToken item){
+        private static RoutePoint RoutePoint(this IObjectSpace objectSpace, JsonElement item){
             var point = objectSpace.CreateObject<RoutePoint>();
-            point.ManeuverInstruction = RemoveTagRegex.Replace(item["instruction"]["text"]!.ToString(), string.Empty);
-            var distance = (double)item["travelDistance"];
+            point.ManeuverInstruction = RemoveTagRegex.Replace(item.GetProperty("instruction").GetProperty("text").GetString()!, string.Empty);
+            var distance = item.GetProperty("travelDistance").GetDouble();
             point.Distance = distance > 0.9 ? $"{Math.Ceiling(distance):0} mi" : $"{Math.Ceiling(distance * 52.8) * 100:0} ft";
-            point.Maneuver = Enum.Parse<BingManeuverType>(item["details"][0]!["maneuverType"]!.ToString());
+            point.Maneuver = Enum.Parse<BingManeuverType>(item.GetProperty("details").EnumerateArray().First().GetProperty("maneuverType").GetString()!);
             return point;
         }
+
         
         public static DxMapOptions DxMapOptions(this IMapsMarker mapsMarker, IMapsMarker homeOffice, string travelMode){
             var mode = travelMode.FirstCharacterToLower();
