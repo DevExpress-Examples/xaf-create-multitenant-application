@@ -29,7 +29,7 @@
     
     <PropertyGroup><DefineConstants>TRACE;Import</DefineConstants></PropertyGroup>
     <ItemGroup Condition=" '$(Configuration)' == 'TEST' ">
-      <Reference Include="DevExpress.DevAV.v23.2.Data">
+      <Reference Include="DevExpress.DevAV.v24.1.Data">
         <HintPath>..\DevExpress.DevAV.v24.1.Data.dll</HintPath>
       </Reference>
     </ItemGroup>

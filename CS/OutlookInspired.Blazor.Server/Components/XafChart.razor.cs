@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
 using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Blazor.Components.Models;
 using Microsoft.AspNetCore.Components;
-using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Components {
@@ -17,6 +15,6 @@ namespace OutlookInspired.Blazor.Server.Components {
         public Expression<Func<TObject,TName>> NameField{ get; set; }
         RenderFragment IComponentContentHolder.ComponentContent => this.Create(model => model.Create<TComponent>());
         public string Height{ get; set; } = "70vh";
-        public Expression<Func<object,string>> NameField1{ get; set; }
+        
     }
 }

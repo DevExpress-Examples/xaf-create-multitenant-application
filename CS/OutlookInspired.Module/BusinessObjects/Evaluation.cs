@@ -38,8 +38,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
 		[NotMapped]
 		public string Description{
-			get => DescriptionBytes.ToDocument(server => server.Text);
-			set => DescriptionBytes=value.Bytes().ToDocument(server => server.OpenXmlBytes);
+			get => DescriptionBytes.ToDocumentText();
+			set => DescriptionBytes=value.Bytes().ToDocumentBytes();
 		}
 
 		[EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]

@@ -34,7 +34,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         
         [VisibleInDetailView(false)][VisibleInListView(false)][VisibleInLookupListView(false)]
-        public virtual string DescriptionString => Description.ToDocument(server => server.Text);
+        public virtual string DescriptionString => Description.ToDocumentText();
         public  virtual DateTime ProductionStart { get; set; }
         public  virtual bool Available { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

@@ -11,7 +11,7 @@ namespace OutlookInspired.Blazor.Server.Editors{
     public class EnumPropertyEditor:DevExpress.ExpressApp.Blazor.Editors.EnumPropertyEditor{
         public EnumPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }
-        
+
         protected override RenderFragment CreateViewComponentCore(object dataContext) 
             => ComboBoxIconItem.Create(null, ((Enum)this.GetPropertyValue(dataContext))?.ImageName());
     }

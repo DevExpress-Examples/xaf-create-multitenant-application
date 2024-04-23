@@ -1,6 +1,5 @@
 ﻿@inject IJSRuntime JsRuntime
 @using OutlookInspired.Module.BusinessObjects
-@using OutlookInspired.Blazor.Server.Services
 @using OutlookInspired.Blazor.Server.Components;
 @using OutlookInspired.Blazor.Server.Services.Internal
 @using OutlookInspired.Module.Services.Internal
@@ -15,7 +14,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 tasks-div">
-            @Task.Description.ToDocument(server => server.Text)
+            @Task.Description.ToDocumentText()
         </div>
     </div>
     <div class="row">

@@ -1,9 +1,5 @@
-﻿using DevExpress.ExpressApp.Blazor.Components.Models;
-
-namespace OutlookInspired.Blazor.Server.Components{
+﻿namespace OutlookInspired.Blazor.Server.Components{
     public class LabelModel:ComponentModelBase{
-        
-
         public string Text{
             get => GetPropertyValue<string>();
             set => SetPropertyValue(value);

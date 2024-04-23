@@ -5,14 +5,13 @@ using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors{
     [PropertyEditor(typeof(byte[]),EditorAliases.PdfViewerEditor)]
-    public class PdfViewerEditor:ComponentPropertyEditor<PdfModel,PdfModelAdapter,byte[]>{
+    public class PdfViewerEditor:BlazorPropertyEditor<PdfViewer,PdfModel>{
         public PdfViewerEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }
-    }
 
-    public class PdfModelAdapter:ComponentModelAdapter<PdfViewer,PdfModel,byte[]>{
-        public override void SetPropertyValue(byte[] value) => Model.Bytes = value;
-        
+        protected override void ReadValueCore(){
+            base.ReadValueCore();
+            ComponentModel.Bytes = (byte[])PropertyValue;
+        }
     }
-
 }

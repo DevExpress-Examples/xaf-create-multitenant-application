@@ -31,7 +31,7 @@ namespace OutlookInspired.Blazor.Tests.Common{
     class PdfViewerAssertion:IPdfViewerAssertion{
         public IObservable<Unit> Assert(DetailView detailView) 
             => detailView.GetItems<PdfViewerEditor>().ToNowObservable().ControlCreated()
-                .Select(editor => ((PdfModelAdapter)editor.Control).Model)
+                .Select(editor => ((PdfModel)editor.Control))
                 .SelectMany(model => model.WhenClientIsReady().Take(1))
                 .Select(pattern => pattern)
                 .Assert().ToUnit();
