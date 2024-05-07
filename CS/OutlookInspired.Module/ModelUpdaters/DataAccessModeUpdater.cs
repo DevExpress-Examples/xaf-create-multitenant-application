@@ -6,6 +6,7 @@ using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.ModelUpdaters{
+    
     public class DataAccessModeUpdater : ModelNodesGeneratorUpdater<ModelViewsNodesGenerator>{
         public static readonly Type[] ClientTypes = {typeof(Evaluation),typeof(TaskAttachedFile)};
 

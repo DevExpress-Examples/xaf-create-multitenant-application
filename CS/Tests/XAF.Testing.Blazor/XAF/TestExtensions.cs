@@ -50,7 +50,7 @@ namespace XAF.Testing.Blazor.XAF{
         private static void StopTest(this IServiceProvider serviceProvider){
             try{
                 serviceProvider.StopApplication();
-                Logger.Exit();
+                // Logger.Exit();
             }
             catch {
                 // ignored

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Model.Core;
 using DevExpress.Persistent.BaseImpl.EF;
 using OutlookInspired.Blazor.Server.Controllers;
+using OutlookInspired.Blazor.Server.Editors;
 using OutlookInspired.Blazor.Server.Features;
 using OutlookInspired.Blazor.Server.Features.Customers;
 using OutlookInspired.Blazor.Server.Features.Employees;
@@ -29,6 +31,11 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController),typeof(ViewFilterController),
             typeof(FunnelFilterController),typeof(WelcomeController)
         };
+
+    public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters){
+        base.AddGeneratorUpdaters(updaters);
+        updaters.Add(new HyperlinkPropertyEditorUpdater());
+    }
 
     public override void Setup(XafApplication application) {
         base.Setup(application);

@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp.Editors;
+﻿using System.ComponentModel.DataAnnotations;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.Persistent.Base;
 
 namespace OutlookInspired.Module.BusinessObjects{
@@ -7,6 +8,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual Employee Employee { get; set; }
         public virtual CustomerEmployee CustomerEmployee { get; set; }
         public virtual DateTime Date { get; set; }
+        [MaxLength(100)]
         public virtual string Type { get; set; }
         [EditorAlias(EditorAliases.RichTextPropertyEditor)]
         public virtual byte[] Purpose { get; set; }

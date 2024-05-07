@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Features.CloneView;
@@ -13,6 +14,7 @@ namespace OutlookInspired.Module.BusinessObjects{
     public class Quote :OutlookInspiredBaseObject, IViewFilter,IMapsMarker{
         public const string MapsDetailView = "Quote_DetailView_Maps";
         public const string PivotDetailView = "Quote_DetailView_Pivot";
+        [MaxLength(20)]
         public  virtual string Number { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual CustomerStore CustomerStore { get; set; }
@@ -25,7 +27,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [Column(TypeName = CurrencyType)]
         public  virtual decimal Total { get; set; }
         [EditorAlias(EditorAliases.ProgressEditor)]
-        // [ProgressPropertyEditor(Maximum = 1)]
+        
         public virtual  double Opportunity { get; set; }
         [DevExpress.ExpressApp.DC.Aggregated]
         public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();

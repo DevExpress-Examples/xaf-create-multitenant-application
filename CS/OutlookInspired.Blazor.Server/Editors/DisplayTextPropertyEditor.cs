@@ -7,22 +7,22 @@ using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors {
     [PropertyEditor(typeof(object), EditorAliases.LabelPropertyEditor,false)]
-    public class LabelPropertyEditor:ComponentPropertyEditor<LabelModel,LabelModelAdapter>{
+    public class LabelPropertyEditor:BlazorPropertyEditor<Label,LabelModel>{
         public LabelPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }
 
-        protected override LabelModelAdapter CreateComponentAdapter(){
-            var adapter = base.CreateComponentAdapter();
-            adapter.Model.Style=Model.ModelMember.MemberInfo.FontSize();
-            return adapter;
+        protected override void ReadValueCore(){
+            base.ReadValueCore();
+            ComponentModel.Text = PropertyValue is byte[] bytes ? bytes.ToDocumentText() : $"{PropertyValue}";
+        }
+
+        protected override object GetControlValueCore() 
+            => ComponentModel.Text;
+
+        protected override LabelModel CreateComponentModel(){
+            var labelModel = base.CreateComponentModel();
+            labelModel.Style = MemberInfo.FontSize();
+            return labelModel;
         }
     }
-    
-    public class LabelModelAdapter:ComponentModelAdapter<Label,LabelModel>{
-        public override void SetPropertyValue(object value) 
-            => Model.Text = value is byte[] bytes ? bytes.ToDocument(server => server.Text) : $"{value}";
-
-        public override object GetPropertyValue() => Model.Text;
-    }
-
 }

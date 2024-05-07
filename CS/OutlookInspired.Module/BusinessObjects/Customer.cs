@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using DevExpress.ExpressApp.DC;
@@ -24,22 +25,25 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public const string GridViewDetailView = "CustomerGridView_DetailView";
 		public const string LayoutViewDetailView = "CustomerLayoutView_DetailView";
 		public const string MapsDetailView = "Customer_DetailView_Maps";
-		[FontSizeDelta(4)]
+		[FontSizeDelta(4)][MaxLength(255)]
 		public  virtual string HomeOfficeLine { get; set; }
-		[XafDisplayName("City")]
+		[XafDisplayName("City")][MaxLength(100)]
 		public  virtual string HomeOfficeCity { get; set; }
 		[ZipCode]
-		[XafDisplayName("ZipCode")]
+		[XafDisplayName("ZipCode")][MaxLength(20)]
 		public  virtual string HomeOfficeZipCode { get; set; }
 		[XafDisplayName("Address")]
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
+		[MaxLength(255)]
 		public  virtual string BillingAddressLine { get; set; }
 		[VisibleInListView(false)][VisibleInLookupListView(false)]
+		[MaxLength(100)]
 		public virtual string BillingAddressCity { get; set; }
 		[ZipCode][VisibleInListView(false)][VisibleInLookupListView(false)]
+		[MaxLength(20)]
 		public  virtual string BillingAddressZipCode { get; set; }
 		[RuleRequiredField][XafDisplayName(nameof(Customer))]
-		[FontSizeDelta(8)]
+		[FontSizeDelta(8)][MaxLength(100)]
 		public virtual string Name { get; set; }
 		[XafDisplayName("State")]
 		public virtual StateEnum HomeOfficeState { get; set; }
@@ -57,12 +61,14 @@ namespace OutlookInspired.Module.BusinessObjects {
 		public virtual ObservableCollection<MapItem> CitySales{ get; set; } = new();
 		[Aggregated]
 		public virtual ObservableCollection<CustomerEmployee> Employees{ get; set; } = new(); 
-		[Attributes.Validation.Phone]
+		[Attributes.Validation.Phone][MaxLength(20)]
 		public virtual string Phone { get; set; }
 		[Attributes.Validation.Phone][VisibleInListView(false)][VisibleInLookupListView(false)]
+		[MaxLength(20)]
 		public virtual string Fax { get; set; }
 		[Attributes.Validation.Url]
 		[EditorAlias(EditorAliases.HyperLinkPropertyEditor)][VisibleInListView(false)][VisibleInLookupListView(false)]
+		[MaxLength(255)]
 		public virtual string Website { get; set; }
 		[Column(TypeName = CurrencyType)][VisibleInListView(false)][VisibleInLookupListView(false)]
 		public virtual decimal AnnualRevenue { get; set; }

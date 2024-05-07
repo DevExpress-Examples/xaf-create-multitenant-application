@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
-using Newtonsoft.Json;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
@@ -27,11 +28,12 @@ namespace OutlookInspired.Module.BusinessObjects{
         public const string ListViewDetail = "Order_ListView_Detail";
         
         [XafDisplayName("Invoice #")]
-        [FontSizeDelta(4)]
+        [FontSizeDelta(4)][MaxLength(100)]
         public  virtual string InvoiceNumber { get; set; }
         
         public virtual Customer Customer { get; set; }
         public virtual CustomerStore Store { get; set; }
+        [MaxLength(100)]
         public  virtual string PONumber { get; set; }
         public virtual Employee Employee { get; set; }
         public  virtual DateTime OrderDate { get; set; }
@@ -96,15 +98,15 @@ namespace OutlookInspired.Module.BusinessObjects{
         double IBaseMapsMarker.Longitude => Store?.Longitude??0;
     }
     
-    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum OrderShipMethod {
         Ground, Air
     }
-    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ShipmentCourier {
         None, FedEx, UPS, DHL
     }
-    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ShipmentStatus {
         [ImageName("ShipmentAwaiting")]
         Awaiting,
@@ -113,7 +115,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         [ImageName("ShipmentReceived")]
         Received
     }
-    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PaymentStatus {
         [ImageName("PaymentUnPaid")]
         Unpaid, 

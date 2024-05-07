@@ -28,7 +28,7 @@ namespace OutlookInspired.Win.Editors{
             };
 
         protected override void ReadValueCore()
-            => Control.Text = PropertyValue is byte[] bytes ? bytes.ToDocument(server => server.Text) :
+            => Control.Text = PropertyValue is byte[] bytes ? bytes.ToDocumentText() :
                 DisplayFormat != String.Empty ? string.Format(DisplayFormat, PropertyValue) : $"{PropertyValue}";
     }
 }

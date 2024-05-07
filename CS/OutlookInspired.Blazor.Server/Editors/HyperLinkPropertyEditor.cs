@@ -1,30 +1,31 @@
-﻿using DevExpress.ExpressApp.Blazor.Components.Models;
-using DevExpress.ExpressApp.Blazor.Editors.Adapters;
+﻿using DevExpress.ExpressApp.Blazor.Editors;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
-using Microsoft.AspNetCore.Components;
+using DevExpress.ExpressApp.Model.Core;
+using DevExpress.ExpressApp.Model.NodeGenerators;
 using OutlookInspired.Blazor.Server.Components;
-using OutlookInspired.Blazor.Server.Services.Internal;
+using OutlookInspired.Module.Services.Internal;
 using EditorAliases = OutlookInspired.Module.Services.EditorAliases;
 
 namespace OutlookInspired.Blazor.Server.Editors{
-    [PropertyEditor(typeof(object), EditorAliases.HyperLinkPropertyEditor, false)]
-    public class HyperLinkPropertyEditor:DevExpress.ExpressApp.Blazor.Editors.BlazorPropertyEditorBase{
+    [PropertyEditor(typeof(string), EditorAliases.HyperLinkPropertyEditor, false)]
+    public class HyperLinkPropertyEditor:BlazorPropertyEditor<Hyperlink,HyperlinkModel>{
         public HyperLinkPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
         }
 
-        protected override IComponentAdapter CreateComponentAdapter() 
-            => new HyperlinkModelAdapter(new DxTextBoxModel());
-
-
-        protected override RenderFragment CreateViewComponentCore(object dataContext) 
-            => new HyperlinkModel(){Text = $"{dataContext}",Href = $"mailto:{dataContext}"}.Create(model1 => model1.Create<Hyperlink>());
+        protected override void ConfigureViewComponent(HyperlinkModel model, object dataContext){
+            model.Text = $"{dataContext}";
+            model.Href = $"mailto:{dataContext}";
+        }
     }
     
-    public class HyperlinkModelAdapter:DxTextBoxAdapter{
-        public HyperlinkModelAdapter(DxTextBoxModel componentModel) : base(componentModel){
-        }
-
+    
+    public class HyperlinkPropertyEditorUpdater:ModelNodesGeneratorUpdater<ModelViewsNodesGenerator>{
+        public override void UpdateNode(ModelNode node)
+            => ((IModelViews)node).OfType<IModelDetailView>()
+                .SelectMany(view => view.MemberViewItems().Where(item => item.PropertyEditorType == typeof(HyperLinkPropertyEditor)))
+                .Do(item => item.PropertyEditorType = typeof(StringPropertyEditor))
+                .Enumerate();
     }
 
 }

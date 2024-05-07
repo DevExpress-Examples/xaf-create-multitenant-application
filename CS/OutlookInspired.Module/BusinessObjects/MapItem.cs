@@ -1,4 +1,4 @@
-using DevExpress.ExpressApp.Data;
+using System.ComponentModel.DataAnnotations;
 using DevExpress.ExpressApp.DC;
 using OutlookInspired.Module.Services.Internal;
 
@@ -12,16 +12,20 @@ namespace OutlookInspired.Module.BusinessObjects{
 
     [DomainComponent]
     public class MapItem : IMapItem{
-        [Key]
+        [DevExpress.ExpressApp.Data.Key]
         public int ID{ get; set; }
+        [MaxLength(100)]
         public string City{ get; set; }
         public double Latitude{ get; set; }
         public double Longitude { get; set; }
         public decimal Total { get; init; }
+        [MaxLength(100)]
         public string CustomerName{ get; init; }
+        [MaxLength(100)]
         public string ProductName{ get; init; }
 
         public ProductCategory ProductCategory{ get; set; }
+        [MaxLength(20)]
         public string Color{ get; set; }
 
         public string PropertyValue(Type type) 

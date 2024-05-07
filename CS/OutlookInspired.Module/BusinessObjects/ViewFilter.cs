@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using DevExpress.Data.Filtering;
@@ -20,9 +21,9 @@ namespace OutlookInspired.Module.BusinessObjects{
     [DeactivateAction(ListViewProcessCurrentObjectController.ListViewShowObjectActionId)]
     public class ViewFilter:BaseObject{
         
-        [RuleRequiredField]
+        [RuleRequiredField][MaxLength(100)]
         public virtual string Name{ get; set; }
-        [Browsable(false)]
+        [Browsable(false)][MaxLength(255)]
         public virtual string DataTypeName { get; set; }
         
         

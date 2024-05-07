@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using DevExpress.Persistent.Base;
 
 
 namespace OutlookInspired.Module.BusinessObjects{
     [DefaultProperty(nameof(LongName))]
     public class State:OutlookInspiredBaseObject{
+        [MaxLength(255)]
         public virtual string LongName{ get; set; }
         public virtual StateEnum ShortName{ get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,

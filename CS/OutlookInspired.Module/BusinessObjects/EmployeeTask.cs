@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
@@ -17,7 +18,7 @@ namespace OutlookInspired.Module.BusinessObjects{
         
         public virtual ObservableCollection<Employee> AssignedEmployees{ get; set; } = new();
         [RuleRequiredField]
-        [FontSizeDelta(8)]
+        [FontSizeDelta(8)][MaxLength(100)]
         public virtual string Subject { get; set; }
         
         public virtual byte[] Description { get; set; }
@@ -49,12 +50,14 @@ namespace OutlookInspired.Module.BusinessObjects{
         public virtual CustomerEmployee CustomerEmployee { get; set; }
         public virtual  EmployeeTaskFollowUp FollowUp { get; set; }
         public  virtual bool Private { get; set; }
+        [MaxLength(100)]
         public  virtual string Category { get; set; }
 
         [Aggregated]
         public virtual ObservableCollection<TaskAttachedFile> AttachedFiles{ get; set; } = new();
         public  virtual bool AttachedCollectionsChanged { get; set; }
         public  virtual long? ParentId { get; set; }
+        [MaxLength(100)]
         public  virtual string Predecessors { get; set; }
         public override string ToString() => $"{Subject} - {Description}, due {DueDate}, {Status},\r\nOwner: {Owner}";
         public bool Overdue 

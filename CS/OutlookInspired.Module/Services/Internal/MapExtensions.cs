@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.EFCore;
 using OutlookInspired.Module.BusinessObjects;
@@ -87,23 +86,12 @@ namespace OutlookInspired.Module.Services.Internal{
                     Value = ((IQueryable<Quote>)objectSpace.YieldAll().OfType<EFCoreObjectSpace>().First().Query(typeof(Quote), criteria))
                         .Where(stage1).TotalSum(q => q.Total) }).Do((item, i) => item.ID=i);
 
-        private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage,string criteria=null){
-            return ((IQueryable<Quote>)((EFCoreObjectSpace)objectSpace).Query(typeof(Quote),
-                criteria)).Where(stage);
-        }
+        private static IQueryable<Quote> Quotes(this IObjectSpace objectSpace, Stage stage,string criteria=null) 
+            => ((IQueryable<Quote>)((EFCoreObjectSpace)objectSpace).Query(typeof(Quote), criteria)).Where(stage);
 
         public static decimal TotalSum<T>(this IEnumerable<T> query, Expression<Func<T, decimal>> selector){
             var source = query.AsQueryable().Select(selector);
             return !source.Any() ? 0M : source.AsEnumerable().Sum();
-        }
-        static LambdaExpression Where(this Stage stage){
-            var (min, max) = new Dictionary<Stage, (double, double)>{
-                [Stage.High] = (0.6, 1.0), [Stage.Medium] = (0.3, 0.6), [Stage.Low] = (0.12, 0.3), [Stage.Summary] = (0.0, 1.0),
-            }.GetValueOrDefault(stage, (0.0, 0.12));
-            var quoteParam = Expression.Parameter(typeof(Quote), "quote");
-            return Expression.Lambda<Func<Quote, bool>>(Expression.And(
-                    Expression.GreaterThan(Expression.Property(quoteParam, nameof(Quote.Opportunity)), Expression.Constant(min)),
-                    Expression.LessThan(Expression.Property(quoteParam, nameof(Quote.Opportunity)), Expression.Constant(max))), quoteParam);
         }
         
         static IQueryable<Quote> Where(this IQueryable<Quote> quotes, Stage stage){

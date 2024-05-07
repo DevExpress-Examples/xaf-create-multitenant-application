@@ -6,7 +6,7 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Features.Maps{
-    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T,DxMapModel,DxMap>,IMapsRouteController where T:IRouteMapsMarker{
+    public abstract class RouteMapsViewController<T>:BlazorMapsViewController<T,DxMapModel,DxrMap>,IMapsRouteController where T:IRouteMapsMarker{
         protected override void OnDeactivated(){
             base.OnDeactivated();
             if (!Active)return;

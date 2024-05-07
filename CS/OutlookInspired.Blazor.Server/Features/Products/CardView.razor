@@ -6,7 +6,7 @@
              <SideBySideInfoCard CurrentObject="product" ComponentModel="@ComponentModel" Image="@product.PrimaryImage.Data.ToBase64Image()" HeaderText="@product.Name" 
                                  InfoItems="@(new Dictionary<string, string>{{ "COST", product.Cost.ToString("C") },
                                                 { "SALE PRICE", product.SalePrice.ToString("C") } })"
-                                 FooterText="@product.Description.ToDocument(server => server.Text)"/>
+                                 FooterText="@product.Description.ToDocumentText()"/>
          }
 
     </Content>

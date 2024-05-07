@@ -202,8 +202,9 @@ namespace XAF.Testing.XAF{
                 .Where(pattern => (!isRoot.HasValue || pattern.IsRoot == isRoot) &&
                                   (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type)))
                 .InversePair(application);
-
         
+        public static IObservable<T> CloseTrialWindow<T>(this IObservable<T> source) where T:XafApplication 
+            => source.MergeIgnored(application => "About DevExpress".CloseWindow().TakeUntil(application.WhenLoggedOn()));
 
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
