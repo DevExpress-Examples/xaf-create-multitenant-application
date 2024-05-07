@@ -22,8 +22,6 @@
     <None Remove="Images\_InProgress.png" />
     <None Remove="Images\_NotStarted.png" />
     <None Remove="Model.DesignedDiffs.xafml" />
-    <None Remove="ProductionModel.xafml" />
-    <None Remove="ServiceModel.xafml" />
     <None Remove="UnusableNodes16.xml" />
     
   </ItemGroup>
@@ -90,7 +88,6 @@
     <None Remove="MailMerge\Welcome to DevAV.docx" />
     <None Remove="MailMerge\Month Award.docx" />
     <None Remove="Resources\MailMerge\FollowUp.docx" />
-    <EmbeddedResource Include="ProductionModel.xafml" />
     <EmbeddedResource Include="Resources\MailMerge\FollowUp.docx" />
     <None Remove="Resources\MailMerge\Month Award.docx" />
     <EmbeddedResource Include="Resources\MailMerge\Month Award.docx" />
@@ -110,7 +107,6 @@
     <None Remove="Images\Welcome.png" />
     <None Remove="Resources\Welcome.pdf" />
     <EmbeddedResource Include="Resources\Welcome.pdf" />
-    <EmbeddedResource Include="ServiceModel.xafml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" Version="24.1.1-alpha-24111" />

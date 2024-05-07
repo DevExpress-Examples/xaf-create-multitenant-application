@@ -54,8 +54,9 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                     options.UseLazyLoadingProxies();
                 })
                 .WithMultiTenancyModelDifferenceStore(e => {
-                    e.ModuleType = typeof(OutlookInspiredModule);
+#if !RELEASE
                     e.UseTenantSpecificModel = false;
+#endif
                 })
                 .WithTenantResolver<TenantByEmailResolver>();
             return builder;
