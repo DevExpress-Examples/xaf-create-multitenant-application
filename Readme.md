@@ -124,7 +124,7 @@ A Tenant database is created and populated with demo data on the first login to 
 
 A list of the tenants is created, and tenant databases are populated with demo data in the Module Updater:
 
-[OutlookInspired.Module/DatabaseUpdate/Updater.cs](https://github.com/EugeniyBurmistrov/How-to-create-a-multitenancy-application/blob/23.2.2%2B/CS/OutlookInspired.Module/DatabaseUpdate/Updater.cs#L36):
+[OutlookInspired.Module/DatabaseUpdate/Updater.cs](https://github.com/DevExpress-Example/How-to-create-a-multitenancy-application/blob/23.2.2%2B/CS/OutlookInspired.Module/DatabaseUpdate/Updater.cs#L36):
 
 ```cs
 public override void UpdateDatabaseAfterUpdateSchema() {
