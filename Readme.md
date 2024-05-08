@@ -578,17 +578,21 @@ This folder contains XAF custom editors. Examples include:
       }
   }
 
-- `ComponentPropertyEditor` - An abstract property editor that serves as a basis for editors such as `ProgressPropertyEditor` or `PdfViewEditor`. The latter uses the PdfViewer component from the _Components_ folder.
+- `BlazorPropertyEditor` - An abstract property editor that serves as a basis for editors such as `ProgressPropertyEditor` or `PdfViewEditor`. The latter uses the PdfViewer component from the _Components_ folder.
 
-  [Editors/ComponentPropertyEditor.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/24.1.2%2B/CS/OutlookInspired.Blazor.Server/Editors/ComponentPropertyEditor.cs):
+  [Editors/BlazorPropertyEditor.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/24.1.2%2B/CS/OutlookInspired.Blazor.Server/Editors/BlazorPropertyEditor.cs):
 
   ```cs
-  [PropertyEditor(typeof(byte[]), EditorAliases.PdfViewerEditor)]
-  public class PdfViewerEditor : ComponentPropertyEditor<PdfModel, PdfModelAdapter, byte[]> {
-      public PdfViewerEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model) {
+  [PropertyEditor(typeof(byte[]),EditorAliases.PdfViewerEditor)]
+  public class PdfViewerEditor:BlazorPropertyEditor<PdfViewer,PdfModel>{
+      public PdfViewerEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model){
+      }
+
+      protected override void ReadValueCore(){
+          base.ReadValueCore();
+          ComponentModel.Bytes = (byte[])PropertyValue;
       }
   }
-
   ```
 - `EnumPropertyEditor` - Inherits from XAF's native _EnumPropertyEditor_, but only displays an image (like its WinForms counterpart).
 
