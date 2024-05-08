@@ -16,7 +16,10 @@ public static class WebExtensions{
 
     private static IObservable<Unit> WhenLifeTimeEvent(this IServiceProvider serviceProvider,Func<IHostApplicationLifetime,CancellationToken> theEvent){
         var subject = new Subject<Unit>();
-        theEvent(serviceProvider.GetRequiredService<IHostApplicationLifetime>()).Register(_ => subject.OnNext(), null);
+        theEvent(serviceProvider.GetRequiredService<IHostApplicationLifetime>()).Register(_ => {
+            if (subject.IsDisposed)return;
+            subject.OnNext();
+        }, null);
         return subject.AsObservable().Take(1).Finally(() => subject.Dispose());
     }
     
@@ -34,7 +37,7 @@ public static class WebExtensions{
     public static IObservable<Process> Start(this Uri uri,string browser=null) 
         => new ProcessStartInfo{
             FileName = browser??"chrome",
-            Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} {uri}",
+            Arguments = $"--user-data-dir={CreateTempProfilePath(browser)} --no-first-run --no-default-browser-check {uri}",
             UseShellExecute = true
         }.Start().Observe().Delay(TimeSpan.FromSeconds(2));
 

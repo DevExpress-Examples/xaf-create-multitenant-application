@@ -5,6 +5,7 @@ using DevExpress.Persistent.Base;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Controllers;
 using OutlookInspired.Module.Features;
@@ -30,6 +31,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole));
 		AdditionalExportedTypes.Add(typeof(ModelDifference));
 		AdditionalExportedTypes.Add(typeof(ModelDifferenceAspect));
+		AdditionalExportedTypes.Add(typeof(Tenant));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Security.SecurityModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule));

@@ -16,22 +16,30 @@ public class Updater : ModuleUpdater {
     public override void UpdateDatabaseBeforeUpdateSchema(){
         base.UpdateDatabaseBeforeUpdateSchema();
         if (ObjectSpace.TenantName() == null) return;
-        SynchronizeDatesWithToday();
+        new[]{ new { ParentTable = nameof(OutlookInspiredEFCoreDbContext.Orders), ChildTable = nameof(Order.OrderItems), DateField = nameof(Order.OrderDate), ForeignKeyField = nameof(OrderItem.OrderID), GroupField = nameof(OrderItem.ProductID) },
+            new { ParentTable = nameof(OutlookInspiredEFCoreDbContext.Quotes), ChildTable = nameof(Quote.QuoteItems), DateField = nameof(Quote.Date), ForeignKeyField = nameof(QuoteItem.QuoteID), GroupField = nameof(QuoteItem.ProductId) }
+        }.Do(entity => SynchronizeDates(entity.ParentTable, entity.ChildTable, entity.DateField, entity.ForeignKeyField, entity.GroupField)).Enumerate();
     }
 
-    private void SynchronizeDatesWithToday(){
-        new[]{
-                (table: nameof(OutlookInspiredEFCoreDbContext.Orders), column: nameof(Order.OrderDate)),
-                (table: nameof(OutlookInspiredEFCoreDbContext.Quotes), column: nameof(Quote.Date))
-            }
-            .Do(t => CreateCommand($@"
-DECLARE @MostRecentDate DATE = (SELECT MAX({t.column}) FROM {t.table});
-DECLARE @DaysDifference INT = DATEDIFF(DAY, @MostRecentDate, GETDATE());
-
-UPDATE {t.table}
-SET {t.column} = DATEADD(DAY, @DaysDifference, {t.column});
-").ExecuteNonQuery()).Enumerate();
+    private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName){
+        using var updateCommand = CreateCommand($@"
+        UPDATE p
+        SET p.{parentDateFieldName} = DATEADD(DAY, DATEDIFF(DAY, agg.MostRecentDate, GETDATE()), p.{parentDateFieldName})
+        FROM {parentTableName} p
+        INNER JOIN {childTableName} c ON p.Id = c.{childForeignKeyFieldName}
+        INNER JOIN (
+            SELECT
+                c.{groupingFieldName},
+                MAX(p.{parentDateFieldName}) AS MostRecentDate
+            FROM
+                {childTableName} c
+                INNER JOIN {parentTableName} p ON c.{childForeignKeyFieldName} = p.Id
+            GROUP BY
+                c.{groupingFieldName}
+        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}");
+        updateCommand.ExecuteNonQuery();
     }
+
 
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();

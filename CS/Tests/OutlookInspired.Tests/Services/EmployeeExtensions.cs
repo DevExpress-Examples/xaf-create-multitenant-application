@@ -61,7 +61,7 @@ namespace OutlookInspired.Tests.Services{
                 EmployeeDepartment.Engineering => new[]{ WelcomeDetailView, EmployeeListView, CustomerListView },
                 EmployeeDepartment.Management => new[]{ WelcomeDetailView, EmployeeListView,EvaluationListView, CustomerListView },
                 _ => new[]{ CustomerListView, EmployeeListView, Opportunities, OrderListView, ProductListView,
-                    WelcomeDetailView, UserListView, EvaluationListView,RoleListView,ModelDifferenceListView,RichTextMailMergeDataListView}
+                    WelcomeDetailView, UserListView,UserDetailView, EvaluationListView,RoleListView,ModelDifferenceListView,RichTextMailMergeDataListView,ReportDataV2ListView}
             }).OrderBy(view => view).ToArray();
     }
 }

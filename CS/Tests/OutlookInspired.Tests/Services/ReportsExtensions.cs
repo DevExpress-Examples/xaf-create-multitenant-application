@@ -12,6 +12,7 @@ namespace OutlookInspired.Tests.Services{
         
         public static IObservable<Unit> AssertProductReports(this XafApplication application,string view, string viewVariant) 
             => application.AssertReports( view, viewVariant, Module.Features.Products.ReportController.ReportActionId);
+
         public static IObservable<Unit> AssertOrderReports(this XafApplication application,string view, string viewVariant) 
             => application.AssertReports( view, viewVariant, Module.Features.Orders.ReportController.ReportActionId,(_, item) =>  item.ParentItem is{ Data: null });
 

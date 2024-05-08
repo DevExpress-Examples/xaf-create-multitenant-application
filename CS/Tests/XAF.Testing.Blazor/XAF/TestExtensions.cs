@@ -34,22 +34,27 @@ namespace XAF.Testing.Blazor.XAF{
             WindowPosition inactiveWindowBrowserPosition = WindowPosition.None,LogContext logContext=default,WindowPosition inactiveWindowLogContextPosition=WindowPosition.None)
             where TStartup : class where TDBContext : DbContext 
             => builder.ConfigureWebHostDefaults<TStartup>( url, contentRoot,configure).Build()
-                .Observe().SelectMany(host => Application.EnsureMultiTenantMainDatabase()
+                .Observe().SelectMany(host => Application
+                    .EnsureMultiTenantMainDatabase()
                     .DeleteModelDiffs<TDBContext>(application => application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"),user).Cast<BlazorApplication>()
                     .TakeUntil(host.Services.WhenApplicationStopping())
-                    .SelectMany(application => application.WhenLoggedOn(user).IgnoreElements()
-                        .Merge(application.WhenMainWindowCreated().To(application))
-                        .TakeUntilDisposed(application).Cast<BlazorApplication>()
-                        .SelectMany(xafApplication => test(xafApplication).To(xafApplication)))
-                    .Select(application => application.ServiceProvider)
-                    .DoAlways(() => host.Services.StopTest()).Take(1)
+                    .MergeIgnored(application => application.WhenLoggedOn(user).TakeUntil(host.Services.WhenApplicationStopping()))
+                    .SelectMany(application => test(application).TakeUntil(host.Services.WhenApplicationStopping()).BufferUntilCompleted().WhenNotEmpty().To(application))
+                    .Take(1)
+                    .DoOnError(_ => host.Services.StopTest())
+                    .Finally(() => host.Services.StopTest())
                     .MergeToUnit(host.Run(url, browser,inactiveWindowBrowserPosition)))
                 .LogError()
                 .Log(logContext,inactiveWindowLogContextPosition,true);
 
         private static void StopTest(this IServiceProvider serviceProvider){
-            serviceProvider.StopApplication();
-            Logger.Exit();
+            try{
+                serviceProvider.StopApplication();
+                Logger.Exit();
+            }
+            catch {
+                // ignored
+            }
         }
 
         private static IObservable<Unit> Run(this IHost host,string url, string browser,WindowPosition inactiveWindowPosition=WindowPosition.None) 

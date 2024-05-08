@@ -6,6 +6,7 @@ using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OutlookInspired.Module;
 using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Blazor.Server.Services.Internal{
@@ -52,6 +53,11 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })
+                .WithMultiTenancyModelDifferenceStore(e => {
+#if !RELEASE
+                    e.UseTenantSpecificModel = false;
+#endif
+                })
                 .WithTenantResolver<TenantByEmailResolver>();
             return builder;
         }
@@ -83,7 +89,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                 .AddScheduler()
                 .AddValidation()
                 .AddViewVariants()
-                .Add<Module.OutlookInspiredModule>()
+                .Add<OutlookInspiredModule>()
                 .Add<OutlookInspiredBlazorModule>();
             return builder;
         }

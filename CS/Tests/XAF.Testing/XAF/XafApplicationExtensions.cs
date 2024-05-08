@@ -6,8 +6,11 @@ using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Layout;
+using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
+using DevExpress.Persistent.BaseImpl.EF;
+using DevExpress.XtraReports.UI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace XAF.Testing.XAF{
@@ -55,7 +58,7 @@ namespace XAF.Testing.XAF{
             => source.Where(frame => frame.When(nesting))
                 .SelectMany(frame => frame.WhenFrame(viewType?.Invoke(frame)??ViewType.Any, objectType?.Invoke(frame)));
 
-        public static IObservable<Window> Navigate2(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
+        public static IObservable<Window> Navigate(this XafApplication application,string viewId,Func<Window,IObservable<Unit>> navigate=null) 
             => application.Navigate(viewId,frame =>frame.WhenFrame(viewId).Select(frame1 => frame1),navigate).Take(1).Cast<Window>();
         
         public static IObservable<Frame> WhenFrameViewChanged(this XafApplication application) 
@@ -78,6 +81,7 @@ namespace XAF.Testing.XAF{
         
         public static bool TenantsExist(this XafApplication application,string connectionString=null,int recordCount=2){
             connectionString ??= application.ConnectionString;
+            if (!application.DbExist(connectionString)) return false;
             using var sqlConnection = new SqlConnection(connectionString);
             var cmdText = @"
             IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Tenant')
@@ -95,16 +99,20 @@ namespace XAF.Testing.XAF{
             var result = command.ExecuteScalar()!;
             sqlConnection.Close();
             return result == (object)1;
+
         }
-        
-        public static bool DbExist(this XafApplication application,string connectionString=null) {
-            var builder = new SqlConnectionStringBuilder(connectionString??application.ConnectionString);
+
+        public static bool DbExist(this XafApplication application,string connectionString=null) 
+            => new SqlConnectionStringBuilder(connectionString??application.ConnectionString).DbExists();
+
+        public static bool DbExists(this SqlConnectionStringBuilder builder){
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);
             using var sqlConnection = new SqlConnection(builder.ConnectionString);
             return sqlConnection.DbExists(databaseName);
         }
+
         public static bool DbExists(this IDbConnection dbConnection, string databaseName=null){
             if (dbConnection.State != ConnectionState.Open) {
                 dbConnection.Open();
@@ -152,8 +160,7 @@ namespace XAF.Testing.XAF{
         }
 
         private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).Select(window => window).TemplateChanged().Cast<Window>().Take(1)
-                .Select(window => window);
+            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1);
 
         public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation,Func<Window,IObservable<Unit>> navigate=null){
             navigate ??= _ => Unit.Default.Observe();
@@ -196,11 +203,12 @@ namespace XAF.Testing.XAF{
                                   (objectType == null || objectType.IsAssignableFrom(pattern.CollectionSource.ObjectTypeInfo.Type)))
                 .InversePair(application);
 
+        
+
         public static IObservable<Frame> NavigateBack(this XafApplication application){
             var viewNavigationController = application.MainWindow.GetController<ViewNavigationController>();
             viewNavigationController.NavigateBackAction.SelectedItem = viewNavigationController.NavigateBackAction.Items.First();
-            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged())
-                .Select(window => window);
+            return viewNavigationController.NavigateBackAction.Trigger(application.MainWindow.WhenViewChanged());
         }
 
         public static IObservable<(ITypeInfo typeInfo, object keyValue, Frame frame)> WhenSaveObject(this IObservable<Frame> source,Frame parentFrame)

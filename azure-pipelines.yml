@@ -1,6 +1,7 @@
 jobs:
   - job: ImportData
     displayName: 'ImportData Job'
+    dependsOn: []
     timeoutInMinutes: 90
     variables:
       defaultWorkingDir: '$(System.DefaultWorkingDirectory)\CS'
@@ -9,7 +10,7 @@ jobs:
       dxFeedVar: '$(DXFeed)'
       NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
     pool:
-      vmImage: 'windows-2022'
+        name: Self
     steps:
     - task: PowerShell@2
       displayName: Build
@@ -21,8 +22,7 @@ jobs:
           dotnet nuget add source $(dxFeedVar) --name DX
           cd "$(defaultWorkingDir)"
           dotnet build --configuration TEST
-          Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | 
-          ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
+          Get-ChildItem -Path "$(testsFolderPath)" -Recurse -Directory -Include "ref", "refint", "obj" | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }  
         pwsh: true      
     - task: VSTest@3
       displayName: 'ImportData.Test'

@@ -9,18 +9,20 @@ using XAF.Testing.XAF;
 namespace OutlookInspired.Tests.Services{
     public static class CustomerExtensions{
         public static IObservable<Unit> AssertCustomerListView(this XafApplication application,string view, string viewVariant) 
-            => application.AssertNavigation(view, viewVariant, source => {
-                    var customerTabControl = application.AssertTabbedGroup(typeof(Customer),5);
-                    return source.AssertDashboardMasterDetail(
-                             frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
-                        .Merge(customerTabControl.IgnoreElements().To<Frame>())
-                        .ReplayFirstTake()
-                        .If(_ => viewVariant == "CustomerListView", frame => frame.AssertDashboardViewGridControlDetailViewObjects(
-                                nameof(Customer.RecentOrders), nameof(Customer.Employees)), frame => frame.Observe())
-                        .ToUnit();
-                },application.CanNavigate(view).ToUnit())
-                .FilterListViews(application);
+            => application.AssertNavigation(view, viewVariant, source => source.AssertCustomerListView(application,viewVariant),application.CanNavigate(view).ToUnit())
+                .FilterListViews(application)
+            ;
 
+        private static IObservable<Unit> AssertCustomerListView(this IObservable<Frame> source, XafApplication application, string viewVariant){
+            var customerTabControl = application.AssertTabbedGroup(typeof(Customer),5);
+            return source.AssertDashboardMasterDetail(
+                    frame => customerTabControl.AssertCustomerDetailView(frame).ToUnit(),assert:frame => frame.AssertAction())
+                .Merge(customerTabControl.IgnoreElements().To<Frame>())
+                .ReplayFirstTake()
+                .If(_ => viewVariant == "CustomerListView", frame => 
+                    frame.AssertDashboardViewGridControlDetailViewObjects(nameof(Customer.RecentOrders), nameof(Customer.Employees)), frame => frame.Observe())
+                .ToUnit();
+        }
 
         internal static IObservable<Frame> AssertCustomerDetailView(this IObservable<ITabControlProvider> source,
             Frame frame)

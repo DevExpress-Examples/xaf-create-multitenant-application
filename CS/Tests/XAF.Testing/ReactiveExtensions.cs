@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive;
@@ -27,6 +28,19 @@ namespace XAF.Testing{
                 signal.OnNext(Unit.Default); 
                 signal.OnCompleted();
             }).Concat(switchTo.TakeUntil(signal)));
+        
+        public static IObservable<T> MergeIgnored<T,T2>(this IObservable<T> source,Func<T,IObservable<T2>> secondSelector,Func<T,bool> merge=null)
+            => source.Publish(obs => obs.SelectMany(arg => {
+                merge ??= _ => true;
+                var observable = Observable.Empty<T>();
+                if (merge(arg)) {
+                    observable = secondSelector(arg).IgnoreElements().To(arg);
+                }
+                return observable.Merge(arg.Observe());
+            }));
+
+        public static IObservable<TOut> WhenNotEmpty<TOut>(this IObservable<TOut> source) where TOut:IEnumerable
+            => source.Where(outs => outs.Cast<object>().Any());
         
         public static IObservable<Unit> MergeToUnit<TSource, TValue>(this IObservable<TSource> source, IObservable<TValue> value) 
             => source.ToUnit().Merge(value.ToUnit());
@@ -231,7 +245,15 @@ namespace XAF.Testing{
             var synchronizationContext = SynchronizationContext.Current;
             return synchronizationContext != null ? source.ObserveOn(synchronizationContext) : source;
         }
-        
+        public static IObservable<TSource> DoOnFirst<TSource>(this IObservable<TSource> source, Action<TSource> action)
+            => source.DoWhen((i, _) => i == 0, action);
+        public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<int,TSource, bool> predicate, Action<TSource> action)
+            => source.Select((source1, i) => {
+                if (predicate(i,source1)) {
+                    action(source1);
+                }
+                return source1;
+            });
         public static IObservable<TSource> DoWhen<TSource>(this IObservable<TSource> source, Func<TSource, bool> predicate, Action<TSource> action,Action<TSource> actionElse=null)
             => source.Do(source1 => {
                 if (predicate(source1)) {
@@ -257,7 +279,7 @@ namespace XAF.Testing{
                 .Merge(obs.DoOnComplete(always)).Merge(obs.Do(_ => always()))
                 .IgnoreElements().Merge(obs));
         
-        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 15).Seconds();
+        public static TimeSpan TimeoutInterval = (Debugger.IsAttached ? 120 : 60).Seconds();
         
 
         public static IObservable<TSource> Assert<TSource>(

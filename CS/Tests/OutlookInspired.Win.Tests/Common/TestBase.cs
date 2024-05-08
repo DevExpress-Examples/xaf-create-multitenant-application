@@ -12,7 +12,7 @@ using XAF.Testing.Win.XAF;
 using Tracing = XAF.Testing.XAF.Tracing;
 
 namespace OutlookInspired.Win.Tests.Common{
-    
+    [Apartment(ApartmentState.STA)]
     public abstract class TestBase:OutlookInspired.Tests.Common.TestBase{
         static TestBase() => AppDomain.CurrentDomain.Await(async () => await Tracing.Use());
 

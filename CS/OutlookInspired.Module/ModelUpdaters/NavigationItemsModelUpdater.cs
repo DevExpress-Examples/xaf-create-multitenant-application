@@ -11,6 +11,7 @@ namespace OutlookInspired.Module.ModelUpdaters{
         public const string WelcomeDetailView = "Welcome_DetailView";
         public const string ReportDataV2ListView = "ReportDataV2_ListView";
         public const string UserListView = "ApplicationUser_ListView";
+        public const string UserDetailView = "ApplicationUser_DetailView";
         public const string RoleListView = "PermissionPolicyRole_ListView";
         public const string RichTextMailMergeDataListView = "RichTextMailMergeData_ListView";
         
