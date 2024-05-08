@@ -18,9 +18,11 @@
       </Item>
     </Items>
   </NavigationItems>
+  <Options UIType="TabbedMDI" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.3.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.3.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerBlazorModule" Version="24.1.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="24.1.1.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="24.1.1.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">

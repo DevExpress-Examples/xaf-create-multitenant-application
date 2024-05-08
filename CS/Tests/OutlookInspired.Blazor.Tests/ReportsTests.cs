@@ -8,7 +8,7 @@ using static OutlookInspired.Module.ModelUpdaters.NavigationItemsModelUpdater;
 using TestBase = OutlookInspired.Blazor.Tests.Common.TestBase;
 
 namespace OutlookInspired.Blazor.Tests{
-    [Order(-1)]
+    [Order(-1)][Ignore("support DxReportViewer t1228848")]
     public class ReportsTests : TestBase{
         
         [RetryTestCaseSource(nameof(CustomerVariants),MaxTries=MaxTries)]

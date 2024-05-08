@@ -57,8 +57,8 @@ namespace XAF.Testing.XAF{
                     return dialogController switch {
                         { AcceptAction.Active.ResultValue: true } => dialogController.AcceptAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe()),
                         { CloseAction.Active.ResultValue: true } => dialogController.CloseAction.Trigger().Take(1).To<Frame>().Concat(previous.Observe()),
-                        null => frame.IsMain ? frame.Application.NavigateBack() : frame.Actions("Close").Cast<SimpleAction>().Where(a => a.Controller.Name.StartsWith("DevExpress"))
-                            .ToNowObservable().SelectMany(a => a.Trigger().To(previous)),
+                        null => frame.IsMain ? frame.Application.NavigateBack() : frame.Actions("Close").Cast<SimpleAction>().Where(a => a.Controller.Name.StartsWith("DevExpress")).ToNowObservable()
+                            .If(action => action.Active,action => action.Trigger().To(previous),action => frame.Observe().Do(window => window.Close()).To(previous)),
                         _ => throw new NotImplementedException()
                     };
                 })
@@ -154,13 +154,17 @@ namespace XAF.Testing.XAF{
         public static IEnumerable<T> Actions<T>(this Frame frame,params string[] actionsIds) where T : ActionBase 
             => frame.Controllers.Cast<Controller>().SelectMany(controller => controller.Actions).OfType<T>()
                 .Where(actionBase => !actionsIds.Any()|| actionsIds.Any(s => s==actionBase.Id));
-        
+
+        public static Window ToActive(this Window window) 
+            => window.Application.GetRequiredService<IActiveWindowResolver>().GetWindow(window);
+
         public static IObservable<Frame> ChangeViewVariant(this IObservable<Frame> source,string id) 
             => source.ToController<ChangeVariantController>()
                 .SelectMany(controller => {
                     var choiceActionItem = controller.ChangeVariantAction.Items.First(item => item.Id == id);
                     var variantInfo = ((VariantInfo)choiceActionItem.Data);
-                    return variantInfo.ViewID != controller.Frame.View.Id ? controller.ChangeVariantAction.Trigger(controller.Application.WhenFrame(variantInfo.ViewID),() => choiceActionItem) : controller.Frame.Observe();
+                    return variantInfo.ViewID != controller.Frame.View.Id ? controller.ChangeVariantAction.Trigger(
+                            controller.Application.WhenFrame(variantInfo.ViewID), () => choiceActionItem) : controller.Frame.Observe();
                 });
 
         public static IObservable<object> WhenObjects(this IObservable<Frame> source,int count=0) 

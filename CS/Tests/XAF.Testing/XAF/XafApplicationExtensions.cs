@@ -6,11 +6,8 @@ using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Layout;
-using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.Persistent.BaseImpl.EF;
-using DevExpress.XtraReports.UI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace XAF.Testing.XAF{
@@ -35,7 +32,8 @@ namespace XAF.Testing.XAF{
                 .Where(frame => frame.Application==application&& (templateContext==default ||frame.Context == templateContext));
 
         public static IObservable<Frame> WhenFrame(this XafApplication application)
-            => application.WhenFrameViewChanged().Merge(application.MainWindow.Observe().WhenNotDefault().WhenViewChanged().WhenNotDefault(window => window.View));
+            => application.WhenFrameViewChanged().Merge(application.MainWindow.Observe().WhenNotDefault()
+                .SelectMany(window => new[]{window,window.ToActive()}).WhenViewChanged().WhenNotDefault(window => window.View));
         public static IObservable<Frame> WhenFrame(this XafApplication application, Type objectType , params ViewType[] viewTypes) 
             => application.WhenFrame(objectType).WhenFrame(viewTypes);
 
@@ -160,7 +158,8 @@ namespace XAF.Testing.XAF{
         }
 
         private static IObservable<Window> WhenMainWindowAvailable(this IObservable<Window> windowCreated) 
-            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1);
+            => windowCreated.When(TemplateContext.ApplicationWindow).TemplateChanged().Cast<Window>().Take(1)
+                .Select(window => window.Application.MainWindow ?? window);
 
         public static IObservable<Frame> Navigate(this Window window,string viewId, IObservable<Frame> afterNavigation,Func<Window,IObservable<Unit>> navigate=null){
             navigate ??= _ => Unit.Default.Observe();

@@ -73,7 +73,7 @@ namespace XAF.Testing.Blazor.XAF{
                 if (application.DbExist(application.GetRequiredService<IConfiguration>().GetConnectionString("ConnectionString"))){
                     return application.WhenMainWindowCreated().DoNotComplete()
                         .TakeUntil(subscribed.WhenDefault())
-                        .SelectMany(window => window.GetController<LogoffController>().LogoffAction.Trigger().To(application))
+                        .SelectMany(window => window.Application.MainWindow.GetController<LogoffController>().LogoffAction.Trigger().To(application))
                         .TakeUntil(application.WhenDisposed().Do(_ => subscribed.OnNext(false))).Take(1)
                         .Merge(subscribed.WhenDefault().To(application).WhenDefault(blazorApplication => blazorApplication.IsDisposed()));
                 }

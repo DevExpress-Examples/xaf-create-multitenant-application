@@ -5,6 +5,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Utils;
 using View = DevExpress.ExpressApp.View;
 
 namespace XAF.Testing.XAF{
@@ -39,6 +40,20 @@ namespace XAF.Testing.XAF{
         public static IObservable<Unit> Trigger(this SimpleAction action, params object[] selection)
             => action.Trigger(action.WhenExecuteCompleted().Take(1).ToUnit(),selection);
         
+        public static IObservable<TAction> WhenActivated<TAction>(this TAction simpleAction,params string[] contexts) where TAction : ActionBase 
+            => simpleAction.ResultValueChanged(action => action.Active).SelectMany(t => contexts.Concat(Controller.ControllerActiveKey.YieldItem()).Select(context => (t,context)))
+                .Where(t => t.t.action.Active.ResultValue&&t.t.action.Active.Contains(t.context)&& t.t.action.Active[t.context])
+                .Select(t => t.t.action);
+
+        public static IObservable<(BoolList boolList, BoolValueChangedEventArgs e)> ResultValueChanged(
+            this IObservable<BoolList> source,bool? newValue=null) 
+            => source.SelectMany(item => item.WhenEvent<BoolValueChangedEventArgs>(nameof(BoolList.ResultValueChanged))
+                .Where(eventArgs => !newValue.HasValue || eventArgs.NewValue == newValue).InversePair(item));
+
+        public static IObservable<(TAction action, BoolList boolList, BoolValueChangedEventArgs e)> ResultValueChanged<TAction>(
+            this TAction source, Func<TAction, BoolList> boolListSelector) where TAction : ActionBase 
+            => boolListSelector(source).Observe().ResultValueChanged().Select(tuple => (source, tuple.boolList, tuple.e));
+
         public static void DoExecute(this SimpleAction action, params object[] selection) 
             => action.DoExecute(() => action.DoExecute(),selection);
         

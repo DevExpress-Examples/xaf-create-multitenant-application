@@ -40,6 +40,10 @@ namespace XAF.Testing.XAF{
         IObservable<T> SelectObject(ListView source, params T[] objects);
     }
 
+    public interface IActiveWindowResolver{
+        Window GetWindow(Window window);
+    }
+    
     public interface IFrameObjectObserver{
         IObservable<object> WhenObjects(Frame frame, int count = 0);
     }
