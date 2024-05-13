@@ -4,7 +4,7 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using DevExpress.ExpressApp.Design;
 using DevExpress.ExpressApp.EFCore.DesignTime;
 using DevExpress.Persistent.BaseImpl.EF;
-using Microsoft.Data.SqlClient;
+using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
 
 
 namespace OutlookInspired.Module.BusinessObjects;
@@ -34,6 +34,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	public OutlookInspiredEFCoreDbContext(DbContextOptions<OutlookInspiredEFCoreDbContext> options) : base(options) {
 	}
 	
+	public DbSet<Tenant> Tenants { get; set; }
 	public DbSet<ModelDifference> ModelDifferences { get; set; }
 	public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
 	public DbSet<PermissionPolicyRole> Roles { get; set; }
@@ -43,6 +44,7 @@ public class OutlookInspiredEFCoreDbContext : DbContext {
 	public DbSet<ReportDataV2> ReportDataV2 { get; set; }
 	public DbSet<DashboardData> DashboardData { get; set; }
 	public DbSet<Analysis> Analysis { get; set; }
+	
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Product> Products { get; set; }

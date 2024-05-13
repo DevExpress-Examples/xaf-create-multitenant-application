@@ -22,6 +22,7 @@ public class Updater : ModuleUpdater {
     }
 
     private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName){
+        
         using var updateCommand = CreateCommand($@"
         UPDATE p
         SET p.{parentDateFieldName} = DATEADD(DAY, DATEDIFF(DAY, agg.MostRecentDate, GETDATE()), p.{parentDateFieldName})
@@ -44,6 +45,7 @@ public class Updater : ModuleUpdater {
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
         if (!ObjectSpace.CanInstantiate(typeof(ApplicationUser))) return;
+        if (!ObjectSpace.CanInstantiate(typeof(Tenant))) return;
         if (ObjectSpace.TenantName() == null) {
             CreateAdminObjects();
             CreateTenant("company1.com", "OutlookInspired_company1");

@@ -27,11 +27,6 @@ namespace OutlookInspired.Module;
 public sealed class OutlookInspiredModule : ModuleBase{
 	public const string ModelCategory = "OutlookInspired";
     public OutlookInspiredModule() {
-		AdditionalExportedTypes.Add(typeof(ApplicationUser));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole));
-		AdditionalExportedTypes.Add(typeof(ModelDifference));
-		AdditionalExportedTypes.Add(typeof(ModelDifferenceAspect));
-		AdditionalExportedTypes.Add(typeof(Tenant));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Security.SecurityModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule));
@@ -48,19 +43,14 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
 		RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ViewVariantsModule.ViewVariantsModule));
 		DevExpress.ExpressApp.Security.SecurityModule.UsedExportedTypes = UsedExportedTypes.Custom;
-		AdditionalExportedTypes.Add(typeof(FileData));
-		AdditionalExportedTypes.Add(typeof(FileAttachment));
-		AdditionalExportedTypes.Add(typeof(Analysis));
-		AdditionalExportedTypes.Add(typeof(Event));
-		AdditionalExportedTypes.Add(typeof(Resource));
-		AdditionalExportedTypes.Add(typeof(HCategory));
-		AdditionalExportedTypes.Add(typeof(RichTextMailMergeData));
     }
     
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
 	    yield return new PredefinedReportsUpdater(Application, objectSpace, versionFromDB)
 		    .AddOrderReports().AddCustomerReports().AddProductReports();
-        yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
+	    yield return new DatabaseUpdate.Updater(objectSpace, versionFromDB);
+	    
+        
     }
 
     protected override IEnumerable<Type> GetDeclaredControllerTypes() 

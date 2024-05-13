@@ -1,28 +1,21 @@
-﻿using DevExpress.ExpressApp.Security;
-using DevExpress.Persistent.Base;
-using Microsoft.EntityFrameworkCore;
-using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using DevExpress.EntityFrameworkCore.Security.MiddleTier.ClientServer;
+﻿using System.Text;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.MultiTenancy;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text;
+using DevExpress.ExpressApp.Security;
+using DevExpress.ExpressApp.Security.Authentication.ClientServer;
+using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OutlookInspired.WebApi.JWT;
-using DevExpress.ExpressApp.Security.Authentication.ClientServer;
-using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.ApplicationBuilder;
 
-namespace OutlookInspired.WebApi;
+namespace OutlookInspired.MiddleTier;
 
-public class Startup {
-    public Startup(IConfiguration configuration) {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
+public class Startup(IConfiguration configuration){
+    public IConfiguration Configuration { get; } = configuration;
 
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -32,11 +25,12 @@ public class Startup {
         services.AddXafMiddleTier(Configuration, builder => {
 
             builder.Modules
-                .Add<OutlookInspired.Module.OutlookInspiredModule>();
+                .AddReports(options => options.ReportDataType = typeof(DevExpress.Persistent.BaseImpl.EF.ReportDataV2))
+                .Add<Module.OutlookInspiredModule>();
 
 
             builder.AddMultiTenancy()
-                .WithHostDbContext((serviceProvider, options) => {
+                .WithHostDbContext((_, options) => {
                     string connectionString = Configuration.GetConnectionString("ConnectionString");
 #if EASYTEST
                     string connectionString = Configuration.GetConnectionString("EasyTestConnectionString");
@@ -55,8 +49,8 @@ public class Startup {
 
             builder.ObjectSpaceProviders
                 .AddSecuredEFCore()
-                    .WithDbContext<OutlookInspired.Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
-                        string connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
+                    .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
+                        var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                         options.UseSqlServer(connectionString);
                         options.UseChangeTrackingProxies();
                         options.UseObjectSpaceLinkProxies();
@@ -71,10 +65,10 @@ public class Startup {
                     options.RoleType = typeof(PermissionPolicyRole);
                     // ApplicationUser descends from PermissionPolicyUser and supports the OAuth authentication. For more information, refer to the following topic: https://docs.devexpress.com/eXpressAppFramework/402197
                     // If your application uses PermissionPolicyUser or a custom user type, set the UserType property as follows:
-                    options.UserType = typeof(OutlookInspired.Module.BusinessObjects.ApplicationUser);
+                    options.UserType = typeof(Module.BusinessObjects.ApplicationUser);
                     // ApplicationUserLoginInfo is only necessary for applications that use the ApplicationUser user type.
                     // If you use PermissionPolicyUser or a custom user type, comment out the following line:
-                    options.UserLoginInfoType = typeof(OutlookInspired.Module.BusinessObjects.ApplicationUserLoginInfo);
+                    options.UserLoginInfoType = typeof(Module.BusinessObjects.ApplicationUserLoginInfo);
                     options.Events.OnSecurityStrategyCreated += securityStrategy => {
                         //((SecurityStrategy)securityStrategy).AnonymousAllowedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.ModelDifference));
                         //((SecurityStrategy)securityStrategy).AnonymousAllowedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.EF.ModelDifferenceAspect));
@@ -87,7 +81,7 @@ public class Startup {
 
             builder.AddBuildStep(application => {
                 application.ApplicationName = "SetupApplication.OutlookInspired";
-                application.CheckCompatibilityType = DevExpress.ExpressApp.CheckCompatibilityType.DatabaseSchema;
+                application.CheckCompatibilityType = CheckCompatibilityType.DatabaseSchema;
                 //application.CreateCustomModelDifferenceStore += += (s, e) => {
                     //    e.Store = new ModelDifferenceDbStore((XafApplication)sender!, typeof(ModelDifference), true, "Win");
                     //    e.Handled = true;
@@ -95,7 +89,7 @@ public class Startup {
 #if DEBUG
                 if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
                     application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                    application.DatabaseVersionMismatch += (s, e) => {
+                    application.DatabaseVersionMismatch += (_, e) => {
                         e.Updater.Update();
                         e.Handled = true;
                     };
@@ -113,7 +107,7 @@ public class Startup {
                     //ValidAudience = Configuration["Authentication:Jwt:Audience"],
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Jwt:IssuerSigningKey"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Jwt:IssuerSigningKey"]!))
                 };
             });
 
@@ -143,11 +137,11 @@ public class Startup {
                 {
                     new OpenApiSecurityScheme() {
                         Reference = new OpenApiReference() {
-                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Type = ReferenceType.SecurityScheme,
                             Id = "JWT"
                         }
                     },
-                    new string[0]
+                    Array.Empty<string>()
                 },
             });
         });
