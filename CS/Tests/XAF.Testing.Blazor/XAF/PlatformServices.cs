@@ -1,8 +1,10 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Blazor;
 using DevExpress.ExpressApp.Blazor.Components.Models;
 using DevExpress.ExpressApp.Model;
 using DevExpress.XtraPrinting;
@@ -27,6 +29,7 @@ namespace XAF.Testing.Blazor.XAF{
             serviceCollection.AddScoped<IDocumentActionAssertion, DocumentActionAssertion>();
             serviceCollection.AddScoped<ITabControlObserver, TabControlObserver>();
             serviceCollection.AddScoped<IFrameObjectObserver, FrameObjectObserver>();
+            serviceCollection.AddScoped<IActiveWindowResolver, ActiveWindowResolver>();
             serviceCollection.AddScoped<IAssertReport, AssertReport>();
             serviceCollection.AddScoped<ISelectedObjectProcessor, SelectedObjectProcessor>();
             serviceCollection.AddScoped<IWindowMaximizer, WindowMaximizer>();
@@ -55,7 +58,7 @@ namespace XAF.Testing.Blazor.XAF{
 
 
     public interface IReportResolver{
-        IObservable<XtraReport> WhenResolved(Frame frame);
+        IObservable<XtraReport> WhenResolved();
     }
     class DefaultWebDocumentViewerReportResolver:DevExpress.XtraReports.Web.WebDocumentViewer.Native.Services.DefaultWebDocumentViewerReportResolver, IReportResolver{
         public DefaultWebDocumentViewerReportResolver(ReportStorageWebExtension reportStorageWebExtension, IReportProvider reportProvider) : base(reportStorageWebExtension, reportProvider){
@@ -63,7 +66,7 @@ namespace XAF.Testing.Blazor.XAF{
 
         private readonly Subject<XtraReport> _resolvedSubject = new();
 
-        public IObservable<XtraReport> WhenResolved(Frame frame)
+        public IObservable<XtraReport> WhenResolved()
             => _resolvedSubject.AsObservable();
                 
         public override XtraReport Resolve(string reportEntry) 
@@ -75,7 +78,14 @@ namespace XAF.Testing.Blazor.XAF{
         public IObservable<T> SelectObject(ListView view, params T[] objects) 
             => view.SelectObject(objects);
     }
-    
+
+    public class ActiveWindowResolver:IActiveWindowResolver{
+        private static readonly PropertyInfo ActiveWindowMember;
+
+        static ActiveWindowResolver() => ActiveWindowMember = typeof(BlazorWindow).GetProperty("ActiveWindow");
+
+        public Window GetWindow(Window window) => (Window)ActiveWindowMember.GetValue(window);
+    }
     public class FrameObjectObserver : IFrameObjectObserver{
         IObservable<object> IFrameObjectObserver.WhenObjects(Frame frame, int count) 
             => frame.View.Observe().OfType<DetailView>().SelectMany(view => view.WhenGridControl()

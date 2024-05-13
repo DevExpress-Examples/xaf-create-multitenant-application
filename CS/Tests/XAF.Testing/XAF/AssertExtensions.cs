@@ -125,7 +125,7 @@ namespace XAF.Testing.XAF{
         public static IObservable<Unit> AssertNavigation(this XafApplication application,string view, string viewVariant,Func<IObservable<Frame>,IObservable<Unit>> assert, IObservable<Unit> canNavigate) 
             => application.AssertNavigation(view,_ => canNavigate
                     .SwitchIfEmpty(Observable.Defer(() => Observable.Throw<Unit>(new CannotNavigateException()))).ToUnit())
-                .SelectMany(window => window.Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
+                .SelectMany(window => window.ToActive().Observe().If(_ => viewVariant!=null,window1 => window1.Observe()
                         .AssertChangeViewVariant(viewVariant),window1 => window1.Observe())
                     .SelectMany(frame => assert(frame.Observe())))
                 .Catch<Unit,CannotNavigateException>(_ => Unit.Default.Observe())

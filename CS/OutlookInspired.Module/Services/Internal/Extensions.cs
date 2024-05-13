@@ -1,3 +1,4 @@
+using System.Data;
 using System.Drawing;
 using System.IO.Compression;
 using System.Linq.Expressions;
@@ -8,13 +9,22 @@ using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Utils;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
-        public static void AttachDatabase(this IServiceProvider serviceProvider){
+        internal static string GetTenantConnectionString(this ITenantProvider tenantProvider, string connectionString){
+            using var connection = new SqlConnection(connectionString);
+            var query = "SELECT ID, ConnectionString FROM Tenant WHERE ID = @Id";
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", tenantProvider.TenantId);
+            if (connection.State != ConnectionState.Open) connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.Read() ? reader.GetString(1)
+                : throw new InvalidOperationException("Tenant not found.");
+        }
+        public static void AttachDatabase(this IServiceProvider serviceProvider, string connectionString){
             var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
-            var builder = new SqlConnectionStringBuilder((serviceProvider.GetRequiredService<IConnectionStringProvider>()).GetConnectionString());
+            var builder = new SqlConnectionStringBuilder(connectionString);
             var initialCatalog = "Initial catalog";
             var databaseName = builder[initialCatalog].ToString();
             builder.Remove(initialCatalog);

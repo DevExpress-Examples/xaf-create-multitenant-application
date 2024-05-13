@@ -36,7 +36,7 @@ namespace XAF.Testing{
                 if (merge(arg)) {
                     observable = secondSelector(arg).IgnoreElements().To(arg);
                 }
-                return observable.Merge(arg.Observe());
+                return arg.Observe().Merge(observable);
             }));
 
         public static IObservable<TOut> WhenNotEmpty<TOut>(this IObservable<TOut> source) where TOut:IEnumerable

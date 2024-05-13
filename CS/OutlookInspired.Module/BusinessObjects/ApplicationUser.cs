@@ -8,7 +8,12 @@ using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
 
 namespace OutlookInspired.Module.BusinessObjects;
 [DefaultProperty(nameof(UserName))]
-public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo {
+public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo,ISecurityUserLockout {
+    [Browsable(false)]
+    public virtual int AccessFailedCount { get; set; }
+
+    [Browsable(false)]
+    public virtual DateTime LockoutEnd { get; set; }
     [Browsable(false)]
     [DevExpress.ExpressApp.DC.Aggregated]
     public virtual IList<ApplicationUserLoginInfo> UserLogins { get; set; }= new ObservableCollection<ApplicationUserLoginInfo>();

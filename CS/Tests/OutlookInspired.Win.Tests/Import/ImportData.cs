@@ -1,6 +1,7 @@
 using System.Reactive.Linq;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
+using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
@@ -26,6 +27,7 @@ namespace OutlookInspired.Win.Tests.Import{
             application.Setup();
             
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
+            objectSpace.GetObjectsQuery<Tenant>().Count().ShouldBe(0);
             await objectSpace.ImportFromSqlLite();
             objectSpace.CommitChanges();
             objectSpace.Count<Crest>().ShouldBe(20);

@@ -24,6 +24,7 @@ namespace XAF.Testing.Win.XAF{
             serviceCollection.AddSingleton<IUserControlProvider, UserControlProvider>();
             serviceCollection.AddSingleton<IUserControlObjects, UserControlProperties>();
             serviceCollection.AddSingleton<IFrameObjectObserver, FrameObjectObserver>();
+            serviceCollection.AddSingleton<IActiveWindowResolver, ActiveWindowResolver>();
             serviceCollection.AddSingleton<INewRowAdder, NewRowAdder>();
             serviceCollection.AddSingleton<IAssertReport, AssertReport>();
             serviceCollection.AddSingleton<ISelectedObjectProcessor, SelectedObjectProcessor>();
@@ -56,6 +57,11 @@ namespace XAF.Testing.Win.XAF{
         public IObservable<object> WhenGridControl(DetailView detailView) 
             => detailView.WhenGridControl();
     }
+    public class ActiveWindowResolver:IActiveWindowResolver{
+
+        public Window GetWindow(Window window) => window;
+    }
+
     public class FrameObjectObserver : IFrameObjectObserver{
         IObservable<object> IFrameObjectObserver.WhenObjects(Frame frame, int count) 
             => frame.WhenColumnViewObjects(count).SwitchIfEmpty(Observable.Defer(() =>
