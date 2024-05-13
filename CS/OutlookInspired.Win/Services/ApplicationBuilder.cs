@@ -1,4 +1,7 @@
-﻿using DevExpress.ExpressApp;
+﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.ReportsV2.Win;
@@ -19,25 +22,26 @@ namespace OutlookInspired.Win.Services{
         public static IWinApplicationBuilder Configure(this IWinApplicationBuilder builder,string connectionString){
             builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
             builder.AddModules();
-            builder.AddSecuredObjectSpaceProviders();
-            builder.AddIntegratedModeSecurity();
-            builder.AddMultiTenancy(connectionString);
+            
+            // builder.UseIntegratedModeSecurity();
+            builder.UseMiddleTierModeSecurity();
+            // builder.AddMultiTenancy(connectionString);
+            builder.AddMiddleTierMultiTenancy();
             builder.AddBuildSteps(connectionString);
             return builder;
         }
         public static void AddBuildSteps(this IWinApplicationBuilder builder, string connectionString) 
             => builder.AddBuildStep(application => {
-                application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                application.CheckCompatibilityType = CheckCompatibilityType.DatabaseSchema;
+                application.DatabaseUpdateMode = DatabaseUpdateMode.Never;
                 ((WinApplication)application).SplashScreen = new DXSplashScreen(
                     typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
                 application.ApplicationName = "OutlookInspired";
                 SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
                 WinReportServiceController.UseNewWizard = true;
-                application.DatabaseVersionMismatch += (_, e) => {
-                    e.Updater.Update();
-                    e.Handled = true;
-                };
+                // application.DatabaseVersionMismatch += (_, e) => {
+                //     e.Updater.Update();
+                //     e.Handled = true;
+                // };
                 application.LastLogonParametersReading += (_, e) => {
                     if (!string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) return;
                     e.SettingsStorage.SaveOption("", "UserName", "Admin");
@@ -45,8 +49,33 @@ namespace OutlookInspired.Win.Services{
                 application.ConnectionString = connectionString;
             });
 
-        private static void AddIntegratedModeSecurity(this IWinApplicationBuilder builder) 
-            => builder.Security
+        private static void UseMiddleTierModeSecurity(this IWinApplicationBuilder builder){
+            var objectSpaceProviderBuilder = builder.AddMiddleTierObjectSpaceProviders();
+            builder.Security.UseMiddleTierMode(options => {
+                options.WaitForMiddleTierServerReady();
+                options.BaseAddress = new Uri("https://localhost:44319/");
+                options.Events.OnHttpClientCreated = client => client.DefaultRequestHeaders.Add("Accept", "application/json");
+                options.Events.OnCustomAuthenticate = (_, _, args) => {
+                    args.Handled = true;
+                    var msg = args.HttpClient.PostAsJsonAsync("api/Authentication/Authenticate",
+                        (AuthenticationStandardLogonParameters)args.LogonParameters).GetAwaiter().GetResult();
+                    var token = (string)msg.Content.ReadFromJsonAsync(typeof(string)).GetAwaiter().GetResult();
+                    if (msg.StatusCode == HttpStatusCode.Unauthorized){
+                        XafExceptions.Authentication.ThrowAuthenticationFailedFromResponse(token);
+                    }
+                    msg.EnsureSuccessStatusCode();
+                    args.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+                };
+            })
+            .UsePasswordAuthentication();
+            builder.Get().PostConfigure<SecurityOptions>(options => {
+                options.RoleType = typeof(PermissionPolicyRole);
+                options.UserType = typeof(ApplicationUser);
+            });
+        }
+
+        public static void UseIntegratedModeSecurity(this IWinApplicationBuilder builder) 
+            => builder.AddSecuredObjectSpaceProviders().Context.Security
                 .UseIntegratedMode(options => {
                     options.RoleType = typeof(PermissionPolicyRole);
                     options.UserType = typeof(ApplicationUser);
@@ -65,6 +94,16 @@ namespace OutlookInspired.Win.Services{
 
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddObjectSpaceProviders(this IWinApplicationBuilder builder)
             => builder.ObjectSpaceProviders.AddEFCore(ConfigureObjectSpaceProvider()).ObjectSpaceProviderBuilder();
+        
+        public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> AddMiddleTierObjectSpaceProviders(this IWinApplicationBuilder builder) 
+            => builder.ObjectSpaceProviders
+                .AddEFCore(options => options.PreFetchReferenceProperties())
+                .WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
+                    options.UseMiddleTier(application.Security);
+                    options.UseChangeTrackingProxies();
+                    options.UseObjectSpaceLinkProxies();
+                }, ServiceLifetime.Transient)
+                .AddNonPersistent();
 
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> ObjectSpaceProviderBuilder(this DbContextBuilder<IWinApplicationBuilder> builder,Action<XafApplication> configure=null) 
             => builder.WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
@@ -75,6 +114,21 @@ namespace OutlookInspired.Win.Services{
                 options.UseLazyLoadingProxies();
             }, ServiceLifetime.Transient)
                 .AddNonPersistent();
+
+        public static IWinApplicationBuilder AddMiddleTierMultiTenancy(this IWinApplicationBuilder builder) {
+            builder.AddMultiTenancy()
+                .WithHostDbContext((serviceProvider, options) => {
+                    options.UseMiddleTier(serviceProvider.GetRequiredService<ISecurityStrategyBase>());
+                    options.UseChangeTrackingProxies();
+                },true)
+                .WithMultiTenancyModelDifferenceStore(mds => {
+#if !RELEASE
+                    mds.UseTenantSpecificModel = false;
+#endif
+                })
+                .WithTenantResolver<TenantByEmailResolver>();
+            return builder;
+        }
 
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
             builder.AddMultiTenancy()
