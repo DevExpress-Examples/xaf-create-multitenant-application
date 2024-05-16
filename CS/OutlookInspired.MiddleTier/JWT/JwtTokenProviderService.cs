@@ -20,9 +20,6 @@ public class JwtTokenProviderService : IAuthenticationTokenProvider {
         this.configuration = configuration;
     }
     public string Authenticate(object logonParameters) {
-#if !RELEASE
-        tenantDatabaseUpdater.EnsureTenantDatabaseCreated((AuthenticationStandardLogonParameters)logonParameters);
-#endif
         var result = signInManager.AuthenticateByLogonParameters(logonParameters);
         if(result.Succeeded) {
             var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:Jwt:IssuerSigningKey"]));
