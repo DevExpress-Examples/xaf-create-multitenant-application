@@ -1,8 +1,6 @@
-﻿<div @attributes=@Attributes style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top: 5px;@ComponentModel.Style;">@ComponentModel.Text</div>
-@code {
-    [Parameter]
-    public LabelModel ComponentModel { get; set; }
+﻿<div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top: 5px;@Style;">@Text</div>
 
-    [Parameter(CaptureUnmatchedValues = true)][Obsolete] 
-    public Dictionary<string, object> Attributes { get; set; }
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string Style { get; set; }
 }

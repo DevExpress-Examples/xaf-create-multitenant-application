@@ -1,14 +1,30 @@
 ﻿@using OutlookInspired.Module.Services.Internal
-@inherits ComponentBase<PdfModel,PdfViewer>
+@using OutlookInspired.Blazor.Server.Components.DevExtreme
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
-<embed  @ref=@Element type="application/pdf" style="@(ComponentModel?.Style??"width:100%; height:100vh;")"/>
+<embed @ref=@element type="application/pdf" style="@(Style ?? "width:100%; height:100vh;")" />
 
 @code {
 
-    protected override async Task OnAfterImportClientModuleAsync(bool firstRender){
-        if (ComponentModel.Bytes==null)return;
-        await ClientModule.InvokeVoidAsync("addPdfLoadListener",Element, ComponentModel, ComponentModel.Bytes.ToBase64String(), ComponentModel.ToolBar ? 1 : 0);
+    [Parameter] public byte[] Bytes { get; set; }
+    [Parameter] public bool ToolBar { get; set; }
+    [Parameter] public string Style { get; set; }
+
+    private IJSObjectReference module;
+    private ElementReference element { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if(firstRender) {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/PdfViewer.razor.js");
+            if(Bytes == null) return;
+            await module.InvokeVoidAsync("addPdfLoadListener", element, Bytes.ToBase64String(), ToolBar ? 1 : 0);
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
-
-
+    async ValueTask IAsyncDisposable.DisposeAsync() {
+        if(module is not null) {
+            await module.DisposeAsync();
+        }
+    }
 }
