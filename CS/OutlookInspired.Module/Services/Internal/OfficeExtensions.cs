@@ -3,10 +3,10 @@ using DevExpress.XtraRichEdit;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class OfficeExtensions{
-        static T ToDocument<T>(this byte[] bytes,Func<IRichEditDocumentServer,T> data){
-            using var server = new RichEditDocumentServer();
-            return server.ToDocument(bytes,() => data(server),DocumentFormat.OpenXml);
-        }
+        private static readonly RichEditDocumentServer RichEditDocumentServer = new();
+        static T ToDocument<T>(this byte[] bytes,Func<IRichEditDocumentServer,T> data) 
+            => RichEditDocumentServer.ToDocument(bytes,() => data(RichEditDocumentServer),DocumentFormat.OpenXml);
+        
         public static string ToDocumentText(this byte[] bytes) => bytes.ToDocument(server => server.Text);
         public static byte[] ToDocumentBytes(this byte[] bytes) => bytes.ToDocument(server => server.OpenXmlBytes);
 
