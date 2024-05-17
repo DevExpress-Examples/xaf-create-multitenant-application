@@ -298,12 +298,12 @@ namespace OutlookInspired.Module.Resources.Reports {
             viewProperty10.Expression = "Order.Employee.MobilePhone";
             viewProperty11.DisplayName = "Order.Employee.HomePhone";
             viewProperty11.Expression = "Order.Employee.HomePhone";
-            viewProperty12.DisplayName = "Order.Employee.Picture";
-            viewProperty12.Expression = "Order.Employee.Picture";
-            viewProperty13.DisplayName = "Order.Employee.Email";
-            viewProperty13.Expression = "Order.Employee.Email";
-            viewProperty14.DisplayName = "Order.Employee.Skype";
-            viewProperty14.Expression = "Order.Employee.Skype";
+            viewProperty12.DisplayName = "Order.Employee.Email";
+            viewProperty12.Expression = "Order.Employee.Email";
+            viewProperty13.DisplayName = "Order.Employee.Skype";
+            viewProperty13.Expression = "Order.Employee.Skype";
+            viewProperty14.DisplayName = "Order.Employee.Picture.Data";
+            viewProperty14.Expression = "Order.Employee.Picture.Data";
             this.bindingSource1.Properties.AddRange(new DevExpress.Persistent.Base.ReportsV2.ViewProperty[] {
             viewProperty1,
             viewProperty2,
