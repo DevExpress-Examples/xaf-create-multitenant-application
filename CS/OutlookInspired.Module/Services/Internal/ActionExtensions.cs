@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using DevExpress.Data.Filtering;
+﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Model;
@@ -23,14 +22,33 @@ namespace OutlookInspired.Module.Services.Internal{
 
         public static bool Available(this ActionBase action) => action.Active && action.Enabled;
 
-        public static void ShowReportPreview(this SingleChoiceAction action,Type reportDataType, CriteriaOperator criteria=null) 
-            => action.Controller.Frame.GetController<ReportServiceController>()
+        public static void ShowReportPreview(this SingleChoiceAction action,Type reportDataType, CriteriaOperator criteria=null,string parameterName=null)
+            => action.HandleReportParameter(parameterName).Controller.Frame.GetController<ReportServiceController>()
                 .ShowPreview(ReportDataProvider.GetReportStorage(action.Application.ServiceProvider)
-                    .GetReportContainerHandle(action.View().ObjectSpace
-                        .FindObject<ReportDataV2>(data =>data.DataTypeName==reportDataType.FullName&& data.DisplayName == (string)action.SelectedItem.Data)),criteria);
-        
-        public static void ShowReportPreview(this SingleChoiceAction action,CriteriaOperator criteria=null) 
-            => action.ShowReportPreview(action.View().ObjectTypeInfo.Type,criteria);
+                .GetReportContainerHandle(action.View().ObjectSpace.FindObject<ReportDataV2>(data
+                        => data.DataTypeName == reportDataType.FullName &&
+                           data.DisplayName == (string)action.SelectedItem.Data)), criteria);
+
+        private static SingleChoiceAction HandleReportParameter(this SingleChoiceAction action, string parameterName){
+            if (parameterName != null){
+                var reportsDataSourceHelper = action.Application.Modules.FindModule<ReportsModuleV2>().ReportsDataSourceHelper;
+                EventHandler<BeforeShowPreviewEventArgs> handler = null;
+                handler = (_, e) => {
+                    reportsDataSourceHelper.BeforeShowPreview -= handler;
+                    e.Report.RequestParameters = false;
+                    var reportParameter = e.Report.Parameters[parameterName];
+                    if (reportParameter==null)return;
+                    reportParameter.Visible = false;
+                    reportParameter.Value = action.View().ObjectSpace
+                        .GetKeyValue(action.View().SelectedObjects.Cast<object>().First());
+                };
+                reportsDataSourceHelper.BeforeShowPreview += handler;    
+            }
+            return action;
+        }
+
+        public static void ShowReportPreview(this SingleChoiceAction action,CriteriaOperator criteria=null,string parameterName=null) 
+            => action.ShowReportPreview(action.View().ObjectTypeInfo.Type,criteria,parameterName);
 
         public static View NewDetailView(this ActionBaseEventArgs e,string viewId,TargetWindow targetWindow=TargetWindow.Default,bool isRoot=false){
             e.ShowViewParameters.TargetWindow = targetWindow;

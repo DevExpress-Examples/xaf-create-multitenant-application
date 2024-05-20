@@ -60,9 +60,15 @@ namespace OutlookInspired.Win.Editors{
 
         public object CurrentObject => ColumnView.FocusedRowObject( _objectSpace,ObjectType);
 
-        public IList SelectedObjects => ColumnView.GetSelectedRows()
-            .Concat(ColumnView.FocusedRowHandle.YieldItem()).Distinct()
-            .Select(i => ColumnView.GetRow(i)).ToArray();
+        public IList SelectedObjects{
+            get{
+                var rows = ColumnView.GetSelectedRows();
+                return rows.Any() ? rows.Select(i => ColumnView.GetRow(i)).ToArray()
+                    : ColumnView.FocusedRowHandle.YieldItem()
+                        .Select(i => ColumnView.GetRow(i)).ToArray();
+            }
+        }
+
         public SelectionType SelectionType => SelectionType.Full;
         public bool IsRoot => false;
 

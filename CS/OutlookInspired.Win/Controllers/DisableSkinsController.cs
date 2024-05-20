@@ -7,5 +7,6 @@ namespace OutlookInspired.Win.Controllers{
             base.OnActivated();
             Frame.GetController<ConfigureSkinController>().Active[nameof(DisableSkinsController)]=false;
         }
+
     }
 }

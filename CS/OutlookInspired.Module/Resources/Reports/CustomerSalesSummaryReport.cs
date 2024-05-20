@@ -1218,10 +1218,8 @@ namespace OutlookInspired.Module.Resources.Reports {
         #endregion
 
         private void xrPictureBox4_BeforePrint(object sender, CancelEventArgs e){
-	        var customer = bindingSource1.ObjectSpace().GetObjectByKey<Customer>(Customer.Value);
-	        var customerProfile = customer?.Logo;
 	        xrPictureBox4.ImageSource = new ImageSource(false,
-                customerProfile ?? Array.Empty<byte>());
+		        bindingSource1.ObjectSpace().GetObjectByKey<Customer>(Customer.Value)?.Logo ?? Array.Empty<byte>());
         }
     }
 }

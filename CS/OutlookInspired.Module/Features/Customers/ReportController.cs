@@ -23,6 +23,11 @@ namespace OutlookInspired.Module.Features.Customers{
                 ItemType = SingleChoiceActionItemType.ItemIsOperation
             };
             ReportAction.Executed+=ReportActionOnExecuted;
+            ReportAction.Enabled.ResultValueChanged += (sender, e) => {
+                if (!e.NewValue){
+
+                }
+            };
         }
 
         public SingleChoiceAction ReportAction{ get; }
@@ -31,7 +36,7 @@ namespace OutlookInspired.Module.Features.Customers{
             var selectedItemData = (string)ReportAction.SelectedItem.Data;
             if (selectedItemData == SalesSummaryReport){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type, CriteriaOperator.FromLambda<OrderItem>(item 
-                    => item.Order.Customer.ID == ((Customer)View.CurrentObject).ID));
+                    => item.Order.Customer.ID == ((Customer)View.CurrentObject).ID),"Customer");
             }
             else if (selectedItemData == LocationsReport){
                 ReportAction.ShowReportPreview(View.ObjectTypeInfo.Type,CriteriaOperator.FromLambda<Customer>(customer

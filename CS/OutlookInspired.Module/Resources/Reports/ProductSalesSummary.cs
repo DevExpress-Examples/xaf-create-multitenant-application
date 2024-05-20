@@ -41,6 +41,8 @@ using DevExpress.ExpressApp.EFCore;
 using DevExpress.Persistent.Base.ReportsV2;
 using DevExpress.XtraPrinting.Drawing;
 using DevExpress.XtraReports.UI;
+using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Resources.Reports {
 	public class ProductSalesSummary : XtraReport {
@@ -723,19 +725,16 @@ namespace OutlookInspired.Module.Resources.Reports {
 			}   
 		}
 		private void xrTableCell21_BeforePrint(object sender, CancelEventArgs e) {
-			decimal cost = (decimal)GetProduct("Cost");
+			object cost = bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID")).Cost;
 			decimal totalUnits = (decimal)xrTableCell23.Summary.GetResult();
-			xrTableCell21.Text = (cost * totalUnits).ToString("$#,#");
+			xrTableCell21.Text = ((decimal)cost * totalUnits).ToString("$#,#");
 		}
 
         #endregion
 
         private void xrPictureBox4_BeforePrint(object sender, CancelEventArgs e) 
-	        => xrPictureBox4.ImageSource = new ImageSource(false, (byte[])GetProduct("PrimaryImage.Data"));
+	        => xrPictureBox4.ImageSource = new ImageSource(false, bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID")).PrimaryImage.Data);
 
-        object GetProduct(string data) {
-            var productId = (Guid)GetCurrentColumnValue("Product.ID");
-            return productsSource1.Cast<EFCoreDataViewRecord>().FirstOrDefault(record => (Guid)record["ID"]==productId)?[data];
-        }
+        
 	}
 }

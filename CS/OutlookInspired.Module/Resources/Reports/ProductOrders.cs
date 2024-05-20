@@ -1120,7 +1120,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 
         private void xrPictureBox4_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
             xrPictureBox4.ImageSource = new ImageSource(false,
-                productSource.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue<Guid>("Product.ID"))
+                bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue<Guid>("Product.ID"))
                     ?.PrimaryImage.Data ?? Array.Empty<byte>());
 
         }

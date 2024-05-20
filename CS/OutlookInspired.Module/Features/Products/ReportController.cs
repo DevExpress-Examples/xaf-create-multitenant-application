@@ -31,7 +31,7 @@ namespace OutlookInspired.Module.Features.Products{
         private void ReportActionOnExecuted(object sender, ActionBaseEventArgs e) 
             => ReportAction.ShowReportPreview((string)ReportAction.SelectedItem.Data==ProductProfile?CriteriaOperator.FromLambda<Product>(
                 product => product.ID == ((Product)View.CurrentObject).ID):CriteriaOperator.FromLambda<OrderItem>(
-                orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID));
+                orderItem => orderItem.Product.ID == ((Product)View.CurrentObject).ID),"Product");
 
         protected override void OnViewControllersActivated(){
             base.OnViewControllersActivated();
