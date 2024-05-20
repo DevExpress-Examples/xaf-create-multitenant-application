@@ -1,7 +1,10 @@
 ﻿using System.Drawing;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.EFCore;
 using DevExpress.ExpressApp.ReportsV2;
 using DevExpress.Pdf;
+using DevExpress.Persistent.Base.ReportsV2;
 using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
@@ -20,6 +23,10 @@ static class ReportsExtensions{
     public const string Sales = "Sales";
     public const string TopSalesPerson = "Top Sales Person";
     public const string FedExGroundLabel = nameof(FedExGroundLabel);
+
+    public static IObjectSpace ObjectSpace(this ViewDataSource source) => source.GetPropertyValue("ObjectSpace") as IObjectSpace;
+    
+
     public static void ApplyReportProtection(this SingleChoiceAction action,Func<ChoiceActionItem,bool> match=null) 
         => action.Items.SelectManyRecursive(item => item.Items)
             .WhereNotDefault(item => item.Data).Where(item => match?.Invoke(item)??true)

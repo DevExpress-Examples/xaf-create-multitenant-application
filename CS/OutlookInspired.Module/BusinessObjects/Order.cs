@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -43,6 +44,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual decimal ShippingAmount { get; set; }
         [Column(TypeName = CurrencyType)]
         public  virtual decimal TotalAmount { get; set; }
+
+        [Browsable(false)]
+        public virtual int Year => OrderDate.Year;
         public  virtual DateTime? ShipDate { get; set; }
         public  virtual OrderShipMethod ShipMethod { get; set; }
         [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.RichTextPropertyEditor)]
