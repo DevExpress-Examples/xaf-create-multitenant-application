@@ -24,7 +24,7 @@
     <SchemaModule Name="SchedulerModuleBase" Version="24.1.1.0" IsNewNode="True" />
     <SchemaModule Name="SystemModule" Version="24.1.1.0" IsNewNode="True" />
   </SchemaModules>
-  <Views DefaultListEditor="OutlookInspired.Blazor.Server.Editors.DxGridListEditor">
+  <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
     <DetailView Id="Customer_DetailView_Child">
       <Items>
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.LabelPropertyEditor" />
@@ -297,12 +297,12 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+    <ListView Id="Employee_Evaluations_ListView">
       <Columns>
         <ColumnInfo Id="Description" Removed="True" />
       </Columns>
     </ListView>
-    <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+    <ListView Id="Employee_Evaluations_ListView_Child">
       <Columns>
         <ColumnInfo Id="Bonus" Index="-1" />
         <ColumnInfo Id="EndOn" Index="-1" />

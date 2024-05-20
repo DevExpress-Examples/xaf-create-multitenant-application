@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Layout;
+using OutlookInspired.Blazor.Server.ComponentModels;
 using OutlookInspired.Blazor.Server.Components;
 using OutlookInspired.Blazor.Server.Components.Models;
 using OutlookInspired.Blazor.Server.Editors;
@@ -12,48 +13,48 @@ using XAF.Testing.Blazor.XAF;
 using XAF.Testing.XAF;
 using IUserControlObjects = XAF.Testing.XAF.IUserControlObjects;
 
-namespace OutlookInspired.Blazor.Tests.Common{
-    class UserControlProcessSelectedObject:IUserControlProcessSelectedObject{
-        public IObservable<Frame> Process(Frame frame, object gridControl) 
+namespace OutlookInspired.Blazor.Tests.Common {
+    class UserControlProcessSelectedObject : IUserControlProcessSelectedObject {
+        public IObservable<Frame> Process(Frame frame, object gridControl)
             => frame.Application.WhenFrame(ViewType.DetailView).Select(frame1 => frame1)
                 .Merge(gridControl.Observe().Cast<IUserControlProcessObject>()
                     .Do(processObject => processObject.ProcessSelectedObject())
                     .IgnoreElements().To<Frame>());
     }
-    
-    public class AssertMapControl : IAssertMapControl{
-        public IObservable<Unit> Assert(DetailView detailView) 
+
+    public class AssertMapControl : IAssertMapControl {
+        public IObservable<Unit> Assert(DetailView detailView)
             => detailView.AssertViewItemControl<ComponentModelBase>(
                 model => model.WhenClientIsReady()).ToUnit()
                 .Select(unit => unit);
     }
 
-    class PdfViewerAssertion:IPdfViewerAssertion{
-        public IObservable<Unit> Assert(DetailView detailView) 
-            => detailView.GetItems<PdfViewerEditor>().ToNowObservable().ControlCreated()
-                .Select(editor => ((PdfModel)editor.Control))
+    class PdfViewerAssertion : IPdfViewerAssertion {
+        public IObservable<Unit> Assert(DetailView detailView)
+            => detailView.GetItems<PdfViewerPropertyEditor>().ToNowObservable().ControlCreated()
+                .Select(editor => ((PdfViewerModel)editor.Control))
                 .SelectMany(model => model.WhenClientIsReady().Take(1))
                 .Select(pattern => pattern)
                 .Assert().ToUnit();
-        
+
     }
 
-    class FilterViewManager:IFilterViewManager{
+    class FilterViewManager : IFilterViewManager {
         public bool InlineEdit => false;
     }
-    class UserControlProperties:IUserControlObjects{
+    class UserControlProperties : IUserControlObjects {
         public int ObjectsCount(object control) => ((IUserControlDataSource)control).Objects.Count;
         public IObservable<object> WhenObjects(object control, int i) => ((IUserControlDataSource)control).Objects.Cast<object>().Take(i).ToNowObservable();
     }
 
-    class UserControlProvider:IUserControlProvider{
-        public IObservable<object> WhenGridControl(DetailView detailView) 
+    class UserControlProvider : IUserControlProvider {
+        public IObservable<object> WhenGridControl(DetailView detailView)
             => detailView.WhenControlViewItemControl().OfType<IUserControlDataSource>()
                 .SelectMany(source => source.WhenEvent(nameof(IUserControlDataSource.DataSourceChanged)).To(source).StartWith(source));
     }
-    
-    public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector{
-        public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item) 
+
+    public class DashboardColumnViewObjectSelector : IDashboardColumnViewObjectSelector {
+        public IObservable<Unit> SelectDashboardColumnViewObject(DashboardViewItem item)
             => item.InnerView.ToDetailView().GetItems<ControlViewItem>().Select(viewItem => viewItem.Control).Cast<IModelSelectObject>()
                 .Do(model => model.SelectObject(model.Objects.Cast<object>().First()))
                 .ToNowObservable()

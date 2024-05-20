@@ -21,7 +21,7 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
         e.Handled = true;
     }
 
-    protected override IEnumerable<Type> GetDeclaredControllerTypes() 
+    protected override IEnumerable<Type> GetDeclaredControllerTypes()
         => new[]{
             typeof(CellDisplayTemplateController), typeof(SchedulerGroupTypeController), typeof(EnableDashboardMasterItemNewActionController),
             typeof(DxGridListEditorController),typeof(DetailRowController),typeof(RichTextPropertyEditorController),
@@ -29,13 +29,8 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(RouteMapsViewController),typeof(RouteMapsViewController),typeof(MapsViewController),typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(Features.Orders.RouteMapsViewController),
             typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController),typeof(ViewFilterController),
-            typeof(FunnelFilterController),typeof(WelcomeController)
+            typeof(FunnelFilterController),typeof(WelcomeController), typeof(DisableInlineRowActionController)
         };
-
-    public override void AddGeneratorUpdaters(ModelNodesGeneratorUpdaters updaters){
-        base.AddGeneratorUpdaters(updaters);
-        updaters.Add(new HyperlinkPropertyEditorUpdater());
-    }
 
     public override void Setup(XafApplication application) {
         base.Setup(application);

@@ -1,6 +1,6 @@
-﻿<a href="@ComponentModel.Href" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top: 5px;@ComponentModel.Style;">@ComponentModel.Text</a>
+﻿<a href="@Href" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top: 5px;@Style;">@Text</a>
 @code {
-    [Parameter]
-    public HyperlinkModel ComponentModel { get; set; }
-
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string Style { get; set; }
+    [Parameter] public string Href { get; set; }
 }
