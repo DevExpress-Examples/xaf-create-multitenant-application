@@ -122,6 +122,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRLabel xrLabel2;
 		private CalculatedField totalCost;
         private DevExpress.XtraReports.Parameters.Parameter Product;
+        private DevExpress.XtraReports.Parameters.Parameter OrderDate;
         IList<State> states;
 		public ProductOrders() {
 			InitializeComponent();
@@ -238,6 +239,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTableCell17 = new DevExpress.XtraReports.UI.XRTableCell();
             this.totalCost = new DevExpress.XtraReports.UI.CalculatedField();
             this.Product = new DevExpress.XtraReports.Parameters.Parameter();
+            this.OrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.productSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -529,6 +531,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             // bindingSource1
             // 
+            this.bindingSource1.CriteriaString = "[Product.ID] = ?Product And [Order.OrderDate] > ?OrderDate";
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.OrderItem";
             viewProperty3.DisplayName = "Product.CurrentInventory";
@@ -573,9 +576,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             viewProperty13,
             viewProperty14,
             viewProperty15,
-            viewProperty16
-            
-            });
+            viewProperty16});
             this.bindingSource1.TopReturnedRecords = 0;
             // 
             // ReportHeader
@@ -1058,7 +1059,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // Product
             // 
             this.Product.Name = "Product";
-            this.Product.Type = typeof(Guid);
+            this.Product.Type = typeof(global::System.Guid);
             dynamicListLookUpSettings1.DataMember = null;
             dynamicListLookUpSettings1.DataSource = this.productSource;
             dynamicListLookUpSettings1.DisplayMember = "Name";
@@ -1067,6 +1068,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             dynamicListLookUpSettings1.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
             dynamicListLookUpSettings1.ValueMember = "ID";
             this.Product.ValueSourceSettings = dynamicListLookUpSettings1;
+            // 
+            // OrderDate
+            // 
+            this.OrderDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.Expressions.BasicExpressionBinding[] {
+            new DevExpress.XtraReports.Expressions.BasicExpressionBinding("Value", "AddDays(Today(), -30)")});
+            this.OrderDate.Name = "OrderDate";
+            this.OrderDate.Type = typeof(global::System.DateTime);
+            this.OrderDate.ValueInfo = "2024-05-23";
             // 
             // ProductOrders
             // 
@@ -1081,11 +1090,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.totalCost});
             this.DataSource = this.bindingSource1;
             this.DesignerOptions.ShowExportWarnings = false;
-            this.FilterString = "[Product.ID] = ?Product";
             this.Font = new DevExpress.Drawing.DXFont("Segoe UI", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(100F, 100F, 119F, 93.37114F);
+            this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.Product, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.OrderDate, DevExpress.XtraReports.Parameters.Orientation.Horizontal)});
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
-            this.Product});
+            this.Product,
+            this.OrderDate});
             this.Version = "24.1";
             this.DataSourceDemanded += new System.EventHandler<System.EventArgs>(this.CustomerSalesSummary_DataSourceDemanded);
             ((System.ComponentModel.ISupportInitialize)(this.productSource)).EndInit();

@@ -90,6 +90,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRTableRow xrTableRow17;
 		private XRTableCell xrTableCell23;
         private DevExpress.XtraReports.Parameters.Parameter Product;
+        private DevExpress.XtraReports.Parameters.Parameter OrderDate;
         private BottomMarginBand bottomMarginBand1;
 		public ProductSalesSummary() {
 			InitializeComponent();
@@ -166,6 +167,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTableCell23 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrChart1 = new DevExpress.XtraReports.UI.XRChart();
             this.Product = new DevExpress.XtraReports.Parameters.Parameter();
+            this.OrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -181,6 +183,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             // bindingSource1
             // 
+            this.bindingSource1.CriteriaString = "[Product.ID] = ?Product And [Order.OrderDate] > ?OrderDate";
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.OrderItem";
             viewProperty1.DisplayName = "Product.Name";
@@ -638,8 +641,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             series1.Label = pieSeriesLabel1;
             series1.LabelsVisibility = DevExpress.Utils.DefaultBoolean.False;
             series1.LegendTextPattern = "{A}: {V:$#,#}\n";
-            series1.QualitativeSummaryOptions.SummaryFunction = "SUM([Total])";
             series1.Name = "Series 1";
+            series1.QualitativeSummaryOptions.SummaryFunction = "SUM([Total])";
             series1.SeriesID = 0;
             pieSeriesView1.Border.Visibility = DevExpress.Utils.DefaultBoolean.True;
             series1.View = pieSeriesView1;
@@ -661,6 +664,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             dynamicListLookUpSettings1.ValueMember = "ID";
             this.Product.ValueSourceSettings = dynamicListLookUpSettings1;
             // 
+            // OrderDate
+            // 
+            this.OrderDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.Expressions.BasicExpressionBinding[] {
+            new DevExpress.XtraReports.Expressions.BasicExpressionBinding("Value", "AddDays(Today(),-30 )")});
+            this.OrderDate.Name = "OrderDate";
+            this.OrderDate.Type = typeof(global::System.DateTime);
+            this.OrderDate.ValueInfo = "2024-05-23";
+            // 
             // ProductSalesSummary
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -670,11 +681,11 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.ReportHeader,
             this.ReportFooter});
             this.DataSource = this.bindingSource1;
-            this.FilterString = "[Product.ID] = ?Product";
             this.Font = new DevExpress.Drawing.DXFont("Segoe UI", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(104F, 104F, 125F, 102F);
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
-            this.Product});
+            this.Product,
+            this.OrderDate});
             this.Version = "24.1";
             this.BeforePrint += new DevExpress.XtraReports.UI.BeforePrintEventHandler(this.EmployeeSummary_BeforePrint);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();

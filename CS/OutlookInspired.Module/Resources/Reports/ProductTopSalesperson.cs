@@ -110,6 +110,8 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private GroupHeaderBand GroupHeader1;
 		private XRTableCell xrTableCell30;
 		private XRChart xrChart1;
+        private Parameter Product;
+        private Parameter OrderDate;
         private Parameter paramAscending;
 		public ProductTopSalesperson() {
 			InitializeComponent();
@@ -141,6 +143,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             DevExpress.XtraCharts.PieSeriesView pieSeriesView2 = new DevExpress.XtraCharts.PieSeriesView();
             DevExpress.XtraReports.UI.XRSummary xrSummary3 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRGroupSortingSummary xrGroupSortingSummary1 = new DevExpress.XtraReports.UI.XRGroupSortingSummary();
+            DevExpress.XtraReports.Parameters.DynamicListLookUpSettings dynamicListLookUpSettings1 = new DevExpress.XtraReports.Parameters.DynamicListLookUpSettings();
             this.productSource = new DevExpress.Persistent.Base.ReportsV2.ViewDataSource();
             this.topMarginBand1 = new DevExpress.XtraReports.UI.TopMarginBand();
             this.xrPictureBox2 = new DevExpress.XtraReports.UI.XRPictureBox();
@@ -204,6 +207,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTableCell27 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.GroupHeader1 = new DevExpress.XtraReports.UI.GroupHeaderBand();
+            this.Product = new DevExpress.XtraReports.Parameters.Parameter();
+            this.OrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.productSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -293,6 +298,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             // bindingSource1
             // 
+            this.bindingSource1.CriteriaString = "[Product.ID] = ?Product And [Order.OrderDate] > ?OrderDate";
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.OrderItem";
             viewProperty4.DisplayName = "Product.Name";
@@ -895,6 +901,28 @@ namespace OutlookInspired.Module.Resources.Reports {
             xrGroupSortingSummary1.FieldName = "Total";
             this.GroupHeader1.SortingSummary = xrGroupSortingSummary1;
             // 
+            // Product
+            // 
+            this.Product.AllowNull = true;
+            this.Product.Name = "Product";
+            this.Product.Type = typeof(global::System.Guid);
+            dynamicListLookUpSettings1.DataMember = null;
+            dynamicListLookUpSettings1.DataSource = this.productSource;
+            dynamicListLookUpSettings1.DisplayMember = "Name";
+            dynamicListLookUpSettings1.FilterString = null;
+            dynamicListLookUpSettings1.SortMember = "Name";
+            dynamicListLookUpSettings1.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+            dynamicListLookUpSettings1.ValueMember = "ID";
+            this.Product.ValueSourceSettings = dynamicListLookUpSettings1;
+            // 
+            // OrderDate
+            // 
+            this.OrderDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.Expressions.BasicExpressionBinding[] {
+            new DevExpress.XtraReports.Expressions.BasicExpressionBinding("Value", "AddDays(Today(),-30 )")});
+            this.OrderDate.Name = "OrderDate";
+            this.OrderDate.Type = typeof(global::System.DateTime);
+            this.OrderDate.ValueInfo = "2024-05-23";
+            // 
             // ProductTopSalesperson
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -911,7 +939,9 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
             new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.paramAscending, DevExpress.XtraReports.Parameters.Orientation.Horizontal)});
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
-            this.paramAscending});
+            this.paramAscending,
+            this.Product,
+            this.OrderDate});
             this.Version = "24.1";
             this.BeforePrint += new DevExpress.XtraReports.UI.BeforePrintEventHandler(this.ProductTopSalesperson_BeforePrint);
             ((System.ComponentModel.ISupportInitialize)(this.productSource)).EndInit();
