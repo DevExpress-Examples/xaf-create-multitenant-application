@@ -1,15 +1,16 @@
-﻿@using OutlookInspired.Module.BusinessObjects
+﻿@using System.Linq.Expressions
+@using OutlookInspired.Module.BusinessObjects
 @using OutlookInspired.Module.Services.Internal
-@typeparam TObject
+@typeparam T
 @typeparam TArgument
 @typeparam TValue
 @typeparam TName
 
-<DxChart Data="@ComponentModel.Data" Width="100%" Rotated="true" Height="@ComponentModel.Height" CustomizeSeriesPoint="CustomizeSeriesPoint">
-    <DxChartCommonSeries T="TObject" TValue="TValue" TGroup="TName" TArgument="TArgument" 
-        ArgumentField="@ComponentModel.ArgumentField" ValueField="@ComponentModel.ValueField" 
-        SeriesType="ChartSeriesType.Bar" SummaryMethod="@(values => values.DynamicSum())" NameField="@ComponentModel.NameField"/>
-    <DxChartLegend Visible="false"/>
+<DxChart Data="@Data" Width="100%" Rotated="true" Height="@Height" CustomizeSeriesPoint="CustomizeSeriesPoint">
+    <DxChartCommonSeries T="T" TValue="TValue" TGroup="TName" TArgument="TArgument"
+                         ArgumentField="@ArgumentField" ValueField="@ValueField"
+                         SeriesType="ChartSeriesType.Bar" SummaryMethod="@(values => values.DynamicSum())" NameField="@NameField" />
+    <DxChartLegend Visible="false" />
     <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
         <div style="background-color: #505050;color: white">
             @context.Point.SeriesName: @($"{(decimal)context.Point.Value:$0,.#K}")
@@ -17,10 +18,12 @@
     </DxChartTooltip>
 </DxChart>
 @code {
-    [Parameter]
-    public ChartModel<TObject,TArgument,TValue,TName,XafChart<TObject,TArgument,TValue,TName>> ComponentModel { get; set; }
-    
-    private static void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj) 
-        => obj.PointAppearance.Color = obj.Point.DataItems.Cast<MapItem>().First().Color.ColorFromHex();
+    [Parameter] public IEnumerable<T> Data { get; set; }
+    [Parameter] public Expression<Func<T, TArgument>> ArgumentField { get; set; }
+    [Parameter] public Expression<Func<T, TValue>> ValueField { get; set; }
+    [Parameter] public Expression<Func<T, TName>> NameField { get; set; }
+    [Parameter] public string Height { get; set; } = "70vh";
 
+    private static void CustomizeSeriesPoint(ChartSeriesPointCustomizationSettings obj)
+        => obj.PointAppearance.Color = obj.Point.DataItems.Cast<MapItem>().First().Color.ColorFromHex();
 }

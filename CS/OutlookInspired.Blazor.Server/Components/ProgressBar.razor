@@ -1,25 +1,7 @@
-﻿
-<div class="progress-container">
-    <div class="progress-bar" style="width: @ComponentModel.Width%" title="@(ComponentModel.Width)%"></div>
+﻿<div class="progress-container">
+    <div class="progress-bar" style="width: @Width%" title="@(Width)%"></div>
 </div>
 
-<style>
-    .progress-container {
-        width: 100%;
-        background-color: transparent;
-        margin-top: 13px;
-        margin-bottom: 13px;
-    }
-    .progress-bar {
-        height: 4px;
-        background-color: #8F4700;
-        text-align: center;
-        line-height: 4px;
-        color: white;
-    }
-</style>
-
 @code {
-    [Parameter]
-    public ProgressBarModel ComponentModel { get; set; }
+    [Parameter] public int Width { get; set; }
 }

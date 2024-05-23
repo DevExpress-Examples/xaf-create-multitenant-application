@@ -2,15 +2,16 @@
 using DevExpress.ExpressApp.Blazor.Editors;
 using OutlookInspired.Module.BusinessObjects;
 
-namespace OutlookInspired.Blazor.Server.Features.Customers{
-    public class DetailRowController:ViewController<ListView>{
+namespace OutlookInspired.Blazor.Server.Features.Customers {
+    public class DetailRowController : ViewController<ListView> {
         public DetailRowController() => TargetViewId = $"{nameof(Customer)}_ListView";
 
-        protected override void OnViewControlsCreated(){
+        protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
-            if (View.Editor is not DxGridListEditor{ Control: IDxGridAdapter gridAdapter }) return;
-            gridAdapter.GridModel.AutoCollapseDetailRow = true;
-            gridAdapter.GridModel.DetailRowTemplate = DetailRow.Create;
+            if(View.Editor is DxGridListEditor editor) {
+                editor.GridModel.AutoCollapseDetailRow = true;
+                editor.GridModel.DetailRowTemplate = DetailRow.Create;
+            }
         }
     }
 }

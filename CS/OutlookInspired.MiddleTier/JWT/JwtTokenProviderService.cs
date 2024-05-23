@@ -14,17 +14,12 @@ namespace OutlookInspired.WebApi.JWT;
 public class JwtTokenProviderService : IAuthenticationTokenProvider {
     readonly SignInManager signInManager;
     readonly IConfiguration configuration;
-    readonly ITenantDatabaseUpdater tenantDatabaseUpdater;
     
-    public JwtTokenProviderService(SignInManager signInManager, IConfiguration configuration, ITenantDatabaseUpdater tenantDatabaseUpdater) {
-        this.tenantDatabaseUpdater = tenantDatabaseUpdater;
+    public JwtTokenProviderService(SignInManager signInManager, IConfiguration configuration) {
         this.signInManager = signInManager;
         this.configuration = configuration;
     }
     public string Authenticate(object logonParameters) {
-#if !RELEASE
-        tenantDatabaseUpdater.EnsureTenantDatabaseCreated((AuthenticationStandardLogonParameters)logonParameters);
-#endif
         var result = signInManager.AuthenticateByLogonParameters(logonParameters);
         if(result.Succeeded) {
             var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:Jwt:IssuerSigningKey"]));

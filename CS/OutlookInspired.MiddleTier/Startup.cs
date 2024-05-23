@@ -44,6 +44,9 @@ public class Startup(IConfiguration configuration){
                     options.UseTenantSpecificModel = false;
 #endif
                 })
+#if !RELEASE
+                .WithTenantDatabaseUpdater()
+#endif
                 .WithTenantResolver<TenantByEmailResolver>();
 
 
