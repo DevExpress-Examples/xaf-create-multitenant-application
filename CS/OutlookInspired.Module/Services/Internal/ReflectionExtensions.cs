@@ -2,7 +2,8 @@ using System.Reflection;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class ReflectionExtensions{
-        
+        public static object GetPropertyValue(this object obj, string propertyName) 
+            => obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!.GetValue(obj);
         public new static bool ReferenceEquals(this object objA, object objB)
             => Object.ReferenceEquals(objA, objB);
         

@@ -38,8 +38,10 @@
 
 using System.Drawing;
 using DevExpress.Persistent.Base.ReportsV2;
+using DevExpress.XtraPrinting.Drawing;
 using DevExpress.XtraReports.UI;
 using OutlookInspired.Module.BusinessObjects;
+using OutlookInspired.Module.Services.Internal;
 
 namespace OutlookInspired.Module.Resources.Reports {
 	public class ProductOrders : XtraReport {
@@ -48,6 +50,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private TopMarginBand topMarginBand1;
 		private DetailBand detailBand1;
 		private ViewDataSource bindingSource1;
+		private ViewDataSource productSource;
 
 		private XRPictureBox xrPictureBox1;
 		private BottomMarginBand bottomMarginBand1;
@@ -118,7 +121,8 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRChart xrChart1;
 		private XRLabel xrLabel2;
 		private CalculatedField totalCost;
-		IList<State> states;
+        private DevExpress.XtraReports.Parameters.Parameter Product;
+        IList<State> states;
 		public ProductOrders() {
 			InitializeComponent();
 			InitializeDateTimeParameters();
@@ -135,9 +139,9 @@ namespace OutlookInspired.Module.Resources.Reports {
 			this.states = states;
 		}
 		private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductOrders));
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty1 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty2 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductOrders));
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty3 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty4 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty5 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
@@ -147,6 +151,11 @@ namespace OutlookInspired.Module.Resources.Reports {
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty9 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty10 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty11 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty12 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty13 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty14 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty15 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
+            DevExpress.Persistent.Base.ReportsV2.ViewProperty viewProperty16 = new DevExpress.Persistent.Base.ReportsV2.ViewProperty();
             DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.PieSeriesLabel pieSeriesLabel1 = new DevExpress.XtraCharts.PieSeriesLabel();
             DevExpress.XtraCharts.PieSeriesView pieSeriesView1 = new DevExpress.XtraCharts.PieSeriesView();
@@ -156,6 +165,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             DevExpress.XtraReports.UI.XRSummary xrSummary3 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary4 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary5 = new DevExpress.XtraReports.UI.XRSummary();
+            DevExpress.XtraReports.Parameters.DynamicListLookUpSettings dynamicListLookUpSettings1 = new DevExpress.XtraReports.Parameters.DynamicListLookUpSettings();
+            this.productSource = new DevExpress.Persistent.Base.ReportsV2.ViewDataSource();
             this.topMarginBand1 = new DevExpress.XtraReports.UI.TopMarginBand();
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.detailBand1 = new DevExpress.XtraReports.UI.DetailBand();
@@ -226,6 +237,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTableCell16 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell17 = new DevExpress.XtraReports.UI.XRTableCell();
             this.totalCost = new DevExpress.XtraReports.UI.CalculatedField();
+            this.Product = new DevExpress.XtraReports.Parameters.Parameter();
+            ((System.ComponentModel.ISupportInitialize)(this.productSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
@@ -241,6 +254,19 @@ namespace OutlookInspired.Module.Resources.Reports {
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+            // 
+            // productSource
+            // 
+            this.productSource.Name = "productSource";
+            this.productSource.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.Product";
+            viewProperty1.DisplayName = "ID";
+            viewProperty1.Expression = "ID";
+            viewProperty2.DisplayName = "Name";
+            viewProperty2.Expression = "Name";
+            this.productSource.Properties.AddRange(new DevExpress.Persistent.Base.ReportsV2.ViewProperty[] {
+            viewProperty1,
+            viewProperty2});
+            this.productSource.TopReturnedRecords = 0;
             // 
             // topMarginBand1
             // 
@@ -466,6 +492,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrPictureBox4.StylePriority.UseBorderColor = false;
             this.xrPictureBox4.StylePriority.UseBorders = false;
             this.xrPictureBox4.StylePriority.UseBorderWidth = false;
+            this.xrPictureBox4.BeforePrint += new DevExpress.XtraReports.UI.BeforePrintEventHandler(this.xrPictureBox4_BeforePrint);
             // 
             // bottomMarginBand1
             // 
@@ -504,31 +531,35 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.OrderItem";
-            viewProperty1.DisplayName = "Product.CurrentInventory";
-            viewProperty1.Expression = "Product.CurrentInventory";
-            viewProperty2.DisplayName = "Product.Name";
-            viewProperty2.Expression = "Product.Name";
-            viewProperty3.DisplayName = "Product.Manufacturing";
-            viewProperty3.Expression = "Product.Manufacturing";
-            viewProperty4.DisplayName = "ProductUnits";
-            viewProperty4.Expression = "ProductUnits";
-            viewProperty5.DisplayName = "Product.Cost";
-            viewProperty5.Expression = "Product.Cost";
-            viewProperty6.DisplayName = "Order.OrderDate";
-            viewProperty6.Expression = "Order.OrderDate";
-            viewProperty7.DisplayName = "Order.InvoiceNumber";
-            viewProperty7.Expression = "Order.InvoiceNumber";
-            viewProperty8.DisplayName = "Discount";
-            viewProperty8.Expression = "Discount";
-            viewProperty9.DisplayName = "ProductPrice";
-            viewProperty9.Expression = "ProductPrice";
-            viewProperty10.DisplayName = "Total";
-            viewProperty10.Expression = "Total";
-            viewProperty11.DisplayName = "Product.Image";
-            viewProperty11.Expression = "Product.Image";
+            viewProperty3.DisplayName = "Product.CurrentInventory";
+            viewProperty3.Expression = "Product.CurrentInventory";
+            viewProperty4.DisplayName = "Product.Name";
+            viewProperty4.Expression = "Product.Name";
+            viewProperty5.DisplayName = "Product.Manufacturing";
+            viewProperty5.Expression = "Product.Manufacturing";
+            viewProperty6.DisplayName = "ProductUnits";
+            viewProperty6.Expression = "ProductUnits";
+            viewProperty7.DisplayName = "Product.Cost";
+            viewProperty7.Expression = "Product.Cost";
+            viewProperty8.DisplayName = "Order.OrderDate";
+            viewProperty8.Expression = "Order.OrderDate";
+            viewProperty9.DisplayName = "Order.InvoiceNumber";
+            viewProperty9.Expression = "Order.InvoiceNumber";
+            viewProperty10.DisplayName = "Discount";
+            viewProperty10.Expression = "Discount";
+            viewProperty11.DisplayName = "ProductPrice";
+            viewProperty11.Expression = "ProductPrice";
+            viewProperty12.DisplayName = "Total";
+            viewProperty12.Expression = "Total";
+            viewProperty13.DisplayName = "Order.Year";
+            viewProperty13.Expression = "Order.Year";
+            viewProperty14.DisplayName = "Order.Store.State";
+            viewProperty14.Expression = "Order.Store.State";
+            viewProperty15.DisplayName = "Product.ID";
+            viewProperty15.Expression = "Product.ID";
+            viewProperty16.DisplayName = "Order.ID";
+            viewProperty16.Expression = "Order.ID";
             this.bindingSource1.Properties.AddRange(new DevExpress.Persistent.Base.ReportsV2.ViewProperty[] {
-            viewProperty1,
-            viewProperty2,
             viewProperty3,
             viewProperty4,
             viewProperty5,
@@ -537,7 +568,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             viewProperty8,
             viewProperty9,
             viewProperty10,
-            viewProperty11});
+            viewProperty11,
+            viewProperty12,
+            viewProperty13,
+            viewProperty14,
+            viewProperty15,
+            viewProperty16
+            
+            });
             this.bindingSource1.TopReturnedRecords = 0;
             // 
             // ReportHeader
@@ -570,12 +608,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrChart1.Legend.Padding.Left = 30;
             this.xrChart1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 264.3151F);
             this.xrChart1.Name = "xrChart1";
+            series1.ArgumentDataMember = "Order.Store.State";
             series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.Qualitative;
             pieSeriesLabel1.TextPattern = "{V:$#,#}";
             series1.Label = pieSeriesLabel1;
             series1.LabelsVisibility = DevExpress.Utils.DefaultBoolean.False;
             series1.LegendTextPattern = "{A} {V:$#,#}";
             series1.Name = "Series 1";
+            series1.QualitativeSummaryOptions.SummaryFunction = "SUM([Total])";
             series1.SeriesID = 0;
             pieSeriesView1.Border.Visibility = DevExpress.Utils.DefaultBoolean.True;
             series1.View = pieSeriesView1;
@@ -934,7 +974,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // xrLabel5
             // 
             this.xrLabel5.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumCount([Order.Store.Address.State])")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumCount([Order.Store.State])")});
             this.xrLabel5.Font = new DevExpress.Drawing.DXFont("Segoe UI", 14F);
             this.xrLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
             this.xrLabel5.LocationFloat = new DevExpress.Utils.PointFloat(156.25F, 7.999996F);
@@ -956,7 +996,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTable6,
             this.xrLabel4});
             this.GroupHeader1.GroupFields.AddRange(new DevExpress.XtraReports.UI.GroupField[] {
-            new DevExpress.XtraReports.UI.GroupField("Order.Store.Address.State", DevExpress.XtraReports.UI.XRColumnSortOrder.Ascending)});
+            new DevExpress.XtraReports.UI.GroupField("Order.Store.State", DevExpress.XtraReports.UI.XRColumnSortOrder.Ascending)});
             this.GroupHeader1.GroupUnion = DevExpress.XtraReports.UI.GroupUnion.WithFirstDetail;
             this.GroupHeader1.HeightF = 89.00002F;
             this.GroupHeader1.Name = "GroupHeader1";
@@ -1015,6 +1055,19 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.totalCost.FieldType = DevExpress.XtraReports.UI.FieldType.Decimal;
             this.totalCost.Name = "totalCost";
             // 
+            // Product
+            // 
+            this.Product.Name = "Product";
+            this.Product.Type = typeof(Guid);
+            dynamicListLookUpSettings1.DataMember = null;
+            dynamicListLookUpSettings1.DataSource = this.productSource;
+            dynamicListLookUpSettings1.DisplayMember = "Name";
+            dynamicListLookUpSettings1.FilterString = null;
+            dynamicListLookUpSettings1.SortMember = "Name";
+            dynamicListLookUpSettings1.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+            dynamicListLookUpSettings1.ValueMember = "ID";
+            this.Product.ValueSourceSettings = dynamicListLookUpSettings1;
+            // 
             // ProductOrders
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -1028,10 +1081,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.totalCost});
             this.DataSource = this.bindingSource1;
             this.DesignerOptions.ShowExportWarnings = false;
+            this.FilterString = "[Product.ID] = ?Product";
             this.Font = new DevExpress.Drawing.DXFont("Segoe UI", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(100F, 100F, 119F, 93.37114F);
+            this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
+            this.Product});
             this.Version = "24.1";
             this.DataSourceDemanded += new System.EventHandler<System.EventArgs>(this.CustomerSalesSummary_DataSourceDemanded);
+            ((System.ComponentModel.ISupportInitialize)(this.productSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
@@ -1049,21 +1106,23 @@ namespace OutlookInspired.Module.Resources.Reports {
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
 		}
-		private void xrLabel4_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
-			Order currentOrder = (Order)GetCurrentColumnValue("Order");
+		private void xrLabel4_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e){
+			
+			Order currentOrder = (Order)bindingSource1.ObjectSpace().GetObjectByKey<Order>(GetCurrentColumnValue("Order.ID"));
 			if(currentOrder != null && states != null)
 				(sender as XRLabel).Text = states.Last(element => element.ShortName == currentOrder.Store.State).LongName.ToUpper();
 		}
 		private void CustomerSalesSummary_DataSourceDemanded(object sender, EventArgs e) {
-			// if(Equals(true, paramOrderDate.Value)) {
-				// xrTableCell6.Text = "Grouped by State | Sorted by Order Date";
-				// this.detailBand1.SortFields[0].FieldName = "Order.OrderDate";
-			// } else {
-				xrTableCell6.Text = "Grouped by State | Sorted by Invoice #";
-				this.detailBand1.SortFields[0].FieldName = "Order.InvoiceNumber";
-			// }
-			// xrTableCell2.Text = ((DateTime)paramFromDate.Value).ToString("MMMM d, yyyy") + " to " + ((DateTime)paramToDate.Value).ToString("MMMM d, yyyy");
+			xrTableCell6.Text = "Grouped by State | Sorted by Invoice #";
+			this.detailBand1.SortFields[0].FieldName = "Order.InvoiceNumber";
 		}
-		#endregion
-	}
+        #endregion
+
+        private void xrPictureBox4_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e) {
+            xrPictureBox4.ImageSource = new ImageSource(false,
+                bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue<Guid>("Product.ID"))
+                    ?.PrimaryImage.Data ?? Array.Empty<byte>());
+
+        }
+    }
 }
