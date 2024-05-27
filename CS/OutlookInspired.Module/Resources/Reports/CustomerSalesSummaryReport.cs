@@ -134,6 +134,7 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRChart xrChart1;
 		private Parameter paramOrderDate;
         private Parameter Customer;
+        private Parameter OrderDate;
         private Parameter paramToDate;
 		[Obsolete]
 		public CustomerSalesSummaryReport() {
@@ -252,6 +253,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.paramToDate = new DevExpress.XtraReports.Parameters.Parameter();
             this.paramOrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             this.Customer = new DevExpress.XtraReports.Parameters.Parameter();
+            this.OrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.customerSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -588,6 +590,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             // 
             // bindingSource1
             // 
+            this.bindingSource1.CriteriaString = "[Order.Customer.ID] = ?Customer And [Order.OrderDate] > ?OrderDate";
             this.bindingSource1.Name = "bindingSource1";
             this.bindingSource1.ObjectTypeName = "OutlookInspired.Module.BusinessObjects.OrderItem";
             viewProperty3.DisplayName = "Order.Customer.Name";
@@ -1141,6 +1144,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             dynamicListLookUpSettings1.ValueMember = "ID";
             this.Customer.ValueSourceSettings = dynamicListLookUpSettings1;
             // 
+            // OrderDate
+            // 
+            this.OrderDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.Expressions.BasicExpressionBinding[] {
+            new DevExpress.XtraReports.Expressions.BasicExpressionBinding("Value", "AddDays(Today(),-30 )")});
+            this.OrderDate.Name = "OrderDate";
+            this.OrderDate.Type = typeof(global::System.DateTime);
+            this.OrderDate.ValueInfo = "2024-05-23";
+            // 
             // CustomerSalesSummaryReport
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -1152,7 +1163,6 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.GroupFooter1});
             this.DataSource = this.bindingSource1;
             this.DesignerOptions.ShowExportWarnings = false;
-            this.FilterString = "[Order.Customer.ID] = ?Customer";
             this.Font = new DevExpress.Drawing.DXFont("Segoe UI", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(100F, 100F, 119F, 93.37113F);
             this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
@@ -1164,7 +1174,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.paramFromDate,
             this.paramToDate,
             this.paramOrderDate,
-            this.Customer});
+            this.Customer,
+            this.OrderDate});
             this.Version = "24.1";
             ((System.ComponentModel.ISupportInitialize)(this.customerSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).EndInit();

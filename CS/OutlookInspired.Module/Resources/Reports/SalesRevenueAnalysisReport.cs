@@ -103,7 +103,8 @@ namespace OutlookInspired.Module.Resources.Reports {
 		private XRTableCell xrTableCell20;
 		private XRTableRow xrTableRow15;
 		private XRTableCell xrTableCell21;
-		Dictionary<CustomerStore, decimal> storeSales  = new Dictionary<CustomerStore, decimal>();
+        private Parameter OrderDate;
+        Dictionary<CustomerStore, decimal> storeSales  = new Dictionary<CustomerStore, decimal>();
 		public SalesRevenueAnalysisReport() {
 			InitializeComponent();
 		}
@@ -175,6 +176,7 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.xrTableCell16 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell17 = new DevExpress.XtraReports.UI.XRTableCell();
             this.paramOrderDate = new DevExpress.XtraReports.Parameters.Parameter();
+            this.OrderDate = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrChart1)).BeginInit();
@@ -771,6 +773,14 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.paramOrderDate.ValueInfo = "True";
             this.paramOrderDate.Visible = false;
             // 
+            // OrderDate
+            // 
+            this.OrderDate.ExpressionBindings.AddRange(new DevExpress.XtraReports.Expressions.BasicExpressionBinding[] {
+            new DevExpress.XtraReports.Expressions.BasicExpressionBinding("Value", "AddDays(Today(), -30)")});
+            this.OrderDate.Name = "OrderDate";
+            this.OrderDate.Type = typeof(global::System.DateTime);
+            this.OrderDate.ValueInfo = "2024-05-23";
+            // 
             // SalesRevenueAnalysisReport
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -785,7 +795,8 @@ namespace OutlookInspired.Module.Resources.Reports {
             this.Font = new DevExpress.Drawing.DXFont("Segoe UI", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(100F, 100F, 119F, 93.37114F);
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
-            this.paramOrderDate});
+            this.paramOrderDate,
+            this.OrderDate});
             this.Version = "24.1";
             this.DataSourceDemanded += new System.EventHandler<System.EventArgs>(this.CustomerSalesSummary_DataSourceDemanded);
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).EndInit();
