@@ -1,19 +1,26 @@
-﻿using OutlookInspired.Blazor.Server.Components;
+﻿using DevExpress.Blazor.PdfViewer;
+using DevExpress.Blazor.Reporting.Models;
+using Microsoft.AspNetCore.Components;
+using OutlookInspired.Blazor.Server.Components;
 
 namespace OutlookInspired.Blazor.Server.ComponentModels {
     public class PdfViewerModel : ComponentModelBase {
-        public byte[] Bytes {
+        public byte[] DocumentContent {
             get => GetPropertyValue<byte[]>();
             set => SetPropertyValue(value);
         }
-        public bool ToolBar {
-            get => GetPropertyValue<bool>();
-            set => SetPropertyValue(value);
-        }
-        public string Style {
+        public string CssClass {
             get => GetPropertyValue<string>();
             set => SetPropertyValue(value);
         }
-        public override Type ComponentType => typeof(PdfViewer);
+        public bool IsSinglePagePreview {
+            get => GetPropertyValue<bool>();
+            set => SetPropertyValue(value);
+        }
+        public EventCallback<ToolbarModel> CustomizeToolbar {
+            get => GetPropertyValue<EventCallback<ToolbarModel>>();
+            set => SetPropertyValue(value);
+        }
+        public override Type ComponentType => typeof(DxPdfViewer);
     }
 }
