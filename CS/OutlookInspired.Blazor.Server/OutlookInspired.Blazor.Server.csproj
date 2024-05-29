@@ -16,7 +16,6 @@
     <None Remove="Components\DevExtreme\Chart\DxChart.razor.js" />
     <None Remove="Components\DevExtreme\DevExtremeResources.razor.js" />
     <None Remove="Components\DevExtreme\Maps\DevExtremeMap.razor.js" />
-    <None Remove="Components\PdfViewer.razor.js" />
     <None Remove="Components\ProgressBar.razor.css" />
     <None Remove="Model.xafml" />
     <None Remove="js\**" />
@@ -35,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="24.1.2-beta" />
+    <PackageReference Include="DevExpress.Blazor.PdfViewer" Version="24.1.2-beta" />
     <PackageReference Include="DevExpress.ExpressApp.Dashboards.Blazor" Version="24.1.2-beta" />
     <PackageReference Include="DevExpress.ExpressApp.FileAttachment.Blazor" Version="24.1.2-beta" />
     <PackageReference Include="DevExpress.ExpressApp.MultiTenancy.Blazor.EFCore" Version="24.1.2-beta" />
@@ -88,8 +88,6 @@
     <EmbeddedResource Include="Components\DevExtreme\Maps\DxVectorMap.razor.js" />
     
     <EmbeddedResource Include="Components\DevExtreme\Pivot\DxPivotGrid.razor.js" />
-    
-    <Content Include="Components\PdfViewer.razor.js" />
     <Content Include="Components\ProgressBar.razor.css" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />

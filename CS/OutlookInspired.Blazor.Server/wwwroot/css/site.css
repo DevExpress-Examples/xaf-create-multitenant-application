@@ -29,3 +29,17 @@ app {
     height: 100%;
     z-index: 100001;
 }
+
+.welcome-pdf-viewer {
+    width: 100%;
+    height: 500px;
+}
+
+    .welcome-pdf-viewer .dxbrv-toolbar {
+        height: 2rem;
+    }
+
+.pe-pdf-viewer {
+    width: 100%;
+    height: 100vh;
+}
