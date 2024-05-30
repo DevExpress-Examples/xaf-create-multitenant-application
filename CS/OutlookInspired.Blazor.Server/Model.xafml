@@ -297,12 +297,12 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Employee_Evaluations_ListView">
+    <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
       <Columns>
         <ColumnInfo Id="Description" Removed="True" />
       </Columns>
     </ListView>
-    <ListView Id="Employee_Evaluations_ListView_Child">
+    <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
       <Columns>
         <ColumnInfo Id="Bonus" Index="-1" />
         <ColumnInfo Id="EndOn" Index="-1" />
