@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Data;
 using System.Drawing;
 using System.IO.Compression;
@@ -22,7 +23,11 @@ namespace OutlookInspired.Module.Services.Internal{
             return reader.Read() ? reader.GetString(1)
                 : throw new InvalidOperationException("Tenant not found.");
         }
+        static readonly ConcurrentBag<string> attachedDatabases = new ConcurrentBag<string>();
         public static void AttachDatabase(this IServiceProvider serviceProvider, string connectionString){
+            if (attachedDatabases.Contains(connectionString)) {
+                return;
+            }
             var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
             var builder = new SqlConnectionStringBuilder(connectionString);
             var initialCatalog = "Initial catalog";
@@ -45,6 +50,7 @@ namespace OutlookInspired.Module.Services.Internal{
                             CREATE DATABASE {databaseName} ON (FILENAME = '{destFileName}') FOR ATTACH_REBUILD_LOG;
                         END";
             command.ExecuteNonQuery();
+            attachedDatabases.Add(connectionString);
         }
         
         public static Color ColorFromHex(this string hex){

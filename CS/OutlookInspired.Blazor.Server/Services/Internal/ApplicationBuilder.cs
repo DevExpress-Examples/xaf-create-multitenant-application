@@ -33,7 +33,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                     options.RoleType = typeof(PermissionPolicyRole);
                     options.UserType = typeof(Module.BusinessObjects.ApplicationUser);
                     options.UserLoginInfoType = typeof(Module.BusinessObjects.ApplicationUserLoginInfo);
-                    options.Events.OnSecurityStrategyCreated += securityStrategy => ((SecurityStrategy)securityStrategy).PermissionsReloadMode = PermissionsReloadMode.NoCache;
+                    options.Events.OnSecurityStrategyCreated += securityStrategy => ((SecurityStrategy)securityStrategy).PermissionsReloadMode = PermissionsReloadMode.CacheOnFirstAccess;
                 })
                 .AddPasswordAuthentication(options => {
                     options.IsSupportChangePassword = true;
