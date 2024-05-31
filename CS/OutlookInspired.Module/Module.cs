@@ -60,6 +60,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),
 		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController),
+			typeof(EvaluationListViewController)
 		    // typeof(MyClass)
 	    };
 
