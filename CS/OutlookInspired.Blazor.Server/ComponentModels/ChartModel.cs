@@ -20,7 +20,7 @@ namespace OutlookInspired.Blazor.Server.ComponentModels {
             set => SetPropertyValue(value);
         }
         public string Height {
-            get => GetPropertyValue<string>("70vh");
+            get => GetPropertyValue("70vh");
             set => SetPropertyValue(value);
         }
         public override Type ComponentType => typeof(Components.XafChart<T, TArgument, TValue, TName>);

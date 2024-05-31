@@ -35,9 +35,13 @@ app {
     height: 500px;
 }
 
-    .welcome-pdf-viewer .dxbrv-toolbar {
-        height: 2rem;
-    }
+.welcome-pdf-viewer .dxbrv-toolbar {
+    height: 2rem;
+}
+
+.pe-pdf-viewer .dxbrv-toolbar {
+    height: 2rem;
+}
 
 .pe-pdf-viewer {
     width: 100%;
