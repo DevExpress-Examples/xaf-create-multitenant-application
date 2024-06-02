@@ -9,15 +9,14 @@
           <Item Id="ProductCardView" Removed="True" />
         </Items>
       </Item>
-      
     </Items>
   </NavigationItems>
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="23.2.2.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerWindowsFormsModule" Version="23.2.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemWindowsFormsModule" Version="23.2.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="24.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerWindowsFormsModule" Version="24.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="24.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemWindowsFormsModule" Version="24.1.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">

@@ -4,10 +4,15 @@ using System.IO.Compression;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using Aqua.EnumerableExtensions;
 using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Utils;
+using DevExpress.Persistent.Base.General;
+using DevExpress.Utils;
+using DevExpress.XtraScheduler.Xml;
 using Microsoft.Data.SqlClient;
 
 namespace OutlookInspired.Module.Services.Internal{
@@ -77,6 +82,28 @@ namespace OutlookInspired.Module.Services.Internal{
         public static string ToBase64Image(this byte[] bytes) 
             => $"data:{bytes.FileType()};base64,{bytes?.ToBase64String()}";
 
+        public static void Update<T,TEvent>(this TEvent @event,IList<T> objects) where T : IResource where TEvent:IEvent,IObjectSpaceLink{
+            while (objects.Count > 0)
+                objects.RemoveAt(objects.Count - 1);
+            if (string.IsNullOrEmpty(@event.ResourceId))
+                return;
+            var list = SafeXml.CreateDocument(@event.ResourceId).DocumentElement!.ChildNodes;
+            for (var index = 0; index < list.Count; index++){
+                var childNode = list[index];
+                var objectByKey = @event.ObjectSpace.GetObjectByKey(typeof(T),
+                    new AppointmentResourceIdXmlLoader(childNode).ObjectFromXml());
+                if (objectByKey != null)
+                    objects.Add((T)objectByKey);
+            }
+        }
+
+        public static string ToIds<T>(this IEnumerable<T> objects) where T:IResource{
+            var typeInfo = typeof(T).ToTypeInfo();
+            return "<ResourceIds>\r\n".YieldItem()
+                .Concat(objects.Select(value
+                    => $"<ResourceId Type=\"{typeInfo.KeyMember.MemberType}\" Value=\"{typeInfo.KeyMember.GetValue(value)}\" />\r\n"))
+                .Concat("</ResourceIds>").StringJoin("");
+        } 
         private static bool IsMaskMatch(this byte[] byteArray, int offset, params byte[] mask) 
             => byteArray != null && byteArray.Length >= offset + mask.Length &&
                !mask.Where((t, i) => byteArray[offset + i] != t).Any();
