@@ -56,8 +56,7 @@ public sealed class OutlookInspiredModule : ModuleBase{
 		    typeof(CommunicationController),typeof(RoutePointController), typeof(WelcomeController),
 		    typeof(FollowUpController),typeof(InvoiceReportDocumentController),typeof(InvoiceController),typeof(PayController),typeof(RefundController),typeof(Features.Orders.ReportController),typeof(ShipmentDetailController),
 		    typeof(Features.Products.ReportController),
-		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController),
-			typeof(EvaluationListViewController)
+		    typeof(MasterDetailController),typeof(SplitterPositionController),typeof(ViewFilterController)
 	    };
 
     public override void Setup(XafApplication application) {
