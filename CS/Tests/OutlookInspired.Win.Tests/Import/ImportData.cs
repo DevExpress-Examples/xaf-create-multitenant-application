@@ -32,8 +32,6 @@ namespace OutlookInspired.Win.Tests.Import{
             sqlCommand.CommandText = "ALTER DATABASE [OutlookInspired_Service] SET COMPATIBILITY_LEVEL = 100";
             sqlCommand.ExecuteNonQuery();
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
-            
-            
             objectSpace.GetObjectsQuery<Tenant>().Count().ShouldBe(0);
             await objectSpace.ImportFromSqlLite();
             objectSpace.CommitChanges();

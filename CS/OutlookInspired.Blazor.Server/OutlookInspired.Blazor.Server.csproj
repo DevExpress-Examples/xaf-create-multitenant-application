@@ -82,41 +82,16 @@
     <AdditionalFiles Include="Features\Employees\Tasks\ColumnTemplate.razor" />
   </ItemGroup>
   <ItemGroup>
-    
     <EmbeddedResource Include="Components\DevExtreme\Charts\DxFunnel.razor.js" />
-    
     <EmbeddedResource Include="Components\DevExtreme\Maps\DxVectorMap.razor.js" />
-    
     <EmbeddedResource Include="Components\DevExtreme\Pivot\DxPivotGrid.razor.js" />
     <Content Include="Components\ProgressBar.razor.css" />
     <None Remove="Components\DevExtreme\DevExtremeComponent.cs.js" />
     <None Remove="Components\DevExtreme\PivotGrid\DevExtremePivotGrid.razor.js" />
-    
-    
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Customers\CardView\" />
     <Folder Include="wwwroot\js\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="UnusableNodes.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes1.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes2.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes3.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes4.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
-    <None Update="UnusableNodes5.xml">
-      <DependentUpon>Model.xafml</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Components\DevExtreme\Maps\Some.razor.js" />

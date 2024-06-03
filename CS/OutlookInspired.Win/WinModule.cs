@@ -7,6 +7,7 @@ using OutlookInspired.Module;
 using OutlookInspired.Win.Controllers;
 using OutlookInspired.Win.Features.Customers;
 using OutlookInspired.Win.Features.Employees;
+using OutlookInspired.Win.Features.Evaluations;
 using OutlookInspired.Win.Features.GridListEditor;
 using OutlookInspired.Win.Features.Maps;
 using OutlookInspired.Win.Features.Quotes;
@@ -32,7 +33,8 @@ public sealed class OutlookInspiredWinModule : ModuleBase {
             typeof(MapsViewController), typeof(FontSizeController), typeof(NewItemRowHandlingModeController),
             typeof(WinMapsController),typeof(PaletteEntriesController),typeof(FunnelFilterController),
             typeof(RouteMapsViewController),typeof(Features.Orders.RouteMapsViewController), typeof(SalesMapsViewController),
-            typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController)
+            typeof(Features.Products.SalesMapsViewController),typeof(PropertyEditorController), typeof(DisableSkinsController), typeof(SplitterPositionController),
+            typeof(SchedulerListEditorController)
         };
 
     public override void Setup(XafApplication application) {

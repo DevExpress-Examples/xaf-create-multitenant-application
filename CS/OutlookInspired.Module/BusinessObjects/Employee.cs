@@ -58,7 +58,10 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual ObservableCollection<EmployeeTask> OwnedTasks{ get; set; } = new(); 
 		[InverseProperty(nameof(Evaluation.Employee))][Aggregated]
 		public virtual ObservableCollection<Evaluation> Evaluations { get; set; }=new();
-		[VisibleInListView(false)]public virtual string PersonalProfile { get; set; }
+		[NotMapped]
+		public virtual ObservableCollection<Evaluation> Events => Evaluations;
+		[VisibleInListView(false)][MaxLength(1000)]
+		public virtual string PersonalProfile { get; set; }
 		[VisibleInListView(false)]
 		public virtual Probation ProbationReason { get; set; }
 		[RuleRequiredField][VisibleInListView(false)][MaxLength(100)]

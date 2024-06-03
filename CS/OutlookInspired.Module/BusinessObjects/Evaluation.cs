@@ -6,7 +6,6 @@ using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.General;
-using DevExpress.Persistent.Base.General.Compatibility;
 using DevExpress.Persistent.Validation;
 using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features.CloneView;
@@ -20,7 +19,17 @@ namespace OutlookInspired.Module.BusinessObjects{
     [CloneView(CloneViewType.ListView, EmployeeEvaluationsChildListView)]
     [DefaultClassOptions][ImageName("EvaluationYes")][VisibleInReports(false)]
     public class Evaluation :OutlookInspiredBaseObject,IEvent{
-        public const string EmployeeEvaluationsChildListView="Employee_Evaluations_ListView_Child";
+	    private string _resourceId;
+	    private bool _isUpdateResourcesDelayed;
+
+	    public const string EmployeeEvaluationsChildListView="Employee_Evaluations_ListView_Child";
+
+	    public override void OnSaving(){
+		    if (ObjectSpace == null || !_isUpdateResourcesDelayed)
+			    return;
+		    _isUpdateResourcesDelayed = false;
+		    this.Update(Resources);
+	    }
 
 		public override void OnCreated() {
 			base.OnCreated();
@@ -57,10 +66,21 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public virtual Int32 Status { get; set; }
 		[Browsable(false)]
 		public virtual Int32 Type { get; set; }
-		
-		[NotMapped, Browsable(false)]
-		public virtual String ResourceId{ get; set; }
 
+		[NotMapped, Browsable(false)]
+		public virtual String ResourceId{
+			get => _resourceId ??= Resources.ToIds();
+			set{
+				if (_resourceId == value)
+					return;
+				_resourceId = value;
+				if (ObjectSpace != null)
+					this.Update(Resources);
+				else
+					_isUpdateResourcesDelayed = true;
+			}
+		}
+		
 		[Browsable(false)]
 		public Object AppointmentId => ID;
 		
@@ -90,13 +110,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [VisibleInListView(false)]
         public virtual Raise Raise{ get; set; }
-        [NotMapped]
-        [Browsable(false)]
-        public string RecurrenceInfoXmlBlazor{
-	        get => RecurrenceInfoXml?.ToNewRecurrenceInfoXml();
-	        set => RecurrenceInfoXml = value?.ToOldRecurrenceInfoXml();
-        }
-
+        
         [StringLength(300)]
         [NonCloneable]
         [DisplayName("Recurrence")]
