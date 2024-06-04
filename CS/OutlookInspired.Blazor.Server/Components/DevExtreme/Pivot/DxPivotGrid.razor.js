@@ -29,8 +29,20 @@ function PivotCellProgressBar(model) {
 }
 
 
+let isScheduled = false;
+
 export async function SetPivotGridSource(dxPivot, model) {
-    dxPivot.option("dataSource",model.options.dataSource)
+    if (!isScheduled) {
+        isScheduled = true;
+        setTimeout(async () => {
+            await updatePivotGrid(dxPivot, model);
+            isScheduled = false;
+        }, 0);
+    }
+}
+
+async function updatePivotGrid(dxPivot, model) {
+    dxPivot.option("dataSource", model.options.dataSource);
 }
 export async function PivotGridInit(element, model) {
     PivotCellProgressBar(model);
