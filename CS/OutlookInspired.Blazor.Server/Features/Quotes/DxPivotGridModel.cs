@@ -11,7 +11,7 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
                 State = quote.CustomerStore.State.ToString(), quote.CustomerStore.City, quote.Total, quote.Opportunity
             }).ToArray();
             SelectedObjects = Objects.Take(1).ToArray();
-            ComponentModel.Update?.Invoke();
+            // ComponentModel.Update?.Invoke();
         }
 
         public override Components.DevExtreme.Pivot.DxPivotGridModel ComponentModel{ get; }=new(){

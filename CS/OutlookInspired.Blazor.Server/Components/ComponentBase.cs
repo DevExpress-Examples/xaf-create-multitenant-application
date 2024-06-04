@@ -109,16 +109,21 @@ namespace OutlookInspired.Blazor.Server.Components{
             ComponentModel.Update = StateHasChanged;
         }
 
+        private bool _notFirstRender;
+        private bool _importingClientModule;
+
         protected override async Task OnAfterRenderAsync(bool firstRender){
             if (firstRender){
                 ScriptLoader ??= await ImportResource($"{ComponentBaseName}.js");
                 ClientModule ??= await ImportResource();
                 await OnAfterImportClientModuleAsync(true);
+                _notFirstRender = true;
             }
             else{
-                if (ClientModule != null){
+                if (_notFirstRender&&!_importingClientModule){
+                    _importingClientModule = true;
                     await OnAfterImportClientModuleAsync(false);
-                    
+                    _importingClientModule = false;
                 }
             }
         }

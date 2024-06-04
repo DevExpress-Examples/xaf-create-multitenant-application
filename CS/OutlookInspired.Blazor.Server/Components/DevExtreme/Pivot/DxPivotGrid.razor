@@ -9,7 +9,7 @@
         }
         
         if (ClientObject != null&&!firstRender){
-            await ClientModule.InvokeAsync<IJSObjectReference>("SetPivotGridSource", ClientObject, ComponentModel);
+            await ClientModule.InvokeVoidAsync("SetPivotGridSource", ClientObject, ComponentModel);
         }
     }
 

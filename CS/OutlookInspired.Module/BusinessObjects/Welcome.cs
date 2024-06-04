@@ -8,9 +8,9 @@ namespace OutlookInspired.Module.BusinessObjects{
     [DomainComponent][ForbidCRUD][ForbidNavigation]
     [ImageName("About")]
     public class Welcome{
-        public Welcome(){
-            About = GetType().Assembly.GetManifestResourceStream(s => s.EndsWith("Welcome.pdf")).Bytes();
-        }
+        private static Welcome _instance;
+        public Welcome() => About = GetType().Assembly.GetManifestResourceStream(s => s.EndsWith("Welcome.pdf")).Bytes();
+        public static Welcome Instance => _instance ??= new Welcome();
 
         [EditorAlias(EditorAliases.PdfViewerEditor)]
         public byte[] About{ get; set; }

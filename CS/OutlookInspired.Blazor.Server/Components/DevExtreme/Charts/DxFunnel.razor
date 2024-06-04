@@ -6,7 +6,7 @@
             ClientObject ??= await ClientModule.InvokeAsync<IJSObjectReference>("ChartInit", Element, ComponentModel);
         }
         if (ClientObject != null){
-            await ClientModule.InvokeAsync<IJSObjectReference>("SetChartSource", ClientObject, ComponentModel);
+            await ClientModule.InvokeVoidAsync("SetChartSource", ClientObject, ComponentModel);
         }
     }
 }
