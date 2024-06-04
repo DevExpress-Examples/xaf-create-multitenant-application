@@ -7,46 +7,51 @@ using OutlookInspired.Module.Features.Maps;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
 
-namespace OutlookInspired.Blazor.Server.Features.Quotes{
-    public class PaletteController:ViewController<DashboardView>{
+namespace OutlookInspired.Blazor.Server.Features.Quotes {
+    public class PaletteController : ViewController<DashboardView> {
         private (string color, Stage stage)[] _palette;
         public PaletteController() => TargetViewId = "Opportunities";
-        protected override void OnViewControlsCreated(){
+        protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
-            View.MasterItem().ControlCreated+=OnMasterItemControlCreated;
-            View.ChildItem().ControlCreated+=OncChildItemControlCreated;
+            View.MasterItem().ControlCreated += OnMasterItemControlCreated;
+            View.ChildItem().ControlCreated += OncChildItemControlCreated;
         }
 
-        private void OncChildItemControlCreated(object sender, EventArgs e){
+        private void OncChildItemControlCreated(object sender, EventArgs e) {
             var dashboardViewItem = ((DashboardViewItem)sender);
-            dashboardViewItem.ControlCreated-=OnMasterItemControlCreated;
-            dashboardViewItem.Frame.View.ToDetailView().GetItems<ControlViewItem>().First().ControlCreated+=OnChartControlCreated;
+            dashboardViewItem.ControlCreated -= OnMasterItemControlCreated;
+            dashboardViewItem.Frame.View.ToDetailView().GetItems<ControlViewItem>().First().ControlCreated += OnChartControlCreated;
         }
 
-        private void OnChartControlCreated(object sender, EventArgs e){
+        private void OnChartControlCreated(object sender, EventArgs e) {
             var controlViewItem = ((ControlViewItem)sender);
-            controlViewItem.ControlCreated-=OnChartControlCreated;
+            controlViewItem.ControlCreated -= OnChartControlCreated;
             _palette = ((DxFunnelModel)controlViewItem.Control).ComponentModel.Options.PaletteData;
         }
 
-        private void OnMasterItemControlCreated(object sender, EventArgs e){
+        private void OnMasterItemControlCreated(object sender, EventArgs e) {
             var dashboardViewItem = ((DashboardViewItem)sender);
-            dashboardViewItem.ControlCreated-=OnMasterItemControlCreated;
-            dashboardViewItem.Frame.GetController<MapsViewController>().MapItAction.Executed+=MapItActionOnExecuted;
-        }
-        
-        protected override void OnDeactivated(){
-            base.OnDeactivated();
-            View.MasterItem().Frame.GetController<MapsViewController>().MapItAction.Executed-=MapItActionOnExecuted;
+            dashboardViewItem.ControlCreated -= OnMasterItemControlCreated;
+            if (dashboardViewItem.Frame?.GetController<MapsViewController>() is { } targetController) {
+                targetController.MapItAction.Executed += MapItActionOnExecuted;
+            }
         }
 
-        private void MapItActionOnExecuted(object sender, ActionBaseEventArgs e){
+        protected override void OnDeactivated() {
+            base.OnDeactivated();
+            var targetController = View?.MasterItem()?.Frame?.GetController<MapsViewController>();
+            if (targetController != null) {
+                targetController.MapItAction.Executed -= MapItActionOnExecuted;
+            }
+        }
+        private void MapItActionOnExecuted(object sender, ActionBaseEventArgs e) {
             var controller = Application.CreateController<BlazorMapsViewController>();
             controller.Palette = _palette;
             e.ShowViewParameters.Controllers.Add(controller);
-            if (View.MasterItem().Frame.GetController<ViewFilterController>()
-                    .FilterAction.SelectedItem.Data is not Module.BusinessObjects.ViewFilter viewFilter) return;
-            controller.Criteria = viewFilter.Criteria;
+            if (View.MasterItem()?.Frame.GetController<ViewFilterController>() is { } targetController &&
+                targetController.FilterAction.SelectedItem.Data is Module.BusinessObjects.ViewFilter viewFilter) {
+                controller.Criteria = viewFilter.Criteria;
+            }
         }
     }
 }
