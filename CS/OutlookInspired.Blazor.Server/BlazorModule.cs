@@ -29,7 +29,7 @@ public sealed class OutlookInspiredBlazorModule : ModuleBase {
             typeof(RouteMapsViewController),typeof(RouteMapsViewController),typeof(MapsViewController),typeof(SalesMapsViewController),
             typeof(Features.Products.SalesMapsViewController),typeof(Features.Orders.RouteMapsViewController),
             typeof(BlazorMapsViewController),typeof(PaletteController),typeof(PopupWindowSizeController),typeof(ViewFilterController),
-            typeof(FunnelFilterController),typeof(WelcomeController), typeof(DisableInlineRowActionController)
+            typeof(FunnelFilterController),typeof(WelcomeController), typeof(DisableInlineRowActionController), typeof(WelcomePageNavigationItemController)
         };
 
     public override void Setup(XafApplication application) {

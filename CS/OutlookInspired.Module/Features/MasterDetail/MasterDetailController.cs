@@ -40,9 +40,13 @@ namespace OutlookInspired.Module.Features.MasterDetail{
             if (_controlViewItem != null){
                 _controlViewItem.ControlCreated-=ControlViewItemOnControlCreated;
             }
-            _masterFrame.View.ObjectSpace.Committed-=ObjectSpaceOnCommitted;
-            _masterFrame.View.SelectionChanged-=ViewOnSelectionChanged;
-            _childFrame.View.ObjectSpace.ModifiedChanged-=ObjectSpaceOnModifiedChanged;
+            if(_masterFrame?.View?.ObjectSpace != null) {
+                _masterFrame.View.ObjectSpace.Committed -= ObjectSpaceOnCommitted;
+                _masterFrame.View.SelectionChanged -= ViewOnSelectionChanged;
+            }
+            if(_childFrame?.View?.ObjectSpace != null) {
+                _childFrame.View.ObjectSpace.ModifiedChanged -= ObjectSpaceOnModifiedChanged;
+            }            
             View.ChildItem().ControlCreated-=OnChildItemControlCreated;
             View.MasterItem().ControlCreated-=OnChildItemControlCreated;
         }

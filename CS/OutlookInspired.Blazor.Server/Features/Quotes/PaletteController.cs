@@ -37,7 +37,12 @@ namespace OutlookInspired.Blazor.Server.Features.Quotes{
         
         protected override void OnDeactivated(){
             base.OnDeactivated();
-            View.MasterItem().Frame.GetController<MapsViewController>().MapItAction.Executed-=MapItActionOnExecuted;
+
+            var mapItAction = View.MasterItem()?.Frame?.GetController<MapsViewController>()?.MapItAction;
+
+            if(mapItAction != null) {
+                mapItAction.Executed -= MapItActionOnExecuted;
+            }            
         }
 
         private void MapItActionOnExecuted(object sender, ActionBaseEventArgs e){
