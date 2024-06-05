@@ -138,8 +138,7 @@ namespace OutlookInspired.Module.BusinessObjects{
 		[FontSizeDelta(2)]
 		public virtual string RouteResult{ get; set; }
 
-		[RuleRequiredField]
-		
+		[RuleRequiredField(ResultType = ValidationResultType.Warning,CustomMessageTemplate = "Ask your Admin to create a new user and assign him to this Employee. (Click this msg gear to continue)")]
 		public virtual ApplicationUser User{ get; set; }
 
 		[Browsable(false)]
