@@ -1,4 +1,6 @@
 ﻿using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.MultiTenancy;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Features{
@@ -6,6 +8,7 @@ namespace OutlookInspired.Module.Features{
         private Welcome _welcome;
         protected override void OnFrameAssigned(){
             base.OnFrameAssigned();
+            if (Application.ServiceProvider.GetRequiredService<ITenantProvider>().TenantId == null) return;
             if (Frame.Context != TemplateContext.ApplicationWindow) return;
             Application.ObjectSpaceCreated-=ApplicationOnObjectSpaceCreated;
             Application.ObjectSpaceCreated+=ApplicationOnObjectSpaceCreated;

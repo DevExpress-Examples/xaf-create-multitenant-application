@@ -28,9 +28,9 @@ namespace OutlookInspired.Module.Services.Internal{
             return reader.Read() ? reader.GetString(1)
                 : throw new InvalidOperationException("Tenant not found.");
         }
-        static readonly ConcurrentBag<string> attachedDatabases = new ConcurrentBag<string>();
+        static readonly ConcurrentBag<string> AttachedDatabases = new();
         public static void AttachDatabase(this IServiceProvider serviceProvider, string connectionString){
-            if (attachedDatabases.Contains(connectionString)) {
+            if (AttachedDatabases.Contains(connectionString)) {
                 return;
             }
             var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
@@ -55,7 +55,7 @@ namespace OutlookInspired.Module.Services.Internal{
                             CREATE DATABASE {databaseName} ON (FILENAME = '{destFileName}') FOR ATTACH_REBUILD_LOG;
                         END";
             command.ExecuteNonQuery();
-            attachedDatabases.Add(connectionString);
+            AttachedDatabases.Add(connectionString);
         }
         
         public static Color ColorFromHex(this string hex){
