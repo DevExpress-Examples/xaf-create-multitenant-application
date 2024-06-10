@@ -30,7 +30,7 @@ public class Startup(IConfiguration configuration){
 
 
             builder.AddMultiTenancy()
-                .WithHostDbContext((_, options) => {
+                .WithHostDbContext((serviceProvider, options) => {
                     string connectionString = Configuration.GetConnectionString("ConnectionString");
 #if EASYTEST
                     string connectionString = Configuration.GetConnectionString("EasyTestConnectionString");
@@ -92,7 +92,7 @@ public class Startup(IConfiguration configuration){
 #if DEBUG
                 if(System.Diagnostics.Debugger.IsAttached && application.CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
                     application.DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
-                    application.DatabaseVersionMismatch += (_, e) => {
+                    application.DatabaseVersionMismatch += (s, e) => {
                         e.Updater.Update();
                         e.Handled = true;
                     };
