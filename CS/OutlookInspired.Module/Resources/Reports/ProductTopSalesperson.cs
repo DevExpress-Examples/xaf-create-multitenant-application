@@ -974,11 +974,11 @@ namespace OutlookInspired.Module.Resources.Reports {
             => xrPictureBox4.ImageSource = new ImageSource(false, GetProduct()?.PrimaryImage?.Data??Array.Empty<byte>());
 
         private Product GetProduct() 
-            => bindingSource1.ObjectSpace().GetObjectByKey<Product>((Guid)GetCurrentColumnValue("Product.ID"));
+            => bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID"));
 
         private void xrPictureBox1_BeforePrint(object sender, CancelEventArgs e){
-	        var employee = bindingSource1.ObjectSpace().GetObjectByKey<Employee>((Guid)GetCurrentColumnValue("Order.Employee.ID"));
-	        var pictureData = employee.Picture?.Data;
+	        var employee = bindingSource1.ObjectSpace().GetObjectByKey<Employee>(GetCurrentColumnValue("Order.Employee.ID"));
+	        var pictureData = employee?.Picture?.Data;
 	        xrPictureBox1.ImageSource = new ImageSource(false, pictureData ?? Array.Empty<byte>());
         }
 	}

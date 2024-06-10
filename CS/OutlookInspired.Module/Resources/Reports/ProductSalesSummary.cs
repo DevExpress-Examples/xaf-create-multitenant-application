@@ -736,7 +736,8 @@ namespace OutlookInspired.Module.Resources.Reports {
 			}   
 		}
 		private void xrTableCell21_BeforePrint(object sender, CancelEventArgs e) {
-			object cost = bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID")).Cost;
+			object cost = bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID"))?.Cost;
+			if (cost==null) return;
 			decimal totalUnits = (decimal)xrTableCell23.Summary.GetResult();
 			xrTableCell21.Text = ((decimal)cost * totalUnits).ToString("$#,#");
 		}
@@ -744,7 +745,7 @@ namespace OutlookInspired.Module.Resources.Reports {
         #endregion
 
         private void xrPictureBox4_BeforePrint(object sender, CancelEventArgs e) 
-	        => xrPictureBox4.ImageSource = new ImageSource(false, bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID")).PrimaryImage.Data);
+	        => xrPictureBox4.ImageSource = new ImageSource(false, bindingSource1.ObjectSpace().GetObjectByKey<Product>(GetCurrentColumnValue("Product.ID"))?.PrimaryImage.Data);
 
         
 	}
