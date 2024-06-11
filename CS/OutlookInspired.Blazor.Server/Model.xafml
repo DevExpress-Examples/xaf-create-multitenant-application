@@ -18,7 +18,7 @@
       </Item>
     </Items>
   </NavigationItems>
-  <Options UIType="TabbedMDI" />
+  <Options UIType="TabbedMDI" RestoreTabbedMdiLayout="True" />
   <SchemaModules>
     <SchemaModule Name="SchedulerBlazorModule" Version="24.1.1.0" IsNewNode="True" />
     <SchemaModule Name="SchedulerModuleBase" Version="24.1.1.0" IsNewNode="True" />
