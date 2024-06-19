@@ -1,7 +1,9 @@
 ﻿using Aqua.EnumerableExtensions;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.MultiTenancy.Internal;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
+using Microsoft.Extensions.DependencyInjection;
 using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.ViewFilter;
 using OutlookInspired.Module.Services.Internal;
@@ -80,6 +82,7 @@ public class Updater : ModuleUpdater {
             tenant.Name = tenantName;
             tenant.ConnectionString = $"Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\\mssqllocaldb;Initial Catalog={databaseName}";
         }
+        ((TenantNameHelperBase)ObjectSpace.ServiceProvider.GetRequiredService<ITenantNameHelper>()).ClearTenantMapCache();
     }
 
     private void CreateDepartmentRoles() 
