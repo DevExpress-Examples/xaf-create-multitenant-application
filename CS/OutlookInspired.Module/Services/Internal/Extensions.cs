@@ -1,5 +1,3 @@
-using System.Collections.Concurrent;
-using System.Data;
 using System.Drawing;
 using System.IO.Compression;
 using System.Linq.Expressions;
@@ -14,48 +12,35 @@ using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base.General;
 using DevExpress.Utils;
 using DevExpress.XtraScheduler.Xml;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 
 namespace OutlookInspired.Module.Services.Internal{
     internal static class Extensions{
-        internal static string GetTenantConnectionString(this ITenantProvider tenantProvider, string connectionString){
-            using var connection = new SqlConnection(connectionString);
-            var query = "SELECT ID, ConnectionString FROM Tenant WHERE ID = @Id";
-            using var command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@Id", tenantProvider.TenantId);
-            if (connection.State != ConnectionState.Open) connection.Open();
-            using var reader = command.ExecuteReader();
-            return reader.Read() ? reader.GetString(1)
-                : throw new InvalidOperationException("Tenant not found.");
-        }
-        static readonly ConcurrentBag<string> AttachedDatabases = new();
+    static readonly string DataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
+    
+    internal static string GetTenantConnectionString(this ITenantProvider tenantProvider, string connectionString){
+        
+        using var connection = new SqliteConnection($"Data source={Path.GetFullPath($"{DataPath}\\{Path.GetFileName(connectionString)}")}");
+        var query = "SELECT ConnectionString FROM Tenant WHERE ID = @Id";
+        using var command = new SqliteCommand(query, connection);
+        command.Parameters.AddWithValue("@Id", tenantProvider.TenantId);
+        connection.Open();
+        using var reader = command.ExecuteReader();
+        if (reader.Read()){
+            return reader.GetString(0);
+        } 
+        throw new InvalidOperationException("Tenant not found.");
+    }
+        
         public static void AttachDatabase(this IServiceProvider serviceProvider, string connectionString){
-            if (AttachedDatabases.Contains(connectionString)) {
-                return;
+            
+            if (!File.Exists($"{DataPath}\\OutlookInspired.db")){
+                ZipFile.ExtractToDirectory($"{DataPath}\\OutlookInspired.zip",DataPath);
             }
-            var dataPath = new DirectoryInfo(Directory.GetCurrentDirectory()).FindFolderInPathUpwards("Data");
-            var builder = new SqlConnectionStringBuilder(connectionString);
-            var initialCatalog = "Initial catalog";
-            var databaseName = builder[initialCatalog].ToString();
-            builder.Remove(initialCatalog);
-            using var sqlConnection = new SqlConnection(builder.ConnectionString);
-            sqlConnection.Open();
-            using var command = new SqlCommand();
-            command.Connection = sqlConnection;
-            var fullDataPath = Path.GetFullPath(dataPath);
-            var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var destFileName = $"{userProfilePath}\\{databaseName}.mdf";
-            if (!File.Exists(destFileName)) {
-                ZipFile.ExtractToDirectory($"{fullDataPath}\\OutlookInspired.zip", userProfilePath);
-                File.Move($"{userProfilePath}\\OutlookInspired.mdf", destFileName);
+            var dbPath = $"{DataPath}\\{Path.GetFileName(connectionString)}";
+            if (!File.Exists(dbPath)){
+                File.Copy($"{DataPath}\\OutlookInspired.db",dbPath);
             }
-            command.CommandText = $@"
-                        IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{databaseName}')
-                        BEGIN
-                            CREATE DATABASE {databaseName} ON (FILENAME = '{destFileName}') FOR ATTACH_REBUILD_LOG;
-                        END";
-            command.ExecuteNonQuery();
-            AttachedDatabases.Add(connectionString);
         }
         
         public static Color ColorFromHex(this string hex){

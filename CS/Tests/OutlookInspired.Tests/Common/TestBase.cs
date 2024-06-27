@@ -12,7 +12,7 @@ using static OutlookInspired.Module.ModelUpdaters.DashboardViewsModelUpdater;
 
 namespace OutlookInspired.Tests.Common{
     public class TestBase{
-        protected const string ServiceDbName = "OutlookInspired_Service";
+        protected const string ServiceDbName = "OutlookInspired_Service.db";
         protected const string Tests = nameof(Tests);
         protected const string Admin = "Admin@company1.com";
 #if TEST
@@ -26,7 +26,7 @@ namespace OutlookInspired.Tests.Common{
         }
 
         protected virtual bool RunInMainMonitor => false;
-        public static readonly string ConnectionString = "Integrated Security=SSPI;Pooling=true;MultipleActiveResultSets=true;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=";
+        public static readonly string ConnectionString = "Data Source=..\\..\\..\\..\\..\\..\\data\\";
         protected virtual TimeSpan Timeout => TimeSpan.FromMinutes(10);
 
         public static IEnumerable<object> EmployeeVariants 
@@ -73,18 +73,10 @@ namespace OutlookInspired.Tests.Common{
         }
 
         [OneTimeSetUp]
-        public void Setup() 
-            => new[]{ServiceDbName,"OutlookInspired_company1"}
-                .Select(dbName => $"{ConnectionString}{dbName}").Where(connectionString => new SqlConnectionStringBuilder(connectionString).DbExists())
-                .Do(connectionString => {
-                    var builder = new SqlConnectionStringBuilder(connectionString);
-                    var initialCatalog = "Initial catalog";
-                    var databaseName = builder[initialCatalog].ToString();
-                    builder.Remove(initialCatalog);
-                    using SqlConnection connection = new SqlConnection(builder.ConnectionString);
-                    connection.Open();
-                    using SqlCommand cmd = new SqlCommand($"USE master; ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection);
-                    cmd.ExecuteNonQuery();
-                }).Enumerate();
+        public void Setup(){
+            Directory.GetFiles("..\\..\\..\\..\\..\\..\\data", "*.db").ToArray()
+                .Do(File.Delete)
+                .Enumerate();
+        }
     }
 }
