@@ -49,7 +49,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
 #else
                     string connectionString = configuration.GetConnectionString("ConnectionString");
 #endif
-                    options.UseSqlServer(connectionString);
+                    options.UseSqlite(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })
@@ -67,7 +67,7 @@ namespace OutlookInspired.Blazor.Server.Services.Internal{
                 .AddSecuredEFCore(options => options.PreFetchReferenceProperties())
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                     serviceProvider.AttachDatabase(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
-                    options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+                    options.UseSqlite(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                     options.UseChangeTrackingProxies();
                     options.UseObjectSpaceLinkProxies();
                     options.UseLazyLoadingProxies();

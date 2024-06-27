@@ -42,6 +42,8 @@
     <PackageReference Include="DevExpress.ExpressApp.ReportsV2.Blazor" Version="24.1.3" />
     <PackageReference Include="DevExpress.ExpressApp.Scheduler.Blazor" Version="24.1.3" />
     <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="24.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />

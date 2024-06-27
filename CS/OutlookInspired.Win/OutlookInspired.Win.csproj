@@ -80,6 +80,8 @@
     <PackageReference Include="DevExpress.RichEdit.Export" Version="24.1.3" />
     <PackageReference Include="DevExpress.Win.Design" Version="24.1.3" />
 <!--    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookInspired.Module\OutlookInspired.Module.csproj" />

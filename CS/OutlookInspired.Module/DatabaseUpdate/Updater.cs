@@ -23,23 +23,33 @@ public class Updater : ModuleUpdater {
         }.Do(entity => SynchronizeDates(entity.ParentTable, entity.ChildTable, entity.DateField, entity.ForeignKeyField, entity.GroupField)).Enumerate();
     }
 
-    private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName){
-        
+    private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName) {
         using var updateCommand = CreateCommand($@"
-        UPDATE p
-        SET p.{parentDateFieldName} = DATEADD(DAY, DATEDIFF(DAY, agg.MostRecentDate, GETDATE()), p.{parentDateFieldName})
-        FROM {parentTableName} p
-        INNER JOIN {childTableName} c ON p.Id = c.{childForeignKeyFieldName}
+    UPDATE {parentTableName}
+    SET {parentDateFieldName} = (
+        SELECT COALESCE(
+            DATE(
+                'now',
+                '-' || (JULIANDAY('now') - JULIANDAY(MAX(agg.MostRecentDate))) || ' days'
+            ),
+            {parentTableName}.{parentDateFieldName}
+        )
+        FROM {childTableName} c
         INNER JOIN (
             SELECT
                 c.{groupingFieldName},
                 MAX(p.{parentDateFieldName}) AS MostRecentDate
-            FROM
-                {childTableName} c
-                INNER JOIN {parentTableName} p ON c.{childForeignKeyFieldName} = p.Id
-            GROUP BY
-                c.{groupingFieldName}
-        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}");
+            FROM {childTableName} c
+            INNER JOIN {parentTableName} p ON c.{childForeignKeyFieldName} = p.Id
+            GROUP BY c.{groupingFieldName}
+        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}
+        WHERE {parentTableName}.Id = c.{childForeignKeyFieldName}
+    )
+    WHERE EXISTS (
+        SELECT 1
+        FROM {childTableName} c
+        WHERE {parentTableName}.Id = c.{childForeignKeyFieldName}
+    )");
         updateCommand.ExecuteNonQuery();
     }
 
@@ -80,7 +90,7 @@ public class Updater : ModuleUpdater {
         if (tenant == null) {
             tenant = ObjectSpace.CreateObject<Tenant>();
             tenant.Name = tenantName;
-            tenant.ConnectionString = $"Integrated Security=SSPI;MultipleActiveResultSets=True;Data Source=(localdb)\\mssqllocaldb;Initial Catalog={databaseName}";
+            tenant.ConnectionString = $"Data Source=..\\\\..\\\\data\\\\{databaseName}.db";
         }
         ((TenantNameHelperBase)ObjectSpace.ServiceProvider.GetRequiredService<ITenantNameHelper>()).ClearTenantMapCache();
     }

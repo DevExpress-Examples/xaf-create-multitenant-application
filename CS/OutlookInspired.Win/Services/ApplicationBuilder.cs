@@ -103,7 +103,7 @@ namespace OutlookInspired.Win.Services{
         public static IObjectSpaceProviderBuilder<IWinApplicationBuilder> ObjectSpaceProviderBuilder(this DbContextBuilder<IWinApplicationBuilder> builder,Action<XafApplication> configure=null) 
             => builder.WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
                 configure?.Invoke(application);
-                options.UseSqlServer(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+                options.UseSqlite(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
                 options.UseChangeTrackingProxies();
                 options.UseObjectSpaceLinkProxies();
                 options.UseLazyLoadingProxies();
@@ -128,7 +128,7 @@ namespace OutlookInspired.Win.Services{
         public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
             builder.AddMultiTenancy()
                 .WithHostDbContext((_, options) => {
-                    options.UseSqlServer(serviceConnectionString);
+                    options.UseSqlite(serviceConnectionString);
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })

@@ -14,7 +14,7 @@ namespace OutlookInspired.Module.BusinessObjects;
 public class OutlookInspiredContextInitializer : DbContextTypesInfoInitializerBase {
 	protected override DbContext CreateDbContext() 
 		=> new OutlookInspiredEFCoreDbContext(new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>()
-			.UseSqlServer(";")
+			.UseSqlite(";")
 			.UseChangeTrackingProxies()
 			.UseObjectSpaceLinkProxies().Options);
 }
@@ -23,7 +23,7 @@ public class OutlookInspiredDesignTimeDbContextFactory : IDesignTimeDbContextFac
 	public OutlookInspiredEFCoreDbContext CreateDbContext(string[] args) {
 		// throw new InvalidOperationException("Make sure that the database connection string and connection provider are correct. After that, uncomment the code below and remove this exception.");
 		var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
-		optionsBuilder.UseSqlServer("Integrated Security=SSPI;Data Source=(localdb)\\mssqllocaldb;Initial Catalog=OutlookInspired");
+		optionsBuilder.UseSqlite("Data Source=..\\\\..\\\\data\\\\OutlookInspired_Service.db");
         optionsBuilder.UseChangeTrackingProxies();
         optionsBuilder.UseObjectSpaceLinkProxies();
 		return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);

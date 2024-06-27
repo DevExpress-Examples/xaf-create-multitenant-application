@@ -2,7 +2,7 @@ using System.Reactive.Linq;
 using DevExpress.ExpressApp.MultiTenancy;
 using DevExpress.ExpressApp.Win.ApplicationBuilder;
 using DevExpress.Persistent.BaseImpl.EF.MultiTenancy;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OutlookInspired.Module.BusinessObjects;
@@ -26,15 +26,19 @@ namespace OutlookInspired.Win.Tests.Import{
             using var application = builder.Build();
             await application.GetRequiredService<OutlookInspiredEFCoreDbContext>().Database.EnsureDeletedAsync();
             application.Setup();
-            await using var sqlConnection = new SqlConnection(application.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
-            sqlConnection.Open();
-            await using var sqlCommand = sqlConnection.CreateCommand();
-            sqlCommand.CommandText = "ALTER DATABASE [OutlookInspired_Service] SET COMPATIBILITY_LEVEL = 100";
-            sqlCommand.ExecuteNonQuery();
+
+
+            // var connectionString = application.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
+            // await using var sqlConnection = new SqlConnection(application.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+            // sqlConnection.Open();
+            // await using var sqlCommand = sqlConnection.CreateCommand();
+            // sqlCommand.CommandText = "ALTER DATABASE [OutlookInspired_Service] SET COMPATIBILITY_LEVEL = 100";
+            // sqlCommand.ExecuteNonQuery();
             using var objectSpace = application.ObjectSpaceProvider.CreateObjectSpace();
             objectSpace.GetObjectsQuery<Tenant>().Count().ShouldBe(0);
             await objectSpace.ImportFromSqlLite();
             objectSpace.CommitChanges();
+            SqliteConnection.ClearAllPools();
             objectSpace.Count<Crest>().ShouldBe(20);
             objectSpace.Count<State>().ShouldBe(51);
             objectSpace.Count<Customer>().ShouldBe(20);

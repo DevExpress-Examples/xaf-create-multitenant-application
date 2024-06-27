@@ -35,7 +35,7 @@ public class Startup(IConfiguration configuration){
 #if EASYTEST
                     string connectionString = Configuration.GetConnectionString("EasyTestConnectionString");
 #endif
-                    options.UseSqlServer(connectionString);
+                    options.UseSqlite(connectionString);
                     options.UseChangeTrackingProxies();
                     options.UseLazyLoadingProxies();
                 })
@@ -54,7 +54,7 @@ public class Startup(IConfiguration configuration){
                 .AddSecuredEFCore()
                     .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                         var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
-                        options.UseSqlServer(connectionString);
+                        options.UseSqlite(connectionString);
                         options.UseChangeTrackingProxies();
                         options.UseObjectSpaceLinkProxies();
                         options.UseLazyLoadingProxies();
