@@ -22,7 +22,7 @@ public class Updater : ModuleUpdater {
     }
 
     private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName){
-        using var updateCommand = CreateCommand($@"
+        using (var updateCommand = CreateCommand($@"
         UPDATE p
         SET p.{parentDateFieldName} = DATEADD(DAY, DATEDIFF(DAY, agg.MostRecentDate, GETDATE()), p.{parentDateFieldName})
         FROM {parentTableName} p
@@ -36,8 +36,12 @@ public class Updater : ModuleUpdater {
                 INNER JOIN {parentTableName} p ON c.{childForeignKeyFieldName} = p.Id
             GROUP BY
                 c.{groupingFieldName}
-        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}");
-        updateCommand.ExecuteNonQuery();
+        ) agg ON c.{groupingFieldName} = agg.{groupingFieldName}")) {
+            if (updateCommand.Connection.State != System.Data.ConnectionState.Open) {
+                updateCommand.Connection.Open();
+            }
+            updateCommand.ExecuteNonQuery();
+        }
     }
 
 
