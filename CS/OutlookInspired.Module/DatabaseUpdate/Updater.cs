@@ -24,7 +24,7 @@ public class Updater : ModuleUpdater {
     }
 
     private void SynchronizeDates(string parentTableName, string childTableName, string parentDateFieldName, string childForeignKeyFieldName, string groupingFieldName) {
-        using var updateCommand = CreateCommand($@"
+        using (var updateCommand = CreateCommand($@"
     UPDATE {parentTableName}
     SET {parentDateFieldName} = (
         SELECT COALESCE(
@@ -49,8 +49,12 @@ public class Updater : ModuleUpdater {
         SELECT 1
         FROM {childTableName} c
         WHERE {parentTableName}.Id = c.{childForeignKeyFieldName}
-    )");
-        updateCommand.ExecuteNonQuery();
+    )")) {
+            if (updateCommand.Connection.State != System.Data.ConnectionState.Open) {
+                updateCommand.Connection.Open();
+            }
+            updateCommand.ExecuteNonQuery();
+        }
     }
 
 
