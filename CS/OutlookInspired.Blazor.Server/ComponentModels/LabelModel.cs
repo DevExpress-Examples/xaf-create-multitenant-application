@@ -1,4 +1,4 @@
-﻿using OutlookInspired.Blazor.Server.Components;
+﻿using DevExpress.ExpressApp.Blazor.Components.Models;
 
 namespace OutlookInspired.Blazor.Server.ComponentModels
 {
@@ -14,6 +14,6 @@ namespace OutlookInspired.Blazor.Server.ComponentModels
             get => GetPropertyValue<string>();
             set => SetPropertyValue(value);
         }
-        public override Type ComponentType => typeof(Label);
+        public override Type ComponentType => typeof(Components.Label);
     }
 }
