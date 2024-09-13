@@ -82,10 +82,20 @@ namespace OutlookInspired.Module.Features.ViewFilter{
         
         protected override void OnActivated(){
             base.OnActivated();
-            if (!(FilterAction.Active[nameof(ViewFilterController)] = Frame is NestedFrame&&Frame.View.IsRoot))return;
+            var active = Frame is NestedFrame && Frame.View.IsRoot && (Frame.View is ListView || Frame.View is DetailView && View.ObjectTypeInfo.Type == typeof(Quote));
+            FilterAction.Active[nameof(ViewFilterController)] = active;
+            if(!active)
+                return;
+
             AddFilterItems();
-            View.CustomizeViewItemControlCore<ControlViewItem>(this, _ => FilterAction.DoExecute(item => $"{item.Data}" == "This Month"),_ => View.ObjectTypeInfo.Type==typeof(Quote));
-            Application.ObjectSpaceCreated+=ApplicationOnObjectSpaceCreated;
+            if(View is DetailView detailView) {
+                detailView.CustomizeViewItemControl<ControlViewItem>(this, _ => {
+                    if(View.ObjectTypeInfo.Type == typeof(Quote)) {
+                        FilterAction.DoExecute(item => $"{item.Data}" == "This Month");
+                    }
+                });
+            }
+            Application.ObjectSpaceCreated += ApplicationOnObjectSpaceCreated;
         }
 
         private void ApplicationOnObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e){
@@ -110,15 +120,24 @@ namespace OutlookInspired.Module.Features.ViewFilter{
         private void ObjectSpaceOnCommitted(object sender, EventArgs e) => AddFilterItems();
         
         void AddFilterItems(){
-            if (View==null)return;
+            if(View == null)
+                return;
+
             FilterAction.Items.Clear();
-            var viewCriteria =View is ListView listView? listView.CollectionSource.GetTotalCriteria():null;
-            FilterAction.Items.AddRange(new[]{ (caption:"Manage...",data:"Manage"),
-                    (caption:$"All ({ObjectSpace.GetObjectsCount(View.ObjectTypeInfo.Type, viewCriteria)})",data:"All") }
-                .Select(t => new ChoiceActionItem(t.caption, t.data)).Concat(ObjectSpace.GetObjectsQuery<BusinessObjects.ViewFilter>()
-                    .Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToArray()
-                    .Select(filter => new ChoiceActionItem($"{filter.Name} ({filter.Count(viewCriteria)})",filter))).ToArray());
-            FilterAction.SelectedItem = FilterAction.Items.First(item => $"{item.Data}"=="All");
+
+            FilterAction.Items.Add(new ChoiceActionItem("Manage...", "Manage"));
+
+            var count = View is ListView listView ? listView.CollectionSource.GetCount() : ObjectSpace.GetObjectsCount(View.ObjectTypeInfo.Type, null);
+            var criteria = View is ListView _listView ? _listView.CollectionSource.GetTotalCriteria() : null;
+
+            var allItem = new ChoiceActionItem($"All ({count})", "All");
+            FilterAction.Items.Add(allItem);
+
+            var viewFilters = ObjectSpace.GetObjectsQuery<BusinessObjects.ViewFilter>().Where(filter => filter.DataTypeName == View.ObjectTypeInfo.Type.FullName).ToList();
+            var choiceActionItems = viewFilters.Select(viewFilter => new ChoiceActionItem($"{viewFilter.Name} ({viewFilter.Count(criteria)})", viewFilter)).ToList();
+            FilterAction.Items.AddRange(choiceActionItems);
+
+            FilterAction.SelectedItem = allItem;
         }
     }
 }
