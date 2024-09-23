@@ -32,8 +32,8 @@ Once you log in, two tenants are created in the system: `company1.com` and `comp
 
 After the Host Database is initialized, you can log in to the Tenant User Interface using one of the following Tenant Administrator accounts
 
-- `admin@company1.com`
-- `admin@company2.com`
+- `Admin@company1.com`
+- `Admin@company2.com`
 
 A Tenant Administrator has full access to all data stored in the Tenant Database but no access to other Tenant data. Users and permissions are managed in each tenant independently.
 
