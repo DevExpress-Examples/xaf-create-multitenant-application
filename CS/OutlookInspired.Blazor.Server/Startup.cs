@@ -46,7 +46,6 @@ public class Startup(IConfiguration configuration){
             builder.ObjectSpaceProviders
                 .AddSecuredEFCore(options => {
                     options.PreFetchReferenceProperties();
-                    options.SchemaUpdateOptions.DisableUpdateSchema = true;
                 })
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                     var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();

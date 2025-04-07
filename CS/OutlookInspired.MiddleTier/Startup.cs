@@ -49,7 +49,7 @@ public class Startup(IConfiguration configuration){
 
 
             builder.ObjectSpaceProviders
-                .AddSecuredEFCore(options => options.SchemaUpdateOptions.DisableUpdateSchema = true)
+                .AddSecuredEFCore()
                     .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                         var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                         options.UseConnectionString(connectionString);
