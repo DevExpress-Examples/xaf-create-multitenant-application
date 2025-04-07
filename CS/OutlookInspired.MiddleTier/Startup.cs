@@ -35,9 +35,7 @@ public class Startup(IConfiguration configuration){
 #if EASYTEST
                     string connectionString = Configuration.GetConnectionString("EasyTestConnectionString");
 #endif
-                    options.UseSqlite(connectionString);
-                    options.UseChangeTrackingProxies();
-                    options.UseLazyLoadingProxies();
+                    options.UseConnectionString(connectionString);
                 })
                 .WithMultiTenancyModelDifferenceStore(options => {
 #if !RELEASE
@@ -51,13 +49,10 @@ public class Startup(IConfiguration configuration){
 
 
             builder.ObjectSpaceProviders
-                .AddSecuredEFCore()
+                .AddSecuredEFCore(options => options.SchemaUpdateOptions.DisableUpdateSchema = true)
                     .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                         var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
-                        options.UseSqlite(connectionString);
-                        options.UseChangeTrackingProxies();
-                        options.UseObjectSpaceLinkProxies();
-                        options.UseLazyLoadingProxies();
+                        options.UseConnectionString(connectionString);
                     })
                 .AddNonPersistent();
 

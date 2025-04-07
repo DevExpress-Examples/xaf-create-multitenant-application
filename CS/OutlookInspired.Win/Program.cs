@@ -27,7 +27,7 @@ static class Program {
         
         Initialization.RunSecurityServer(args);
 
-        var winApplication = ApplicationBuilder.BuildApplication(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+        var winApplication = ApplicationBuilder.BuildApplication();
         try {
             
             winApplication.Setup();

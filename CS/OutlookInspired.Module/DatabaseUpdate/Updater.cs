@@ -154,7 +154,7 @@ public class Updater(IObjectSpace objectSpace, Version currentDBVersion) : Modul
         if (tenant == null) {
             tenant = ObjectSpace.CreateObject<Tenant>();
             tenant.Name = tenantName;
-            tenant.ConnectionString = $"Data Source=..\\\\..\\\\data\\\\{databaseName}.db";
+            tenant.ConnectionString = $"EFCoreProvider=SQLite;Data Source=..\\\\..\\\\data\\\\{databaseName}.db";
         }
         ((TenantNameHelperBase)ObjectSpace.ServiceProvider.GetRequiredService<ITenantNameHelper>()).ClearTenantMapCache();
     }

@@ -25,7 +25,7 @@ using OutlookInspired.Module.Features.Maps;
 
 namespace OutlookInspired.Win;
 public class ApplicationBuilder : IDesignTimeApplicationFactory {
-    public static WinApplication BuildApplication(string connectionString){
+    public static WinApplication BuildApplication(){
         var builder = WinApplication.CreateBuilder();
         builder.UseApplication<OutlookInspiredWindowsFormsApplication>();
         builder.Modules
@@ -108,12 +108,10 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
             application.ApplicationName = "OutlookInspired";
             SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
-            WinReportServiceController.UseNewWizard = true;
             application.LastLogonParametersReading += (_, e) => {
                 if (!string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) return;
                 e.SettingsStorage.SaveOption("", "UserName", "Admin");
             };
-            application.ConnectionString = connectionString;
         });
         return builder.Build();
     }
@@ -144,7 +142,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
 
     static string GetTenantConnectionString( XafApplication application, string dataPath){
         var tenantProvider = application.ServiceProvider.GetRequiredService<ITenantProvider>();
-        using var connection = new SqliteConnection($"Data source={Path.GetFullPath($"{dataPath}\\{Path.GetFileName(application.ConnectionString)}")}");
+        using var connection = new SqliteConnection($"Data source={Path.GetFullPath($"{dataPath}\\OutlookInspired_Service.db")}");
         var query = "SELECT ConnectionString FROM Tenant WHERE ID = @Id";
         using var command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@Id", tenantProvider.TenantId);
@@ -159,6 +157,6 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
     XafApplication IDesignTimeApplicationFactory.Create() {
         MiddleTierClientSecurityBase.DesignModeUserType = typeof(ApplicationUser);
         MiddleTierClientSecurityBase.DesignModeRoleType = typeof(PermissionPolicyRole);
-        return BuildApplication(XafApplication.DesignTimeConnectionString);
+        return BuildApplication();
     }
 }

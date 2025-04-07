@@ -56,9 +56,7 @@ public static IBlazorApplicationBuilder AddMultiTenancy(this IBlazorApplicationB
 #else
             string connectionString = configuration.GetConnectionString("ConnectionString");
 #endif
-            options.UseSqlite(connectionString);
-            options.UseChangeTrackingProxies();
-            options.UseLazyLoadingProxies();
+            options.UseConnectionString(connectionString);
         })
         .WithMultiTenancyModelDifferenceStore(e => {
 #if !RELEASE
@@ -78,9 +76,7 @@ In the WinForms application, the following code activates multi-tenancy.
 public static IWinApplicationBuilder AddMultiTenancy(this IWinApplicationBuilder builder, string serviceConnectionString) {
     builder.AddMultiTenancy()
         .WithHostDbContext((_, options) => {
-            options.UseSqlite(serviceConnectionString);
-            options.UseChangeTrackingProxies();
-            options.UseLazyLoadingProxies();
+            options.UseConnectionString(serviceConnectionString);
         })
         .WithMultiTenancyModelDifferenceStore(mds => {
 #if !RELEASE
@@ -102,7 +98,7 @@ In the Blazor application:
 // ...
 builder.WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
     // ...
-    options.UseSqlite(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+    options.UseConnectionString(serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
 })
 // ...
 ```
@@ -115,7 +111,7 @@ In the WinForms application.
 // ...
 builder.WithDbContext<OutlookInspiredEFCoreDbContext>((application, options) => {
   // ...
-  options.UseSqlite(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
+  options.UseConnectionString(application.ServiceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString());
 }, ServiceLifetime.Transient)
 // ...
 ```

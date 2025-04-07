@@ -44,14 +44,14 @@ public class Startup(IConfiguration configuration){
                 .Add<OutlookInspiredModule>()
                 .Add<OutlookInspiredBlazorModule>();
             builder.ObjectSpaceProviders
-                .AddSecuredEFCore(options => options.PreFetchReferenceProperties())
+                .AddSecuredEFCore(options => {
+                    options.PreFetchReferenceProperties();
+                    options.SchemaUpdateOptions.DisableUpdateSchema = true;
+                })
                 .WithDbContext<Module.BusinessObjects.OutlookInspiredEFCoreDbContext>((serviceProvider, options) => {
                     var connectionString = serviceProvider.GetRequiredService<IConnectionStringProvider>().GetConnectionString();
                     ExtractDb(connectionString);
-                    options.UseSqlite(connectionString);
-                    options.UseChangeTrackingProxies();
-                    options.UseObjectSpaceLinkProxies();
-                    options.UseLazyLoadingProxies();
+                    options.UseConnectionString(connectionString);
                 })
                 .AddNonPersistent();
             builder.Security
@@ -71,9 +71,7 @@ public class Startup(IConfiguration configuration){
 #else
                     string connectionString = Configuration.GetConnectionString("ConnectionString");
 #endif
-                    options.UseSqlite(connectionString);
-                    options.UseChangeTrackingProxies();
-                    options.UseLazyLoadingProxies();
+                    options.UseConnectionString(connectionString);
                 })
                 .WithMultiTenancyModelDifferenceStore(e => {
 #if !RELEASE

@@ -8,28 +8,12 @@ using DevExpress.Persistent.BaseImpl.EF;
 
 namespace OutlookInspired.Module.BusinessObjects;
 
-// This code allows our Model Editor to get relevant EF Core metadata at design time.
-// For details, please refer to https://supportcenter.devexpress.com/ticket/details/t933891.
-public class OutlookInspiredContextInitializer : DbContextTypesInfoInitializerBase{
-
-	protected override DbContext CreateDbContext() 
-		=> new OutlookInspiredEFCoreDbContext(new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>()
-			.UseSqlServer(";").UseChangeTrackingProxies().UseObjectSpaceLinkProxies().Options);
-}
 //This factory creates DbContext for design-time services. For example, it is required for database migration.
-public class OutlookInspiredDesignTimeDbContextFactory : IDesignTimeDbContextFactory<OutlookInspiredEFCoreDbContext>{
-	
-
-	public OutlookInspiredEFCoreDbContext CreateDbContext(string[] args) {
-		// throw new InvalidOperationException("Make sure that the database connection string and connection provider are correct. After that, uncomment the code below and remove this exception.");
-		var optionsBuilder = new DbContextOptionsBuilder<OutlookInspiredEFCoreDbContext>();
-		optionsBuilder.UseSqlite("Data Source=..\\\\..\\\\data\\\\OutlookInspired_Service.db");
-        optionsBuilder.UseChangeTrackingProxies();
-        optionsBuilder.UseObjectSpaceLinkProxies();
-		return new OutlookInspiredEFCoreDbContext(optionsBuilder.Options);
-	}
+public class OutlookInspiredDesignTimeDbContextFactory : DesignTimeDbContextFactory<OutlookInspiredEFCoreDbContext>{
+    protected override string ConnectionString => "EFCoreProvider=SQLite;Data Source=..\\\\..\\\\data\\\\OutlookInspired_Service.db";
 }
-[TypesInfoInitializer(typeof(OutlookInspiredContextInitializer))]
+
+[TypesInfoInitializer(typeof(DbContextTypesInfoInitializer<OutlookInspiredEFCoreDbContext>))]
 public class OutlookInspiredEFCoreDbContext(DbContextOptions<OutlookInspiredEFCoreDbContext> options)
 	: DbContext(options){
 	
