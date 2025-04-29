@@ -22,7 +22,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Customer_CitySales_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Charts.DxChartListEditor" />
+    <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxChartListEditor" />
     <ListView Id="Customer_CustomerStores_ListView" DataAccessMode="Client" EditorTypeName="OutlookInspired.Blazor.Server.Editors.LayoutViewStacked.StackedLayoutViewEditor" />
     <DetailView Id="Customer_DetailView_Child">
       <Items>
@@ -332,7 +332,7 @@
     </DetailView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
     <DashboardView Id="Opportunities" />
-    <ListView Id="Opportunity_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Charts.DxChartPieListEditor" />
+    <ListView Id="Opportunity_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxChartListEditor" SettingsTypeName="OutlookInspired.Blazor.Server.Charts.OpportunityPieChart" ChartType="DxPieChart" />
     <DetailView Id="Order_DetailView">
       <Layout>
         <LayoutGroup Id="Main">
@@ -460,7 +460,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Product_CitySales_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Charts.DxChartListEditor" />
+    <ListView Id="Product_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxChartListEditor" />
     <DetailView Id="Product_DetailView">
       <Items>
         <PropertyEditor Id="Image" ImageSizeMode="AutoSize" />

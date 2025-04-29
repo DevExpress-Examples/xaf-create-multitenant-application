@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -36,7 +36,6 @@
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Editors\Charts\MyDxPieChart.razor.js" />
     <None Remove="Editors\Maps\DevExtremeMap.razor.js" />
     <Content Include="Editors\Maps\DevExtremeMap.razor.js" />
     
