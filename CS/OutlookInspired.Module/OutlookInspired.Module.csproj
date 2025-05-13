@@ -139,6 +139,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+	<PackageReference Include="Microsoft.CodeAnalysis.Common" />
   </ItemGroup>
   <ItemGroup>
     <None Update="UnusableNodes.xml">
