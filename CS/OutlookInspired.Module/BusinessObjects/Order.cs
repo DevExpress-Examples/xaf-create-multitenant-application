@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
@@ -78,6 +79,9 @@ namespace OutlookInspired.Module.BusinessObjects{
         [Column(TypeName = CurrencyType)]
         public  virtual decimal PaymentTotal { get; set; }
 
+        [HideInUI(HideInUI.ListView)]
+        [PersistentAlias("[<TaxRate>][State = ^.Customer.BillingAddressState].Single(Rate) * TotalAmount")]
+        public decimal Tax => EvaluateAlias<decimal>();
 
         [PersistentAlias("Iif(" + nameof(PaymentTotal) + "=0 AND " + nameof(RefundTotal) + "=0,0,Iif(" +
                          nameof(RefundTotal) + "=" + nameof(TotalAmount) + ",3,Iif(" + nameof(PaymentTotal) + "=" +

@@ -45,7 +45,8 @@ public class Updater(IObjectSpace objectSpace, Version currentDBVersion) : Modul
             CreateAdminObjects();
             CreateTenant("company1.com", "OutlookInspired_company1");
             CreateTenant("company2.com", "OutlookInspired_company2");
-            ObjectSpace.CommitChanges();
+            CreateTaxRates();
+            ObjectSpace.CommitChanges(); 
         }
         else {
             var defaultRole = EnsureDefaultRole();
@@ -71,6 +72,17 @@ public class Updater(IObjectSpace objectSpace, Version currentDBVersion) : Modul
                 employee.User.Roles.Add(policyRole);
             }
             ObjectSpace.CommitChanges();
+        }
+    }
+
+    void CreateTaxRates() {
+        if (!ObjectSpace.GetObjectsQuery<TaxRate>().Any()) {
+            var states = Enum.GetValues<StateEnum>();
+            for (int i = 0; i < states.Length; i++) {
+                var taxRate = ObjectSpace.CreateObject<TaxRate>();
+                taxRate.State = states[i];
+                taxRate.Rate = 0.03m + (i % 10) * 0.02m;
+            }
         }
     }
 

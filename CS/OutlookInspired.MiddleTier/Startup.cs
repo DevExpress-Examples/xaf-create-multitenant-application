@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.WebApi.JWT;
 
 namespace OutlookInspired.MiddleTier;
@@ -45,6 +46,7 @@ public class Startup(IConfiguration configuration){
 #if !RELEASE
                 .WithTenantDatabaseUpdater()
 #endif
+                .WithSharedBusinessObjects(typeof(TaxRate))
                 .WithTenantResolver<TenantByEmailResolver>();
 
 

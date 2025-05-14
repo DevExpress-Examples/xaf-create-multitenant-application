@@ -834,8 +834,9 @@
                   <LayoutItem Id="SaleAmount" ViewItem="SaleAmount" Index="4" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="ShippingAmount" ViewItem="ShippingAmount" Index="5" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="TotalAmount" ViewItem="TotalAmount" Index="6" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
-                  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="7" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
-                  <LayoutItem Id="ShipMethod" ViewItem="ShipMethod" Index="8" RelativeSize="72.43589743589743" CaptionLocation="Left" IsNewNode="True" />
+                  <LayoutItem Id="Tax" ViewItem="Tax" Index="7" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
+				  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="8" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
+                  <LayoutItem Id="ShipMethod" ViewItem="ShipMethod" Index="9" RelativeSize="72.43589743589743" CaptionLocation="Left" IsNewNode="True" />
                 </LayoutGroup>
                 <LayoutGroup Id="Order_col2" ShowCaption="False" Index="1" RelativeSize="50.11135857461024" IsNewNode="True">
                   <LayoutItem Id="ShipmentCourier" ViewItem="ShipmentCourier" Index="0" RelativeSize="4.006410256410256" CaptionLocation="Left" IsNewNode="True" />

@@ -93,6 +93,7 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 mds.UseTenantSpecificModel = false;
 #endif
             })
+            .WithSharedBusinessObjects(typeof(TaxRate))
             .WithTenantResolver<TenantByEmailResolver>();
         var services = builder.Services;
         services.AddSingleton<IMapApiKeyProvider, MapApiKeyProvider>();

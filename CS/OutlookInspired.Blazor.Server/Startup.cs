@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using OutlookInspired.Blazor.Server.Services;
 using OutlookInspired.Blazor.Server.Services.Internal;
 using OutlookInspired.Module;
+using OutlookInspired.Module.BusinessObjects;
 using OutlookInspired.Module.Features.Maps;
 
 namespace OutlookInspired.Blazor.Server;
@@ -77,6 +78,7 @@ public class Startup(IConfiguration configuration){
                     e.UseTenantSpecificModel = false;
 #endif
                 })
+                .WithSharedBusinessObjects(typeof(TaxRate))
                 .WithTenantResolver<TenantByEmailResolver>();
             builder.AddBuildStep(application => {
                 application.ApplicationName = "OutlookInspired";
