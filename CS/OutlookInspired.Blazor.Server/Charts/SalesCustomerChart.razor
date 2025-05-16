@@ -1,0 +1,13 @@
+﻿@using OutlookInspired.Module.BusinessObjects
+
+<DxChartCommonSeries SeriesType="ChartSeriesType.Bar"
+                     ArgumentField="(MapItem item) => item.CustomerName"
+                     NameField="item => item.CustomerName"
+                     ValueField="item => item.Total"
+                     SummaryMethod="items => items.Sum()" />
+<DxChartLegend Visible="false" />
+<DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+    <div style="background-color: #505050;color: white">
+        @context.Point.SeriesName: @($"{(decimal)context.Point.Value:$0,.#K}")
+    </div>
+</DxChartTooltip>
