@@ -21,8 +21,8 @@
     <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
-  
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis">
+	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
+	<PackageReference Include="DevExpress.ExpressApp.CodeAnalysis">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

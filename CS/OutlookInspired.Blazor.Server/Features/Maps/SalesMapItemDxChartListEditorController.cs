@@ -31,7 +31,7 @@ public class SalesMapItemDxChartListEditorController : ObjectViewController<Deta
     private void ChartListEditorOnControlsCreated(object sender, EventArgs args) {
         _chartListEditor.ChartModel.CustomizeSeriesPoint = e
             => e.PointAppearance.Color = ColorTranslator.FromHtml(e.Point.DataItems.Cast<MapItem>().First().Color);
-        _chartListEditor.SettingsType = IsCustomer ? typeof(SalesProductChart) : typeof(SalesCustomerChart);
+        _chartListEditor.SettingType = IsCustomer ? typeof(SalesProductChart) : typeof(SalesCustomerChart);
 
         var mapItemListEditor = View.GetItems<ListPropertyEditor>()
             .Select(editor => editor.ListView?.Editor).OfType<MapItemListEditor>().First();
