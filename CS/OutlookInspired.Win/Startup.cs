@@ -108,7 +108,6 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
                 typeof(XafDemoSplashScreen), new DefaultOverlayFormOptions());
             application.ApplicationName = "OutlookInspired";
             SchedulerListEditor.DailyPrintStyleCalendarHeaderVisible = false;
-            WinReportServiceController.UseNewWizard = true;
             application.LastLogonParametersReading += (_, e) => {
                 if (!string.IsNullOrWhiteSpace(e.SettingsStorage.LoadOption("", "UserName"))) return;
                 e.SettingsStorage.SaveOption("", "UserName", "Admin");
