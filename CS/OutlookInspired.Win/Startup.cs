@@ -97,7 +97,6 @@ public class ApplicationBuilder : IDesignTimeApplicationFactory {
         var services = builder.Services;
         services.AddSingleton<IMapApiKeyProvider, MapApiKeyProvider>();
         services.AddDevExpressBlazor(options => {
-            options.BootstrapVersion = BootstrapVersion.v5;
             options.SizeMode = SizeMode.Large;
         });
         services.AddWindowsFormsBlazorWebView();

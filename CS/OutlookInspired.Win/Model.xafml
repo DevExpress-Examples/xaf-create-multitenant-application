@@ -3,10 +3,10 @@
   <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" />
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerWindowsFormsModule" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemWindowsFormsModule" Version="24.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerWindowsFormsModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemWindowsFormsModule" Version="25.1.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">
@@ -46,20 +46,13 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Customer_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client">
-      <Columns>
-        <ColumnInfo Id="Logo" ImageSizeMode="CenterImage" />
-      </Columns>
-      
-    </ListView>
+    <ListView Id="Customer_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client" />
     <DetailView Id="CustomerLayoutView_DetailView">
       <Layout>
         <LayoutGroup Id="Main" TextAlignMode="AlignWithChildren" RelativeSize="100" />
       </Layout>
     </DetailView>
-    <ListView Id="CustomerLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client">
-      
-    </ListView>
+    <ListView Id="CustomerLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client" />
     <ListView Id="Employee_AssignedTasks_ListView_Child">
       <Columns>
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
@@ -173,11 +166,8 @@
         <ActionLink ActionId="FilterView" IsNewNode="True" />
       </HiddenActions>
       <Items>
-        <PropertyEditor Id="AAddress" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Address" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
-        <PropertyEditor Id="BAddress" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="FullName" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
-        <PropertyEditor Id="RouteResult" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
@@ -190,9 +180,7 @@
     <ListView Id="Employee_Evaluations_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
     <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor">
       <Columns>
-        <ColumnInfo Id="Bonus" RowIndex="1" Index="0" OwnerBand="Raise" />
         <ColumnInfo Id="Description" RowIndex="1" Index="0" OwnerBand="Main" />
-        <ColumnInfo Id="Raise" RowIndex="0" Index="0" OwnerBand="Raise" />
         <ColumnInfo Id="Subject" RowIndex="0" Index="0" OwnerBand="Main" />
         <ColumnInfo Id="Manager" RowIndex="0" Index="1" OwnerBand="Main" />
       </Columns>
@@ -234,11 +222,8 @@
         <ColumnInfo Id="ZipCode" PropertyName="ZipCode" Index="6" IsNewNode="True" />
         <ColumnInfo Id="Email" PropertyName="Email" Index="7" IsNewNode="True" />
       </Columns>
-      
     </ListView>
-    <ListView Id="EmployeeLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Employee_DetailView_Child">
-      
-    </ListView>
+    <ListView Id="EmployeeLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Employee_DetailView_Child" />
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalStart="2019-12-01" SelectedIntervalEnd="2019-12-31" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
     <ListView Id="Event_ListView" ResourceClass="" />
     <DashboardView Id="Opportunities">
@@ -329,8 +314,8 @@
     </ListView>
     <ListView Id="Order_ListView_Detail" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Server">
       <Columns>
-        <ColumnInfo Id="PaymentStatus" ImageEditorFixedWidth="30" />
         <ColumnInfo Id="ShipmentStatus" ImageEditorFixedWidth="30" />
+        <ColumnInfo Id="PaymentStatus" ImageEditorFixedWidth="30" />
       </Columns>
     </ListView>
     <DetailView Id="Product_Brochure_DetailView">
@@ -365,12 +350,8 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Product_ListView" ShowFindPanel="True">
-      
-    </ListView>
-    <ListView Id="ProductLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client">
-      
-    </ListView>
+    <ListView Id="Product_ListView" ShowFindPanel="True" />
+    <ListView Id="ProductLayoutView_ListView" EditorTypeName="OutlookInspired.Win.Editors.GridListEditor.ColumnViewListEditor" DataAccessMode="Client" />
     <ListView Id="QuoteAnalysis_ListView" EditorTypeName="DevExpress.ExpressApp.PivotGrid.Win.PivotGridListEditor" DataAccessMode="Client">
       <Columns>
         <ColumnInfo Id="Total" Width="100" />

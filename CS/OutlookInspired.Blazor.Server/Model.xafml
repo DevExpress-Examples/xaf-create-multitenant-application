@@ -3,9 +3,9 @@
   <NavigationItems NavigationStyle="Accordion" />
   <Options UIType="TabbedMDI" RestoreTabbedMdiLayout="True" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerBlazorModule" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerModuleBase" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="24.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerBlazorModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
     <DetailView Id="BlazorRichTextMailMergeObject_DetailView" Caption="Document">
@@ -62,7 +62,6 @@
     </DetailView>
     <ListView Id="Customer_ListView">
       <Columns>
-        <ColumnInfo Id="Logo" Index="0" ImageEditorFixedWidth="0" ImageEditorFixedHeight="0" ImageEditorCustomHeight="30" MinWidth="30" Width="30" Caption=" " ToolTip="Logo" />
         <ColumnInfo Id="Name" Index="1">
           <Summary>
             <ColumnSummaryItem Id="Count" SummaryType="Count" IsNewNode="True" />
@@ -259,11 +258,9 @@
     </ListView>
     <ListView Id="Employee_Evaluations_ListView_Child" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
       <Columns>
-        <ColumnInfo Id="Bonus" Index="-1" />
         <ColumnInfo Id="Description" Index="-1" />
         <ColumnInfo Id="EndOn" Index="-1" />
         <ColumnInfo Id="Manager" Index="-1" />
-        <ColumnInfo Id="Raise" Index="-1" />
         <ColumnInfo Id="StartOn" Index="-1" SortIndex="0" SortOrder="Descending" />
         <ColumnInfo Id="Subject" Index="0" SortIndex="-1" SortOrder="None" />
       </Columns>
@@ -331,8 +328,7 @@
       </Layout>
     </DetailView>
     <ListView Id="Evaluation_ListView" SchedulerViewType="Month" SelectedIntervalEnd="2019-12-31" SelectedIntervalStart="2019-12-01" ResourceClass="OutlookInspired.Module.BusinessObjects.Employee" />
-    <DashboardView Id="Opportunities" />
-    <ListView Id="Opportunity_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxChartListEditor" SettingsTypeName="OutlookInspired.Blazor.Server.Charts.OpportunityPieChart" ChartType="DxPieChart" />
+    <ListView Id="Opportunity_ListView" EditorTypeName="DevExpress.ExpressApp.Blazor.Editors.DxChartListEditor" SettingTypeName="OutlookInspired.Blazor.Server.Charts.OpportunityPieChart" ChartType="DxPieChart" />
     <DetailView Id="Order_DetailView">
       <Layout>
         <LayoutGroup Id="Main">
@@ -444,11 +440,11 @@
     </ListView>
     <ListView Id="Order_ListView_Detail" AutoExpandAllGroups="True">
       <Columns>
-        <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
-        <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
         <ColumnInfo Id="InvoiceNumber" Width="175" />
         <ColumnInfo Id="OrderDate" Width="137" />
         <ColumnInfo Id="ShipDate" Width="124" />
+        <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
+        <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
       </Columns>
     </ListView>
     <DetailView Id="Product_Brochure_DetailView">
@@ -558,7 +554,7 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Quote_ListView" DataAccessMode="Client"  EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
+    <ListView Id="Quote_ListView" DataAccessMode="Client" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteAnalysis_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteMapItem_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Maps.MapItemListEditor" />
     <ListView Id="ViewFilter_ListView" AllowEdit="False">
