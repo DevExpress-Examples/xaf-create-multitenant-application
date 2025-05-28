@@ -57,10 +57,6 @@ namespace OutlookInspired.Win.Editors.ProgressEditor{
                 if (!repositoryItems.TryGetValue(e.DataField, out var item)) return;
                 e.RepositoryItem = item;
             };
-            pivotGridControl.CustomCellValue += (_, e) => {
-                if (!repositoryItems.TryGetValue(e.DataField, out var item) || item is not IValueCalculator valueCalculator) return;
-                e.Value = valueCalculator.Calculate(e.Value);
-            };
             pivotGridControl.CustomDrawCell += (_, e) => {
                 if (!repositoryItems.TryGetValue(e.DataField, out var item)) return;
                 e.Appearance = item.Appearance;
