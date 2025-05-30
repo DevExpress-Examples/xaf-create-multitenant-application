@@ -560,18 +560,6 @@ This folder contains the following controllers with no dependencies:
 ### Editors Folder
 This folder contains XAF custom editors. Examples include:
 
-- `ChartListEditor` - An abstract list editor designed to create simple object-specific variants.
-  
-  [Editors/ChartListEditor.cs](https://github.com/DevExpress-Examples/xaf-create-multitenant-application/blob/24.1.2%2B/CS/OutlookInspired.Blazor.Server/Editors/ChartListEditor.cs):
-
-  ```csharp
-  [ListEditor(typeof(MapItem), true)]
-  public class MapItemChartListEditor : ChartListEditor<MapItem, string, decimal, string, XafChart<MapItem, string, decimal, string>> {
-      public MapItemChartListEditor(IModelListView info) : base(info) {
-      }
-  }
-
-
 - `EnumPropertyEditor` - Inherits from XAF's native _EnumPropertyEditor_, but only displays an image (like its WinForms counterpart).
 
 - `DisplayTestPropertyEditors` - Displays raw text (like the WinForms _LabelPropertyEditor_).

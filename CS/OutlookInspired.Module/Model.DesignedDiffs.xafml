@@ -46,8 +46,8 @@
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="24.2.1.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="24.2.1.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <DetailView Id="ApplicationUser_DetailView" FreezeLayout="True">
@@ -214,7 +214,7 @@
         <ColumnInfo Id="IsPurchaseAuthority" Index="5" />
       </Columns>
     </ListView>
-    <ListView Id="Customer_ListView" MasterDetailMode="ListViewAndDetailView" DataAccessMode="Client" MasterDetailView="Customer_DetailView_Child" CustomizationFormEnabled="True">
+    <ListView Id="Customer_ListView" MasterDetailMode="ListViewAndDetailView" DataAccessMode="Client" CustomizationFormEnabled="True" MasterDetailView="Customer_DetailView_Child">
       <SplitLayout RelativePosition="70" />
       <Variants Current="List">
         <Variant Id="List" ViewID="Customer_ListView" Caption="List" Index="0" IsNewNode="True" />

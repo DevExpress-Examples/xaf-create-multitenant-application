@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -21,8 +21,8 @@
     <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
-  
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis">
+	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
+	<PackageReference Include="DevExpress.ExpressApp.CodeAnalysis">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -36,7 +36,6 @@
     <Content Include="Model.xafml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Editors\Charts\MyDxPieChart.razor.js" />
     <None Remove="Editors\Maps\DevExtremeMap.razor.js" />
     <Content Include="Editors\Maps\DevExtremeMap.razor.js" />
     
