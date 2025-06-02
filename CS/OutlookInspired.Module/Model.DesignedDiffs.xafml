@@ -728,6 +728,9 @@
       <SplitLayout SplitterPosition="600" RelativePosition="70" />
     </ListView>
     <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView">
+      <Columns>
+        <ColumnInfo Id="Preview" Index="-1" />
+      </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
     <DetailView Id="EmployeeTask_DetailView" FreezeLayout="True">
@@ -835,7 +838,7 @@
                   <LayoutItem Id="ShippingAmount" ViewItem="ShippingAmount" Index="5" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="TotalAmount" ViewItem="TotalAmount" Index="6" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="Tax" ViewItem="Tax" Index="7" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
-				  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="8" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
+                  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="8" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="ShipMethod" ViewItem="ShipMethod" Index="9" RelativeSize="72.43589743589743" CaptionLocation="Left" IsNewNode="True" />
                 </LayoutGroup>
                 <LayoutGroup Id="Order_col2" ShowCaption="False" Index="1" RelativeSize="50.11135857461024" IsNewNode="True">

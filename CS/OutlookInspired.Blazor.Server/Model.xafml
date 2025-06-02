@@ -557,6 +557,11 @@
     <ListView Id="Quote_ListView" DataAccessMode="Client" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteAnalysis_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteMapItem_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Maps.MapItemListEditor" />
+    <DetailView Id="TaskAttachedFile_DetailView">
+      <Items>
+        <PropertyEditor Id="Preview" PropertyEditorType="DevExpress.ExpressApp.Office.Blazor.Editors.RichTextPropertyEditor" />
+      </Items>
+    </DetailView>
     <ListView Id="ViewFilter_ListView" AllowEdit="False">
       <Columns>
         <ColumnInfo Id="Name" AllowEdit="True" />
