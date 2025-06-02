@@ -30,8 +30,8 @@ namespace OutlookInspired.Module.BusinessObjects{
         public  virtual decimal ShippingAmount { get; set; }
         [Column(TypeName = CurrencyType)]
         public  virtual decimal Total { get; set; }
-        [EditorAlias(EditorAliases.ProgressEditor)]
-        
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.ProgressBarPropertyEditor)]
+
         public virtual  double Opportunity { get; set; }
         [DevExpress.ExpressApp.DC.Aggregated]
         public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
