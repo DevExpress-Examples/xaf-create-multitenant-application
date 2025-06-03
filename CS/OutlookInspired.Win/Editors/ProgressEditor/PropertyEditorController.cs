@@ -3,6 +3,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Win.Editors;
+using DevExpress.Utils;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraPivotGrid;
 
@@ -55,6 +56,10 @@ namespace OutlookInspired.Win.Editors.ProgressEditor{
             var repositoryItems = AddRepositoryItems(pivotGridControl,View);
             pivotGridControl.CustomCellEdit += (_, e) => {
                 if (!repositoryItems.TryGetValue(e.DataField, out var item)) return;
+                if (item is XafRepositoryItemProgressBar xafRepositoryItemProgressBar) {
+                    xafRepositoryItemProgressBar.DisplayFormat.FormatType = FormatType.Custom;
+                    xafRepositoryItemProgressBar.DisplayFormat.FormatString = "{0:P0}";
+                }
                 e.RepositoryItem = item;
             };
             pivotGridControl.CustomDrawCell += (_, e) => {
