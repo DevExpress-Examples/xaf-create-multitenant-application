@@ -90,6 +90,9 @@
         <ColumnInfo Id="AnnualSales" Index="8" />
         <ColumnInfo Id="Crest" Index="9" />
       </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="FullTextSearch" IsNewNode="True" />
+      </HiddenActions>
     </ListView>
     <DetailView Id="Customer_DetailView" CustomizationFormEnabled="True">
       <Layout>
