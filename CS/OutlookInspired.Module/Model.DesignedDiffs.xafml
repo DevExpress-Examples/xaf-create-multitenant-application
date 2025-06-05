@@ -998,6 +998,16 @@
       </Variants>
     </ListView>
     <ListView Id="Order_ListView_Detail" DataAccessMode="ServerView" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Order_DetailView_Child">
+      <Columns>
+        <ColumnInfo Id="ActualWeight" Index="-1" />
+        <ColumnInfo Id="Customer" Index="-1" />
+        <ColumnInfo Id="Employee" Index="-1" />
+        <ColumnInfo Id="Location" Index="-1" />
+        <ColumnInfo Id="ShipDate" Index="-1" />
+        <ColumnInfo Id="ShipmentCourier" Index="-1" />
+        <ColumnInfo Id="Store" Index="-1" />
+        <ColumnInfo Id="InvoiceNumber" Width="98" />
+      </Columns>
       <SplitLayout SplitterPosition="0" RelativePosition="70" />
     </ListView>
     <DetailView Id="OrderItem_DetailView">
