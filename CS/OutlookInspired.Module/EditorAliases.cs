@@ -6,7 +6,6 @@
         public const string PdfViewerEditor = "PdfViewerEditor";
         public const string LabelPropertyEditor = "LabelPropertyEditor";
         public const string HyperLinkPropertyEditor = "HyperLinkPropertyEditor";
-        public const string ProgressEditor = "ProgressEditor";
         public const string DxHtmlPropertyEditor = "DxHtmlPropertyEditor";
         public const string MapHomeOfficePropertyEditor = "MapHomeOfficePropertyEditor";
     }

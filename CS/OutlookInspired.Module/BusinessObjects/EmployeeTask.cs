@@ -42,8 +42,8 @@ namespace OutlookInspired.Module.BusinessObjects{
 
         [HideInUI(HideInUI.DetailView)][XafDisplayName(nameof(Priority))]
         public byte[] PriorityImage => ImageLoader.Instance.GetEnumValueImageInfo(Priority).ImageBytes;
-        
-        [EditorAlias(EditorAliases.ProgressEditor)]
+
+        [EditorAlias(DevExpress.ExpressApp.Editors.EditorAliases.ProgressBarPropertyEditor)]
         public virtual int Completion { get; set; }
         public virtual bool Reminder { get; set; }
         public virtual DateTime? ReminderDateTime { get; set; }
