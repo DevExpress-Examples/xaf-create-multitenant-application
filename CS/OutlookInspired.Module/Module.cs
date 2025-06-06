@@ -110,7 +110,9 @@ public sealed class OutlookInspiredModule : ModuleBase{
 
     private void nonPersistentObjectSpace_ObjectByKeyGetting(object sender, ObjectByKeyGettingEventArgs e) {
         if (e.ObjectType!=typeof(Welcome)) return;
-        e.Object = ((IObjectSpace)sender).CreateObject<Welcome>();
+        var objectSpace = ((IObjectSpace)sender);
+        e.Object = objectSpace.CreateObject<Welcome>(); 
+        objectSpace.CommitChanges();
     }
 }
 
