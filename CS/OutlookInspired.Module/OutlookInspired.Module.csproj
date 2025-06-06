@@ -110,6 +110,8 @@
     <None Remove="Images\Welcome.png" />
     <None Remove="Resources\Welcome.pdf" />
     <EmbeddedResource Include="Resources\Welcome.pdf" />
+    <None Remove="Resources\Welcome.png" />
+    <EmbeddedResource Include="Resources\Welcome.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" />

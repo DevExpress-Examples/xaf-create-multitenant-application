@@ -567,10 +567,17 @@
         <ColumnInfo Id="Name" AllowEdit="True" />
       </Columns>
     </ListView>
-    <DetailView Id="Welcome_DetailView">
+    <DetailView Id="Welcome_DetailView" AllowEdit="False" AllowDelete="False" AllowNew="False" DefaultFocusedItem="">
+      <Items>
+        <PropertyEditor Id="About" AllowEdit="False" />
+      </Items>
       <Layout>
-        <LayoutGroup Id="Main" RelativeSize="3.865546218487395" />
-        <LayoutItem Id="Item1" Index="1" RelativeSize="96.1344537815126" IsNewNode="True" />
+        <LayoutGroup Id="Main" RelativeSize="100">
+          <LayoutGroup Id="About_Group" ShowCaption="False" Direction="Horizontal" RelativeSize="100" Caption="About">
+            <LayoutItem Id="About" ShowCaption="False" RelativeSize="33.333333333333336" CustomCSSClassName="welcome-image-viewer" />
+            <LayoutItem Id="right" Index="1" RelativeSize="66.66666666666667" IsNewNode="True" />
+          </LayoutGroup>
+        </LayoutGroup>
       </Layout>
     </DetailView>
   </Views>
