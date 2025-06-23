@@ -12,7 +12,7 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
-  <NavigationItems StartupNavigationItem="Welcome_DetailView">
+  <NavigationItems StartupNavigationItem="Welcome">
     <Items>
       <Item Id="Admin Portal">
         <Items>
@@ -23,7 +23,8 @@
       </Item>
       <Item Id="Default">
         <Items>
-          <Item Id="Welcome_DetailView" Index="0" ImageName="About" ObjectKey="{8B8DF685-AD96-4BE9-A08A-8DD8C2A9F4C2}" />
+          <Item Id="Welcome" ViewId="Welcome" Caption="Welcome" ImageName="About" Index="0" IsNewNode="True" />
+          <Item Id="Welcome_DetailView" Index="0" ImageName="About" ObjectKey="{8B8DF685-AD96-4BE9-A08A-8DD8C2A9F4C2}" Removed="True" />
           <Item Id="Employee_ListView" ImageName="BO_Employee" Index="1" />
           <Item Id="Evaluation_ListView" Index="2" ImageName="EvaluationYes" />
           <Item Id="Customer_ListView" ImageName="BO_Customer" Index="3" />
@@ -31,7 +32,6 @@
           <Item Id="Product_ListView" ImageName="BO_Product" Index="5" />
           <Item Id="Opportunities" Index="6" ImageName="BO_Opportunity" />
           <Item Id="My Details" ViewId="ApplicationUser_DetailView" Caption="My Details" ImageName="BO_MyDetails" ObjectKey="@CurrentUserID" Index="7" IsNewNode="True" />
-          <Item Id="@08b55426-76b2-4954-9ddd-cb2e0ae0e903" ViewId="Welcome" Caption="Welcome1" IsNewNode="True" />
         </Items>
       </Item>
       <Item Id="Reports">
@@ -1344,11 +1344,5 @@
         </LayoutGroup>
       </Layout>
     </DashboardView>
-    <DetailView Id="Welcome_DetailView">
-      <HiddenActions>
-        <ActionLink ActionId="FullTextSearch" IsNewNode="True" />
-        <ActionLink ActionId="Refresh" IsNewNode="True" />
-      </HiddenActions>
-    </DetailView>
   </Views>
 </Application>
