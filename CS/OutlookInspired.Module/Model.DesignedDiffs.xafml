@@ -931,6 +931,7 @@
       <Items>
         <PropertyEditor Id="Customer" PropertyName="Customer.Name" IsNewNode="True" />
         <PropertyEditor Id="Logo" PropertyName="Customer.Logo" IsNewNode="True" />
+        <PropertyEditor Id="ShipmentDetail" PropertyName="ShipmentDetail" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
