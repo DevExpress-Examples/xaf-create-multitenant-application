@@ -7,7 +7,7 @@ using DevExpress.Persistent.Base;
 using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Module.Features.Customers{
-     class MapCustomerController:ObjectViewController<ListView,Customer>{
+    public class MapCustomerController:ObjectViewController<ListView,Customer>{
         public const string MapItActionId = "MapCustomer";
         public MapCustomerController(){
             MapCustomerAction = new PopupWindowShowAction(this, MapItActionId, PredefinedCategory.View){
