@@ -31,6 +31,7 @@
           <Item Id="Product_ListView" ImageName="BO_Product" Index="5" />
           <Item Id="Opportunities" Index="6" ImageName="BO_Opportunity" />
           <Item Id="My Details" ViewId="ApplicationUser_DetailView" Caption="My Details" ImageName="BO_MyDetails" ObjectKey="@CurrentUserID" Index="7" IsNewNode="True" />
+          <Item Id="@08b55426-76b2-4954-9ddd-cb2e0ae0e903" ViewId="Welcome" Caption="Welcome1" IsNewNode="True" />
         </Items>
       </Item>
       <Item Id="Reports">
@@ -1333,6 +1334,16 @@
       </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
+    <DashboardView Id="Welcome" IsNewNode="True">
+      <Items IsNewNode="True">
+        <StaticImage Id="Welcome" ImageName="Welcome" HorizontalAlign="Center" VerticalAlign="Middle" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" IsNewNode="True">
+          <LayoutItem Id="Welcome" ViewItem="Welcome" Index="0" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
     <DetailView Id="Welcome_DetailView">
       <HiddenActions>
         <ActionLink ActionId="FullTextSearch" IsNewNode="True" />

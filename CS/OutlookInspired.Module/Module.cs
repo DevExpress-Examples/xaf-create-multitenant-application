@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Model.Core;
@@ -84,9 +83,6 @@ public sealed class OutlookInspiredModule : ModuleBase{
     }
 
 	private void Application_ObjectSpaceCreated(object sender, ObjectSpaceCreatedEventArgs e) {
-		if(e.ObjectSpace is NonPersistentObjectSpace nonPersistentObjectSpace) {
-            nonPersistentObjectSpace.ObjectByKeyGetting += nonPersistentObjectSpace_ObjectByKeyGetting;
-        }
 		if (e.ObjectSpace is not CompositeObjectSpace { Owner: not CompositeObjectSpace } compositeObjectSpace) return;
 		compositeObjectSpace.PopulateAdditionalObjectSpaces((XafApplication)sender);
 	}
@@ -108,11 +104,5 @@ public sealed class OutlookInspiredModule : ModuleBase{
 	    
     }
 
-    private void nonPersistentObjectSpace_ObjectByKeyGetting(object sender, ObjectByKeyGettingEventArgs e) {
-        if (e.ObjectType!=typeof(Welcome)) return;
-        var objectSpace = ((IObjectSpace)sender);
-        e.Object = objectSpace.CreateObject<Welcome>(); 
-        objectSpace.CommitChanges();
-    }
 }
 
