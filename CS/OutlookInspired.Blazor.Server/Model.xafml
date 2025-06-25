@@ -32,6 +32,7 @@
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" AllowEdit="False">
       <Items>
+        <PropertyEditor Id="CitySales" View="Customer_CitySales_ListView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
         <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" ImageEditorCustomHeight="100" ImageEditorFixedHeight="100" ImageEditorFixedWidth="100" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
@@ -440,9 +441,9 @@
     </ListView>
     <ListView Id="Order_ListView_Detail" AutoExpandAllGroups="True">
       <Columns>
+        <ColumnInfo Id="ShipDate" Width="124" />
         <ColumnInfo Id="InvoiceNumber" Width="175" />
         <ColumnInfo Id="OrderDate" Width="137" />
-        <ColumnInfo Id="ShipDate" Width="124" />
         <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
         <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
       </Columns>
@@ -567,18 +568,5 @@
         <ColumnInfo Id="Name" AllowEdit="True" />
       </Columns>
     </ListView>
-    <DetailView Id="Welcome_DetailView" AllowEdit="False" AllowDelete="False" AllowNew="False" DefaultFocusedItem="">
-      <Items>
-        <PropertyEditor Id="About" AllowEdit="False" />
-      </Items>
-      <Layout>
-        <LayoutGroup Id="Main" RelativeSize="100">
-          <LayoutGroup Id="About_Group" ShowCaption="False" Direction="Horizontal" RelativeSize="100" Caption="About">
-            <LayoutItem Id="About" ShowCaption="False" RelativeSize="33.333333333333336" CustomCSSClassName="welcome-image-viewer" />
-            <LayoutItem Id="right" Index="1" RelativeSize="66.66666666666667" IsNewNode="True" />
-          </LayoutGroup>
-        </LayoutGroup>
-      </Layout>
-    </DetailView>
   </Views>
 </Application>

@@ -52,6 +52,7 @@ public class SalesMapItemDxChartListEditorController : ObjectViewController<Deta
             .ToArray();
         mapItemListEditor.ApplyColors(dataSource, item => IsCustomer ? item.ProductName : item.CustomerName);
         _chartListEditor.DataSource = dataSource;
+        
     }
 
     private static MapItem[] MapItems(MapItemListEditor mapItemListEditor) => ((ProxyCollection)mapItemListEditor.DataSource).Cast<MapItem>().ToArray();

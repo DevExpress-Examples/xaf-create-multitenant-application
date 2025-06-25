@@ -183,6 +183,10 @@
       </Layout>
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <PropertyEditor Id="CitySales" PropertyName="CitySales" IsNewNode="True" />
+        <PropertyEditor Id="Sales" PropertyName="Sales" IsNewNode="True" />
+      </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" Direction="Horizontal" IsNewNode="True">
@@ -1125,6 +1129,9 @@
       </Layout>
     </DetailView>
     <DetailView Id="Product_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <PropertyEditor Id="CitySales" PropertyName="CitySales" View="Product_CitySales_ListView" IsNewNode="True" />
+      </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" Direction="Horizontal" IsNewNode="True">

@@ -31,6 +31,8 @@
     public IMapsMarker Center{ get; set; }
     [Parameter][EditorRequired]
     public MapRouteMode MapRouteMode{ get; set; }
-    private string GetLocation(IMapsMarker mapsMarker) => $"{mapsMarker.Latitude}, {mapsMarker.Longitude}";
+    private string GetLocation(IMapsMarker mapsMarker){
+        return $"{mapsMarker.Latitude}, {mapsMarker.Longitude}";
+    }
 
 }

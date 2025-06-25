@@ -43,4 +43,9 @@
     
     <Content Include="Editors\LayoutViewStacked\StackedLayoutView.razor.css" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="UnusableNodes1.xml">
+      <DependentUpon>Model.xafml</DependentUpon>
+    </None>
+  </ItemGroup>
 </Project>

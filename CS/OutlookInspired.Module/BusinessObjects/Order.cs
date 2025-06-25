@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
@@ -68,7 +67,6 @@ namespace OutlookInspired.Module.BusinessObjects{
         
         
         [EditorAlias(EditorAliases.PdfViewerEditor)]
-        // [HideInUI(HideInUI.DetailView)]
         [VisibleInDetailView(false)]
         [NotMapped]
         public virtual byte[] InvoiceDocument{ get; set; } = [];
