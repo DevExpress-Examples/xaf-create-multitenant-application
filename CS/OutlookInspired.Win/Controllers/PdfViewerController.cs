@@ -7,6 +7,7 @@ namespace OutlookInspired.Win.Features {
         protected override void OnActivated() {
             base.OnActivated();
             View.CustomizeViewItemControl<PdfViewerPropertyEditor>(this, editor => {
+                editor.Control.ZoomMode = PdfZoomMode.PageLevel;
                 editor.Control.NavigationPaneVisibility = PdfNavigationPaneVisibility.Hidden;
                 editor.Control.NavigationPaneInitialVisibility = PdfNavigationPaneVisibility.Hidden;
             });

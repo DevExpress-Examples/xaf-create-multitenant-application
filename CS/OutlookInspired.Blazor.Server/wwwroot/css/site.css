@@ -39,11 +39,3 @@ app {
     height: 2rem;
 }
 
-.pe-pdf-viewer .dxbrv-toolbar {
-    height: 2rem;
-}
-
-.pe-pdf-viewer {
-    width: 100%;
-    height: 100vh;
-}
