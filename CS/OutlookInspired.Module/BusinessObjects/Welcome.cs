@@ -2,18 +2,21 @@
 using DevExpress.ExpressApp.DC;
 using DevExpress.Persistent.Base;
 using OutlookInspired.Module.Attributes.Appearance;
+using BaseEditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
-namespace OutlookInspired.Module.BusinessObjects{
-    [DomainComponent][ForbidCRUD][ForbidNavigation]
+namespace OutlookInspired.Module.BusinessObjects {
+    [DomainComponent]
+    [ForbidCRUD]
+    [ForbidNavigation]
     [ImageName("About")]
     public class Welcome : NonPersistentBaseObject {
-        public Welcome(){
+        public Welcome() {
             var assembly = GetType().Assembly;
             About = Bytes(assembly.GetManifestResourceStream(assembly.GetManifestResourceNames().First(s => s.EndsWith("Welcome.pdf"))));
         }
 
-        byte[] Bytes( Stream stream){
-            if (stream is MemoryStream memoryStream){
+        byte[] Bytes(Stream stream) {
+            if(stream is MemoryStream memoryStream) {
                 return memoryStream.ToArray();
             }
 
@@ -22,8 +25,7 @@ namespace OutlookInspired.Module.BusinessObjects{
             return ms.ToArray();
         }
 
-
-        [EditorAlias(EditorAliases.PdfViewerEditor)]
-        public byte[] About{ get; set; }
+        [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
+        public byte[] About { get; set; }
     }
 }

@@ -8,7 +8,7 @@
 <DxPieChartSeries ArgumentField="(Opportunity item) => CaptionHelper.GetDisplayText(item.Stage)"
                   ValueField="Item => Item.Value"
                   SummaryMethod="items => items.Sum()">
-    <DxChartSeriesLabel Visible="true" Position="RelativePosition.Outside" ValueFormat="ChartElementFormat.Thousands(1)">
+    <DxChartSeriesLabel Visible="true" Position="RelativePosition.Outside" ValueFormat="ChartElementFormat.Thousands(1)" FormatPattern="${valueText}">
         <DxChartSeriesLabelConnector Visible="true" />
     </DxChartSeriesLabel>
 </DxPieChartSeries>

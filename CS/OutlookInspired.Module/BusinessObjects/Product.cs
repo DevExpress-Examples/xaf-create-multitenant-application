@@ -10,84 +10,84 @@ using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
+using BaseEditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
-
-
-namespace OutlookInspired.Module.BusinessObjects{
+namespace OutlookInspired.Module.BusinessObjects {
     [ImageName("BO_Product")]
     [CloneView(CloneViewType.DetailView, BrochureDetailView)]
     [CloneView(CloneViewType.ListView, LayoutViewListView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
-    [Appearance("UnAvailable",AppearanceItemType.ViewItem, "!"+nameof(Available),TargetItems = "*",FontStyle = DevExpress.Drawing.DXFontStyle.Strikeout)]
+    [Appearance("UnAvailable", AppearanceItemType.ViewItem, "!" + nameof(Available), TargetItems = "*", FontStyle = DevExpress.Drawing.DXFontStyle.Strikeout)]
     [XafDefaultProperty(nameof(Name))]
-    public class Product :OutlookInspiredBaseObject, IViewFilter,ISalesMapsMarker{
+    public class Product : OutlookInspiredBaseObject, IViewFilter, ISalesMapsMarker {
         private static readonly RichEditDocumentServer RichEditDocumentServer = new();
         public const string LayoutViewListView = "ProductLayoutView_ListView";
         public const string BrochureDetailView = "Product_Brochure_DetailView";
         public const string MapsDetailView = "Product_DetailView_Maps";
-        
-        [FontSizeDelta(8)][MaxLength(100)]
-        public  virtual string Name { get; set; }
-        [EditorAlias(EditorAliases.DxHtmlPropertyEditor)]
-        public  virtual byte[] Description { get; set; }
 
-        
+        [FontSizeDelta(8)]
+        [MaxLength(100)]
+        public virtual string Name { get; set; }
+        [EditorAlias(EditorAliases.DxHtmlPropertyEditor)]
+        public virtual byte[] Description { get; set; }
+
         [HideInUI(HideInUI.All)]
-        public virtual string DescriptionString{
-            get{
-                RichEditDocumentServer.LoadDocument(Description,DocumentFormat.OpenXml);
+        public virtual string DescriptionString {
+            get {
+                RichEditDocumentServer.LoadDocument(Description, DocumentFormat.OpenXml);
                 return RichEditDocumentServer.Text;
             }
         }
 
-        public  virtual DateTime ProductionStart { get; set; }
-        public  virtual bool Available { get; set; }
+        public virtual DateTime ProductionStart { get; set; }
+        public virtual bool Available { get; set; }
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
-        public  virtual byte[] Image { get; set; }
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit, ImageSizeMode = ImageSizeMode.Zoom)]
+        public virtual byte[] Image { get; set; }
         public virtual Employee Support { get; set; }
         public virtual Employee Engineer { get; set; }
         [Browsable(false)]
         public virtual Guid? EngineerId { get; set; }
         [XafDisplayName("Inventory")]
-        public  virtual int? CurrentInventory { get; set; }
-        public  virtual int Backorder { get; set; }
-        public  virtual int Manufacturing { get; set; }
+        public virtual int? CurrentInventory { get; set; }
+        public virtual int Backorder { get; set; }
+        public virtual int Manufacturing { get; set; }
 
         [NotMapped]
         public ObservableCollection<MapItem> Sales { get; set; } = new();
 
-        [NotMapped][HideInUI(HideInUI.DetailView)]
-        public virtual ObservableCollection<MapItem> CitySales{ get; set; } = new();
+        [NotMapped]
+        [HideInUI(HideInUI.DetailView)]
+        public virtual ObservableCollection<MapItem> CitySales { get; set; } = new();
         public virtual Picture PrimaryImage { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal Cost { get; set; }
+        public virtual decimal Cost { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal SalePrice { get; set; }
+        public virtual decimal SalePrice { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal RetailPrice { get; set; }
-        public  virtual double Weight { get; set; }
-        public  virtual double ConsumerRating { get; set; }
-        public  virtual ProductCategory Category { get; set; }
+        public virtual decimal RetailPrice { get; set; }
+        public virtual double Weight { get; set; }
+        public virtual double ConsumerRating { get; set; }
+        public virtual ProductCategory Category { get; set; }
 
-        [InverseProperty(nameof(ProductCatalog.Product))][Aggregated]
-        public virtual ObservableCollection<ProductCatalog> Catalogs{ get; set; } = new();
-        
+        [InverseProperty(nameof(ProductCatalog.Product))]
+        [Aggregated]
+        public virtual ObservableCollection<ProductCatalog> Catalogs { get; set; } = new();
 
         [Aggregated]
-        public virtual ObservableCollection<ProductImage> Images{ get; set; } = new();
+        public virtual ObservableCollection<ProductImage> Images { get; set; } = new();
 
         [Aggregated]
-        public virtual ObservableCollection<QuoteItem> QuoteItems{ get; set; } = new();
-        [EditorAlias(EditorAliases.PdfViewerEditor)]
+        public virtual ObservableCollection<QuoteItem> QuoteItems { get; set; } = new();
+        [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
         public byte[] Brochure => Catalogs.Select(catalog => catalog.PDF).FirstOrDefault();
         string IBaseMapsMarker.Title => Name;
         double IBaseMapsMarker.Latitude => throw new NotImplementedException();
         double IBaseMapsMarker.Longitude => throw new NotImplementedException();
-        [InverseProperty(nameof(OrderItem.Product))][Aggregated]
-        
-        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
+        [InverseProperty(nameof(OrderItem.Product))]
+        [Aggregated]
 
+        public virtual ObservableCollection<OrderItem> OrderItems { get; set; } = new();
 
         IEnumerable<Order> ISalesMapsMarker.Orders => OrderItems.Select(item => item.Order).Distinct();
     }
@@ -104,5 +104,4 @@ namespace OutlookInspired.Module.BusinessObjects{
         [ImageName(nameof(VideoPlayers))]
         VideoPlayers
     }
-
 }
