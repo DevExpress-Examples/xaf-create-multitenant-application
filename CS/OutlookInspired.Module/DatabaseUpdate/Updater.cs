@@ -112,7 +112,7 @@ public class Updater(IObjectSpace objectSpace, Version currentDBVersion) : Modul
     }
 
     void NewMailMergeData(string name, Type dataType, byte[] bytes){
-        var richTextMailMergeData = ObjectSpace.CreateObject<RichTextMailMergeData>();
+        var richTextMailMergeData =ObjectSpace.GetObjectsQuery<RichTextMailMergeData>().FirstOrDefault(data => data.Name==name)?? ObjectSpace.CreateObject<RichTextMailMergeData>();
         richTextMailMergeData.Name = name;
         richTextMailMergeData.Template = bytes;
         richTextMailMergeData.DataType = dataType;

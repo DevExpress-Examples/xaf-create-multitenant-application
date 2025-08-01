@@ -32,6 +32,7 @@
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" AllowEdit="False">
       <Items>
+        <PropertyEditor Id="CitySales" View="Customer_CitySales_ListView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
         <PropertyEditor Id="Logo" ImageSizeMode="StretchImage" ImageEditorCustomHeight="100" ImageEditorFixedHeight="100" ImageEditorFixedWidth="100" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
@@ -440,9 +441,9 @@
     </ListView>
     <ListView Id="Order_ListView_Detail" AutoExpandAllGroups="True">
       <Columns>
+        <ColumnInfo Id="ShipDate" Width="124" />
         <ColumnInfo Id="InvoiceNumber" Width="175" />
         <ColumnInfo Id="OrderDate" Width="137" />
-        <ColumnInfo Id="ShipDate" Width="124" />
         <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
         <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
       </Columns>
@@ -557,16 +558,15 @@
     <ListView Id="Quote_ListView" DataAccessMode="Client" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteAnalysis_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Pivot.PivotGridListEditor" />
     <ListView Id="QuoteMapItem_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.Maps.MapItemListEditor" />
+    <DetailView Id="TaskAttachedFile_DetailView">
+      <Items>
+        <PropertyEditor Id="Preview" PropertyEditorType="DevExpress.ExpressApp.Office.Blazor.Editors.RichTextPropertyEditor" />
+      </Items>
+    </DetailView>
     <ListView Id="ViewFilter_ListView" AllowEdit="False">
       <Columns>
         <ColumnInfo Id="Name" AllowEdit="True" />
       </Columns>
     </ListView>
-    <DetailView Id="Welcome_DetailView">
-      <Layout>
-        <LayoutGroup Id="Main" RelativeSize="3.865546218487395" />
-        <LayoutItem Id="Item1" Index="1" RelativeSize="96.1344537815126" IsNewNode="True" />
-      </Layout>
-    </DetailView>
   </Views>
 </Application>

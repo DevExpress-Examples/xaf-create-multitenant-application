@@ -12,7 +12,7 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
-  <NavigationItems StartupNavigationItem="Welcome_DetailView">
+  <NavigationItems StartupNavigationItem="Welcome">
     <Items>
       <Item Id="Admin Portal">
         <Items>
@@ -23,7 +23,8 @@
       </Item>
       <Item Id="Default">
         <Items>
-          <Item Id="Welcome_DetailView" Index="0" ImageName="About" ObjectKey="{8B8DF685-AD96-4BE9-A08A-8DD8C2A9F4C2}" />
+          <Item Id="Welcome" ViewId="Welcome" Caption="Welcome" ImageName="About" Index="0" IsNewNode="True" />
+          <Item Id="Welcome_DetailView" Index="0" ImageName="About" ObjectKey="{8B8DF685-AD96-4BE9-A08A-8DD8C2A9F4C2}" Removed="True" />
           <Item Id="Employee_ListView" ImageName="BO_Employee" Index="1" />
           <Item Id="Evaluation_ListView" Index="2" ImageName="EvaluationYes" />
           <Item Id="Customer_ListView" ImageName="BO_Customer" Index="3" />
@@ -90,6 +91,9 @@
         <ColumnInfo Id="AnnualSales" Index="8" />
         <ColumnInfo Id="Crest" Index="9" />
       </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="FullTextSearch" IsNewNode="True" />
+      </HiddenActions>
     </ListView>
     <DetailView Id="Customer_DetailView" CustomizationFormEnabled="True">
       <Layout>
@@ -179,6 +183,10 @@
       </Layout>
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <PropertyEditor Id="CitySales" PropertyName="CitySales" IsNewNode="True" />
+        <PropertyEditor Id="Sales" PropertyName="Sales" IsNewNode="True" />
+      </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" Direction="Horizontal" IsNewNode="True">
@@ -728,6 +736,9 @@
       <SplitLayout SplitterPosition="600" RelativePosition="70" />
     </ListView>
     <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView">
+      <Columns>
+        <ColumnInfo Id="Preview" Index="-1" />
+      </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
     <DetailView Id="EmployeeTask_DetailView" FreezeLayout="True">
@@ -835,7 +846,7 @@
                   <LayoutItem Id="ShippingAmount" ViewItem="ShippingAmount" Index="5" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="TotalAmount" ViewItem="TotalAmount" Index="6" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="Tax" ViewItem="Tax" Index="7" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
-				  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="8" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
+                  <LayoutItem Id="ShipDate" ViewItem="ShipDate" Index="8" RelativeSize="3.3653846153846154" CaptionLocation="Left" IsNewNode="True" />
                   <LayoutItem Id="ShipMethod" ViewItem="ShipMethod" Index="9" RelativeSize="72.43589743589743" CaptionLocation="Left" IsNewNode="True" />
                 </LayoutGroup>
                 <LayoutGroup Id="Order_col2" ShowCaption="False" Index="1" RelativeSize="50.11135857461024" IsNewNode="True">
@@ -924,6 +935,7 @@
       <Items>
         <PropertyEditor Id="Customer" PropertyName="Customer.Name" IsNewNode="True" />
         <PropertyEditor Id="Logo" PropertyName="Customer.Logo" IsNewNode="True" />
+        <PropertyEditor Id="ShipmentDetail" PropertyName="ShipmentDetail" IsNewNode="True" />
       </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
@@ -992,6 +1004,16 @@
       </Variants>
     </ListView>
     <ListView Id="Order_ListView_Detail" DataAccessMode="ServerView" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Order_DetailView_Child">
+      <Columns>
+        <ColumnInfo Id="ActualWeight" Index="-1" />
+        <ColumnInfo Id="Customer" Index="-1" />
+        <ColumnInfo Id="Employee" Index="-1" />
+        <ColumnInfo Id="Location" Index="-1" />
+        <ColumnInfo Id="ShipDate" Index="-1" />
+        <ColumnInfo Id="ShipmentCourier" Index="-1" />
+        <ColumnInfo Id="Store" Index="-1" />
+        <ColumnInfo Id="InvoiceNumber" Width="98" />
+      </Columns>
       <SplitLayout SplitterPosition="0" RelativePosition="70" />
     </ListView>
     <DetailView Id="OrderItem_DetailView">
@@ -1107,6 +1129,9 @@
       </Layout>
     </DetailView>
     <DetailView Id="Product_DetailView_Maps" FreezeLayout="True">
+      <Items>
+        <PropertyEditor Id="CitySales" PropertyName="CitySales" View="Product_CitySales_ListView" IsNewNode="True" />
+      </Items>
       <Layout IsNewNode="True" Removed="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" IsNewNode="True">
           <LayoutGroup Id="SimpleEditors" Index="0" ShowCaption="False" RelativeSize="100" Caption="SimpleEditors" Direction="Horizontal" IsNewNode="True">
@@ -1317,17 +1342,15 @@
       </Columns>
       <SplitLayout RelativePosition="30" />
     </ListView>
-    <DetailView Id="Welcome_DetailView">
-      <HiddenActions>
-        <ActionLink ActionId="FullTextSearch" IsNewNode="True" />
-      </HiddenActions>
-      <Layout>
-        <LayoutGroup Id="Main" RelativeSize="100">
-          <LayoutGroup Id="About_Group" ShowCaption="False" Direction="Vertical" RelativeSize="100">
-            <LayoutItem Id="About" RelativeSize="100" CaptionLocation="Top" ShowCaption="False" />
-          </LayoutGroup>
+    <DashboardView Id="Welcome" IsNewNode="True">
+      <Items IsNewNode="True">
+        <StaticImage Id="Welcome" ImageName="Welcome" HorizontalAlign="Center" VerticalAlign="Middle" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" IsNewNode="True">
+          <LayoutItem Id="Welcome" ViewItem="Welcome" Index="0" IsNewNode="True" />
         </LayoutGroup>
       </Layout>
-    </DetailView>
+    </DashboardView>
   </Views>
 </Application>

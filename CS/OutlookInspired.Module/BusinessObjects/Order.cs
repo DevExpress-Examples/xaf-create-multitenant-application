@@ -68,7 +68,6 @@ namespace OutlookInspired.Module.BusinessObjects {
         public virtual byte[] ShipmentDetail { get; set; } = [];
 
         [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
-        // [HideInUI(HideInUI.DetailView)]
         [VisibleInDetailView(false)]
         [NotMapped]
         public virtual byte[] InvoiceDocument { get; set; } = [];

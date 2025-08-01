@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using DevExpress.Data;
-using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
@@ -12,7 +11,6 @@ using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.ExpressApp.Win.Editors.Grid.Internal;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
-using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Win.Editors.GridListEditor{
     [ListEditor(typeof(object),false)]
@@ -36,7 +34,6 @@ namespace OutlookInspired.Win.Editors.GridListEditor{
             if (Control == null) return;
             var columnView = Control.ColumnView;
             columnView.SelectionChanged += ColumnViewOnSelectionChanged;
-            columnView.DoubleClick += ColumnViewOnDoubleClick;
             columnView.DataSourceChanged+=ColumnViewOnDataSourceChanged;
             columnView.GridControl.DataSource = dataSource;
             if (columnView is GridView gridView){
@@ -53,7 +50,6 @@ namespace OutlookInspired.Win.Editors.GridListEditor{
             base.BreakLinksToControls();
             if (Control == null) return;
             Control.ColumnView.SelectionChanged -= ColumnViewOnSelectionChanged;
-            Control.ColumnView.DoubleClick -= ColumnViewOnDoubleClick;
             Control.ColumnView.DataSourceChanged-=ColumnViewOnDataSourceChanged;
         }
 
@@ -69,15 +65,7 @@ namespace OutlookInspired.Win.Editors.GridListEditor{
                 Control.ColumnView.GridControl.LevelTree.Nodes.Remove(gridLevelNode);
             }
         }
-
-        private void ColumnViewOnDoubleClick(object sender, EventArgs e){
-            // if (!IsNotGroupedRow()) return;
-            // OnProcessSelectedItem();
-        }
-
-        bool IsNotGroupedRow( ) 
-            => Control.ColumnView is not GridView view|| !view.IsGroupRow(Control.ColumnView.FocusedRowHandle);
-
+        
         private void ColumnViewOnSelectionChanged(object sender, SelectionChangedEventArgs e){
             OnFocusedObjectChanging();
             FocusedObject = GetSelectedObjects().Cast<object>().FirstOrDefault();

@@ -30,6 +30,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Images\Welcome.png" />
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
     <None Remove="Images\Skype.svg" />
     <EmbeddedResource Include="Images\Skype.svg" />
@@ -109,7 +110,7 @@
     <None Remove="Resources\Welcome.docx" />
     <None Remove="Images\Welcome.png" />
     <None Remove="Resources\Welcome.pdf" />
-    <EmbeddedResource Include="Resources\Welcome.pdf" />
+    <None Remove="Resources\Welcome.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" />
