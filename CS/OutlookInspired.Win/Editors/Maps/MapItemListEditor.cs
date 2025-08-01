@@ -29,11 +29,11 @@ namespace OutlookInspired.Win.Editors.Maps{
             var bingKey = ServiceProvider.GetService<IMapApiKeyProvider>().Key;
             var mapControl = new MapControl();
             _zoomToRegionService = (IZoomToRegionService)((IServiceProvider)mapControl).GetService(typeof(IZoomToRegionService));
-            _imageLayer = new ImageLayer{ DataProvider =new BingMapDataProvider(){ BingKey = bingKey,Kind = BingMapKind.Road} };
+            _imageLayer = new ImageLayer{ DataProvider =new AzureMapDataProvider(){ AzureKey = bingKey} };
             _imageLayer.Error+=ImageLayerOnError;
             mapControl.Layers.Add(_imageLayer);
             mapControl.Layers.AddRange(new LayerBase[]{
-                new InformationLayer{ DataProvider = new BingSearchDataProvider(){BingKey = bingKey} },
+                new InformationLayer{ DataProvider = new AzureSearchDataProvider(){AzureKey = bingKey} },
             });
             mapControl.ZoomLevel = 8;
             mapControl.Dock=DockStyle.Fill;

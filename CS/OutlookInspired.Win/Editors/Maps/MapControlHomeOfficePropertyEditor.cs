@@ -15,33 +15,38 @@ namespace OutlookInspired.Win.Editors.Maps{
     public class MapControlHomeOfficePropertyEditor(Type objectType, IModelMemberViewItem model)
         : WinPropertyEditor(objectType, model){
         private ImageLayer _imageLayer;
-        private BingRouteDataProvider _routeDataProvider;
+        private AzureRouteDataProvider _routeDataProvider;
         private GeoPoint _homeOfficePoint;
         private MapControl _mapControl;
 
         protected override object CreateControlCore(){
-            var bingKey = ServiceProvider.GetService<IMapApiKeyProvider>().Key;
+            var azureKey = ServiceProvider.GetService<IMapApiKeyProvider>().Key;
             _mapControl = new MapControl();
-            _imageLayer = new ImageLayer{ DataProvider =new BingMapDataProvider(){ BingKey = bingKey,Kind = BingMapKind.Road} };
+            _imageLayer = new ImageLayer{ DataProvider =new AzureMapDataProvider(){ AzureKey = azureKey
+                // ,Kind = AzureMapKind.Road
+                } 
+            };
             _imageLayer.Error+=ImageLayerOnError;
             _mapControl.Layers.Add(_imageLayer);
             _mapControl.Layers.AddRange(new LayerBase[]{
-                new InformationLayer{ DataProvider = new BingGeocodeDataProvider(){BingKey =bingKey } },
-                new InformationLayer{ DataProvider = new BingSearchDataProvider(){BingKey = bingKey} },
+                new InformationLayer{ DataProvider = new AzureGeocodeDataProvider(){AzureKey =azureKey } },
+                new InformationLayer{ DataProvider = new AzureSearchDataProvider(){AzureKey = azureKey} },
                 
             });
             var modelHomeOffice = (((IModelOptionsHomeOffice)View.Model.Application.Options).HomeOffice);
             _homeOfficePoint = new GeoPoint(modelHomeOffice.Latitude,modelHomeOffice.Longitude);
-            _routeDataProvider = new BingRouteDataProvider(){ BingKey = bingKey,RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile} };
+            _routeDataProvider = new AzureRouteDataProvider(){ AzureKey = azureKey,
+                // RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile} 
+            };
             var routeLayer = RouteLayer();
             AddRoutePoints(routeLayer);
             _mapControl.Layers.Add(routeLayer);
             _routeDataProvider.RouteCalculated+=RouteDataProviderOnRouteCalculated;
-            CalculateRoute(BingTravelMode.Driving);
+            CalculateRoute(AzureTravelMode.Car);
             return _mapControl;
         }
 
-        private void RouteDataProviderOnRouteCalculated(object sender, BingRouteCalculatedEventArgs e){
+        private void RouteDataProviderOnRouteCalculated(object sender, AzureRouteCalculatedEventArgs e){
             var mapsMarker = ((IMapsMarker)View.CurrentObject);
             var zoomToRegionService = (IZoomToRegionService)((IServiceProvider)_mapControl).GetService(typeof(IZoomToRegionService));
             ZoomTo(zoomToRegionService,_homeOfficePoint, new GeoPoint(mapsMarker.Latitude,mapsMarker.Longitude));
@@ -59,12 +64,11 @@ namespace OutlookInspired.Win.Editors.Maps{
         static double CalculatePadding(double margin,double delta) 
             => delta > 0 ? Math.Max(0.1, delta * margin) : delta < 0 ? Math.Min(-0.1, delta * margin) : 0;
 
-        public void CalculateRoute(BingTravelMode bingTravelMode){
-            _routeDataProvider.RouteOptions.Mode=bingTravelMode;
+        public void CalculateRoute(AzureTravelMode travelMode){
             var mapsMarker = (IMapsMarker)View.CurrentObject;
             _routeDataProvider.CalculateRoute(new[]
             { new RouteWaypoint("Home Office", _homeOfficePoint), new RouteWaypoint(mapsMarker.Title,
-                new GeoPoint(mapsMarker.Latitude, mapsMarker.Longitude)) }.ToList());
+                new GeoPoint(mapsMarker.Latitude, mapsMarker.Longitude)) }.ToList(),new AzureRouteOptions(){TravelMode = travelMode,});
         }
 
         public void AddRoutePoints(InformationLayer routeLayer){

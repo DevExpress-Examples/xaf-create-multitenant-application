@@ -12,6 +12,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;NU1507</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoWarn>1701;1702;NU1507</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Controllers\Order\ShipmentDetailController.cs" />
     <Compile Update="Features\Customers\CustomerGridView.cs">

@@ -8,6 +8,12 @@
     <Configurations>Debug;Release;EasyTest</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;NU1507</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoWarn>1701;1702;NU1507</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <!-- Essential DevExpress Package References -->
     <PackageReference Include="DevExpress.ExpressApp.Blazor" />
