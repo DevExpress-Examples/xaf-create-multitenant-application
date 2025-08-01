@@ -10,72 +10,73 @@ using OutlookInspired.Module.Attributes;
 using OutlookInspired.Module.Features;
 using OutlookInspired.Module.Features.CloneView;
 using OutlookInspired.Module.Features.Maps;
+using BaseEditorAliases = DevExpress.ExpressApp.Editors.EditorAliases;
 
-
-namespace OutlookInspired.Module.BusinessObjects{
+namespace OutlookInspired.Module.BusinessObjects {
     [XafDefaultProperty(nameof(InvoiceNumber))]
     [CloneView(CloneViewType.DetailView, ChildDetailView)]
     [CloneView(CloneViewType.DetailView, MapsDetailView)]
     [CloneView(CloneViewType.DetailView, InvoiceDetailView)]
     [CloneView(CloneViewType.ListView, ListViewDetail)]
-    [ImageName("BO_Order")][VisibleInReports(true)]
-    public class Order :OutlookInspiredBaseObject, IViewFilter,IRouteMapsMarker{
+    [ImageName("BO_Order")]
+    [VisibleInReports(true)]
+    public class Order : OutlookInspiredBaseObject, IViewFilter, IRouteMapsMarker {
         public const string MapsDetailView = "Order_DetailView_Maps";
         public const string InvoiceDetailView = "Order_Invoice_DetailView";
         public const string ChildDetailView = "Order_DetailView_Child";
         public const string ListViewDetail = "Order_ListView_Detail";
-        
+
         [XafDisplayName("Invoice #")]
-        [FontSizeDelta(4)][MaxLength(100)]
-        public  virtual string InvoiceNumber { get; set; }
-        
+        [FontSizeDelta(4)]
+        [MaxLength(100)]
+        public virtual string InvoiceNumber { get; set; }
+
         public virtual Customer Customer { get; set; }
         public virtual CustomerStore Store { get; set; }
         [MaxLength(100)]
-        public  virtual string PONumber { get; set; }
+        public virtual string PONumber { get; set; }
         public virtual Employee Employee { get; set; }
-        public  virtual DateOnly OrderDate { get; set; }
+        public virtual DateOnly OrderDate { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal SaleAmount { get; set; }
+        public virtual decimal SaleAmount { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal ShippingAmount { get; set; }
+        public virtual decimal ShippingAmount { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal TotalAmount { get; set; }
+        public virtual decimal TotalAmount { get; set; }
 
         [Browsable(false)]
         public virtual int Year => OrderDate.Year;
-        public  virtual DateTime? ShipDate { get; set; }
-        public  virtual OrderShipMethod ShipMethod { get; set; }
+        public virtual DateTime? ShipDate { get; set; }
+        public virtual OrderShipMethod ShipMethod { get; set; }
         [EditorAlias(EditorAliases.DxHtmlPropertyEditor)]
-        public  virtual byte[] OrderTerms { get; set; }
+        public virtual byte[] OrderTerms { get; set; }
         [Aggregated]
-        public virtual ObservableCollection<OrderItem> OrderItems{ get; set; } = new();
-        public  virtual ShipmentCourier ShipmentCourier { get; set; }
+        public virtual ObservableCollection<OrderItem> OrderItems { get; set; } = new();
+        public virtual ShipmentCourier ShipmentCourier { get; set; }
         [EditorAlias(EditorAliases.EnumImageOnlyEditor)]
-        public  virtual ShipmentStatus ShipmentStatus { get; set; }
+        public virtual ShipmentStatus ShipmentStatus { get; set; }
 
         [HideInUI(HideInUI.DetailView)]
         [XafDisplayName(nameof(ShipmentStatus))]
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit, ImageSizeMode = ImageSizeMode.Zoom)]
         public virtual byte[] ShipmentStatusImage => ImageLoader.Instance.GetEnumValueImageInfo(@ShipmentStatus).ImageBytes;
 
-        [EditorAlias(EditorAliases.PdfViewerEditor)]
+        [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
         [HideInUI(HideInUI.DetailView)]
         [NotMapped]
-        public virtual byte[] ShipmentDetail{ get; set; } = [];
-        
-        
-        [EditorAlias(EditorAliases.PdfViewerEditor)]
+        public virtual byte[] ShipmentDetail { get; set; } = [];
+
+        [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
         [VisibleInDetailView(false)]
         [NotMapped]
-        public virtual byte[] InvoiceDocument{ get; set; } = [];
+        public virtual byte[] InvoiceDocument { get; set; } = [];
         [EditorAlias(EditorAliases.DxHtmlPropertyEditor)]
-        public  virtual byte[] Comments { get; set; }
+        public virtual byte[] Comments { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal RefundTotal { get; set; }
+        public virtual decimal RefundTotal { get; set; }
         [Column(TypeName = CurrencyType)]
-        public  virtual decimal PaymentTotal { get; set; }
+        public virtual decimal PaymentTotal { get; set; }
 
         [HideInUI(HideInUI.ListView)]
         [PersistentAlias("[<TaxRate>][State = ^.Customer.BillingAddressState].Single(Rate) * TotalAmount")]
@@ -84,29 +85,27 @@ namespace OutlookInspired.Module.BusinessObjects{
         [PersistentAlias("Iif(" + nameof(PaymentTotal) + "=0 AND " + nameof(RefundTotal) + "=0,0,Iif(" +
                          nameof(RefundTotal) + "=" + nameof(TotalAmount) + ",3,Iif(" + nameof(PaymentTotal) + "=" +
                          nameof(TotalAmount) + ",1,2)))")]
-        public PaymentStatus PaymentStatus 
+        public PaymentStatus PaymentStatus
             => Enum.TryParse(EvaluateAlias() as string, out PaymentStatus result) ? result : PaymentStatus.Other;
 
         [HideInUI(HideInUI.DetailView)]
         [XafDisplayName(nameof(ShipmentStatus))]
         [ImageEditor(ListViewImageEditorMode = ImageEditorMode.PictureEdit,
-            DetailViewImageEditorMode = ImageEditorMode.PictureEdit,ImageSizeMode = ImageSizeMode.Zoom)]
+            DetailViewImageEditorMode = ImageEditorMode.PictureEdit, ImageSizeMode = ImageSizeMode.Zoom)]
         public byte[] PaymentStatusImage => ImageLoader.Instance.GetEnumValueImageInfo(PaymentStatus).ImageBytes;
-        
-        public double ActualWeight 
+        public double ActualWeight
             => OrderItems == null ? 0 : OrderItems.Where(item => item.Product != null)
                     .Sum(item => item.Product.Weight * item.ProductUnits);
 
         [EditorAlias(EditorAliases.MapHomeOfficePropertyEditor)]
-        public Location Location => new(){Latitude = ((IBaseMapsMarker)this).Latitude, Longitude = ((IBaseMapsMarker)this).Longitude };
+        public Location Location => new() { Latitude = ((IBaseMapsMarker)this).Latitude, Longitude = ((IBaseMapsMarker)this).Longitude };
         string IBaseMapsMarker.Title => Store?.Customer.Name;
 
-        double IBaseMapsMarker.Latitude => Store?.Latitude??0;
+        double IBaseMapsMarker.Latitude => Store?.Latitude ?? 0;
 
-        double IBaseMapsMarker.Longitude => Store?.Longitude??0;
-
+        double IBaseMapsMarker.Longitude => Store?.Longitude ?? 0;
     }
-    
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum OrderShipMethod {
         Ground, Air
@@ -127,9 +126,9 @@ namespace OutlookInspired.Module.BusinessObjects{
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PaymentStatus {
         [ImageName("PaymentUnPaid")]
-        Unpaid, 
+        Unpaid,
         [ImageName("PaymentPaid")]
-        PaidInFull, 
+        PaidInFull,
         [ImageName("PaymentRefund")]
         RefundInFull,
         Other
