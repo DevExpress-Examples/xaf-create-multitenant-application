@@ -28,9 +28,6 @@ namespace OutlookInspired.Module.BusinessObjects{
 		public const string ChildDetailView = "Employee_DetailView_Child";
 		public const string LayoutViewListView = "EmployeeLayoutView_ListView";
 		
-		[NotMapped][Browsable(false)]
-		public new IObjectSpace ObjectSpace{ get; set; }
-		
 		object IResource.Id => ID;
 
 		[EditorAlias(EditorAliases.MapHomeOfficePropertyEditor)]

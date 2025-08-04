@@ -24,7 +24,7 @@ namespace OutlookInspired.Module.Features.Orders{
             };
 
         public static byte[] MailMergeInvoice( Order order){
-            var template = MailMergeData(order.ObjectSpace,"Order").Template;
+            var template = MailMergeData(((IObjectSpaceLink)order).ObjectSpace,"Order").Template;
             var richEditDocumentServer = CreateDocumentServer(template,order);
             return MailMergeInvoice(richEditDocumentServer, order);
         }
@@ -45,7 +45,7 @@ namespace OutlookInspired.Module.Features.Orders{
         static void CalculateDocumentVariable(CalculateDocumentVariableEventArgs e,Order order, IRichEditDocumentServer richEditDocumentServer){
             switch (e.VariableName){
                 case nameof(Order.OrderItems):
-                    MailMerge(richEditDocumentServer,MailMergeData(order.ObjectSpace,"OrderItem"),MergeMode.JoinTables, order.OrderItems.ToArray());
+                    MailMerge(richEditDocumentServer,MailMergeData(((IObjectSpaceLink)order).ObjectSpace,"OrderItem"),MergeMode.JoinTables, order.OrderItems.ToArray());
                     e.PreserveInsertedContentFormatting = true;
                     e.KeepLastParagraph = false;
                     e.Value = richEditDocumentServer;
