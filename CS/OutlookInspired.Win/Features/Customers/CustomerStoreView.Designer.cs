@@ -51,19 +51,29 @@
             // gridControl1
             // 
             gridControl1.Dock = DockStyle.Fill;
+            gridControl1.EmbeddedNavigator.Margin = new Padding(2);
             gridControl1.Location = new Point(0, 0);
             gridControl1.MainView = layoutView1;
+            gridControl1.Margin = new Padding(2);
             gridControl1.Name = "gridControl1";
-            gridControl1.Size = new Size(1290, 1077);
+            gridControl1.Size = new Size(1032, 861);
             gridControl1.TabIndex = 0;
             gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { layoutView1 });
             // 
             // layoutView1
             // 
-            layoutView1.CardMinSize = new Size(245, 216);
+            layoutView1.CardMinSize = new Size(196, 173);
             layoutView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.LayoutViewColumn[] { gridColumnCrestLargeImage, gridColumnCrestCityName, gridColumnAddressLine });
+            layoutView1.DetailHeight = 280;
             layoutView1.GridControl = gridControl1;
             layoutView1.Name = "layoutView1";
+            layoutView1.OptionsBehavior.AllowExpandCollapse = false;
+            layoutView1.OptionsBehavior.AllowRuntimeCustomization = false;
+            layoutView1.OptionsBehavior.Editable = false;
+            layoutView1.OptionsBehavior.ReadOnly = true;
+            layoutView1.OptionsFilter.AllowFilterEditor = false;
+            layoutView1.OptionsView.AllowHotTrackFields = false;
+            layoutView1.OptionsView.FocusRectStyle = DevExpress.XtraGrid.Views.Layout.FocusRectStyle.None;
             layoutView1.OptionsView.ShowCardCaption = false;
             layoutView1.OptionsView.ShowHeaderPanel = false;
             layoutView1.OptionsView.ViewMode = DevExpress.XtraGrid.Views.Layout.LayoutViewMode.MultiRow;
@@ -74,17 +84,22 @@
             gridColumnCrestLargeImage.Caption = "image";
             gridColumnCrestLargeImage.FieldName = "Crest.LargeImage";
             gridColumnCrestLargeImage.LayoutViewField = layoutViewField_gridColumnCrestLargeImage;
-            gridColumnCrestLargeImage.MinWidth = 30;
+            gridColumnCrestLargeImage.MinWidth = 24;
             gridColumnCrestLargeImage.Name = "gridColumnCrestLargeImage";
-            gridColumnCrestLargeImage.Width = 112;
+            gridColumnCrestLargeImage.OptionsColumn.AllowEdit = false;
+            gridColumnCrestLargeImage.OptionsColumn.AllowFocus = false;
+            gridColumnCrestLargeImage.OptionsColumn.AllowGroup = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnCrestLargeImage.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnCrestLargeImage.OptionsFilter.AllowAutoFilter = false;
+            gridColumnCrestLargeImage.OptionsFilter.AllowFilter = false;
+            gridColumnCrestLargeImage.Width = 90;
             // 
             // layoutViewField_gridColumnCrestLargeImage
             // 
-            layoutViewField_gridColumnCrestLargeImage.EditorPreferredWidth = 211;
+            layoutViewField_gridColumnCrestLargeImage.EditorPreferredWidth = 169;
             layoutViewField_gridColumnCrestLargeImage.Location = new Point(0, 0);
             layoutViewField_gridColumnCrestLargeImage.Name = "layoutViewField_gridColumnCrestLargeImage";
-            layoutViewField_gridColumnCrestLargeImage.Size = new Size(215, 30);
-            layoutViewField_gridColumnCrestLargeImage.TextSize = new Size(0, 0);
+            layoutViewField_gridColumnCrestLargeImage.Size = new Size(173, 24);
             layoutViewField_gridColumnCrestLargeImage.TextVisible = false;
             // 
             // gridColumnCrestCityName
@@ -95,19 +110,24 @@
             gridColumnCrestCityName.Caption = "City";
             gridColumnCrestCityName.FieldName = "Crest.CityName";
             gridColumnCrestCityName.LayoutViewField = layoutViewField_gridColumnCrestCityName;
-            gridColumnCrestCityName.MinWidth = 30;
+            gridColumnCrestCityName.MinWidth = 24;
             gridColumnCrestCityName.Name = "gridColumnCrestCityName";
-            gridColumnCrestCityName.Width = 112;
+            gridColumnCrestCityName.OptionsColumn.AllowEdit = false;
+            gridColumnCrestCityName.OptionsColumn.AllowFocus = false;
+            gridColumnCrestCityName.OptionsColumn.AllowGroup = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnCrestCityName.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnCrestCityName.OptionsFilter.AllowAutoFilter = false;
+            gridColumnCrestCityName.OptionsFilter.AllowFilter = false;
+            gridColumnCrestCityName.Width = 90;
             // 
             // layoutViewField_gridColumnCrestCityName
             // 
             layoutViewField_gridColumnCrestCityName.AppearanceItemCaption.Options.UseTextOptions = true;
             layoutViewField_gridColumnCrestCityName.AppearanceItemCaption.TextOptions.WordWrap = DevExpress.Utils.WordWrap.NoWrap;
-            layoutViewField_gridColumnCrestCityName.EditorPreferredWidth = 221;
-            layoutViewField_gridColumnCrestCityName.Location = new Point(0, 30);
+            layoutViewField_gridColumnCrestCityName.EditorPreferredWidth = 177;
+            layoutViewField_gridColumnCrestCityName.Location = new Point(0, 24);
             layoutViewField_gridColumnCrestCityName.Name = "layoutViewField_gridColumnCrestCityName";
-            layoutViewField_gridColumnCrestCityName.Size = new Size(225, 30);
-            layoutViewField_gridColumnCrestCityName.TextSize = new Size(0, 0);
+            layoutViewField_gridColumnCrestCityName.Size = new Size(183, 26);
             layoutViewField_gridColumnCrestCityName.TextVisible = false;
             // 
             // gridColumnAddressLine
@@ -118,19 +138,24 @@
             gridColumnAddressLine.Caption = "Address";
             gridColumnAddressLine.FieldName = "AddressLine";
             gridColumnAddressLine.LayoutViewField = layoutViewField_gridColumnAddressLine;
-            gridColumnAddressLine.MinWidth = 30;
+            gridColumnAddressLine.MinWidth = 24;
             gridColumnAddressLine.Name = "gridColumnAddressLine";
-            gridColumnAddressLine.Width = 112;
+            gridColumnAddressLine.OptionsColumn.AllowEdit = false;
+            gridColumnAddressLine.OptionsColumn.AllowFocus = false;
+            gridColumnAddressLine.OptionsColumn.AllowGroup = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnAddressLine.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            gridColumnAddressLine.OptionsFilter.AllowAutoFilter = false;
+            gridColumnAddressLine.OptionsFilter.AllowFilter = false;
+            gridColumnAddressLine.Width = 90;
             // 
             // layoutViewField_gridColumnAddressLine
             // 
             layoutViewField_gridColumnAddressLine.AppearanceItemCaption.Options.UseTextOptions = true;
             layoutViewField_gridColumnAddressLine.AppearanceItemCaption.TextOptions.WordWrap = DevExpress.Utils.WordWrap.NoWrap;
-            layoutViewField_gridColumnAddressLine.EditorPreferredWidth = 221;
-            layoutViewField_gridColumnAddressLine.Location = new Point(0, 60);
+            layoutViewField_gridColumnAddressLine.EditorPreferredWidth = 177;
+            layoutViewField_gridColumnAddressLine.Location = new Point(0, 50);
             layoutViewField_gridColumnAddressLine.Name = "layoutViewField_gridColumnAddressLine";
-            layoutViewField_gridColumnAddressLine.Size = new Size(225, 30);
-            layoutViewField_gridColumnAddressLine.TextSize = new Size(0, 0);
+            layoutViewField_gridColumnAddressLine.Size = new Size(183, 26);
             layoutViewField_gridColumnAddressLine.TextVisible = false;
             // 
             // layoutViewCard1
@@ -145,12 +170,10 @@
             // 
             // item1
             // 
-            item1.AllowHotTrack = false;
             item1.CustomizationFormText = "item1";
-            item1.Location = new Point(215, 0);
+            item1.Location = new Point(173, 0);
             item1.Name = "item1";
-            item1.Size = new Size(10, 30);
-            item1.TextSize = new Size(0, 0);
+            item1.Size = new Size(10, 24);
             // 
             // labelControl1
             // 
@@ -158,20 +181,22 @@
             labelControl1.Dock = DockStyle.Bottom;
             labelControl1.LineLocation = DevExpress.XtraEditors.LineLocation.Top;
             labelControl1.LineVisible = true;
-            labelControl1.Location = new Point(0, 1077);
+            labelControl1.Location = new Point(0, 861);
+            labelControl1.Margin = new Padding(2);
             labelControl1.Name = "labelControl1";
-            labelControl1.Size = new Size(94, 23);
+            labelControl1.Size = new Size(75, 19);
             labelControl1.TabIndex = 3;
             labelControl1.Text = "labelControl1";
             // 
             // CustomerStoreView
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(gridControl1);
             Controls.Add(labelControl1);
+            Margin = new Padding(2);
             Name = "CustomerStoreView";
-            Size = new Size(1290, 1100);
+            Size = new Size(1032, 880);
             ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutViewField_gridColumnCrestLargeImage).EndInit();
