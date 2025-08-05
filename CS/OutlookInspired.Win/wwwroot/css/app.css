@@ -1,7 +1,15 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-
+html, body, #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.fill-container-editor {
+    height: 100%;
+}
 h1:focus {
     outline: none;
 }
