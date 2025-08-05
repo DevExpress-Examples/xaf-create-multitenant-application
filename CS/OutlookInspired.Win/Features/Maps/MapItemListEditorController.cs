@@ -52,13 +52,44 @@ namespace OutlookInspired.Win.Features.Maps{
         
         void ZoomTo(GeoPoint pointA, GeoPoint pointB, double margin = 0.2){
             if (pointA == null || pointB == null || _mapItemListEditor.ZoomService == null) return;
-            var (latDiff, longDiff) = (pointB.Latitude - pointA.Latitude, pointB.Longitude - pointA.Longitude);
-            var (latPad, longPad) = (CalculatePadding(margin,latDiff), CalculatePadding(margin,longDiff));
-            _mapItemListEditor.ZoomService.ZoomToRegion(new GeoPoint(pointA.Latitude - latPad, pointA.Longitude - longPad),
-                new GeoPoint(pointB.Latitude + latPad, pointB.Longitude + longPad),
-                new GeoPoint((pointA.Latitude + pointB.Latitude) / 2, (pointA.Longitude + pointB.Longitude) / 2));
+            var minLatitude = Math.Min(pointA.Latitude, pointB.Latitude);
+            var maxLatitude = Math.Max(pointA.Latitude, pointB.Latitude);
+            var latitudeDifference = maxLatitude - minLatitude;
+            var lon1 = pointA.Longitude;
+            var lon2 = pointB.Longitude;
+            double longitudeSpan;
+            double centerLongitude;
+            bool crossesAntimeridian = Math.Abs(lon1 - lon2) > 180.0;
+            if (crossesAntimeridian){
+                longitudeSpan = 360.0 - Math.Abs(lon1 - lon2);
+                var unwrappedCenter = (lon1 + lon2) / 2.0;
+                centerLongitude = (Math.Abs(unwrappedCenter) < 90.0) ? unwrappedCenter + 180.0 : unwrappedCenter;
+                if (centerLongitude > 180.0) centerLongitude -= 360.0;
+                if (centerLongitude < -180.0) centerLongitude += 360.0;
+            }
+            else{
+                longitudeSpan = Math.Abs(lon1 - lon2);
+                centerLongitude = (lon1 + lon2) / 2.0;
+            }
+            var latitudePadding = CalculatePadding(margin, latitudeDifference);
+            var longitudePadding = CalculatePadding(margin, longitudeSpan);
+            var totalLatitudeSpan = latitudeDifference + 2 * latitudePadding;
+            var totalLongitudeSpan = longitudeSpan + 2 * longitudePadding;
+            
+            const double minimumVisibleSpan = 0.01; 
+            if (totalLatitudeSpan < minimumVisibleSpan){
+                totalLatitudeSpan = minimumVisibleSpan;
+            }
+            if (totalLongitudeSpan < minimumVisibleSpan){
+                totalLongitudeSpan = minimumVisibleSpan;
+            }
+            var centerLatitude = (minLatitude + maxLatitude) / 2.0;
+            var southWestCorner = new GeoPoint(centerLatitude - totalLatitudeSpan / 2.0, centerLongitude - totalLongitudeSpan / 2.0);
+            var northEastCorner = new GeoPoint(centerLatitude + totalLatitudeSpan / 2.0, centerLongitude + totalLongitudeSpan / 2.0);
+            var centerPoint = new GeoPoint(centerLatitude, centerLongitude);
+            
+            _mapItemListEditor.ZoomService.ZoomToRegion(southWestCorner, northEastCorner, centerPoint);
         }
-        
         static double CalculatePadding(double margin,double delta) 
             => delta > 0 ? Math.Max(0.1, delta * margin) : delta < 0 ? Math.Min(-0.1, delta * margin) : 0;
 
