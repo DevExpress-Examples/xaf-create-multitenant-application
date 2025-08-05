@@ -22,10 +22,7 @@ namespace OutlookInspired.Win.Editors.Maps{
         protected override object CreateControlCore(){
             var azureKey = ServiceProvider.GetService<IMapApiKeyProvider>().Key;
             _mapControl = new MapControl();
-            _imageLayer = new ImageLayer{ DataProvider =new AzureMapDataProvider(){ AzureKey = azureKey
-                // ,Kind = AzureMapKind.Road
-                } 
-            };
+            _imageLayer = new ImageLayer{ DataProvider =new AzureMapDataProvider(){ AzureKey = azureKey,Tileset = AzureTileset.BaseRoad} };
             _imageLayer.Error+=ImageLayerOnError;
             _mapControl.Layers.Add(_imageLayer);
             _mapControl.Layers.AddRange(new LayerBase[]{
@@ -35,9 +32,7 @@ namespace OutlookInspired.Win.Editors.Maps{
             });
             var modelHomeOffice = (((IModelOptionsHomeOffice)View.Model.Application.Options).HomeOffice);
             _homeOfficePoint = new GeoPoint(modelHomeOffice.Latitude,modelHomeOffice.Longitude);
-            _routeDataProvider = new AzureRouteDataProvider(){ AzureKey = azureKey,
-                // RouteOptions = { DistanceUnit = DistanceMeasureUnit.Mile} 
-            };
+            _routeDataProvider = new AzureRouteDataProvider(){ AzureKey = azureKey };
             var routeLayer = RouteLayer();
             AddRoutePoints(routeLayer);
             _mapControl.Layers.Add(routeLayer);
