@@ -70,7 +70,7 @@ namespace OutlookInspired.Module.BusinessObjects {
         [EditorAlias(BaseEditorAliases.PdfViewerPropertyEditor)]
         [VisibleInDetailView(false)]
         [NotMapped]
-        public virtual byte[] InvoiceDocument { get; set; } = [];
+        public virtual byte[] InvoiceDocument { get; set; } 
         [EditorAlias(EditorAliases.DxHtmlPropertyEditor)]
         public virtual byte[] Comments { get; set; }
         [Column(TypeName = CurrencyType)]
