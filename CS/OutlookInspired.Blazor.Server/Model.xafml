@@ -391,27 +391,36 @@
     <DetailView Id="Order_DetailView_Maps">
       <Items>
         <PropertyEditor Id="Customer" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
-        <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" />
-        <PropertyEditor Id="Logo" ImageEditorCustomHeight="100" ImageEditorFixedHeight="100" ImageEditorFixedWidth="100" AllowEdit="False" />
+        <PropertyEditor Id="InvoiceNumber" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.Label.LabelPropertyEditor" DisplayFormat="Invoice #: {0}" />
+        <PropertyEditor Id="Logo" ImageEditorCustomHeight="50" ImageEditorFixedHeight="50" ImageEditorFixedWidth="50" AllowEdit="False" />
       </Items>
       <Layout>
         <LayoutGroup Id="Main">
           <LayoutGroup Id="SimpleEditors">
-            <LayoutGroup Id="Autoa0eb106e-c0d0-41bf-b74e-ed9302e3ce38" ShowCaption="False" Caption="Autoa0eb106e-c0d0-41bf-b74e-ed9302e3ce38(3)" Index="0" RelativeSize="57.582417582417584" IsNewNode="True">
-              <LayoutItem Id="Location" ViewItem="Location" Index="0" RelativeSize="4.551539491298527" ShowCaption="False" IsNewNode="True" />
-              <LayoutItem Id="Item3" Index="1" RelativeSize="95.44846050870147" IsNewNode="True" />
-            </LayoutGroup>
-            <LayoutGroup Id="Auto13cb3f67-43cc-480f-865f-41efcd1565e4" RelativeSize="42.417582417582416">
-              <LayoutGroup Id="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da" RelativeSize="10.7095046854083">
-                <LayoutItem Id="Logo" RelativeSize="26.424870466321245" />
-                <LayoutGroup Id="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c" RelativeSize="73.57512953367876">
-                  <LayoutItem Id="Customer" RelativeSize="42.5" />
-                  <LayoutItem Id="Item1" RelativeSize="12.5" />
-                  <LayoutItem Id="InvoiceNumber" RelativeSize="32.5" />
-                  <LayoutItem Id="Item2" RelativeSize="12.5" />
+            <LayoutGroup Id="Autoa0eb106e-c0d0-41bf-b74e-ed9302e3ce38" ShowCaption="False" Caption="Autoa0eb106e-c0d0-41bf-b74e-ed9302e3ce38(3)" Index="0" RelativeSize="71.7948717948718" IsNewNode="True">
+              <LayoutGroup Id="Autod60f6046-d036-49af-af7c-9bc7c04bf8c8" ShowCaption="False" Caption="Autod60f6046-d036-49af-af7c-9bc7c04bf8c8(4)" Direction="Horizontal" Index="0" RelativeSize="8.653846153846153" IsNewNode="True">
+                <LayoutItem Id="Logo" ShowCaption="False" ViewItem="Logo" SizeConstraintsType="Custom" MinSize="69, 29" MaxSize="69, 29" Index="0" RelativeSize="10.591133004926109" IsNewNode="True" />
+                <LayoutGroup Id="Auto5ba2b04a-f9ef-43e8-b09d-dd2d302a8087" ShowCaption="False" Caption="Auto5ba2b04a-f9ef-43e8-b09d-dd2d302a8087(6)" Index="1" RelativeSize="89.4088669950739" IsNewNode="True">
+                  <LayoutItem Id="Customer" ShowCaption="False" ViewItem="Customer" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="64, 35" Index="0" RelativeSize="81.48148148148148" IsNewNode="True" />
+                  <LayoutItem Id="Item2" Index="1" RelativeSize="18.51851851851852" IsNewNode="True" />
                 </LayoutGroup>
               </LayoutGroup>
-              <LayoutItem Id="ShipmentDetail" RelativeSize="89.2904953145917" />
+              <LayoutItem Id="Location" ViewItem="Location" Index="1" RelativeSize="4.166666666666667" ShowCaption="False" IsNewNode="True" />
+              <LayoutItem Id="Item3" Index="2" RelativeSize="87.17948717948718" IsNewNode="True" />
+            </LayoutGroup>
+            <LayoutGroup Id="Auto13cb3f67-43cc-480f-865f-41efcd1565e4" RelativeSize="28.205128205128204">
+              <LayoutGroup Id="Auto16c888c9-7e2d-4f16-b9ab-72572d60d7da" RelativeSize="5.288461538461538" Direction="Vertical">
+                <LayoutGroup Id="Auto80b2b6d7-3f7b-44f0-8196-2baca796151c" RelativeSize="100" Direction="Vertical" Index="0">
+                  <LayoutItem Id="Item2" Index="0" RelativeSize="100" Removed="True" />
+                  <LayoutItem Id="ShipmentDetail" ShowCaption="False" ViewItem="ShipmentDetail" CaptionLocation="Top" SizeConstraintsType="Custom" MinSize="64, 21" Index="0" RelativeSize="100" IsNewNode="True" />
+                  <LayoutItem Id="Customer" RelativeSize="100" SizeConstraintsType="Custom" MinSize="64, 35" Removed="True" />
+                  <LayoutItem Id="InvoiceNumber" RelativeSize="31.70731707317073" ShowCaption="False" Removed="True" />
+                  <LayoutItem Id="Item1" RelativeSize="21.73913043478261" Removed="True" />
+                </LayoutGroup>
+                <LayoutItem Id="Logo" RelativeSize="30.53435114503817" SizeConstraintsType="Custom" MinSize="64, 35" MaxSize="64, 0" Removed="True" />
+              </LayoutGroup>
+              <LayoutItem Id="Item1" Index="1" RelativeSize="94.71153846153847" SizeConstraintsType="Custom" MinSize="255, 27" MaxSize="255, 0" IsNewNode="True" />
+              <LayoutItem Id="ShipmentDetail" RelativeSize="3.0023094688221708" SizeConstraintsType="Custom" MinSize="64, 21" MaxSize="0, 0" Removed="True" />
             </LayoutGroup>
             <LayoutItem Id="Location" Removed="True" />
           </LayoutGroup>
