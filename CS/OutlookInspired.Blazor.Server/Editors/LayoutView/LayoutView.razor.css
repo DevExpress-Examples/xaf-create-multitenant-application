@@ -5,8 +5,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     height: 100vh;
-    align-items: flex-start;
-    align-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
 }
 
 .store-card-container > div {

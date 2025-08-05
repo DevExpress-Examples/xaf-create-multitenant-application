@@ -8,14 +8,12 @@
         <img src="@(ToBase64Image(LayoutView.ImageSelector?.Invoke(CurrentObject)))" class="img-fluid" alt="Photo">
       </div>
       <div class="col-md-8">
-        <div class="col-md-8">
-          @foreach (var item in LayoutView.InfoItemsSelector?.Invoke(CurrentObject)??new Dictionary<string, string>()){
-            <div class="mb-2">
-              <small class="text-muted">@item.Key:</small>
-              <p class="ellipsis">@((MarkupString)item.Value)</p>
-            </div>
-          }
-        </div>
+        @foreach (var item in LayoutView.InfoItemsSelector?.Invoke(CurrentObject)??new Dictionary<string, string>()){
+          <div class="mb-2">
+            <small class="text-muted">@item.Key:</small>
+            <p class="ellipsis">@((MarkupString)item.Value)</p>
+          </div>
+        }
       </div>
     </div>
   </div>
