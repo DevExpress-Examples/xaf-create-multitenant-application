@@ -35,7 +35,7 @@ namespace OutlookInspired.Win.Features.Maps{
             colorizer.Colors.BeginUpdate();
             chartControl.GetPaletteEntries(20).ForEach(entry => colorizer.Colors.Add(entry.Color));
             colorizer.Colors.EndUpdate();
-            chartControl.Series[0].View.Colorizer = (DevExpress.XtraCharts.IColorizer)colorizer;
+            chartControl.Series[0].View.Colorizer = (IColorizer)colorizer;
         }
 
     }
