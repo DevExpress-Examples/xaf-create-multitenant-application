@@ -57,30 +57,33 @@
             // gridControl1
             // 
             gridControl1.Dock = DockStyle.Fill;
-            gridControl1.EmbeddedNavigator.Margin = new Padding(4);
             gridControl1.Location = new Point(0, 0);
             gridControl1.MainView = layoutView1;
-            gridControl1.Margin = new Padding(4);
             gridControl1.Name = "gridControl1";
             gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemMemoEdit1 });
-            gridControl1.Size = new Size(1171, 904);
+            gridControl1.Size = new Size(781, 602);
             gridControl1.TabIndex = 0;
             gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { layoutView1 });
             // 
             // layoutView1
             // 
             layoutView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            layoutView1.CardMinSize = new Size(362, 341);
+            layoutView1.CardMinSize = new Size(241, 227);
             layoutView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.LayoutViewColumn[] { colImage, colName, colDescription, layoutViewColumnCost, layoutViewColumnSalesPrice });
-            layoutView1.DetailHeight = 614;
+            layoutView1.DetailHeight = 409;
             layoutView1.GridControl = gridControl1;
             layoutView1.Name = "layoutView1";
+            layoutView1.OptionsBehavior.AllowExpandCollapse = false;
             layoutView1.OptionsBehavior.AllowRuntimeCustomization = false;
             layoutView1.OptionsBehavior.Editable = false;
+            layoutView1.OptionsBehavior.ReadOnly = true;
+            layoutView1.OptionsFilter.AllowFilterEditor = false;
             layoutView1.OptionsFind.AlwaysVisible = true;
             layoutView1.OptionsFind.ShowFindButton = false;
             layoutView1.OptionsFind.ShowSearchNavButtons = false;
             layoutView1.OptionsHeaderPanel.EnableCustomizeButton = false;
+            layoutView1.OptionsView.AllowHotTrackFields = false;
+            layoutView1.OptionsView.FocusRectStyle = DevExpress.XtraGrid.Views.Layout.FocusRectStyle.None;
             layoutView1.OptionsView.ShowCardCaption = false;
             layoutView1.OptionsView.ShowHeaderPanel = false;
             layoutView1.OptionsView.ViewMode = DevExpress.XtraGrid.Views.Layout.LayoutViewMode.MultiRow;
@@ -90,40 +93,40 @@
             // 
             colImage.FieldName = "PrimaryImage.Data";
             colImage.LayoutViewField = layoutViewField_colImage;
-            colImage.MinWidth = 24;
+            colImage.MinWidth = 16;
             colImage.Name = "colImage";
             colImage.OptionsColumn.AllowEdit = false;
             colImage.OptionsColumn.AllowFocus = false;
-            colImage.Width = 64;
+            colImage.OptionsFilter.AllowFilter = false;
+            colImage.Width = 43;
             // 
             // layoutViewField_colImage
             // 
-            layoutViewField_colImage.EditorPreferredWidth = 209;
-            layoutViewField_colImage.Location = new Point(0, 30);
+            layoutViewField_colImage.EditorPreferredWidth = 139;
+            layoutViewField_colImage.Location = new Point(0, 24);
             layoutViewField_colImage.Name = "layoutViewField_colImage";
-            layoutViewField_colImage.Size = new Size(178, 108);
-            layoutViewField_colImage.TextSize = new Size(0, 0);
+            layoutViewField_colImage.Size = new Size(142, 86);
             layoutViewField_colImage.TextVisible = false;
             // 
             // colName
             // 
-            colName.AppearanceCell.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            colName.AppearanceCell.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             colName.AppearanceCell.Options.UseFont = true;
             colName.FieldName = "Name";
             colName.LayoutViewField = layoutViewField_colName;
-            colName.MinWidth = 24;
+            colName.MinWidth = 16;
             colName.Name = "colName";
             colName.OptionsColumn.AllowEdit = false;
             colName.OptionsColumn.AllowFocus = false;
-            colName.Width = 262;
+            colName.OptionsFilter.AllowFilter = false;
+            colName.Width = 175;
             // 
             // layoutViewField_colName
             // 
-            layoutViewField_colName.EditorPreferredWidth = 334;
+            layoutViewField_colName.EditorPreferredWidth = 223;
             layoutViewField_colName.Location = new Point(0, 0);
             layoutViewField_colName.Name = "layoutViewField_colName";
-            layoutViewField_colName.Size = new Size(282, 30);
-            layoutViewField_colName.TextSize = new Size(0, 0);
+            layoutViewField_colName.Size = new Size(225, 24);
             layoutViewField_colName.TextVisible = false;
             // 
             // colDescription
@@ -134,11 +137,12 @@
             colDescription.ColumnEdit = repositoryItemMemoEdit1;
             colDescription.FieldName = "DescriptionString";
             colDescription.LayoutViewField = layoutViewField_colDescription;
-            colDescription.MinWidth = 24;
+            colDescription.MinWidth = 16;
             colDescription.Name = "colDescription";
             colDescription.OptionsColumn.AllowEdit = false;
             colDescription.OptionsColumn.AllowFocus = false;
-            colDescription.Width = 262;
+            colDescription.OptionsFilter.AllowFilter = false;
+            colDescription.Width = 175;
             // 
             // repositoryItemMemoEdit1
             // 
@@ -146,14 +150,13 @@
             // 
             // layoutViewField_colDescription
             // 
-            layoutViewField_colDescription.EditorPreferredWidth = 334;
-            layoutViewField_colDescription.Location = new Point(0, 138);
-            layoutViewField_colDescription.MaxSize = new Size(0, 107);
-            layoutViewField_colDescription.MinSize = new Size(29, 107);
+            layoutViewField_colDescription.EditorPreferredWidth = 223;
+            layoutViewField_colDescription.Location = new Point(0, 110);
+            layoutViewField_colDescription.MaxSize = new Size(0, 71);
+            layoutViewField_colDescription.MinSize = new Size(19, 71);
             layoutViewField_colDescription.Name = "layoutViewField_colDescription";
-            layoutViewField_colDescription.Size = new Size(282, 126);
+            layoutViewField_colDescription.Size = new Size(225, 71);
             layoutViewField_colDescription.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
-            layoutViewField_colDescription.TextSize = new Size(0, 0);
             layoutViewField_colDescription.TextVisible = false;
             // 
             // layoutViewColumnCost
@@ -163,20 +166,21 @@
             layoutViewColumnCost.Caption = "COST";
             layoutViewColumnCost.FieldName = "Cost";
             layoutViewColumnCost.LayoutViewField = layoutViewField_layoutViewColumn1;
-            layoutViewColumnCost.MinWidth = 36;
+            layoutViewColumnCost.MinWidth = 24;
             layoutViewColumnCost.Name = "layoutViewColumnCost";
-            layoutViewColumnCost.Width = 134;
+            layoutViewColumnCost.OptionsFilter.AllowFilter = false;
+            layoutViewColumnCost.Width = 89;
             // 
             // layoutViewField_layoutViewColumn1
             // 
             layoutViewField_layoutViewColumn1.AppearanceItemCaption.ForeColor = Color.Gray;
             layoutViewField_layoutViewColumn1.AppearanceItemCaption.Options.UseForeColor = true;
-            layoutViewField_layoutViewColumn1.EditorPreferredWidth = 120;
-            layoutViewField_layoutViewColumn1.Location = new Point(178, 30);
+            layoutViewField_layoutViewColumn1.EditorPreferredWidth = 80;
+            layoutViewField_layoutViewColumn1.Location = new Point(142, 24);
             layoutViewField_layoutViewColumn1.Name = "layoutViewField_layoutViewColumn1";
-            layoutViewField_layoutViewColumn1.Size = new Size(104, 54);
+            layoutViewField_layoutViewColumn1.Size = new Size(83, 43);
             layoutViewField_layoutViewColumn1.TextLocation = DevExpress.Utils.Locations.Top;
-            layoutViewField_layoutViewColumn1.TextSize = new Size(106, 23);
+            layoutViewField_layoutViewColumn1.TextSize = new Size(72, 16);
             // 
             // layoutViewColumnSalesPrice
             // 
@@ -185,20 +189,21 @@
             layoutViewColumnSalesPrice.Caption = "SALE PRICE";
             layoutViewColumnSalesPrice.FieldName = "SalePrice";
             layoutViewColumnSalesPrice.LayoutViewField = layoutViewField_layoutViewColumn1_1;
-            layoutViewColumnSalesPrice.MinWidth = 36;
+            layoutViewColumnSalesPrice.MinWidth = 24;
             layoutViewColumnSalesPrice.Name = "layoutViewColumnSalesPrice";
-            layoutViewColumnSalesPrice.Width = 134;
+            layoutViewColumnSalesPrice.OptionsFilter.AllowFilter = false;
+            layoutViewColumnSalesPrice.Width = 89;
             // 
             // layoutViewField_layoutViewColumn1_1
             // 
             layoutViewField_layoutViewColumn1_1.AppearanceItemCaption.ForeColor = Color.Gray;
             layoutViewField_layoutViewColumn1_1.AppearanceItemCaption.Options.UseForeColor = true;
-            layoutViewField_layoutViewColumn1_1.EditorPreferredWidth = 120;
-            layoutViewField_layoutViewColumn1_1.Location = new Point(178, 84);
+            layoutViewField_layoutViewColumn1_1.EditorPreferredWidth = 80;
+            layoutViewField_layoutViewColumn1_1.Location = new Point(142, 67);
             layoutViewField_layoutViewColumn1_1.Name = "layoutViewField_layoutViewColumn1_1";
-            layoutViewField_layoutViewColumn1_1.Size = new Size(104, 54);
+            layoutViewField_layoutViewColumn1_1.Size = new Size(83, 43);
             layoutViewField_layoutViewColumn1_1.TextLocation = DevExpress.Utils.Locations.Top;
-            layoutViewField_layoutViewColumn1_1.TextSize = new Size(106, 23);
+            layoutViewField_layoutViewColumn1_1.TextSize = new Size(72, 16);
             // 
             // layoutViewCard1
             // 
@@ -217,22 +222,20 @@
             labelControl1.Dock = DockStyle.Bottom;
             labelControl1.LineLocation = DevExpress.XtraEditors.LineLocation.Top;
             labelControl1.LineVisible = true;
-            labelControl1.Location = new Point(0, 904);
-            labelControl1.Margin = new Padding(4);
+            labelControl1.Location = new Point(0, 602);
             labelControl1.Name = "labelControl1";
-            labelControl1.Size = new Size(108, 28);
+            labelControl1.Size = new Size(75, 19);
             labelControl1.TabIndex = 2;
             labelControl1.Text = "labelControl1";
             // 
             // ProductCardView
             // 
-            AutoScaleDimensions = new SizeF(12F, 30F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(gridControl1);
             Controls.Add(labelControl1);
-            Margin = new Padding(4);
             Name = "ProductCardView";
-            Size = new Size(1171, 932);
+            Size = new Size(781, 621);
             ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutViewField_colImage).EndInit();
