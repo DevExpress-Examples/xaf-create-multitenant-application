@@ -2,7 +2,7 @@
 using DevExpress.ExpressApp.Office.Win;
 using DevExpress.XtraPdfViewer;
 
-namespace OutlookInspired.Win.Features {
+namespace OutlookInspired.Win.Controllers {
     public class PdfViewerController : ViewController<DetailView> {
         protected override void OnActivated() {
             base.OnActivated();
