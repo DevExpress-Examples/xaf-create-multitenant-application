@@ -21,6 +21,7 @@
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" AllowEdit="False">
       <Items>
+        <PropertyEditor Id="CitySales" View="Customer_CitySales_ListView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Logo" ImageEditorCustomHeight="100" ImageEditorFixedHeight="100" ImageEditorFixedWidth="100" AllowEdit="False" ImageSizeMode="Normal" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
