@@ -3,9 +3,9 @@
   <NavigationItems NavigationStyle="Accordion" />
   <Options UIType="TabbedMDI" RestoreTabbedMdiLayout="True" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerBlazorModule" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerBlazorModule" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.3.0" IsNewNode="True" />
   </SchemaModules>
   <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
     <DetailView Id="BlazorRichTextMailMergeObject_DetailView" Caption="Document">
@@ -266,12 +266,8 @@
         <ColumnInfo Id="Subject" Index="0" SortIndex="-1" SortOrder="None" />
       </Columns>
     </ListView>
-    <ListView Id="Employee_ListView" MasterDetailMode="ListViewAndDetailView">
-      <SplitLayout SplitterPosition="800" />
-    </ListView>
-    <ListView Id="EmployeeLayoutView_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.LayoutView.LayoutViewListEditor" DataAccessMode="Client">
-      <SplitLayout SplitterPosition="600" />
-    </ListView>
+    <ListView Id="Employee_ListView" MasterDetailMode="ListViewAndDetailView" Filter="StartsWith([City], 'Glendale')" />
+    <ListView Id="EmployeeLayoutView_ListView" EditorTypeName="OutlookInspired.Blazor.Server.Editors.LayoutView.LayoutViewListEditor" DataAccessMode="Client" />
     <DetailView Id="EmployeeTask_DetailView">
       <Layout>
         <LayoutGroup Id="Main">

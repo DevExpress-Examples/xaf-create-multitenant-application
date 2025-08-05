@@ -47,8 +47,8 @@
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.3.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <DetailView Id="ApplicationUser_DetailView" FreezeLayout="True">
@@ -718,7 +718,7 @@
         <ColumnInfo Id="Department" GroupIndex="0" SortOrder="Ascending" Index="3" />
         <ColumnInfo Id="Email" Index="4" Width="171" />
       </Columns>
-      <SplitLayout SplitterPosition="1262" RelativePosition="70" />
+      <SplitLayout RelativePosition="50" />
       <Variants Current="List">
         <Variant Id="List" ViewID="Employee_ListView" Caption="List" Index="0" IsNewNode="True" />
         <Variant Id="Card" ViewID="EmployeeLayoutView_ListView" Caption="Card" Index="1" IsNewNode="True" />
@@ -733,7 +733,7 @@
       </HiddenActions>
     </ListView>
     <ListView Id="EmployeeLayoutView_ListView" MasterDetailMode="ListViewAndDetailView" DataAccessMode="Client" MasterDetailView="Employee_DetailView_Child">
-      <SplitLayout SplitterPosition="600" RelativePosition="70" />
+      <SplitLayout RelativePosition="50" />
     </ListView>
     <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView">
       <Columns>
