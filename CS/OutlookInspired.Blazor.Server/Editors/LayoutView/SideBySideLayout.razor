@@ -1,4 +1,4 @@
-﻿<div class="card" @onclick="CardClicked" @ondblclick="CardDoubleClicked" style="@(LayoutView.SelectedCards.Contains(this) ? "background-color: grey;" : "")" >
+﻿<div class="card mb-3" @onclick="CardClicked" @ondblclick="CardDoubleClicked" style="@(LayoutView.SelectedCards.Contains(this) ? "background-color: grey;" : "")" >
   <div class="card-header">
     <strong>@(LayoutView.HeaderSelector?.Invoke(CurrentObject)!)</strong>
   </div>
