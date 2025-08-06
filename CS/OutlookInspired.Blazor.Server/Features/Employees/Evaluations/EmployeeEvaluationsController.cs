@@ -7,10 +7,10 @@ using OutlookInspired.Module.BusinessObjects;
 namespace OutlookInspired.Blazor.Server.Features.Employees.Evaluations{
     
     public class EmployeeEvaluationsController:ObjectViewController<ListView,Evaluation>{
-        public EmployeeEvaluationsController() => TargetViewId = Evaluation.EmployeeEvaluationsChildListView;
 
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
+            if (View.Id != Evaluation.EmployeeEvaluationsChildListView) return;
             if (View.Editor is not DxGridListEditor editor) return;
             var subjectDataColumnModel = editor.GridDataColumnModels.First(model => model.FieldName==nameof(Evaluation.Subject));
             subjectDataColumnModel.HeaderCaptionTemplate = _ => _ => { };

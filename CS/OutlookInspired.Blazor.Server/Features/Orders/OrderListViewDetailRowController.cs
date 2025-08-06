@@ -9,13 +9,13 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Orders {
     public class OrderListViewDetailRowController : ViewController<ListView> {
-        public OrderListViewDetailRowController() => TargetViewId = Order.ListViewDetail;
-
+        
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
+            if (View.Id!=Order.ListViewDetail)return;
             if (View.Editor is not DxGridListEditor editor) return;
             editor.GridModel.AutoCollapseDetailRow = true;
-            var orderItemModel = OrderItemModel();
+            var orderItemModel = OrderItemModel();   
             editor.GridModel.DetailRowTemplate = value => {
                 if(value.DataItem is EFCoreServerModeViewRecord viewRecord) {
                     if(viewRecord.ContainsMember("ID")) {

@@ -87,8 +87,6 @@ namespace OutlookInspired.Module.Features.Orders{
     }
 
     public class InvoiceController : ObjectViewController<DetailView, Order>{
-        public InvoiceController() => TargetViewId = Order.ChildDetailView;
-        
         protected override void OnDeactivated(){
             base.OnDeactivated();
             View.CurrentObjectChanged-=ViewOnCurrentObjectChanged;
@@ -100,6 +98,7 @@ namespace OutlookInspired.Module.Features.Orders{
         }
         
         private void ViewOnCurrentObjectChanged(object sender, EventArgs e){
+            if (View.Id!=Order.ChildDetailView)return;
             if (View.CurrentObject is not Order order) return;
             var orderInvoiceDocument = InvoiceReportDocumentController.MailMergeInvoice(order);
             order.InvoiceDocument = ToPdf(orderInvoiceDocument);

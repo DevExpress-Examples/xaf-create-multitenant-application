@@ -4,10 +4,11 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Products{
     public class ProductLayoutViewController:ObjectViewController<ListView, Product>{
-        public ProductLayoutViewController() => TargetViewId = Product.LayoutViewListView;
+        
         
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
+            if (View.Id != Product.LayoutViewListView) return;
             var model = ((LayoutViewListEditor)View.Editor).Control;
             model.ImageSelector = o => ((Product)o).PrimaryImage.Data;
             model.HeaderSelector = o => ((Product)o).Name;
