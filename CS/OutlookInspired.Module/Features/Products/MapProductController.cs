@@ -21,7 +21,7 @@ namespace OutlookInspired.Module.Features.Products{
             var createdView = Application.CreateDetailView(objectSpace,
                 (IModelDetailView)Application.Model.Views[Product.MapsDetailView], false, objectSpace.GetObject(View.CurrentObject));
             e.View=createdView;
-            e.Size=new Size(1024,768);
+            e.Size=new Size(1024,700);
         }
 
         public PopupWindowShowAction MapProductAction{ get; }

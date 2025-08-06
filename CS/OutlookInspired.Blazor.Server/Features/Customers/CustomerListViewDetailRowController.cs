@@ -10,10 +10,11 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Customers {
     public class CustomerListViewDetailRowController : ViewController<ListView> {
-        public CustomerListViewDetailRowController() => TargetViewId = $"{nameof(Customer)}_ListView";
+        
 
         protected override void OnViewControlsCreated() {
             base.OnViewControlsCreated();
+            if (View.Id != $"{nameof(Customer)}_ListView") return;
             if (View.Editor is not DxGridListEditor editor) return;
             editor.GridModel.AutoCollapseDetailRow = true;
             var customerEmployeeModel = CustomerEmployeeModel();

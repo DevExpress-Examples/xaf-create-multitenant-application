@@ -3,10 +3,10 @@
   <NavigationItems NavigationStyle="NavBar" DefaultChildItemsDisplayStyle="List" RootGroupsStyle="OutlookAnimated" />
   <Options UIType="SingleWindowSDI" FormStyle="Ribbon" EnableHtmlFormatting="True" Palette="Office Dark Gray" />
   <SchemaModules>
-    <SchemaModule Name="SchedulerModuleBase" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SchedulerWindowsFormsModule" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="25.1.2.0" IsNewNode="True" />
-    <SchemaModule Name="SystemWindowsFormsModule" Version="25.1.2.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerWindowsFormsModule" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="25.1.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemWindowsFormsModule" Version="25.1.3.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
     <ListView Id="Customer_CitySales_ListView" EditorTypeName="DevExpress.ExpressApp.Chart.Win.ChartListEditor">
@@ -21,6 +21,7 @@
     </DetailView>
     <DetailView Id="Customer_DetailView_Maps" AllowEdit="False">
       <Items>
+        <PropertyEditor Id="CitySales" View="Customer_CitySales_ListView" />
         <PropertyEditor Id="HomeOfficeLine" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
         <PropertyEditor Id="Logo" ImageEditorCustomHeight="100" ImageEditorFixedHeight="100" ImageEditorFixedWidth="100" AllowEdit="False" ImageSizeMode="Normal" />
         <PropertyEditor Id="Name" PropertyEditorType="OutlookInspired.Win.Editors.LabelControlPropertyEditor" />
@@ -190,7 +191,7 @@
       </BandsLayout>
     </ListView>
     <ListView Id="Employee_EvaluationsCreatedBy_ListView" EditorTypeName="DevExpress.ExpressApp.Win.Editors.GridListEditor" />
-    <ListView Id="Employee_ListView" ShowFindPanel="True" DataAccessMode="InstantFeedbackView" Criteria="StartsWith([City], 'Glendale')">
+    <ListView Id="Employee_ListView" ShowFindPanel="True" DataAccessMode="InstantFeedbackView" Criteria="" Filter="StartsWith([City], 'Glendale')">
       <Columns>
         <ColumnInfo Id="User" PropertyEditorType="OutlookInspired.Win.Editors.HyperLinkPropertyEditor" />
       </Columns>
@@ -362,17 +363,5 @@
     <ListView Id="QuoteMapItem_ListView" EditorTypeName="OutlookInspired.Win.Editors.Maps.MapItemListEditor">
       <ChartSettings Settings="﻿&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#xD;&#xA;&lt;ChartXmlSerializer version=&quot;23.1.5.0&quot;&gt;&#xD;&#xA;  &lt;Chart AppearanceNameSerializable=&quot;Default&quot; SelectionMode=&quot;None&quot; SeriesSelectionMode=&quot;Series&quot;&gt;&#xD;&#xA;    &lt;DataContainer BoundSeriesSorting=&quot;None&quot; ValidateDataMembers=&quot;true&quot;&gt;&#xD;&#xA;      &lt;SeriesSerializable&gt;&#xD;&#xA;        &lt;Item1 Name=&quot;Series 1&quot; SeriesID=&quot;0&quot; ArgumentDataMember=&quot;Name&quot; ValueDataMembersSerializable=&quot;Value&quot; LegendTextPattern=&quot;{A}&quot;&gt;&#xD;&#xA;          &lt;View ColorEach=&quot;true&quot; AlignToCenter=&quot;true&quot; PointShape=&quot;Trapezoid&quot; TypeNameSerializable=&quot;FunnelSeriesView&quot; /&gt;&#xD;&#xA;          &lt;Label Position=&quot;Center&quot; TypeNameSerializable=&quot;FunnelSeriesLabel&quot; LineVisibility=&quot;True&quot; /&gt;&#xD;&#xA;        &lt;/Item1&gt;&#xD;&#xA;      &lt;/SeriesSerializable&gt;&#xD;&#xA;      &lt;SeriesTemplate /&gt;&#xD;&#xA;    &lt;/DataContainer&gt;&#xD;&#xA;    &lt;Legend CrosshairContentOffset=&quot;4&quot; MaxCrosshairContentWidth=&quot;50&quot; MaxCrosshairContentHeight=&quot;0&quot; LegendID=&quot;-1&quot; Visibility=&quot;True&quot; AlignmentHorizontal=&quot;Center&quot; AlignmentVertical=&quot;BottomOutside&quot; Direction=&quot;LeftToRight&quot; MarkerSize=&quot;@2,Width=20@2,Height=20&quot; EnableAntialiasing=&quot;True&quot;&gt;&#xD;&#xA;      &lt;Padding Left=&quot;0&quot; Top=&quot;40&quot; Right=&quot;0&quot; Bottom=&quot;0&quot; /&gt;&#xD;&#xA;      &lt;Margins Left=&quot;0&quot; Top=&quot;0&quot; Right=&quot;0&quot; Bottom=&quot;0&quot; /&gt;&#xD;&#xA;      &lt;Border Visibility=&quot;False&quot; /&gt;&#xD;&#xA;    &lt;/Legend&gt;&#xD;&#xA;  &lt;/Chart&gt;&#xD;&#xA;&lt;/ChartXmlSerializer&gt;" />
     </ListView>
-    <DetailView Id="Welcome_DetailView">
-      <Items>
-        <PropertyEditor Id="About" ImageSizeMode="Normal" />
-      </Items>
-      <Layout>
-        <LayoutGroup Id="Main" RelativeSize="100">
-          <LayoutGroup Id="About_Group" TextAlignMode="AlignWithChildren" Direction="Vertical" RelativeSize="100" ShowCaption="False">
-            <LayoutItem Id="About" ShowCaption="False" RelativeSize="100" />
-          </LayoutGroup>
-        </LayoutGroup>
-      </Layout>
-    </DetailView>
   </Views>
 </Application>

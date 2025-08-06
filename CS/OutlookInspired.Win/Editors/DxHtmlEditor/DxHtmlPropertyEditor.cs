@@ -29,7 +29,7 @@ namespace OutlookInspired.Win.Editors.DxHtmlEditor{
             blazorWebView.RootComponents.Add<DevExpress.Blazor.DxHtmlEditor>("#app", new Dictionary<string, object>{
                 { nameof(DevExpress.Blazor.DxHtmlEditor.Markup), _markup},
                 { nameof(DevExpress.Blazor.DxHtmlEditor.MarkupChanged), EventCallback.Factory.Create<string>(this, MarkupChanged)},
-                { nameof(DevExpress.Blazor.DxHtmlEditor.Height), "300px" },
+                { nameof(DevExpress.Blazor.DxHtmlEditor.CssClass), "fill-container-editor" },
                 { nameof(DevExpress.Blazor.DxHtmlEditor.BindMarkupMode), HtmlEditorBindMarkupMode.OnDelayedInput },
                 { "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, OnKeyDown) },
             });

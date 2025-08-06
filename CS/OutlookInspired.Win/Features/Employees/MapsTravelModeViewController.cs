@@ -23,8 +23,7 @@ namespace OutlookInspired.Win.Features.Employees{
             _action.PaintStyle=ActionItemPaintStyle.Image;
             _action.Executed+=ActionOnExecuted;
         }
-
-
+        
         private void ActionOnExecuted(object sender, ActionBaseEventArgs e){
             var editor = View.GetItems<MapControlHomeOfficePropertyEditor>().First();
             editor.CalculateRoute((AzureTravelMode)_action.SelectedItem.Data);

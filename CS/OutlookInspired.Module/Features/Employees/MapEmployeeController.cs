@@ -16,12 +16,13 @@ namespace OutlookInspired.Module.Features.Employees{
             MapEmployeeAction.CustomizePopupWindowParams+=MapEmployeeActionOnCustomizePopupWindowParams;
         }
 
+        
         private void MapEmployeeActionOnCustomizePopupWindowParams(object sender, CustomizePopupWindowParamsEventArgs e){
             var objectSpace = Application.CreateObjectSpace(typeof(Employee));
             var createdView = Application.CreateDetailView(objectSpace,
                 (IModelDetailView)Application.Model.Views[Employee.MapsDetailView], false, objectSpace.GetObject(View.CurrentObject));
             e.View=createdView;
-            e.Size=new Size(1024,768);
+            e.Size=new Size(1024,700);
         }
 
         public PopupWindowShowAction MapEmployeeAction{ get; }

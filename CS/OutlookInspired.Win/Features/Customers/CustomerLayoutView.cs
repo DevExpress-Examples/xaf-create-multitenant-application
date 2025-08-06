@@ -7,12 +7,12 @@ namespace OutlookInspired.Win.Features.Customers
         public CustomerLayoutView()
         {
             InitializeComponent();
-            labelControl1.Text = @"RECORDS: 0";
+            labelControl1.Text = @"  RECORDS: 0";
         }
 
         protected override void OnDataSourceOrFilterChanged(){
             base.OnDataSourceOrFilterChanged();
-            labelControl1.Text = $@"RECORDS: {ColumnView.DataRowCount}";
+            labelControl1.Text = $@"  RECORDS: {ColumnView.DataRowCount}";
         }
 
         
