@@ -350,6 +350,12 @@
       </Layout>
     </DetailView>
     <ListView Id="CustomerLayoutView_ListView" DataAccessMode="Client" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Customer_DetailView_Child">
+      <HiddenActions>
+        <ActionLink ActionId="NextObject" IsNewNode="True" />
+        <ActionLink ActionId="PreviousObject" IsNewNode="True" />
+        <ActionLink ActionId="Refresh" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+      </HiddenActions>
       <SplitLayout RelativePosition="70" />
     </ListView>
     <DetailView Id="CustomerStore_DetailView">
@@ -733,6 +739,12 @@
       </HiddenActions>
     </ListView>
     <ListView Id="EmployeeLayoutView_ListView" MasterDetailMode="ListViewAndDetailView" DataAccessMode="Client" MasterDetailView="Employee_DetailView_Child">
+      <HiddenActions>
+        <ActionLink ActionId="NextObject" IsNewNode="True" />
+        <ActionLink ActionId="PreviousObject" IsNewNode="True" />
+        <ActionLink ActionId="Refresh" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+      </HiddenActions>
       <SplitLayout RelativePosition="50" />
     </ListView>
     <ListView Id="EmployeeTask_AttachedFiles_ListView" MasterDetailMode="ListViewAndDetailView">
@@ -1014,6 +1026,12 @@
         <ColumnInfo Id="Store" Index="-1" />
         <ColumnInfo Id="InvoiceNumber" Width="98" />
       </Columns>
+      <HiddenActions>
+        <ActionLink ActionId="NextObject" IsNewNode="True" />
+        <ActionLink ActionId="PreviousObject" IsNewNode="True" />
+        <ActionLink ActionId="Refresh" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+      </HiddenActions>
       <SplitLayout SplitterPosition="0" RelativePosition="70" />
     </ListView>
     <DetailView Id="OrderItem_DetailView">
@@ -1230,6 +1248,12 @@
       </HiddenActions>
     </ListView>
     <ListView Id="ProductLayoutView_ListView" DataAccessMode="Client" MasterDetailMode="ListViewAndDetailView" MasterDetailView="Product_Brochure_DetailView">
+      <HiddenActions>
+        <ActionLink ActionId="NextObject" IsNewNode="True" />
+        <ActionLink ActionId="PreviousObject" IsNewNode="True" />
+        <ActionLink ActionId="Refresh" IsNewNode="True" />
+        <ActionLink ActionId="Save" IsNewNode="True" />
+      </HiddenActions>
       <SplitLayout SplitterPosition="0" RelativePosition="70" />
     </ListView>
     <DetailView Id="Quote_DetailView">
