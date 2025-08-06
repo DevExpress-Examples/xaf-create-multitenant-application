@@ -439,16 +439,16 @@
       <Columns>
         <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
         <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
-        <ColumnInfo Id="InvoiceNumber" Width="175" />
-        <ColumnInfo Id="OrderDate" Width="137" />
-        <ColumnInfo Id="ShipDate" Width="124" />
+        <ColumnInfo Id="InvoiceNumber" Width="90" />
+        <ColumnInfo Id="OrderDate" Width="110" />
+        <ColumnInfo Id="ShipDate" Width="108" />
       </Columns>
     </ListView>
     <ListView Id="Order_ListView_Detail" AutoExpandAllGroups="True">
       <Columns>
         <ColumnInfo Id="ShipDate" Width="124" />
-        <ColumnInfo Id="InvoiceNumber" Width="175" />
-        <ColumnInfo Id="OrderDate" Width="137" />
+        <ColumnInfo Id="InvoiceNumber" Width="104" />
+        <ColumnInfo Id="OrderDate" Width="116" />
         <ColumnInfo Id="ShipmentStatus" PropertyName="ShipmentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
         <ColumnInfo Id="PaymentStatus" PropertyName="PaymentStatus" PropertyEditorType="OutlookInspired.Blazor.Server.Editors.EnumPropertyEditor" MinWidth="30" />
       </Columns>
