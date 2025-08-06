@@ -19,7 +19,7 @@ namespace OutlookInspired.Module.Features.Quotes{
             var objectSpace = Application.CreateObjectSpace(typeof(QuoteMapItem));
             var createdView = Application.CreateListView(objectSpace, typeof(QuoteMapItem),false);
             e.View=createdView;
-            e.Size=new Size(1024,768);
+            e.Size=new Size(1024,700);
         }
 
         public PopupWindowShowAction MapOpportunitiesAction{ get; }
