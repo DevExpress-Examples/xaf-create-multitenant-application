@@ -4,8 +4,6 @@ using OutlookInspired.Module.BusinessObjects;
 
 namespace OutlookInspired.Blazor.Server.Features.Products{
     public class ProductLayoutViewController:ObjectViewController<ListView, Product>{
-        
-        
         protected override void OnViewControlsCreated(){
             base.OnViewControlsCreated();
             if (View.Id != Product.LayoutViewListView) return;
