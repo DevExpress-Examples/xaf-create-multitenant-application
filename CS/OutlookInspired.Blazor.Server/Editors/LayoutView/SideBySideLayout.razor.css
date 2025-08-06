@@ -26,8 +26,6 @@
     text-overflow: ellipsis;
     max-width: 100%;
 }
-.card-footer {
-    .card-footer {
-        padding: 10px 10px 20px 10px;
-    }
+.card > .card-footer {
+    padding: 10px 10px 20px 10px;
 }
