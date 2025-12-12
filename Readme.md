@@ -1,9 +1,2 @@
 # XAF - Outlook-Inspired Demo for Blazor & WinForms (Powered by the DevExpress Multi-Tenancy Module)
 
-This application serves as the central data management hub for the fictitious company, overseeing various business entities such as Employees, Products, Orders, Quotes, Customers, and Stores. It includes Blazor & WinForms projects powered by the DevExpress Multi-Tenancy Module.
-
-⛔ DEPRECATED. This repository was deprecated. Since v25.2 Outlook-Inspired Demo is installed as part of the XAF package. You can run the demo application from the Demo Center or examine source code that typically located in the following directory: _%PUBLIC%\Documents\DevExpress Demos 25.2\Components\XAF\OutlookInspiredDemo.NET.EFCore\CS\_.
-
-For additional information refer to the following documentation topic: [Getting Started: .NET WinForms & Blazor Outlook-Inspired Demo (Multi-Tenancy/SaaS-ready)](https://docs.devexpress.com/eXpressAppFramework/113577/getting-started?v=25.2#net-winforms--blazor-outlook-inspired-demo-multi-tenancysaas-readyxref404669).
-
-The current repository will not be updated in the future.
